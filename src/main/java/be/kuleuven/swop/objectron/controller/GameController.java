@@ -48,9 +48,4 @@ public class GameController {
     void endTurn(){
         throw new RuntimeException("Unimplemented");
     }
-
-    //TODO cancelEndTurn
-    void cancelEndTurn(){
-        throw new RuntimeException("Unimplemented");
-    }
 }
