@@ -20,4 +20,14 @@ public class HumanPlayer implements Player {
     public void addToInventory(Item itemToAdd) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public int getAvailableActions() {
+        return 0;
+    }
+
+    @Override
+    public Item getCurrentlySelectedItem() {
+        return null;
+    }
 }

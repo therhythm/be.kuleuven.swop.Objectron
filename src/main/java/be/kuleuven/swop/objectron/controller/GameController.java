@@ -1,6 +1,9 @@
 package be.kuleuven.swop.objectron.controller;
 
 import be.kuleuven.swop.objectron.model.Direction;
+import be.kuleuven.swop.objectron.model.Item;
+
+import java.util.List;
 
 /**
  * @author : Nik Torfs
@@ -15,12 +18,12 @@ public class GameController {
     }
 
     //TODO showInventory
-    public void showInventory(){
+    public List<Item> showInventory(){
         throw new RuntimeException("Unimplemented");
     }
 
     //TODO selectItem
-    public void selectItem(/*identifier*/){
+    public void selectItem(int identifier){
         throw new RuntimeException("Unimplemented");
     }
 
