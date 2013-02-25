@@ -20,6 +20,7 @@ public class UseItemTest
     private HumanPlayer player;
     private KeyValueInventory inventory;
     private Item item;
+    private Square square;
 
     @Before
     public void setUp() throws Exception
@@ -27,16 +28,14 @@ public class UseItemTest
         controller = new GameController();
         player = new HumanPlayer();
         inventory = new KeyValueInventory();
-        //TODO: finish fixture
-    }
+        item = new LightGrenade();
+        square = new Square();
 
-    @Test
-    public void showInventoryTest()
-    {
-        List<Item> inventoryItems = controller.showInventory();
-
-        assertFalse(inventoryItems.isEmpty());
-        assertEquals(inventory.getItems(),inventoryItems);
+        controller.setCurrentPlayer(player);
+        player.setInventory(inventory);
+        player.setAvailableActions(3);
+        player.setCurrentSquare(square);
+        item.setIdentifier(0);
     }
 
     @Test(expected = InventoryEmptyException.class)
@@ -46,8 +45,21 @@ public class UseItemTest
     }
 
     @Test
+    public void showInventoryTest()
+    {
+        player.getInventory().addItem(item);
+
+        List<Item> inventoryItems = controller.showInventory();
+
+        assertFalse(inventoryItems.isEmpty());
+        assertEquals(inventory.getItems(),inventoryItems);
+    }
+
+    @Test
     public void selectItemTest()
     {
+        player.getInventory().addItem(item);
+
         controller.selectItem(0);
 
         assertNotNull(player.getCurrentlySelectedItem());
@@ -57,9 +69,12 @@ public class UseItemTest
     @Test
     public void useItemTest()
     {
+        player.getInventory().addItem(item);
+
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = inventory.getItems().size();
 
+        controller.selectItem(0);
         controller.useCurrentItem();
 
         assertEquals(initialAvailableActions - 1, player.getAvailableActions());
@@ -70,9 +85,12 @@ public class UseItemTest
     @Test
     public void cancelItemUsageTest()
     {
+        player.getInventory().addItem(item);
+
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = inventory.getItems().size();
 
+        controller.selectItem(0);
         controller.cancelItemUsage();
 
         assertEquals(initialAvailableActions, player.getAvailableActions());

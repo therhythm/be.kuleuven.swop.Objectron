@@ -13,4 +13,18 @@ public interface Item {
      * @param square: square where the item is used
      */
     void use(Square square);
+
+    /**
+     * Set the identifier for this item
+     *
+     * @param identifier: identifier for this item
+     */
+    void setIdentifier(int identifier);
+
+    /**
+     * Retrieve the identifier for this item
+     *
+     * @return the identifier for this item
+     */
+    int getIdentifier();
 }

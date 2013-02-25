@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.controller;
 
-import be.kuleuven.swop.objectron.model.Direction;
-import be.kuleuven.swop.objectron.model.Item;
+import be.kuleuven.swop.objectron.model.*;
 
 import java.util.List;
 
@@ -12,6 +11,16 @@ import java.util.List;
  */
 public class GameController {
 
+    private HumanPlayer currentPlayer;
+
+    public HumanPlayer getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(HumanPlayer currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
     //TODO selectDirection
     public void selectDirection(Direction direction){
         throw new RuntimeException("Unimplemented");
@@ -19,22 +28,33 @@ public class GameController {
 
     //TODO showInventory
     public List<Item> showInventory(){
-        throw new RuntimeException("Unimplemented");
+        List<Item> inventory = getCurrentPlayer().getInventory().getItems();
+        if(!inventory.isEmpty()) {
+            return inventory;
+        } else {
+            throw new InventoryEmptyException("Inventory empty");
+        }
     }
 
     //TODO selectItem
     public void selectItem(int identifier){
-        throw new RuntimeException("Unimplemented");
+        Item selectedItem = currentPlayer.getInventory().retrieveItem(identifier);
+        currentPlayer.setCurrentlySelectedItem(selectedItem);
     }
 
     //TODO useCurrentItem
     public boolean useCurrentItem(){
-        throw new RuntimeException("Unimplemented");
+        Item currentItem = currentPlayer.getCurrentlySelectedItem();
+        currentPlayer.getInventory().removeItem(currentItem.getIdentifier());
+        currentItem.use(currentPlayer.getCurrentSquare());
+        currentPlayer.setAvailableActions(currentPlayer.getAvailableActions()-1);
+        //TODO check successful use of item
+        return true;
     }
 
     //TODO cancelItemUsage
     public void cancelItemUsage(){
-        throw new RuntimeException("Unimplemented");
+        //No further actions required (iteration 1)
     }
 
     //TODO getAvailableItems

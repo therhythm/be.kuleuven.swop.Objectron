@@ -36,4 +36,11 @@ public interface Inventory {
      * @param itemToAdd
      */
     void addItem(Item itemToAdd);
+
+    /**
+     * Remove an item from the inventory
+     *
+     * @param identifier
+     */
+    void removeItem(int identifier);
 }

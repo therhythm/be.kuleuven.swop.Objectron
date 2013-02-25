@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,21 +20,34 @@ public class KeyValueInventory implements Inventory {
 
     @Override
     public List<Item> getItems() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new ArrayList<Item>(items.values());
     }
 
     @Override
     public Item retrieveItem(Integer identifier) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return items.get(identifier);
     }
 
     @Override
     public boolean isLimitReached() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        if(items.size() < LIMIT) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
     public void addItem(Item itemToAdd) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if(!isLimitReached()) {
+            items.put(itemToAdd.getIdentifier(), itemToAdd);
+        } else {
+            throw new InventoryFullException("Inventory full");
+        }
+    }
+
+    @Override
+    public void removeItem(int identifier) {
+        items.remove(identifier);
     }
 }

@@ -6,6 +6,20 @@ package be.kuleuven.swop.objectron.model;
  *         Time: 00:06
  */
 public class HumanPlayer implements Player {
+
+    private Inventory inventory;
+    private Item currentlySelectedItem;
+    private int availableActions;
+    private Square currentSquare;
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
     @Override
     public boolean isInventoryFull() {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
@@ -13,7 +27,12 @@ public class HumanPlayer implements Player {
 
     @Override
     public Square getCurrentSquare() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return currentSquare;
+    }
+
+    @Override
+    public void setCurrentSquare(Square currentSquare) {
+        this.currentSquare = currentSquare;
     }
 
     @Override
@@ -23,11 +42,20 @@ public class HumanPlayer implements Player {
 
     @Override
     public int getAvailableActions() {
-        return 0;
+        return availableActions;
+    }
+
+    @Override
+    public void setAvailableActions(int availableActions) {
+        this.availableActions = availableActions;
     }
 
     @Override
     public Item getCurrentlySelectedItem() {
-        return null;
+        return currentlySelectedItem;
+    }
+
+    public void setCurrentlySelectedItem(Item currentlySelectedItem) {
+        this.currentlySelectedItem = currentlySelectedItem;
     }
 }

@@ -22,6 +22,13 @@ public interface Player {
     Square getCurrentSquare();
 
     /**
+     * Set the current square
+     *
+     * @param currentSquare: the current square
+     */
+    void setCurrentSquare(Square currentSquare);
+
+    /**
      * Add an item to the player's inventory
      *
      * @param itemToAdd: the item to add to the inventory
@@ -34,6 +41,13 @@ public interface Player {
      * @return the number of remaining actions
      */
     int getAvailableActions();
+
+    /**
+     * Set the number of available actions
+     *
+     * @param availableActions: the number of available actions
+     */
+    void setAvailableActions(int availableActions);
 
     /**
      * Retrieve currently selected item
