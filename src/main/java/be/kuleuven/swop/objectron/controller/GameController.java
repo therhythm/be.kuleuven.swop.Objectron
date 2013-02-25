@@ -10,42 +10,42 @@ import be.kuleuven.swop.objectron.model.Direction;
 public class GameController {
 
     //TODO selectDirection
-    void selectDirection(Direction direction){
+    public void selectDirection(Direction direction){
         throw new RuntimeException("Unimplemented");
     }
 
     //TODO showInventory
-    void showInventory(){
+    public void showInventory(){
         throw new RuntimeException("Unimplemented");
     }
 
     //TODO selectItem
-    void selectItem(/*identifier*/){
+    public void selectItem(/*identifier*/){
         throw new RuntimeException("Unimplemented");
     }
 
     //TODO useCurrentItem
-    boolean useCurrentItem(){
+    public boolean useCurrentItem(){
         throw new RuntimeException("Unimplemented");
     }
 
     //TODO cancelItemUsage
-    void cancelItemUsage(){
+    public void cancelItemUsage(){
         throw new RuntimeException("Unimplemented");
     }
 
     //TODO getAvailableItems
-    void getAvailableItems(){
+    public void getAvailableItems(){
         throw new RuntimeException("Unimplemented");
     }
 
     //TODO pickUpItem
-    void pickUpItem(/*identifier*/){
+    public void pickUpItem(/*identifier*/){
         throw new RuntimeException("Unimplemented");
     }
 
     //TODO endTurn
-    void endTurn(){
+    public void endTurn(){
         throw new RuntimeException("Unimplemented");
     }
 }
