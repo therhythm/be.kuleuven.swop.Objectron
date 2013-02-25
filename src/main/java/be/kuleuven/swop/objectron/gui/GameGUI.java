@@ -36,7 +36,6 @@ public class GameGUI {
 
                 };
 
-                //TODO juiste links naar resources
                 playerRed = gui.loadImage("src/main/resources/player_red.png", 40, 40);
                 final Button button = gui.createButton(40, 0, 80, 40, new Runnable() {
                     public void run() {
@@ -59,9 +58,9 @@ public class GameGUI {
                             button.setEnabled(true);
                         }
                     }
-                }).setImage(gui.loadImage("simpleguidemo/arrow_E.png", 40, 40));
+                }).setImage(gui.loadImage("src/main/resources/arrow_E.png", 40, 40));
                 Button wButton = gui.createButton(40, 40, 40, 40, null);
-                wButton.setImage(gui.loadImage("simpleguidemo/arrow_W.png", 40, 40));
+                wButton.setImage(gui.loadImage("src/main/resources/arrow_W.png", 40, 40));
                 wButton.setEnabled(false);
             }
         });
