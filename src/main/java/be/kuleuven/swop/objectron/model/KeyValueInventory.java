@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class KeyValueInventory implements Inventory {
 
+    private static final int LIMIT = 6;
+
     //TODO integer as a key or strings?
     private Map<Integer, Item> items = new HashMap<Integer, Item>();
 
