@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.model.Direction;
  */
 public class GameController {
 
+
     //TODO selectDirection
     public void selectDirection(Direction direction){
         throw new RuntimeException("Unimplemented");
