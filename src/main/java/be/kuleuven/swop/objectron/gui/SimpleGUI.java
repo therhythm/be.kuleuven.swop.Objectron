@@ -64,7 +64,7 @@ public abstract class SimpleGUI {
 	}
 	
 	public final Image loadImage(String url, int width, int height) {
-		Image image = panel.getToolkit().createImage(ClassLoader.getSystemResource(url));
+		Image image = panel.getToolkit().createImage(url);
 		MediaTracker tracker = new MediaTracker(panel);
 		tracker.addImage(image, 1, width, height);
 		try {
