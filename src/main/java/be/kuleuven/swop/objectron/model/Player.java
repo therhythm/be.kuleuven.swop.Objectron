@@ -34,4 +34,7 @@ public interface Player {
      * @param newPosition
      */
     void move(Square newPosition);
+
+    String getName();
+
 }

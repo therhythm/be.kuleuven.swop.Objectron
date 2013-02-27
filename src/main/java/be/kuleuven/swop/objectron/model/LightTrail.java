@@ -8,14 +8,9 @@ package be.kuleuven.swop.objectron.model;
 public class LightTrail {
     private static int MAX_TRAIL_COVERAGE = 3;
     private Square[] trail;
-    private int length = 0;
 
     public LightTrail(){
         trail = (Square[]) new Object[MAX_TRAIL_COVERAGE];
-    }
-
-    public int size(){
-        return length;
     }
 
     public void expand(Square newSquare){
@@ -27,7 +22,6 @@ public class LightTrail {
 
         trail[0] = newSquare;
         newSquare.setObstructed(true);
-        length++;
     }
 
     public void retract(){
@@ -35,7 +29,6 @@ public class LightTrail {
             if(trail[i] != null){
                 trail[i].setObstructed(false);
                 trail[i] = null;
-                length--;
                 break;
             }
         }

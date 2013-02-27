@@ -1,15 +1,32 @@
 package be.kuleuven.swop.objectron.controller;
 
+import be.kuleuven.swop.objectron.model.Direction;
+import be.kuleuven.swop.objectron.model.Grid;
+import be.kuleuven.swop.objectron.model.InvalidMoveException;
+import be.kuleuven.swop.objectron.model.Player;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * @author : Nik Torfs
  *         Date: 22/02/13
  *         Time: 00:11
  */
 public class GameController {
+    private static final Logger logger = Logger.getLogger(GameController.class.getCanonicalName());
 
-    //TODO selectDirection
+    private Player currentPlayer;
+    private Grid gameGrid;
+
+
     public void move(Direction direction){
-        throw new RuntimeException("Unimplemented");
+        try {
+            gameGrid.makeMove(direction, currentPlayer);
+        } catch (InvalidMoveException e) {
+            logger.log(Level.INFO, currentPlayer.getName() + " has made an invalid move!");
+            //TODO do some sort of gamelistener event to show message
+        }
     }
 
     //TODO showInventory

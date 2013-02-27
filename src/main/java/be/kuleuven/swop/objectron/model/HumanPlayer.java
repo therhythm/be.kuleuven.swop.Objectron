@@ -6,8 +6,13 @@ package be.kuleuven.swop.objectron.model;
  *         Time: 00:06
  */
 public class HumanPlayer implements Player {
+    private String name;
     private Square currentSquare;
     private LightTrail lightTrail;
+
+    public HumanPlayer(String name){
+        this.name = name;
+    }
 
     @Override
     public boolean isInventoryFull() {
@@ -29,5 +34,10 @@ public class HumanPlayer implements Player {
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
         newPosition.setObstructed(true);
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 }
