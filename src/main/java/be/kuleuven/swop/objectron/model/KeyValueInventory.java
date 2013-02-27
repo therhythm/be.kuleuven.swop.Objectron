@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,21 +20,35 @@ public class KeyValueInventory implements Inventory {
 
     @Override
     public List<Item> getItems() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<Item> returnItems = new ArrayList<Item>();
+         for (Item item : items.values()){
+            returnItems.add(item);
+         }
+
+        return returnItems;
     }
 
     @Override
     public Item retrieveItem(Integer identifier) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+        Item item = this.items.get(identifier);
 
+        return item;
+
+    }
+     //deze methode evt private maken? Want in addItems wordt deze methode sowieso gebruikt om te controleren of de limiet al bereikt is.
     @Override
     public boolean isLimitReached() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+        if ( this.items.size()>=LIMIT)
+            return true;
+        else
+        return false;
+     }
 
     @Override
     public void addItem(Item itemToAdd) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (isLimitReached())
+            throw new IllegalStateException("limit reached");
+        else
+            this.items.put(5,itemToAdd);     //TODO nog manier implementeren voor die nummer
     }
 }

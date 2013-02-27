@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public class Square {
 
 
     public List<Item> getAvailableItems() {
-        return items;
+        return Collections.unmodifiableList(items);
     }
 
     public void setItems(List<Item> items) {

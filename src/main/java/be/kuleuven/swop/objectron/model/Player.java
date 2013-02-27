@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.model;
 
+import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
+
 /**
  * @author : Nik Torfs
  *         Date: 22/02/13
@@ -27,4 +29,8 @@ public interface Player {
      * @param itemToAdd: the item to add to the inventory
      */
     void addToInventory(Item itemToAdd);
+
+    void addPlayerEventListener(PlayerEventListener listener);
+
+    void removePlayerEventListener(PlayerEventListener listener);
 }
