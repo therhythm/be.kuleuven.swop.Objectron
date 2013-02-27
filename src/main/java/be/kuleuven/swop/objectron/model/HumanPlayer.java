@@ -25,7 +25,7 @@ public class HumanPlayer implements Player {
 
     @Override
     public boolean isInventoryFull() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return this.inventory.isLimitReached();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class HumanPlayer implements Player {
 
     @Override
     public void addToInventory(Item itemToAdd) {
-        //To change body of implemented methods use File | Settings | File Templates.
+       this.inventory.addItem(itemToAdd);
     }
 
     @Override
