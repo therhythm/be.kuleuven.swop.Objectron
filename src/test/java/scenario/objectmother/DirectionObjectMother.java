@@ -1,7 +1,5 @@
 package scenario.objectmother;
 
-import be.kuleuven.swop.objectron.model.Direction;
-
 /**
  * @author : Nik Torfs
  *         Date: 26/02/13

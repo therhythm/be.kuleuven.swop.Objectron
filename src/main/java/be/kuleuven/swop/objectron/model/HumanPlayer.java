@@ -6,6 +6,9 @@ package be.kuleuven.swop.objectron.model;
  *         Time: 00:06
  */
 public class HumanPlayer implements Player {
+    private Square currentSquare;
+    private LightTrail lightTrail;
+
     @Override
     public boolean isInventoryFull() {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
@@ -19,5 +22,12 @@ public class HumanPlayer implements Player {
     @Override
     public void addToInventory(Item itemToAdd) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void move(Square newPosition) {
+        lightTrail.expand(currentSquare);
+        currentSquare = newPosition;
+        newPosition.setObstructed(true);
     }
 }

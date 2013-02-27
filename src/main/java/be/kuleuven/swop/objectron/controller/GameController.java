@@ -1,7 +1,5 @@
 package be.kuleuven.swop.objectron.controller;
 
-import be.kuleuven.swop.objectron.model.Direction;
-
 /**
  * @author : Nik Torfs
  *         Date: 22/02/13

@@ -17,7 +17,7 @@ public interface Player {
     /**
      * Retrieve the square on which the player is standing
      *
-     * @return the current square
+     * @return the currentSquare square
      */
     Square getCurrentSquare();
 
@@ -27,4 +27,11 @@ public interface Player {
      * @param itemToAdd: the item to add to the inventory
      */
     void addToInventory(Item itemToAdd);
+
+    /**
+     * Move the player to the newPosition
+     *
+     * @param newPosition
+     */
+    void move(Square newPosition);
 }

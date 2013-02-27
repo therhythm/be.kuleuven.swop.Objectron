@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.model;
 
+import java.util.EnumSet;
+
 /**
  * @author : Nik Torfs
  *         Date: 22/02/13
@@ -15,12 +17,53 @@ public class Grid {
         setupGrid();
     }
 
-    public boolean isValidMove(Square s, Direction d){
-        throw new RuntimeException("Unimplemented");
+    public void makeMove(Direction direction, Player player) throws InvalidMoveException{
+        Square neighbour = player.getCurrentSquare().getNeighbour(direction);
+        if(!validPosition(neighbour))
+            throw new InvalidMoveException();
+
+        player.move(neighbour);
     }
 
+    private boolean validPosition(Square neighbour) {
+        return neighbour != null && !neighbour.isObstructed();
+    }
+
+    /**
+     * NOTE: BUILDER pattern might be useful here if multiple grid setup strategies are needed (or TEMPLATE METHOD)
+     */
     private void setupGrid(){
-        //TODO grid initialization
+        setupNeighbours();
+        setupWalls();
+        setupItems();
+    }
+
+    private void setupItems() {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    private void setupWalls() {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    private void setupNeighbours() {
+        for(int vertical = 0; vertical < squares.length; vertical++){
+            for(int horizontal = 0; horizontal < squares[0].length; horizontal++){
+                Square current = squares[vertical][horizontal];
+                for(Direction d : Direction.values()){
+                    int horIndex = d.applyHorizontalOperation(horizontal);
+                    int vertIndex = d.applyVerticalOperation(vertical);
+                    if(validIndex(horIndex, vertIndex)){
+                        current.addNeighbour(d, squares[vertIndex][horIndex]);
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean validIndex(int horIndex, int vertIndex) {
+        return horIndex > -1 && horIndex < squares[0].length
+                && vertIndex > -1 && vertIndex < squares.length;
     }
 
 }
