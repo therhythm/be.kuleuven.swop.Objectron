@@ -43,7 +43,7 @@ public class UC_pick_up_item {
 
 
         currentSquare.setItems(itemsSquare);
-        List<Item> items =  gameController.pickUpItem();
+        List<Item> items =  gameController.getAvailableItems();
         int selectedItemId = 0;
 
         gameController.selectItem(selectedItemId);
@@ -55,7 +55,7 @@ public class UC_pick_up_item {
     @org.junit.Test(expected = IllegalArgumentException.class)
     public void  test_alternate_flow_1(){
         assertTrue(currentSquare.getAvailableItems().size()==0);
-        List<Item> items =  gameController.pickUpItem();
+        List<Item> items =  gameController.getAvailableItems();
 
     }
 
@@ -68,7 +68,7 @@ public class UC_pick_up_item {
             player.addToInventory(null);
         }
         assertTrue(player.isInventoryFull());
-        List<Item> items =  gameController.pickUpItem();
+        List<Item> items =  gameController.getAvailableItems();
 
     }
 

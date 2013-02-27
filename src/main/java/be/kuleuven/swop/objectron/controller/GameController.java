@@ -46,10 +46,6 @@ public class GameController {
         throw new RuntimeException("Unimplemented");
     }
 
-    //TODO getAvailableItems
-    public void getAvailableItems(){
-        throw new RuntimeException("Unimplemented");
-    }
 
     /**
      * @throws IllegalStateException when the inventory of the currentPlayer is full
@@ -60,7 +56,7 @@ public class GameController {
      *
      * @return list with available items
      */
-    public List<Item> pickUpItem(){
+    public  List<Item>  getAvailableItems(){
         Player currentPlayer = this.state.getCurrentPlayer();
         if (currentPlayer.isInventoryFull())
             throw new IllegalStateException("inventory full");
@@ -71,8 +67,7 @@ public class GameController {
         if(availableItems.size()==0)
             throw new IllegalStateException("no items in current square");
 
-     return availableItems;
-
+        return availableItems;
     }
 
     /**
@@ -91,7 +86,7 @@ public class GameController {
         currentPlayer.addToInventory(selectedItem);
 
 
-        throw new RuntimeException("Unimplemented");
+
     }
 
     //TODO endTurn
