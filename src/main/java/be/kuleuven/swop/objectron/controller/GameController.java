@@ -1,6 +1,12 @@
 package be.kuleuven.swop.objectron.controller;
 
+import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.model.Direction;
+import be.kuleuven.swop.objectron.model.Item;
+import be.kuleuven.swop.objectron.model.Player;
+import be.kuleuven.swop.objectron.model.Square;
+
+import java.util.List;
 
 /**
  * @author : Nik Torfs
@@ -8,10 +14,15 @@ import be.kuleuven.swop.objectron.model.Direction;
  *         Time: 00:11
  */
 public class GameController {
+    private GameState state;
+
+    public GameController(GameState state) {
+        this.state = state;
+    }
 
 
     //TODO selectDirection
-    public void selectDirection(Direction direction){
+    public void move(Direction direction){
         throw new RuntimeException("Unimplemented");
     }
 
@@ -40,8 +51,46 @@ public class GameController {
         throw new RuntimeException("Unimplemented");
     }
 
-    //TODO pickUpItem
-    public void pickUpItem(/*identifier*/){
+    /**
+     * @throws IllegalStateException when the inventory of the currentPlayer is full
+     *          currentPlayer.isInventoryFull()
+     *
+     * @throws IllegalStateException when the current square has no items
+     *          currentSquare.availableItems().sizer()==0
+     *
+     * @return list with available items
+     */
+    public List<Item> pickUpItem(){
+        Player currentPlayer = this.state.getCurrentPlayer();
+        if (currentPlayer.isInventoryFull())
+            throw new IllegalStateException("inventory full");
+
+        Square currentSquare = currentPlayer.getCurrentSquare();
+
+        List<Item> availableItems = currentSquare.getAvailableItems();
+        if(availableItems.size()==0)
+            throw new IllegalStateException("no items in current square");
+
+     return availableItems;
+
+    }
+
+    /**
+     *
+     * @param selectionId
+     * @post the item will be removed from the current  square and will be added to the inventory of the currentPlayer
+     */
+    public void selectItem(int selectionId){
+        Player currentPlayer = state.getCurrentPlayer();
+        Square currentSquare = currentPlayer.getCurrentSquare();
+
+        List<Item> availableItems = currentSquare.getAvailableItems();
+        Item selectedItem = availableItems.get(selectionId);
+
+        currentSquare.removeItem(selectedItem);
+        currentPlayer.addToInventory(selectedItem);
+
+
         throw new RuntimeException("Unimplemented");
     }
 
