@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class HumanPlayer implements Player {
     private static final int NB_ACTIONS_EACH_TURN = 3;
+    private static final int NB_ACTIONS_BLINDED = 3;
 
     private String name;
     private Square currentSquare;
@@ -21,6 +22,8 @@ public class HumanPlayer implements Player {
     private Inventory inventory;
     private List<PlayerEventListener> listeners = new ArrayList<PlayerEventListener>();
     private boolean hasMoved;
+    private boolean isBlinded;
+    private int remainingActionsBlinded;
 
     public HumanPlayer(String name, Square currentSquare) {
         this.name = name;
@@ -29,6 +32,8 @@ public class HumanPlayer implements Player {
         lightTrail = new LightTrail();
         inventory = new KeyValueInventory();
         hasMoved = false;
+        isBlinded = false;
+        remainingActionsBlinded = 0;
     }
 
     @Override
@@ -48,11 +53,11 @@ public class HumanPlayer implements Player {
 
     @Override
     public void move(Square newPosition) {
+        reduceAvailableActions();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
-        currentSquare.stepOn();//TODO (possibly arguments)
+        currentSquare.stepOn(this);
         hasMoved = true;
-        reduceAvailableActions();
     }
 
     @Override
@@ -94,7 +99,7 @@ public class HumanPlayer implements Player {
 
     @Override
     public void endTurn() {
-        availableActions = NB_ACTIONS_EACH_TURN;
+        availableActions = NB_ACTIONS_EACH_TURN - remainingActionsBlinded;
         hasMoved = false;
     }
 
@@ -106,5 +111,17 @@ public class HumanPlayer implements Player {
     private void reduceAvailableActions(){
         availableActions--;
         lightTrail.reduce();
+    }
+
+    @Override
+    public void blind() {
+        isBlinded = true;
+        remainingActionsBlinded = NB_ACTIONS_BLINDED - availableActions;
+        endTurn();
+    }
+
+    @Override
+    public boolean isBlinded() {
+        return isBlinded;
     }
 }
