@@ -163,9 +163,11 @@ public class GameController {
      *         | !state.getCurrentPlayer().hasMoved()
      */
     public void endTurn(){
-        if(!state.getCurrentPlayer().hasMoved())
+        if(!state.getCurrentPlayer().hasMoved()){
             throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");
-        else
-            state.switchContext();
+        }else{
+            state.nextPlayer();
+            state.getCurrentPlayer().endTurn();
+        }
     }
 }

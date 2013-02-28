@@ -26,13 +26,6 @@ public interface Player {
     Square getCurrentSquare();
 
     /**
-     * Set the current square
-     *
-     * @param currentSquare: the current square
-     */
-    void setCurrentSquare(Square currentSquare);
-
-    /**
      * Add an item to the player's inventory
      *
      * @param itemToAdd: the item to add to the inventory
@@ -47,10 +40,6 @@ public interface Player {
     void move(Square newPosition);
 
     String getName();
-
-    void addPlayerEventListener(PlayerEventListener listener);
-
-    void removePlayerEventListener(PlayerEventListener listener);
 
      /* Retrieve number of available actions
      *

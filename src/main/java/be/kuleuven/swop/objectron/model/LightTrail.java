@@ -7,7 +7,7 @@ package be.kuleuven.swop.objectron.model;
  */
 public class LightTrail {
     private static int MAX_TRAIL_COVERAGE = 3;
-    private static int LIGHT_TRAIL_LIFETIME = 2;
+    private static int LIGHT_TRAIL_LIFETIME = 3;
     private Square[] trail;
     private int[] remainingActions;
 
@@ -25,7 +25,7 @@ public class LightTrail {
         System.arraycopy(remainingActions, 0, remainingActions, 1, MAX_TRAIL_COVERAGE -1);
 
         trail[0] = newSquare;
-        remainingActions[0] = 3;
+        remainingActions[0] = LIGHT_TRAIL_LIFETIME;
         newSquare.setObstructed(true);
     }
 
@@ -45,6 +45,4 @@ public class LightTrail {
         }
         retract();
     }
-
-    //TODO method checking if going through trails
 }

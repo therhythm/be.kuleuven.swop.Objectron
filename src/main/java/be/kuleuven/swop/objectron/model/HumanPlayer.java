@@ -42,23 +42,8 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public void setCurrentSquare(Square currentSquare) {
-        this.currentSquare = currentSquare;
-    }
-
-    @Override
     public void addToInventory(Item itemToAdd) {
        this.inventory.addItem(itemToAdd);
-    }
-
-    @Override
-    public void addPlayerEventListener(PlayerEventListener listener) {
-        listeners.add(listener);
-    }
-
-    @Override
-    public void removePlayerEventListener(PlayerEventListener listener) {
-        listeners.remove(listener);
     }
 
     @Override
