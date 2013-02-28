@@ -12,6 +12,7 @@ public class Square {
     Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
     private List<Item> items = new ArrayList<Item>();
     private boolean isObstructed = false;
+    private Item activeItem = null;
 
     public void addNeighbour(Direction direction, Square neighbour){
         neighbours.put(direction, neighbour);
@@ -55,5 +56,9 @@ public class Square {
 
         items.remove(selectedItem);
         return selectedItem;
+    }
+
+    public boolean hasActiveItem() {
+        return activeItem != null;
     }
 }

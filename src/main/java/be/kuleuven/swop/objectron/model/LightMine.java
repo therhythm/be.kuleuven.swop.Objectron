@@ -7,7 +7,7 @@ package be.kuleuven.swop.objectron.model;
  * Time: 20:56
  * To change this template use File | Settings | File Templates.
  */
-public class LightMine implements  Item {
+public class LightMine implements Item {
     private Square square;
      @Override
      public void use(Square square){
@@ -19,14 +19,7 @@ public class LightMine implements  Item {
 
     private boolean canHaveAsSquare(Square square){
 
-        if (square == null)
-            return false;
+        return square != null && !square.hasActiveItem();
 
-        for (Item item : square.getAvailableItems()){
-            if(item instanceof LightMine)
-                return false;
-        }
-
-        return true;
     }
 }

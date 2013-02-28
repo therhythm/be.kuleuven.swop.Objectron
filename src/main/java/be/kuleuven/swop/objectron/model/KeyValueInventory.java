@@ -22,17 +22,29 @@ public class KeyValueInventory implements Inventory {
     public Item retrieveItem(int identifier) {
         return items.get(identifier);
     }
+
      //deze methode evt private maken? Want in addItems wordt deze methode sowieso gebruikt om te controleren of de limiet al bereikt is.
     @Override
     public boolean isLimitReached() {
         return this.items.size() >= LIMIT;
-     }
+    }
 
     @Override
     public void addItem(Item itemToAdd) {
-        if (isLimitReached())
-            throw new IllegalStateException("limit reached");
-        else
-            this.items.add(itemToAdd);
+        if(!isLimitReached()) {
+            items.add(itemToAdd);
+        } else {
+            throw new InventoryFullException("Inventory full");
+        }
+    }
+
+    @Override
+    public void removeItem(int identifier) {
+        items.remove(identifier);
+    }
+
+    @Override
+    public void removeItem(Item item) {
+        items.remove(item);
     }
 }

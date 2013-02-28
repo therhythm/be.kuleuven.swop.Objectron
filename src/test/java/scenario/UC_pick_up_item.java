@@ -47,7 +47,7 @@ public class UC_pick_up_item {
         //pick up the item
         int selectedItemId = 0;
         gameController.selectItem(selectedItemId);
-        assertTrue(player.getInventory().contains(i1));
+        assertTrue(player.getInventoryItems().contains(i1));
     }
 
     @org.junit.Test(expected = IllegalStateException.class)

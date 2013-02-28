@@ -1,13 +1,13 @@
 package be.kuleuven.swop.objectron.controller;
 
+
 import be.kuleuven.swop.objectron.GameState;
-import be.kuleuven.swop.objectron.model.Direction;
-import be.kuleuven.swop.objectron.model.InvalidMoveException;
-import be.kuleuven.swop.objectron.model.Player;
+import be.kuleuven.swop.objectron.model.*;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import be.kuleuven.swop.objectron.model.Item;
-import be.kuleuven.swop.objectron.model.Square;
+
+
 import java.util.List;
 
 /**
@@ -33,23 +33,31 @@ public class GameController {
     }
 
     //TODO showInventory
-    public void showInventory(){
-        throw new RuntimeException("Unimplemented");
+    public List<Item> showInventory(){
+        List<Item> inventory = state.getCurrentPlayer().getInventoryItems();
+        if(!inventory.isEmpty()) {
+            return inventory;
+        } else {
+            throw new InventoryEmptyException("Inventory empty");
+        }
     }
 
     //TODO selectItem
-    public void selectItem(/*identifier*/){
-        throw new RuntimeException("Unimplemented");
+    public void selectInventoryItem(int identifier){
+        Item selectedItem = state.getCurrentPlayer().getInventoryItem(identifier);
+        state.getCurrentPlayer().setCurrentlySelectedItem(selectedItem);
     }
 
     //TODO useCurrentItem
     public boolean useCurrentItem(){
-        throw new RuntimeException("Unimplemented");
+        state.getCurrentPlayer().useCurrentItem();
+        //TODO check successful use of item
+        return true;
     }
 
     //TODO cancelItemUsage
     public void cancelItemUsage(){
-        throw new RuntimeException("Unimplemented");
+        //No further actions required (iteration 1)
     }
 
 
@@ -84,7 +92,6 @@ public class GameController {
     public void selectItem(int selectionId){
         Player currentPlayer = state.getCurrentPlayer();
         Square currentSquare = currentPlayer.getCurrentSquare();
-
 
         Item selectedItem = currentSquare.pickUpItem(selectionId);
         currentPlayer.addToInventory(selectedItem);

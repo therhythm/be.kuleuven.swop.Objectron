@@ -10,7 +10,7 @@ public class LightTrail {
     private Square[] trail;
 
     public LightTrail(){
-        trail = (Square[]) new Object[MAX_TRAIL_COVERAGE];
+        trail = new Square[MAX_TRAIL_COVERAGE];
     }
 
     public void expand(Square newSquare){
