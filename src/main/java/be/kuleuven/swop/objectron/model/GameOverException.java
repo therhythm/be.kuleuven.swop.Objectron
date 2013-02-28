@@ -9,12 +9,12 @@ package be.kuleuven.swop.objectron.model;
  */
 public class GameOverException extends RuntimeException {
     /**
-    * Initialize this exception with a given message.
-    * @param message
-    *        The message for this exception.
-    * @post  The new error message for this exception equals the given message.
-    *        | new.getMessage == message
-    */
+     * Initialize this exception with a given message.
+     *
+     * @param message The message for this exception.
+     * @post The new error message for this exception equals the given message.
+     * | new.getMessage == message
+     */
     public GameOverException(String message) {
         super(message);
     }

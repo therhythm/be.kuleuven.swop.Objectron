@@ -11,23 +11,23 @@ public class Grid {
 
     private Square[][] squares;
 
-    public Grid(int width, int height){
+    public Grid(int width, int height) {
         this.squares = new Square[height][width];
 
         setupGrid();
     }
 
-    public void makeMove(Direction direction, Player player) throws InvalidMoveException{
+    public void makeMove(Direction direction, Player player) throws InvalidMoveException {
         Square neighbour = player.getCurrentSquare().getNeighbour(direction);
-        if(!validPosition(neighbour)) {
+        if (!validPosition(neighbour)) {
             throw new InvalidMoveException();
         }
 
         player.move(neighbour);
     }
 
-    public Square getSquareAtPosition(int vertIndex, int horIndex){
-        if(!validIndex(horIndex,vertIndex)) {
+    public Square getSquareAtPosition(int vertIndex, int horIndex) {
+        if (!validIndex(horIndex, vertIndex)) {
             throw new IllegalArgumentException("Not a valid square index");
         }
 
@@ -41,7 +41,7 @@ public class Grid {
     /**
      * NOTE: BUILDER pattern might be useful here if multiple grid setup strategies are needed (or TEMPLATE METHOD)
      */
-    private void setupGrid(){
+    private void setupGrid() {
         setupNeighbours();
         setupWalls();
         setupItems();
@@ -56,19 +56,19 @@ public class Grid {
     }
 
     private void setupNeighbours() {
-        for(int vertical = 0; vertical < squares.length; vertical++){
-            for(int horizontal = 0; horizontal < squares[0].length; horizontal++){
+        for (int vertical = 0; vertical < squares.length; vertical++) {
+            for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 squares[vertical][horizontal] = new Square();
             }
         }
 
-        for(int vertical = 0; vertical < squares.length; vertical++){
-            for(int horizontal = 0; horizontal < squares[0].length; horizontal++){
+        for (int vertical = 0; vertical < squares.length; vertical++) {
+            for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Square current = squares[vertical][horizontal];
-                for(Direction d : Direction.values()){
+                for (Direction d : Direction.values()) {
                     int horIndex = d.applyHorizontalOperation(horizontal);
                     int vertIndex = d.applyVerticalOperation(vertical);
-                    if(validIndex(horIndex, vertIndex)){
+                    if (validIndex(horIndex, vertIndex)) {
                         current.addNeighbour(d, squares[vertIndex][horIndex]);
                     }
                 }

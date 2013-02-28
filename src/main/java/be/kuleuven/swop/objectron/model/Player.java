@@ -1,7 +1,5 @@
 package be.kuleuven.swop.objectron.model;
 
-import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
-
 import java.util.List;
 
 /**
@@ -34,10 +32,10 @@ public interface Player {
 
     String getName();
 
-     /* Retrieve number of available actions
-     *
-     * @return the number of remaining actions
-     */
+    /* Retrieve number of available actions
+    *
+    * @return the number of remaining actions
+    */
     int getAvailableActions();
 
     /**

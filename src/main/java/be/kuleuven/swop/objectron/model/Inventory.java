@@ -9,7 +9,6 @@ import java.util.List;
  */
 public interface Inventory {
     /**
-     *
      * @return
      */
     List<Item> getItems();

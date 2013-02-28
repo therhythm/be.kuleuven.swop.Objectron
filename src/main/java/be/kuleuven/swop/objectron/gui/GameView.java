@@ -28,18 +28,26 @@ public class GameView implements GameEventListener, GridEventListener, PlayerEve
         this.verticalTiles = verticalTiles;
     }
 
-    public void run(){
+    public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
-            Image playerRed, playerBlue, cell, cellFinishBlue, cellFinishRed;
-            int buttonWidth = horizontalTiles*TILEWIDTH / 4;
+            Image playerRed
+                    ,
+                    playerBlue
+                    ,
+                    cell
+                    ,
+                    cellFinishBlue
+                    ,
+                    cellFinishRed;
+            int buttonWidth = horizontalTiles * TILEWIDTH / 4;
 
             public void run() {
-                gui = new SimpleGUI("OBJECTRON", 2*HPADDING + TILEWIDTH * horizontalTiles, TILEHEIGHT * verticalTiles + 2*VPADDING) {
+                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * horizontalTiles, TILEHEIGHT * verticalTiles + 2 * VPADDING) {
 
                     @Override
                     public void paint(Graphics2D graphics) {
-                        for(int i = 0; i < horizontalTiles; i++){
-                            for(int j = 0; j < verticalTiles; j++){
+                        for (int i = 0; i < horizontalTiles; i++) {
+                            for (int j = 0; j < verticalTiles; j++) {
                                 graphics.drawImage(cell, HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                             }
                         }
@@ -74,7 +82,7 @@ public class GameView implements GameEventListener, GridEventListener, PlayerEve
                 });
                 pickupButton.setText("Pickup item");
 
-                final Button inventoryButton = gui.createButton(HPADDING + 2*buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         //TODO controller.showInventory();
                         gui.repaint();
@@ -82,7 +90,7 @@ public class GameView implements GameEventListener, GridEventListener, PlayerEve
                 });
                 inventoryButton.setText("Open inventory");
 
-                final Button endTurnButton = gui.createButton(HPADDING + 3*buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         //TODO controller.endTurn();
                         gui.repaint();
