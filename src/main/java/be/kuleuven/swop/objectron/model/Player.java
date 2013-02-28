@@ -56,4 +56,8 @@ public interface Player {
     void endTurn();
 
     boolean hasMoved();
+
+    void blind();
+
+    boolean isBlinded();
 }

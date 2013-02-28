@@ -30,9 +30,12 @@ public class Square {
         isObstructed = value;
     }
 
-    //TODO activate items or win scenarios
-    public void stepOn(/*TODO maybe player*/) {
+    //TODO win scenarios
+    public void stepOn(Player player){
         setObstructed(true);
+        if(hasActiveItem()) {
+            player.blind();
+        }
     }
 
     public List<Item> getAvailableItems() {
