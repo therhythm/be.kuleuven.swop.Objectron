@@ -8,11 +8,11 @@ package be.kuleuven.swop.objectron.model;
 public class LightMine implements Item {
 
     @Override
-    public void use(Square square) {
+    public void use(Square square) throws SquareOccupiedException {
         if (canHaveAsSquare(square)) {
             square.setActiveItem(this);
         } else {
-            throw new IllegalArgumentException("invalid square or square already has a light grenade");
+            throw new SquareOccupiedException("invalid square or square already has a light grenade");
         }
     }
 

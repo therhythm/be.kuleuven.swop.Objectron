@@ -65,7 +65,7 @@ public class TestUC_Use_Item
     }
 
     @Test
-    public void useItemTest() throws InventoryFullException {
+    public void useItemTest() throws InventoryFullException, SquareOccupiedException {
         player.addToInventory(item);
 
         int initialAvailableActions = player.getAvailableActions();
@@ -78,6 +78,16 @@ public class TestUC_Use_Item
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
         assertTrue(player.getCurrentSquare().hasActiveItem());
         assertEquals(item, player.getCurrentSquare().getActiveItem());
+    }
+
+    @Test(expected = SquareOccupiedException.class)
+    public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException {
+        player.getCurrentSquare().setActiveItem(item);
+        player.addToInventory(item);
+
+        controller.selectItemFromInventory(0);
+        controller.useCurrentItem();
+
     }
 
     @Test
