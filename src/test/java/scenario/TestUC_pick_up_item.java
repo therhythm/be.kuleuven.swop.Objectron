@@ -24,7 +24,7 @@ public class TestUC_pick_up_item {
     @Before
     public void setUp(){
         currentSquare = new Square();
-        player = new HumanPlayer("p1", currentSquare);
+        player = new PlayerImpl("p1", currentSquare);
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
@@ -54,7 +54,7 @@ public class TestUC_pick_up_item {
         gameController.getAvailableItems();
     }
 
-    @org.junit.Test(expected = IllegalStateException.class)
+    @org.junit.Test(expected = InventoryFullException.class)
     public void  test_player_inventory_full(){
         currentSquare.addItem(mock(LightMine.class));
         assertTrue(currentSquare.getAvailableItems().size() != 0);
@@ -63,8 +63,8 @@ public class TestUC_pick_up_item {
             player.addToInventory(mock(LightMine.class));
         }
 
-        assertTrue(player.isInventoryFull());
         gameController.getAvailableItems();
+        gameController.pickUpItem(0);
     }
 
 }

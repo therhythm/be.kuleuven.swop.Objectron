@@ -1,7 +1,5 @@
 package be.kuleuven.swop.objectron.model;
 
-import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
-
 import java.util.List;
 
 /**
@@ -10,13 +8,6 @@ import java.util.List;
  *         Time: 00:06
  */
 public interface Player {
-
-    /**
-     * Checks if the players inventory is full
-     *
-     * @return whether the players inventory is full or not
-     */
-    boolean isInventoryFull();
 
     /**
      * Retrieve the square on which the player is standing
@@ -41,10 +32,10 @@ public interface Player {
 
     String getName();
 
-     /* Retrieve number of available actions
-     *
-     * @return the number of remaining actions
-     */
+    /* Retrieve number of available actions
+    *
+    * @return the number of remaining actions
+    */
     int getAvailableActions();
 
     /**

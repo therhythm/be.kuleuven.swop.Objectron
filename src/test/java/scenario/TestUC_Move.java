@@ -27,7 +27,7 @@ public class TestUC_Move {
     public void setUp(){
         Grid grid = new Grid(10, 10);
         Square square = grid.getSquareAtPosition(9,0);
-        player = new HumanPlayer("p1", square);
+        player = new PlayerImpl("p1", square);
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);

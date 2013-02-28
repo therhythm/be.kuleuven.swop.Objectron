@@ -1,12 +1,8 @@
 package be.kuleuven.swop.objectron;
 
-import be.kuleuven.swop.objectron.gui.GameView;
 import be.kuleuven.swop.objectron.model.Grid;
-import be.kuleuven.swop.objectron.model.HumanPlayer;
 import be.kuleuven.swop.objectron.model.Player;
-import be.kuleuven.swop.objectron.model.listener.GameEventListener;
-import be.kuleuven.swop.objectron.model.listener.GridEventListener;
-import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
+import be.kuleuven.swop.objectron.model.PlayerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,20 +18,17 @@ public class GameState {
     private Player currentPlayer;
     private List<Player> players = new ArrayList<Player>();
 
-    private List<GameEventListener> listeners = new ArrayList<GameEventListener>();
-
     public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) {
-
         gameGrid = new Grid(horizontalTiles, verticalTiles);
         gameGrid.initializeGrid();
-        Player p1 = new HumanPlayer(player1Name, gameGrid.getSquareAtPosition(verticalTiles-1,0));
-        Player p2 = new HumanPlayer(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
+        Player p1 = new PlayerImpl(player1Name, gameGrid.getSquareAtPosition(verticalTiles - 1, 0));
+        Player p2 = new PlayerImpl(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);
     }
 
-    public Player getCurrentPlayer(){
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
@@ -43,7 +36,7 @@ public class GameState {
         return gameGrid;
     }
 
-    public void nextPlayer(){
+    public void nextPlayer() {
         int index = players.indexOf(currentPlayer);
         index = (index + 1) % players.size();
         currentPlayer = players.get(index);

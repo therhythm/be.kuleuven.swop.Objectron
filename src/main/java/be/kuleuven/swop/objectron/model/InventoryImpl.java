@@ -7,11 +7,10 @@ import java.util.*;
  *         Date: 21/02/13
  *         Time: 23:51
  */
-public class KeyValueInventory implements Inventory {
+public class InventoryImpl implements Inventory {
     private static final int LIMIT = 6;
 
     private List<Item> items = new ArrayList<Item>();
-
 
     @Override
     public List<Item> getItems() {
@@ -23,9 +22,7 @@ public class KeyValueInventory implements Inventory {
         return items.get(identifier);
     }
 
-     //deze methode evt private maken? Want in addItems wordt deze methode sowieso gebruikt om te controleren of de limiet al bereikt is.
-    @Override
-    public boolean isLimitReached() {
+    private boolean isLimitReached() {
         return this.items.size() >= LIMIT;
     }
 
@@ -36,11 +33,6 @@ public class KeyValueInventory implements Inventory {
         } else {
             throw new InventoryFullException("Inventory full");
         }
-    }
-
-    @Override
-    public void removeItem(int identifier) {
-        items.remove(identifier);
     }
 
     @Override
