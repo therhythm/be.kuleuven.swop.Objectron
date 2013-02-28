@@ -1,12 +1,14 @@
 package be.kuleuven.swop.objectron.controller;
 
+import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.model.Direction;
-import be.kuleuven.swop.objectron.model.Grid;
 import be.kuleuven.swop.objectron.model.InvalidMoveException;
 import be.kuleuven.swop.objectron.model.Player;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import be.kuleuven.swop.objectron.model.Item;
+import be.kuleuven.swop.objectron.model.Square;
+import java.util.List;
 
 /**
  * @author : Nik Torfs
@@ -15,16 +17,17 @@ import java.util.logging.Logger;
  */
 public class GameController {
     private static final Logger logger = Logger.getLogger(GameController.class.getCanonicalName());
+    private GameState state;
 
-    private Player currentPlayer;
-    private Grid gameGrid;
-
+    public GameController(GameState state) {
+        this.state = state;
+    }
 
     public void move(Direction direction){
         try {
-            gameGrid.makeMove(direction, currentPlayer);
+            state.getGrid().makeMove(direction, state.getCurrentPlayer());
         } catch (InvalidMoveException e) {
-            logger.log(Level.INFO, currentPlayer.getName() + " has made an invalid move!");
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has made an invalid move!");
             //TODO do some sort of gamelistener event to show message
         }
     }
@@ -49,14 +52,42 @@ public class GameController {
         throw new RuntimeException("Unimplemented");
     }
 
-    //TODO getAvailableItems
-    public void getAvailableItems(){
-        throw new RuntimeException("Unimplemented");
+
+    /**
+     * @throws IllegalStateException when the inventory of the currentPlayer is full
+     *          currentPlayer.isInventoryFull()
+     *
+     *         IllegalStateException when the current square has no items
+     *          currentSquare.availableItems().size()==0
+     *
+     * @return list with available items
+     */
+    public  List<Item>  getAvailableItems(){
+        Player currentPlayer = this.state.getCurrentPlayer();
+        if (currentPlayer.isInventoryFull())
+            throw new IllegalStateException("inventory full");
+
+        Square currentSquare = currentPlayer.getCurrentSquare();
+
+        List<Item> availableItems = currentSquare.getAvailableItems();
+        if(availableItems.size()==0)
+            throw new IllegalStateException("no items in current square");
+
+        return availableItems;
     }
 
-    //TODO pickUpItem
-    public void pickUpItem(/*identifier*/){
-        throw new RuntimeException("Unimplemented");
+    /**
+     *
+     * @param selectionId
+     * @post the item will be removed from the current square and will be added to the inventory of the currentPlayer
+     */
+    public void selectItem(int selectionId){
+        Player currentPlayer = state.getCurrentPlayer();
+        Square currentSquare = currentPlayer.getCurrentSquare();
+
+
+        Item selectedItem = currentSquare.pickUpItem(selectionId);
+        currentPlayer.addToInventory(selectedItem);
     }
 
     //TODO endTurn

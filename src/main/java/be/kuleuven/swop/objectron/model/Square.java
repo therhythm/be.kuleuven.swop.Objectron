@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.model;
 
 import java.util.*;
 
+
 /**
  * @author : Nik Torfs
  *         Date: 22/02/13
@@ -9,6 +10,7 @@ import java.util.*;
  */
 public class Square {
     Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
+    private List<Item> items = new ArrayList<Item>();
     private boolean isObstructed = false;
 
     public void addNeighbour(Direction direction, Square neighbour){
@@ -31,5 +33,27 @@ public class Square {
     public void stepOn(/*TODO maybe player*/){
         setObstructed(true);
 
+    }
+
+    public List<Item> getAvailableItems() {
+        return Collections.unmodifiableList(items);
+    }
+
+    public void addItem(Item item){
+       if(canHaveAsItem(item))
+           this.items.add(item);
+        else
+           throw new IllegalArgumentException("invalid item");
+    }
+
+    private boolean canHaveAsItem(Item item){
+        return item != null;
+    }
+
+    public Item pickUpItem(int selectionId) {
+        Item selectedItem = items.get(selectionId);
+
+        items.remove(selectedItem);
+        return selectedItem;
     }
 }

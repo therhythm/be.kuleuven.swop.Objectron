@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.model;
 
-import java.util.EnumSet;
+import be.kuleuven.swop.objectron.model.listener.GridEventListener;
 
 /**
  * @author : Nik Torfs
@@ -72,6 +72,16 @@ public class Grid {
     private boolean validIndex(int horIndex, int vertIndex) {
         return horIndex > -1 && horIndex < squares[0].length
                 && vertIndex > -1 && vertIndex < squares.length;
+    }
+
+    public void initializeGrid() {
+    }
+
+    public void addGridEventListener(GridEventListener listener) {
+    }
+
+    public void removeGridEventListener(GridEventListener listener) {
+        //To change body of created methods use File | Settings | File Templates.
     }
 
 }

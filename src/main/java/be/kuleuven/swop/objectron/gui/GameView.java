@@ -1,7 +1,8 @@
 package be.kuleuven.swop.objectron.gui;
 
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
+import be.kuleuven.swop.objectron.controller.GameController;
+import be.kuleuven.swop.objectron.model.Square;
+import be.kuleuven.swop.objectron.model.listener.*;
 
 import java.awt.*;
 
@@ -10,30 +11,30 @@ import java.awt.*;
  *         Date: 25/02/13
  *         Time: 21:24
  */
-public class GameView {
-
-    @Parameter(names="-htiles", description = "number of horizontal tiles")
-    private int horizontalTiles = 10;
-
-    @Parameter(names="-vtiles", description = "number of vertical tiles")
-    private int verticalTiles = 10;
-
+public class GameView implements GameEventListener, GridEventListener, PlayerEventListener {
     private static int HPADDING = 10;
     private static int VPADDING = 50;
     private static int TILEWIDTH = 40;
     private static int TILEHEIGHT = 40;
 
-    public void parseArgs(String[] args){
-        new JCommander(this, args);
+    private GameController controller;
+    private int horizontalTiles;
+    private int verticalTiles;
+    private SimpleGUI gui;
+
+    public GameView(GameController controller, int horizontalTiles, int verticalTiles) {
+        this.controller = controller;
+        this.horizontalTiles = horizontalTiles;
+        this.verticalTiles = verticalTiles;
     }
 
-    public void runGame(){
+    public void run(){
         java.awt.EventQueue.invokeLater(new Runnable() {
             Image playerRed, playerBlue, cell, cellFinishBlue, cellFinishRed;
             int buttonWidth = horizontalTiles*TILEWIDTH / 4;
 
             public void run() {
-                final SimpleGUI gui = new SimpleGUI("OBJECTRON", 2*HPADDING + TILEWIDTH * horizontalTiles, TILEHEIGHT * verticalTiles + 2*VPADDING) {
+                gui = new SimpleGUI("OBJECTRON", 2*HPADDING + TILEWIDTH * horizontalTiles, TILEHEIGHT * verticalTiles + 2*VPADDING) {
 
                     @Override
                     public void paint(Graphics2D graphics) {
@@ -59,6 +60,7 @@ public class GameView {
 
                 final Button moveButton = gui.createButton(HPADDING, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
+                        //TODO controller.selectDirection();
                         gui.repaint();
                     }
                 });
@@ -66,6 +68,7 @@ public class GameView {
 
                 final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
+                        //TODO controller.pickUpItem();
                         gui.repaint();
                     }
                 });
@@ -73,6 +76,7 @@ public class GameView {
 
                 final Button inventoryButton = gui.createButton(HPADDING + 2*buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
+                        //TODO controller.showInventory();
                         gui.repaint();
                     }
                 });
@@ -80,6 +84,7 @@ public class GameView {
 
                 final Button endTurnButton = gui.createButton(HPADDING + 3*buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
+                        //TODO controller.endTurn();
                         gui.repaint();
                     }
                 });
@@ -88,9 +93,28 @@ public class GameView {
         });
     }
 
-    public static void main(String[] args) {
-        GameView g = new GameView();
-        g.parseArgs(args);
-        g.runGame();
+    @Override
+    public void gameEnding(String winner, String loser) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void gridUpdated(Square[][] squares) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void squareUpdated(int hIndex, int vIndex, Square square) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void nbActionsUpdated(int nbActions) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void playerChanged(String newPlayer) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
