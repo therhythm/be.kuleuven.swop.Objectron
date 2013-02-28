@@ -27,7 +27,7 @@ public class InventoryImpl implements Inventory {
     }
 
     @Override
-    public void addItem(Item itemToAdd) {
+    public void addItem(Item itemToAdd) throws InventoryFullException {
         if(!isLimitReached()) {
             items.add(itemToAdd);
         } else {

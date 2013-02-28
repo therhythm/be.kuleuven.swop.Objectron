@@ -26,7 +26,7 @@ public interface Inventory {
      *
      * @param itemToAdd
      */
-    void addItem(Item itemToAdd);
+    void addItem(Item itemToAdd) throws InventoryFullException;
 
     /**
      * Remove an item from the inventory

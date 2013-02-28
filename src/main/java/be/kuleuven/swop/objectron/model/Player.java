@@ -21,7 +21,7 @@ public interface Player {
      *
      * @param itemToAdd: the item to add to the inventory
      */
-    void addToInventory(Item itemToAdd);
+    void addToInventory(Item itemToAdd) throws InventoryFullException;
 
     /**
      * Move the player to the newPosition

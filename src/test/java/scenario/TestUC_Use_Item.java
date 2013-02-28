@@ -40,14 +40,12 @@ public class TestUC_Use_Item
     }
 
     @Test(expected = InventoryEmptyException.class)
-    public void showInventoryEmptyTest()
-    {
+    public void showInventoryEmptyTest() throws InventoryEmptyException {
         controller.showInventory();
     }
 
     @Test
-    public void showInventoryTest()
-    {
+    public void showInventoryTest() throws InventoryFullException, InventoryEmptyException {
         player.addToInventory(item);
 
         List<Item> inventoryItems = controller.showInventory();
@@ -57,8 +55,7 @@ public class TestUC_Use_Item
     }
 
     @Test
-    public void selectItemTest()
-    {
+    public void selectItemTest() throws InventoryFullException {
         player.addToInventory(item);
 
         controller.selectItemFromInventory(0);
@@ -68,8 +65,7 @@ public class TestUC_Use_Item
     }
 
     @Test
-    public void useItemTest()
-    {
+    public void useItemTest() throws InventoryFullException {
         player.addToInventory(item);
 
         int initialAvailableActions = player.getAvailableActions();
@@ -85,8 +81,7 @@ public class TestUC_Use_Item
     }
 
     @Test
-    public void cancelItemUsageTest()
-    {
+    public void cancelItemUsageTest() throws InventoryFullException {
         player.addToInventory(item);
 
         int initialAvailableActions = player.getAvailableActions();

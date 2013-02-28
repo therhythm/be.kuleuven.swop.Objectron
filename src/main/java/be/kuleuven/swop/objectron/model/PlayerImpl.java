@@ -33,7 +33,7 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public void addToInventory(Item itemToAdd) {
+    public void addToInventory(Item itemToAdd) throws InventoryFullException {
        this.inventory.addItem(itemToAdd);
     }
 

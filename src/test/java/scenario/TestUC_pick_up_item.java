@@ -33,7 +33,7 @@ public class TestUC_pick_up_item {
     }
 
     @org.junit.Test
-    public void  test_basic_flow(){
+    public void  test_basic_flow() throws InventoryFullException {
         // fixture
         Item i1 = new LightMine();
         currentSquare.addItem(i1);
@@ -55,7 +55,7 @@ public class TestUC_pick_up_item {
     }
 
     @org.junit.Test(expected = InventoryFullException.class)
-    public void  test_player_inventory_full(){
+    public void  test_player_inventory_full() throws InventoryFullException {
         currentSquare.addItem(mock(LightMine.class));
         assertTrue(currentSquare.getAvailableItems().size() != 0);
 

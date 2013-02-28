@@ -1,7 +1,5 @@
 package be.kuleuven.swop.objectron.model;
 
-import com.sun.xml.internal.ws.api.model.CheckedException;
-
 /**
  * Exception to indicate a full inventory
  *

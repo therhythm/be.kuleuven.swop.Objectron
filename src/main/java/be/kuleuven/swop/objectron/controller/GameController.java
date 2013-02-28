@@ -57,7 +57,7 @@ public class GameController {
      * @throws InventoryEmptyException The current player's inventory is empty
      *                                 | getCurrentPlayer().getInventory().isEmpty()
      */
-    public List<Item> showInventory() {
+    public List<Item> showInventory() throws InventoryEmptyException {
         List<Item> inventory = state.getCurrentPlayer().getInventoryItems();
         if (!inventory.isEmpty()) {
             return inventory;
@@ -139,12 +139,19 @@ public class GameController {
      * @post The item is added to the inventory of the current player.
      * | state.getCurrentPlayer().getInventoryItems().get(selectionId)
      */
-    public void pickUpItem(int selectionId) {
+    public void pickUpItem(int selectionId) throws InventoryFullException {
         Player currentPlayer = state.getCurrentPlayer();
         Square currentSquare = currentPlayer.getCurrentSquare();
 
         Item selectedItem = currentSquare.pickUpItem(selectionId);
-        currentPlayer.addToInventory(selectedItem);
+
+        try {
+            currentPlayer.addToInventory(selectedItem);
+        } catch (InventoryFullException e) {
+            currentSquare.addItem(selectedItem);
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has a full inventory!");
+            throw e;
+        }
     }
 
     /**
@@ -155,7 +162,7 @@ public class GameController {
      * @post The current player is switched to a new player.
      * | new.state.getCurrentPlayer() != state.getCurrentPlayer()
      */
-    public void endTurn() {
+    public void endTurn() throws GameOverException {
         if (!state.getCurrentPlayer().hasMoved()) {
             throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");
         } else {
