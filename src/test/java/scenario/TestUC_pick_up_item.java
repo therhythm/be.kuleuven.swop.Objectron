@@ -5,7 +5,6 @@ import be.kuleuven.swop.objectron.controller.GameController;
 import be.kuleuven.swop.objectron.model.*;
 import org.junit.Before;
 
-import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
 
@@ -25,7 +24,7 @@ public class TestUC_pick_up_item {
     @Before
     public void setUp(){
         currentSquare = new Square();
-        player = new HumanPlayer("p1", currentSquare);
+        player = new PlayerImpl("p1", currentSquare);
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
@@ -34,7 +33,7 @@ public class TestUC_pick_up_item {
     }
 
     @org.junit.Test
-    public void  test_basic_flow(){
+    public void  test_basic_flow() throws InventoryFullException {
         // fixture
         Item i1 = new LightMine();
         currentSquare.addItem(i1);
@@ -45,7 +44,7 @@ public class TestUC_pick_up_item {
 
         //pick up the item
         int selectedItemId = 0;
-        gameController.selectItem(selectedItemId);
+        gameController.pickUpItem(selectedItemId);
         assertTrue(player.getInventoryItems().contains(i1));
     }
 
@@ -55,8 +54,8 @@ public class TestUC_pick_up_item {
         gameController.getAvailableItems();
     }
 
-    @org.junit.Test(expected = IllegalStateException.class)
-    public void  test_player_inventory_full(){
+    @org.junit.Test(expected = InventoryFullException.class)
+    public void  test_player_inventory_full() throws InventoryFullException {
         currentSquare.addItem(mock(LightMine.class));
         assertTrue(currentSquare.getAvailableItems().size() != 0);
 
@@ -64,8 +63,8 @@ public class TestUC_pick_up_item {
             player.addToInventory(mock(LightMine.class));
         }
 
-        assertTrue(player.isInventoryFull());
         gameController.getAvailableItems();
+        gameController.pickUpItem(0);
     }
 
 }

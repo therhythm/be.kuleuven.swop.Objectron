@@ -1,6 +1,5 @@
 package be.kuleuven.swop.objectron.model;
 
-import be.kuleuven.swop.objectron.model.listener.GridEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,12 +201,4 @@ public class Grid {
 
     public void initializeGrid() {
     }
-
-    public void addGridEventListener(GridEventListener listener) {
-    }
-
-    public void removeGridEventListener(GridEventListener listener) {
-        //To change body of created methods use File | Settings | File Templates.
-    }
-
 }

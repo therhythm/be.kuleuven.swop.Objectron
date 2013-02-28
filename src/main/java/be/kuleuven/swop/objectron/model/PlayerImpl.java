@@ -1,8 +1,5 @@
 package be.kuleuven.swop.objectron.model;
 
-import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,8 +7,9 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public class HumanPlayer implements Player {
+public class PlayerImpl implements Player {
     private static final int NB_ACTIONS_EACH_TURN = 3;
+    private static final int NB_ACTIONS_BLINDED = 3;
 
     private String name;
     private Square currentSquare;
@@ -19,21 +17,19 @@ public class HumanPlayer implements Player {
     private int availableActions = NB_ACTIONS_EACH_TURN;
     private LightTrail lightTrail;
     private Inventory inventory;
-    private List<PlayerEventListener> listeners = new ArrayList<PlayerEventListener>();
     private boolean hasMoved;
+    private boolean isBlinded;
+    private int remainingActionsBlinded;
 
-    public HumanPlayer(String name, Square currentSquare) {
+    public PlayerImpl(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
         currentSquare.setObstructed(true);
         lightTrail = new LightTrail();
-        inventory = new KeyValueInventory();
+        inventory = new InventoryImpl();
         hasMoved = false;
-    }
-
-    @Override
-    public boolean isInventoryFull() {
-        return this.inventory.isLimitReached();
+        isBlinded = false;
+        remainingActionsBlinded = 0;
     }
 
     @Override
@@ -42,32 +38,17 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public void setCurrentSquare(Square currentSquare) {
-        this.currentSquare = currentSquare;
-    }
-
-    @Override
-    public void addToInventory(Item itemToAdd) {
+    public void addToInventory(Item itemToAdd) throws InventoryFullException {
        this.inventory.addItem(itemToAdd);
     }
 
     @Override
-    public void addPlayerEventListener(PlayerEventListener listener) {
-        listeners.add(listener);
-    }
-
-    @Override
-    public void removePlayerEventListener(PlayerEventListener listener) {
-        listeners.remove(listener);
-    }
-
-    @Override
     public void move(Square newPosition) {
+        reduceAvailableActions();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
-        currentSquare.stepOn();//TODO (possibly arguments)
+        currentSquare.stepOn(this);
         hasMoved = true;
-        reduceAvailableActions();
     }
 
     @Override
@@ -109,7 +90,7 @@ public class HumanPlayer implements Player {
 
     @Override
     public void endTurn() {
-        availableActions = NB_ACTIONS_EACH_TURN;
+        availableActions = NB_ACTIONS_EACH_TURN - remainingActionsBlinded;
         hasMoved = false;
     }
 
@@ -121,5 +102,17 @@ public class HumanPlayer implements Player {
     private void reduceAvailableActions(){
         availableActions--;
         lightTrail.reduce();
+    }
+
+    @Override
+    public void blind() {
+        isBlinded = true;
+        remainingActionsBlinded = NB_ACTIONS_BLINDED - availableActions;
+        endTurn();
+    }
+
+    @Override
+    public boolean isBlinded() {
+        return isBlinded;
     }
 }

@@ -13,29 +13,26 @@ import com.beust.jcommander.Parameter;
  *         Time: 20:57
  */
 public class RunObjectron {
-    @Parameter(names="-htiles", description = "number of horizontal tiles")
+    @Parameter(names = "-htiles", description = "number of horizontal tiles")
     private int horizontalTiles = 10;
 
-    @Parameter(names="-vtiles", description = "number of vertical tiles")
+    @Parameter(names = "-vtiles", description = "number of vertical tiles")
     private int verticalTiles = 10;
 
-    @Parameter(names="-p1", description = "player 1 name")
+    @Parameter(names = "-p1", description = "player 1 name")
     private String player1Name = "Player 1";
 
-    @Parameter(names="-p2", description = "player 2 name")
+    @Parameter(names = "-p2", description = "player 2 name")
     private String player2Name = "Player 2";
 
-    public void parseArgs(String[] args){
+    public void parseArgs(String[] args) {
         new JCommander(this, args);
     }
 
-    public void run(){
+    public void run() {
         GameState state = new GameState(player1Name, player2Name, horizontalTiles, verticalTiles);
         GameController controller = new GameController(state);
         GameView view = new GameView(controller, horizontalTiles, verticalTiles);
-        state.addGameEventListener(view);
-        state.addGridEventListener(view);
-        state.addPlayerEventListener(view);
     }
 
     public static void main(String[] args) {

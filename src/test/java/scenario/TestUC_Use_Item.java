@@ -21,14 +21,14 @@ import java.util.List;
 public class TestUC_Use_Item
 {
     private GameController controller;
-    private HumanPlayer player;
+    private PlayerImpl player;
     private Item item;
 
     @Before
     public void setUp() throws Exception
     {
         Square square = new Square();
-        player = new HumanPlayer("p1", square);
+        player = new PlayerImpl("p1", square);
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
@@ -40,14 +40,12 @@ public class TestUC_Use_Item
     }
 
     @Test(expected = InventoryEmptyException.class)
-    public void showInventoryEmptyTest()
-    {
+    public void showInventoryEmptyTest() throws InventoryEmptyException {
         controller.showInventory();
     }
 
     @Test
-    public void showInventoryTest()
-    {
+    public void showInventoryTest() throws InventoryFullException, InventoryEmptyException {
         player.addToInventory(item);
 
         List<Item> inventoryItems = controller.showInventory();
@@ -57,45 +55,43 @@ public class TestUC_Use_Item
     }
 
     @Test
-    public void selectItemTest()
-    {
+    public void selectItemTest() throws InventoryFullException {
         player.addToInventory(item);
 
-        controller.selectInventoryItem(0);
+        controller.selectItemFromInventory(0);
 
         assertNotNull(player.getCurrentlySelectedItem());
         assertEquals(item, player.getCurrentlySelectedItem());
     }
 
     @Test
-    public void useItemTest()
-    {
+    public void useItemTest() throws InventoryFullException {
         player.addToInventory(item);
 
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
-        controller.selectInventoryItem(0);
+        controller.selectItemFromInventory(0);
         controller.useCurrentItem();
 
         assertEquals(initialAvailableActions - 1, player.getAvailableActions());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
-        //TODO check item effect on current square
+        assertTrue(player.getCurrentSquare().hasActiveItem());
+        assertEquals(item, player.getCurrentSquare().getActiveItem());
     }
 
     @Test
-    public void cancelItemUsageTest()
-    {
+    public void cancelItemUsageTest() throws InventoryFullException {
         player.addToInventory(item);
 
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
-        controller.selectInventoryItem(0);
+        controller.selectItemFromInventory(0);
         controller.cancelItemUsage();
 
         assertEquals(initialAvailableActions, player.getAvailableActions());
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
-        //TODO check no item effect on current square
+        assertFalse(player.getCurrentSquare().hasActiveItem());
     }
 }

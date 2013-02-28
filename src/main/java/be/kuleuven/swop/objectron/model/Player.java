@@ -1,7 +1,5 @@
 package be.kuleuven.swop.objectron.model;
 
-import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
-
 import java.util.List;
 
 /**
@@ -12,13 +10,6 @@ import java.util.List;
 public interface Player {
 
     /**
-     * Checks if the players inventory is full
-     *
-     * @return whether the players inventory is full or not
-     */
-    boolean isInventoryFull();
-
-    /**
      * Retrieve the square on which the player is standing
      *
      * @return the currentSquare square
@@ -26,18 +17,11 @@ public interface Player {
     Square getCurrentSquare();
 
     /**
-     * Set the current square
-     *
-     * @param currentSquare: the current square
-     */
-    void setCurrentSquare(Square currentSquare);
-
-    /**
      * Add an item to the player's inventory
      *
      * @param itemToAdd: the item to add to the inventory
      */
-    void addToInventory(Item itemToAdd);
+    void addToInventory(Item itemToAdd) throws InventoryFullException;
 
     /**
      * Move the player to the newPosition
@@ -48,14 +32,10 @@ public interface Player {
 
     String getName();
 
-    void addPlayerEventListener(PlayerEventListener listener);
-
-    void removePlayerEventListener(PlayerEventListener listener);
-
-     /* Retrieve number of available actions
-     *
-     * @return the number of remaining actions
-     */
+    /* Retrieve number of available actions
+    *
+    * @return the number of remaining actions
+    */
     int getAvailableActions();
 
     /**
@@ -76,4 +56,8 @@ public interface Player {
     void endTurn();
 
     boolean hasMoved();
+
+    void blind();
+
+    boolean isBlinded();
 }

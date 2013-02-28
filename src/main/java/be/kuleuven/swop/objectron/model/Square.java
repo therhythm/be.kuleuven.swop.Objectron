@@ -14,41 +14,36 @@ public class Square {
     private boolean isObstructed = false;
     private Item activeItem = null;
 
-    public void addNeighbour(Direction direction, Square neighbour){
+    public void addNeighbour(Direction direction, Square neighbour) {
         neighbours.put(direction, neighbour);
     }
 
-    public Square getNeighbour(Direction direction){
+    public Square getNeighbour(Direction direction) {
         return neighbours.get(direction);
     }
 
-    public boolean isObstructed(){
+    public boolean isObstructed() {
         return isObstructed;
     }
 
-    public void setObstructed(boolean value){
+    public void setObstructed(boolean value) {
         isObstructed = value;
     }
 
-    //TODO activate items or win scenarios
-    public void stepOn(/*TODO maybe player*/){
+    //TODO win scenarios
+    public void stepOn(Player player){
         setObstructed(true);
-
+        if(hasActiveItem()) {
+            player.blind();
+        }
     }
 
     public List<Item> getAvailableItems() {
         return Collections.unmodifiableList(items);
     }
 
-    public void addItem(Item item){
-       if(canHaveAsItem(item))
-           this.items.add(item);
-        else
-           throw new IllegalArgumentException("invalid item");
-    }
-
-    private boolean canHaveAsItem(Item item){
-        return item != null;
+    public void addItem(Item item) {
+        this.items.add(item);
     }
 
     public Item pickUpItem(int selectionId) {
@@ -60,5 +55,13 @@ public class Square {
 
     public boolean hasActiveItem() {
         return activeItem != null;
+    }
+
+    public void setActiveItem(Item activeItem) {
+        this.activeItem = activeItem;
+    }
+
+    public Item getActiveItem() {
+        return activeItem;
     }
 }
