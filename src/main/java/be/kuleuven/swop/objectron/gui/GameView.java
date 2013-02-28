@@ -1,8 +1,6 @@
 package be.kuleuven.swop.objectron.gui;
 
 import be.kuleuven.swop.objectron.controller.GameController;
-import be.kuleuven.swop.objectron.model.Square;
-import be.kuleuven.swop.objectron.model.listener.*;
 
 import java.awt.*;
 
@@ -11,7 +9,7 @@ import java.awt.*;
  *         Date: 25/02/13
  *         Time: 21:24
  */
-public class GameView implements GameEventListener, GridEventListener, PlayerEventListener {
+public class GameView {
     private static int HPADDING = 10;
     private static int VPADDING = 50;
     private static int TILEWIDTH = 40;
@@ -99,30 +97,5 @@ public class GameView implements GameEventListener, GridEventListener, PlayerEve
                 endTurnButton.setText("End turn");
             }
         });
-    }
-
-    @Override
-    public void gameEnding(String winner, String loser) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void gridUpdated(Square[][] squares) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void squareUpdated(int hIndex, int vIndex, Square square) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void nbActionsUpdated(int nbActions) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void playerChanged(String newPlayer) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

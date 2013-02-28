@@ -3,7 +3,6 @@ package be.kuleuven.swop.objectron;
 import be.kuleuven.swop.objectron.model.Grid;
 import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.PlayerImpl;
-import be.kuleuven.swop.objectron.model.listener.GameEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +18,7 @@ public class GameState {
     private Player currentPlayer;
     private List<Player> players = new ArrayList<Player>();
 
-    private List<GameEventListener> listeners = new ArrayList<GameEventListener>();
-
     public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) {
-
         gameGrid = new Grid(horizontalTiles, verticalTiles);
         gameGrid.initializeGrid();
         Player p1 = new PlayerImpl(player1Name, gameGrid.getSquareAtPosition(verticalTiles - 1, 0));

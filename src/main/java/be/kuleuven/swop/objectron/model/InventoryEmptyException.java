@@ -7,7 +7,7 @@ package be.kuleuven.swop.objectron.model;
  *         Date: 25/02/2013
  *         Time: 14:36
  */
-public class InventoryEmptyException extends RuntimeException {
+public class InventoryEmptyException extends Exception {
 
     /**
      * Initialize this exception with a given message.

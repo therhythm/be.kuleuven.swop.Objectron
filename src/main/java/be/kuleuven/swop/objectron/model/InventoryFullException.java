@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.model;
 
+import com.sun.xml.internal.ws.api.model.CheckedException;
+
 /**
  * Exception to indicate a full inventory
  *
@@ -7,7 +9,7 @@ package be.kuleuven.swop.objectron.model;
  *         Date: 25/02/13
  *         Time: 19:00
  */
-public class InventoryFullException extends RuntimeException {
+public class InventoryFullException extends Exception {
 
     /**
      * Initialize this exception with a given message.

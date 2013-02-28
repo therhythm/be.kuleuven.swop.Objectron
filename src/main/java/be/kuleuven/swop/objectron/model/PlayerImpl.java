@@ -1,8 +1,5 @@
 package be.kuleuven.swop.objectron.model;
 
-import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +16,6 @@ public class PlayerImpl implements Player {
     private int availableActions = NB_ACTIONS_EACH_TURN;
     private LightTrail lightTrail;
     private Inventory inventory;
-    private List<PlayerEventListener> listeners = new ArrayList<PlayerEventListener>();
     private boolean hasMoved;
 
     public PlayerImpl(String name, Square currentSquare) {
