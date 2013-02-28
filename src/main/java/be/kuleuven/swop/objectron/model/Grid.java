@@ -25,6 +25,14 @@ public class Grid {
         player.move(neighbour);
     }
 
+    public Square getSquareAtPosition(int vertIndex, int horIndex){
+        if(!validIndex(horIndex,vertIndex)) {
+            throw new IllegalArgumentException("Not a valid square index");
+        }
+
+        return squares[vertIndex][horIndex];
+    }
+
     private boolean validPosition(Square neighbour) {
         return neighbour != null && !neighbour.isObstructed();
     }

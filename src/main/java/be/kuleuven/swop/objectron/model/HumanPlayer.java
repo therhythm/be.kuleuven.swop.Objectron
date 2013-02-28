@@ -33,7 +33,7 @@ public class HumanPlayer implements Player {
     public void move(Square newPosition) {
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
-        newPosition.setObstructed(true);
+        currentSquare.stepOn();//TODO (possibly arguments)
     }
 
     @Override

@@ -26,4 +26,10 @@ public class Square {
     public void setObstructed(boolean value){
         isObstructed = value;
     }
+
+    //TODO activate items or win scenarios
+    public void stepOn(/*TODO maybe player*/){
+        setObstructed(true);
+
+    }
 }
