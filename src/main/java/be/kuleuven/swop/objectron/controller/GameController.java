@@ -99,6 +99,9 @@ public class GameController {
 
     //TODO endTurn
     public void endTurn(){
-        throw new RuntimeException("Unimplemented");
+        if(!state.getCurrentPlayer().hasMoved())
+            throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");
+        else
+            state.switchContext();
     }
 }

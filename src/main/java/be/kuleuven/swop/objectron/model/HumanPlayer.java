@@ -20,6 +20,7 @@ public class HumanPlayer implements Player {
     private LightTrail lightTrail;
     private Inventory inventory;
     private List<PlayerEventListener> listeners = new ArrayList<PlayerEventListener>();
+    private boolean hasMoved;
 
     public HumanPlayer(String name, Square currentSquare) {
         this.name = name;
@@ -27,6 +28,7 @@ public class HumanPlayer implements Player {
         currentSquare.setObstructed(true);
         lightTrail = new LightTrail();
         inventory = new KeyValueInventory();
+        hasMoved = false;
     }
 
     @Override
@@ -64,6 +66,8 @@ public class HumanPlayer implements Player {
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
         currentSquare.stepOn();//TODO (possibly arguments)
+        hasMoved = true;
+        reduceAvailableActions();
     }
 
     @Override
@@ -101,6 +105,17 @@ public class HumanPlayer implements Player {
         inventory.removeItem(currentlySelectedItem);
         currentlySelectedItem.use(currentSquare);
         reduceAvailableActions();
+    }
+
+    @Override
+    public void endTurn() {
+        availableActions = NB_ACTIONS_EACH_TURN;
+        hasMoved = false;
+    }
+
+    @Override
+    public boolean hasMoved() {
+        return hasMoved;
     }
 
     private void reduceAvailableActions(){

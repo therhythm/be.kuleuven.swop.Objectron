@@ -72,4 +72,8 @@ public interface Player {
     void setCurrentlySelectedItem(Item selectedItem);
 
     void useCurrentItem();
+
+    void endTurn();
+
+    boolean hasMoved();
 }

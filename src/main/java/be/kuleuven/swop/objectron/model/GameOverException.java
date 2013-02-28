@@ -7,7 +7,7 @@ package be.kuleuven.swop.objectron.model;
  * Time: 15:15
  * To change this template use File | Settings | File Templates.
  */
-public class GameOverException extends Exception {
+public class GameOverException extends RuntimeException {
     /**
     * Initialize this exception with a given message.
     * @param message

@@ -73,4 +73,18 @@ public class GameState {
     public Grid getGrid() {
         return gameGrid;
     }
+
+    public void switchContext(){
+        currentPlayer.endTurn();
+        nextPlayer();
+    }
+
+    private void nextPlayer(){
+        int index = players.indexOf(currentPlayer);
+        index ++;
+        if(index == players.size()){
+            index = 0;
+        }
+        currentPlayer = players.get(index);
+    }
 }
