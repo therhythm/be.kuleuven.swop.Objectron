@@ -13,7 +13,7 @@ import org.junit.Test;
  *         Date: 22/02/13
  *         Time: 07:14
  */
-public class TestUCMove {
+public class UC_Move {
 
     GameController controller;
 
