@@ -19,10 +19,29 @@ public class GameController {
     private static final Logger logger = Logger.getLogger(GameController.class.getCanonicalName());
     private GameState state;
 
+    /**
+     * Initialize the game controller with a give game state.
+     * @param state
+     *        The game state to initialize the controller with.
+     * @post The new game state equals the given state.
+     *       | new.state == state
+     */
     public GameController(GameState state) {
         this.state = state;
     }
 
+    /**
+     * Move the player in a given direction.
+     * @param direction
+     *        The direction the player wants to move in.
+     * @throws InvalidMoveException
+     *         This is an invalid move.
+     *         | !state.getGrid().validPosition(
+     *         |  player.getCurrentSquare().getNeighbour(direction))
+     * @post   The player is moved in the chosen direction.
+     *         | new.state.getCurrentPlayer().getCurrentSquare()
+     *         |  != state.getCurrentPlayer().getCurrentSquare()
+     */
     public void move(Direction direction) throws InvalidMoveException {
         try {
             state.getGrid().makeMove(direction, state.getCurrentPlayer());
@@ -58,7 +77,7 @@ public class GameController {
      *        | currentPlayer.getCurrentlySelectedItem()
      *        |  == currentPlayer.getInventory().retrieveItem(identifier)
      */
-    public void selectInventoryItem(int identifier){
+    public void selectItemFromInventory(int identifier){
         Item selectedItem = state.getCurrentPlayer().getInventoryItem(identifier);
         state.getCurrentPlayer().setCurrentlySelectedItem(selectedItem);
     }
@@ -71,47 +90,63 @@ public class GameController {
      *         | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      * @return A boolean to indicate whether the item was successfully used
      */
-    public boolean useCurrentItem(){
+    public boolean useCurrentItem() {
         state.getCurrentPlayer().useCurrentItem();
-        //TODO check successful use of item
-        return true;
+        if(state.getCurrentPlayer().getCurrentSquare().hasActiveItem()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    //TODO cancelItemUsage
+    /**
+     * Cancel the usage of a selected item
+     * @post The item is no longer selected.
+     *       | new.state.getCurrentPlayer().getCurrentlySelectedItem() == null
+     */
     public void cancelItemUsage(){
-        //No further actions required (iteration 1)
+        state.getCurrentPlayer().setCurrentlySelectedItem(null);
     }
 
 
     /**
-     * @throws IllegalStateException when the inventory of the currentPlayer is full
-     *          currentPlayer.isInventoryFull()
+     * Retrieve a list of available items on the current square.
+     * @throws IllegalStateException
+     *         The inventory of the current player is full.
+     *         | currentPlayer.isInventoryFull()
      *
-     *         IllegalStateException when the current square has no items
-     *          currentSquare.availableItems().size()==0
-     *
-     * @return list with available items
+     * @throws IllegalStateException
+     *         The current square has no items
+     *         | currentSquare.availableItems().size() == 0
+     * @return A list with available items.
      */
     public  List<Item>  getAvailableItems(){
         Player currentPlayer = this.state.getCurrentPlayer();
-        if (currentPlayer.isInventoryFull())
+        if (currentPlayer.isInventoryFull()) {
             throw new IllegalStateException("inventory full");
+        }
 
         Square currentSquare = currentPlayer.getCurrentSquare();
 
         List<Item> availableItems = currentSquare.getAvailableItems();
-        if(availableItems.size()==0)
+        if(availableItems.size()==0) {
             throw new IllegalStateException("no items in current square");
+        }
 
         return availableItems;
     }
 
     /**
-     *
+     * Pick up an item from the current square.
      * @param selectionId
-     * @post the item will be removed from the current square and will be added to the inventory of the currentPlayer
+     *        The ID of the item to pick up.
+     * @post The item is removed from the current square.
+     *       | !state.getCurrentPlayer().getCurrentSquare().
+     *       |  getAvailableItems().get(selectionId)
+     * @post The item is added to the inventory of the current player.
+     *       | state.getCurrentPlayer().getInventoryItems().get(selectionId)
      */
-    public void selectItem(int selectionId){
+    public void pickUpItem(int selectionId){
         Player currentPlayer = state.getCurrentPlayer();
         Square currentSquare = currentPlayer.getCurrentSquare();
 
@@ -119,7 +154,14 @@ public class GameController {
         currentPlayer.addToInventory(selectedItem);
     }
 
-    //TODO endTurn
+    /**
+     * End the current player's turn.
+     * @post   The current player is switched to a new player.
+     *         | new.state.getCurrentPlayer() != state.getCurrentPlayer()
+     * @throws GameOverException
+     *         The player hasn't moved during this turn and loses the game.
+     *         | !state.getCurrentPlayer().hasMoved()
+     */
     public void endTurn(){
         if(!state.getCurrentPlayer().hasMoved())
             throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");

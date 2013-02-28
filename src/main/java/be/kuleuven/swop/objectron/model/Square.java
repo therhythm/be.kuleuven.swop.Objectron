@@ -61,4 +61,12 @@ public class Square {
     public boolean hasActiveItem() {
         return activeItem != null;
     }
+
+    public void setActiveItem(Item activeItem) {
+        this.activeItem = activeItem;
+    }
+
+    public Item getActiveItem() {
+        return activeItem;
+    }
 }

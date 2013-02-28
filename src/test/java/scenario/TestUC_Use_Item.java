@@ -61,7 +61,7 @@ public class TestUC_Use_Item
     {
         player.addToInventory(item);
 
-        controller.selectInventoryItem(0);
+        controller.selectItemFromInventory(0);
 
         assertNotNull(player.getCurrentlySelectedItem());
         assertEquals(item, player.getCurrentlySelectedItem());
@@ -75,12 +75,13 @@ public class TestUC_Use_Item
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
-        controller.selectInventoryItem(0);
+        controller.selectItemFromInventory(0);
         controller.useCurrentItem();
 
         assertEquals(initialAvailableActions - 1, player.getAvailableActions());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
-        //TODO check item effect on current square
+        assertTrue(player.getCurrentSquare().hasActiveItem());
+        assertEquals(item, player.getCurrentSquare().getActiveItem());
     }
 
     @Test
@@ -91,11 +92,11 @@ public class TestUC_Use_Item
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
-        controller.selectInventoryItem(0);
+        controller.selectItemFromInventory(0);
         controller.cancelItemUsage();
 
         assertEquals(initialAvailableActions, player.getAvailableActions());
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
-        //TODO check no item effect on current square
+        assertFalse(player.getCurrentSquare().hasActiveItem());
     }
 }

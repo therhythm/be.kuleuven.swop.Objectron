@@ -5,7 +5,6 @@ import be.kuleuven.swop.objectron.controller.GameController;
 import be.kuleuven.swop.objectron.model.*;
 import org.junit.Before;
 
-import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
 
@@ -45,7 +44,7 @@ public class TestUC_pick_up_item {
 
         //pick up the item
         int selectedItemId = 0;
-        gameController.selectItem(selectedItemId);
+        gameController.pickUpItem(selectedItemId);
         assertTrue(player.getInventoryItems().contains(i1));
     }
 
