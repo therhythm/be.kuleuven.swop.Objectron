@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
  * Time: 19:40
  * To change this template use File | Settings | File Templates.
  */
-public class UC_pick_up_item {
+public class TestUC_pick_up_item {
     private GameController gameController;
     private Player player;
     private Square currentSquare;

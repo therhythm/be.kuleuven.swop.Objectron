@@ -32,7 +32,7 @@ public class GameController {
         }
     }
 
-    //TODO showInventory
+
     public List<Item> showInventory(){
         List<Item> inventory = state.getCurrentPlayer().getInventoryItems();
         if(!inventory.isEmpty()) {
@@ -42,13 +42,13 @@ public class GameController {
         }
     }
 
-    //TODO selectItem
+
     public void selectInventoryItem(int identifier){
         Item selectedItem = state.getCurrentPlayer().getInventoryItem(identifier);
         state.getCurrentPlayer().setCurrentlySelectedItem(selectedItem);
     }
 
-    //TODO useCurrentItem
+
     public boolean useCurrentItem(){
         state.getCurrentPlayer().useCurrentItem();
         //TODO check successful use of item

@@ -18,8 +18,6 @@ public class LightMine implements Item {
      }
 
     private boolean canHaveAsSquare(Square square){
-
         return square != null && !square.hasActiveItem();
-
     }
 }

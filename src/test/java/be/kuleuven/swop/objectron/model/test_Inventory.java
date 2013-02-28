@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
  * Time: 20:21
  * To change this template use File | Settings | File Templates.
  */
-public class test_Inventory {
+public class Test_Inventory {
     private Player player1;
     @Before
     public void setUp(){

@@ -18,7 +18,7 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 15:59
  */
-public class UseItemTest
+public class TestUC_Use_Item
 {
     private GameController controller;
     private HumanPlayer player;
@@ -79,7 +79,7 @@ public class UseItemTest
         controller.useCurrentItem();
 
         assertEquals(initialAvailableActions - 1, player.getAvailableActions());
-        assertEquals(initialNumberOfItemsInInventory-1, player.getInventoryItems().size());
+        assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
         //TODO check item effect on current square
     }
 

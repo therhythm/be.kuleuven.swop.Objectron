@@ -24,6 +24,7 @@ public class HumanPlayer implements Player {
     public HumanPlayer(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
+        currentSquare.setObstructed(true);
         lightTrail = new LightTrail();
         inventory = new KeyValueInventory();
     }

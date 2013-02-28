@@ -19,8 +19,9 @@ public class Grid {
 
     public void makeMove(Direction direction, Player player) throws InvalidMoveException{
         Square neighbour = player.getCurrentSquare().getNeighbour(direction);
-        if(!validPosition(neighbour))
+        if(!validPosition(neighbour)) {
             throw new InvalidMoveException();
+        }
 
         player.move(neighbour);
     }
@@ -55,6 +56,12 @@ public class Grid {
     }
 
     private void setupNeighbours() {
+        for(int vertical = 0; vertical < squares.length; vertical++){
+            for(int horizontal = 0; horizontal < squares[0].length; horizontal++){
+                squares[vertical][horizontal] = new Square();
+            }
+        }
+
         for(int vertical = 0; vertical < squares.length; vertical++){
             for(int horizontal = 0; horizontal < squares[0].length; horizontal++){
                 Square current = squares[vertical][horizontal];
