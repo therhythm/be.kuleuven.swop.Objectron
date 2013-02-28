@@ -18,8 +18,9 @@ public class HumanPlayer implements Player {
 
     private List<PlayerEventListener> listeners = new ArrayList<PlayerEventListener>();
 
-    public HumanPlayer(String name) {
+    public HumanPlayer(String name, Square startingPosition) {
         this.name = name;
+        this.currentSquare = startingPosition;
         inventory = new KeyValueInventory();
     }
 
@@ -46,5 +47,10 @@ public class HumanPlayer implements Player {
     @Override
     public void removePlayerEventListener(PlayerEventListener listener) {
         listeners.remove(listener);
+    }
+
+    @Override
+    public List<Item> getInventory() {
+        return inventory.getItems();
     }
 }

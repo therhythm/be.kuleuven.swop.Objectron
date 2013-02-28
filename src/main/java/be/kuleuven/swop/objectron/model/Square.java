@@ -10,18 +10,10 @@ import java.util.List;
  *         Time: 00:03
  */
 public class Square {
-
-
-    private List<Item> items;
-
-
+    private List<Item> items = new ArrayList<Item>();
 
     public List<Item> getAvailableItems() {
         return Collections.unmodifiableList(items);
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
     }
 
     public void addItem(Item item){
@@ -37,10 +29,11 @@ public class Square {
         return true;
     }
 
-    public void removeItem(Item item){
-        if(!this.items.contains(item))
-            throw new IllegalStateException("item to remove doesn't exist");
-        this.items.remove(item);
+    public Item pickUpItem(int selectionId) {
+        Item selectedItem = items.get(selectionId);
+
+        items.remove(selectedItem);
+        return selectedItem;
     }
 
 

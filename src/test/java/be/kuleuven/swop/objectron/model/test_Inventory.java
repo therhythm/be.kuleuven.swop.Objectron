@@ -1,9 +1,9 @@
 package be.kuleuven.swop.objectron.model;
 
-import be.kuleuven.swop.objectron.GameState;
-import be.kuleuven.swop.objectron.controller.GameController;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,18 +16,18 @@ public class test_Inventory {
     private Player player1;
     @Before
     public void setUp(){
-        player1 = new HumanPlayer("player 1");
-        player1.addToInventory(new LightGrenade());
+        player1 = new HumanPlayer("p1", mock(Square.class));
+        player1.addToInventory(new LightMine());
     }
 
     @Test
     public void  test_getItems(){
-        System.out.println("test 1");
+        //TODO
     }
 
     @Test
     public void test_retrieveItem(){
-        System.out.println("test 2");
+        //TODO
     }
 
 }

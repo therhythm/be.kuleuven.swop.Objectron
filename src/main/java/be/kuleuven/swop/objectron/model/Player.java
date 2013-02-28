@@ -2,6 +2,8 @@ package be.kuleuven.swop.objectron.model;
 
 import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
 
+import java.util.List;
+
 /**
  * @author : Nik Torfs
  *         Date: 22/02/13
@@ -33,4 +35,6 @@ public interface Player {
     void addPlayerEventListener(PlayerEventListener listener);
 
     void removePlayerEventListener(PlayerEventListener listener);
+
+    List<Item> getInventory();
 }

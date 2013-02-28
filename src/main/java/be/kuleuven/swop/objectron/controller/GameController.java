@@ -51,8 +51,8 @@ public class GameController {
      * @throws IllegalStateException when the inventory of the currentPlayer is full
      *          currentPlayer.isInventoryFull()
      *
-     * @throws IllegalStateException when the current square has no items
-     *          currentSquare.availableItems().sizer()==0
+     *         IllegalStateException when the current square has no items
+     *          currentSquare.availableItems().size()==0
      *
      * @return list with available items
      */
@@ -73,20 +73,15 @@ public class GameController {
     /**
      *
      * @param selectionId
-     * @post the item will be removed from the current  square and will be added to the inventory of the currentPlayer
+     * @post the item will be removed from the current square and will be added to the inventory of the currentPlayer
      */
     public void selectItem(int selectionId){
         Player currentPlayer = state.getCurrentPlayer();
         Square currentSquare = currentPlayer.getCurrentSquare();
 
-        List<Item> availableItems = currentSquare.getAvailableItems();
-        Item selectedItem = availableItems.get(selectionId);
 
-        currentSquare.removeItem(selectedItem);
+        Item selectedItem = currentSquare.pickUpItem(selectionId);
         currentPlayer.addToInventory(selectedItem);
-
-
-
     }
 
     //TODO endTurn

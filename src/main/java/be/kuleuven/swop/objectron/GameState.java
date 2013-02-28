@@ -25,10 +25,11 @@ public class GameState {
     private List<GameEventListener> listeners = new ArrayList<GameEventListener>();
 
     public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) {
-        Player p1 = new HumanPlayer(player1Name);
-        Player p2 = new HumanPlayer(player2Name);
+
         gameGrid = new Grid(horizontalTiles, verticalTiles);
         gameGrid.initializeGrid();
+        Player p1 = new HumanPlayer(player1Name, null/*TODO after grid is generated*/);
+        Player p2 = new HumanPlayer(player2Name, null/*TODO after grid is generated*/);
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);

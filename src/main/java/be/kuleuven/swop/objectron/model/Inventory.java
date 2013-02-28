@@ -8,7 +8,6 @@ import java.util.List;
  *         Time: 23:54
  */
 public interface Inventory {
-    //TODO: what is the return type, do we need to add the identifiers here? probably yes.. is it weird to do that? probably yes :P
     /**
      *
      * @return
@@ -21,7 +20,7 @@ public interface Inventory {
      * @param identifier: the item identifier
      * @return the item to retrieve
      */
-    Item retrieveItem(Integer identifier);
+    Item retrieveItem(int identifier);
 
     /**
      * Check if the inventory limit is reached.
