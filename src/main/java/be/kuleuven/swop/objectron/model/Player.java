@@ -12,13 +12,6 @@ import java.util.List;
 public interface Player {
 
     /**
-     * Checks if the players inventory is full
-     *
-     * @return whether the players inventory is full or not
-     */
-    boolean isInventoryFull();
-
-    /**
      * Retrieve the square on which the player is standing
      *
      * @return the currentSquare square

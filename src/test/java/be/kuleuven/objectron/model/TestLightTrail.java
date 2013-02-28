@@ -14,7 +14,6 @@ import static junit.framework.Assert.*;
  *         Time: 20:56
  */
 public class TestLightTrail {
-
     private LightTrail trail;
 
     @Before

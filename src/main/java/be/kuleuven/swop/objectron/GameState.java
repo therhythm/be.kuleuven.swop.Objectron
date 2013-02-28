@@ -1,12 +1,9 @@
 package be.kuleuven.swop.objectron;
 
-import be.kuleuven.swop.objectron.gui.GameView;
 import be.kuleuven.swop.objectron.model.Grid;
-import be.kuleuven.swop.objectron.model.HumanPlayer;
+import be.kuleuven.swop.objectron.model.PlayerImpl;
 import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.listener.GameEventListener;
-import be.kuleuven.swop.objectron.model.listener.GridEventListener;
-import be.kuleuven.swop.objectron.model.listener.PlayerEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +25,8 @@ public class GameState {
 
         gameGrid = new Grid(horizontalTiles, verticalTiles);
         gameGrid.initializeGrid();
-        Player p1 = new HumanPlayer(player1Name, gameGrid.getSquareAtPosition(verticalTiles-1,0));
-        Player p2 = new HumanPlayer(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
+        Player p1 = new PlayerImpl(player1Name, gameGrid.getSquareAtPosition(verticalTiles-1,0));
+        Player p2 = new PlayerImpl(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);

@@ -21,14 +21,14 @@ import java.util.List;
 public class TestUC_Use_Item
 {
     private GameController controller;
-    private HumanPlayer player;
+    private PlayerImpl player;
     private Item item;
 
     @Before
     public void setUp() throws Exception
     {
         Square square = new Square();
-        player = new HumanPlayer("p1", square);
+        player = new PlayerImpl("p1", square);
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
