@@ -33,7 +33,6 @@ public class Square {
     //TODO activate items or win scenarios
     public void stepOn(/*TODO maybe player*/){
         setObstructed(true);
-
     }
 
     public List<Item> getAvailableItems() {
@@ -41,14 +40,7 @@ public class Square {
     }
 
     public void addItem(Item item){
-       if(canHaveAsItem(item))
-           this.items.add(item);
-        else
-           throw new IllegalArgumentException("invalid item");
-    }
-
-    private boolean canHaveAsItem(Item item){
-        return item != null;
+        this.items.add(item);
     }
 
     public Item pickUpItem(int selectionId) {

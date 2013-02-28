@@ -122,10 +122,6 @@ public class GameController {
      */
     public  List<Item>  getAvailableItems(){
         Player currentPlayer = this.state.getCurrentPlayer();
-        if (currentPlayer.isInventoryFull()) {
-            throw new IllegalStateException("inventory full");
-        }
-
         Square currentSquare = currentPlayer.getCurrentSquare();
 
         List<Item> availableItems = currentSquare.getAvailableItems();

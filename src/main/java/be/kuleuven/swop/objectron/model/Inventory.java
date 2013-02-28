@@ -23,13 +23,6 @@ public interface Inventory {
     Item retrieveItem(int identifier);
 
     /**
-     * Check if the inventory limit is reached.
-     *
-     * @return whether the limit is reached or not
-     */
-    boolean isLimitReached();
-
-    /**
      * Add an item to the inventory
      *
      * @param itemToAdd
@@ -39,8 +32,7 @@ public interface Inventory {
     /**
      * Remove an item from the inventory
      *
-     * @param identifier
+     * @param item
      */
-    void removeItem(int identifier);
     void removeItem(Item item);
 }

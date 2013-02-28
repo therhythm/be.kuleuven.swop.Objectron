@@ -10,7 +10,7 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public class HumanPlayer implements Player {
+public class PlayerImpl implements Player {
     private static final int NB_ACTIONS_EACH_TURN = 3;
 
     private String name;
@@ -22,18 +22,13 @@ public class HumanPlayer implements Player {
     private List<PlayerEventListener> listeners = new ArrayList<PlayerEventListener>();
     private boolean hasMoved;
 
-    public HumanPlayer(String name, Square currentSquare) {
+    public PlayerImpl(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
         currentSquare.setObstructed(true);
         lightTrail = new LightTrail();
-        inventory = new KeyValueInventory();
+        inventory = new InventoryImpl();
         hasMoved = false;
-    }
-
-    @Override
-    public boolean isInventoryFull() {
-        return this.inventory.isLimitReached();
     }
 
     @Override
