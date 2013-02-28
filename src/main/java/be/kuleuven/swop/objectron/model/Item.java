@@ -12,5 +12,5 @@ public interface Item {
      *
      * @param square: square where the item is used
      */
-    void use(Square square);
+    void use(Square square) throws SquareOccupiedException;
 }

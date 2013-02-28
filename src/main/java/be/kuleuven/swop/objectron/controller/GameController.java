@@ -88,12 +88,12 @@ public class GameController {
      * @post The player's available actions is reduced by 1
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
-    public boolean useCurrentItem() {
-        state.getCurrentPlayer().useCurrentItem();
-        if (state.getCurrentPlayer().getCurrentSquare().hasActiveItem()) {
-            return true;
-        } else {
-            return false;
+    public void useCurrentItem() throws SquareOccupiedException {
+        try {
+            state.getCurrentPlayer().useCurrentItem();
+        } catch (SquareOccupiedException e) {
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
+            throw e;
         }
     }
 

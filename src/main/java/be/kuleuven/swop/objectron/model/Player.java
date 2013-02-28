@@ -51,7 +51,7 @@ public interface Player {
 
     void setCurrentlySelectedItem(Item selectedItem);
 
-    void useCurrentItem();
+    void useCurrentItem() throws SquareOccupiedException;
 
     void endTurn();
 

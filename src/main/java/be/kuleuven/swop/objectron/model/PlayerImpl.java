@@ -82,7 +82,7 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public void useCurrentItem() {
+    public void useCurrentItem() throws SquareOccupiedException {
         inventory.removeItem(currentlySelectedItem);
         currentlySelectedItem.use(currentSquare);
         reduceAvailableActions();
