@@ -24,7 +24,6 @@ public class TestUC_End_Turn {
     {
         GameState state = new GameState("jos", "piet", 10, 10);
         GameController controller = new GameController(state);
-        GameView view = new GameView(controller, 10, 10);
 
     }
 
