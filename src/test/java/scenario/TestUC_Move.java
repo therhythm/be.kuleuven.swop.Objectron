@@ -37,7 +37,7 @@ public class TestUC_Move {
     }
 
     @Test
-    public void test_main_flow(){
+    public void test_main_flow() throws InvalidMoveException {
         Square prev = player.getCurrentSquare();
 
         controller.move(Direction.UP);
@@ -48,12 +48,13 @@ public class TestUC_Move {
         //TODO lightTrail
     }
 
-   /* @Test(expected = InvalidMoveException.class)
-    public void test_wrong_positioning(){
+    @Test(expected = InvalidMoveException.class)
+    public void test_wrong_positioning() throws InvalidMoveException {
+        controller.move(Direction.DOWN);
     }
 
     @Test
     public void test_endgame_move(){
 
-    } */
+    }
 }

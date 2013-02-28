@@ -28,8 +28,8 @@ public class GameState {
 
         gameGrid = new Grid(horizontalTiles, verticalTiles);
         gameGrid.initializeGrid();
-        Player p1 = new HumanPlayer(player1Name, null/*TODO after grid is generated*/);
-        Player p2 = new HumanPlayer(player2Name, null/*TODO after grid is generated*/);
+        Player p1 = new HumanPlayer(player1Name, gameGrid.getSquareAtPosition(verticalTiles-1,0));
+        Player p2 = new HumanPlayer(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);

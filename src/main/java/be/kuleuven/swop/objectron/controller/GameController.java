@@ -23,12 +23,12 @@ public class GameController {
         this.state = state;
     }
 
-    public void move(Direction direction){
+    public void move(Direction direction) throws InvalidMoveException {
         try {
             state.getGrid().makeMove(direction, state.getCurrentPlayer());
         } catch (InvalidMoveException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has made an invalid move!");
-            //TODO do some sort of gamelistener event to show message
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");
+            throw e;
         }
     }
 

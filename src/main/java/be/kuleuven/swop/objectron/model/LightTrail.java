@@ -7,10 +7,13 @@ package be.kuleuven.swop.objectron.model;
  */
 public class LightTrail {
     private static int MAX_TRAIL_COVERAGE = 3;
+    private static int LIGHT_TRAIL_LIFETIME = 2;
     private Square[] trail;
+    private int[] remainingActions;
 
     public LightTrail(){
         trail = new Square[MAX_TRAIL_COVERAGE];
+        remainingActions = new int[MAX_TRAIL_COVERAGE];
     }
 
     public void expand(Square newSquare){
@@ -19,19 +22,28 @@ public class LightTrail {
         }
 
         System.arraycopy(trail, 0, trail, 1, MAX_TRAIL_COVERAGE - 1);
+        System.arraycopy(remainingActions, 0, remainingActions, 1, MAX_TRAIL_COVERAGE -1);
 
         trail[0] = newSquare;
+        remainingActions[0] = 3;
         newSquare.setObstructed(true);
     }
 
-    public void retract(){
-        for(int i = MAX_TRAIL_COVERAGE - 1; i>-1; i--){
-            if(trail[i] != null){
+    private void retract(){
+        for(int i = 0; i < MAX_TRAIL_COVERAGE; i++){
+            if(remainingActions[i] == 0){
                 trail[i].setObstructed(false);
                 trail[i] = null;
-                break;
+                remainingActions[i] = 0;
             }
         }
+    }
+
+    public void reduce(){
+        for(int i = 0; i < MAX_TRAIL_COVERAGE; i++){
+            remainingActions[i]--;
+        }
+        retract();
     }
 
     //TODO method checking if going through trails

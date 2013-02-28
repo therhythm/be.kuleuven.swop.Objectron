@@ -21,14 +21,13 @@ public class TestUC_pick_up_item {
     private GameController gameController;
     private Player player;
     private Square currentSquare;
-    private GameState stateMock;
 
     @Before
     public void setUp(){
         currentSquare = new Square();
         player = new HumanPlayer("p1", currentSquare);
 
-        stateMock = mock(GameState.class);
+        GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
 
         gameController = new GameController(stateMock);

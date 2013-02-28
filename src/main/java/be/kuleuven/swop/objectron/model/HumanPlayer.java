@@ -120,6 +120,6 @@ public class HumanPlayer implements Player {
 
     private void reduceAvailableActions(){
         availableActions--;
-        lightTrail.retract();
+        lightTrail.reduce();
     }
 }
