@@ -22,7 +22,7 @@ public class GameState {
         gameGrid = new Grid(horizontalTiles, verticalTiles);
         Player p1 = new PlayerImpl(player1Name, gameGrid.getSquareAtPosition(verticalTiles - 1, 0));
         Player p2 = new PlayerImpl(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
-        gameGrid.setupGrid(p1.getCurrentSquare(),p2.getCurrentSquare());
+        gameGrid.buildGrid(p1.getCurrentSquare(),p2.getCurrentSquare());
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);
