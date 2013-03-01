@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class Grid {
 
+    public static final double PERCENTAGE_OF_ITEMS = 0.05;
     private Square[][] squares;
     private List<Wall> walls;
 
@@ -51,7 +52,24 @@ public class Grid {
     }
 
     private void setupItems() {
-        //To change body of created methods use File | Settings | File Templates.
+        int numberOfItems = (int) Math.ceil(PERCENTAGE_OF_ITEMS * (squares.length * squares[0].length));
+
+
+        //players 3x3 square
+
+        //rest mines
+        placeOtherMines(numberOfItems);
+
+    }
+
+    private void placeOtherMines(int numberOfMines){
+        for(int i = 0;i<numberOfMines;i++) {
+            Square randomSquare = getRandomSquare();
+            while (randomSquare.getAvailableItems().size() != 0 && !randomSquare.isObstructed()) {
+                randomSquare = getRandomSquare();
+            }
+        randomSquare.addItem(new LightMine());
+        }
     }
 
     private void setupWalls() {
