@@ -42,7 +42,7 @@ public class GameView {
             int buttonWidth = horizontalTiles * TILEWIDTH / 4;
 
             public void run() {
-                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * horizontalTiles, TILEHEIGHT * verticalTiles + 2 * VPADDING) {
+                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * horizontalTiles, TILEHEIGHT * verticalTiles + 3 * VPADDING) {
 
                     @Override
                     public void paint(Graphics2D graphics) {
@@ -69,6 +69,11 @@ public class GameView {
                 Image NWArrow = gui.loadImage("src/main/resources/arrow_NW.png",20,20);
                 Image NArrow = gui.loadImage("src/main/resources/arrow_N.png",20,20);
                 Image NEArrow = gui.loadImage("src/main/resources/arrow_NE.png",20,20);
+                Image WArrow = gui.loadImage("src/main/resources/arrow_W.png",20,20);
+                Image EArrow = gui.loadImage("src/main/resources/arrow_E.png",20,20);
+                Image SWArrow = gui.loadImage("src/main/resources/arrow_SW.png",20,20);
+                Image SArrow = gui.loadImage("src/main/resources/arrow_S.png",20,20);
+                Image SEArrow = gui.loadImage("src/main/resources/arrow_SE.png",20,20);
 
 
             /*    final Button moveButton = gui.createButton(HPADDING, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
@@ -94,7 +99,7 @@ public class GameView {
                         gui.repaint();
                     }
                 });
-                NWButton.setImage(NArrow);
+                NButton.setImage(NArrow);
 
                 final Button NEButton = gui.createButton(HPADDING + 40,verticalTiles*TILEHEIGHT + VPADDING + 20,20,20,new Runnable() {
                     @Override
@@ -103,7 +108,56 @@ public class GameView {
                         gui.repaint();
                     }
                 });
-                NWButton.setImage(NEArrow);
+                NEButton.setImage(NEArrow);
+
+                final Button WButton = gui.createButton(HPADDING ,verticalTiles*TILEHEIGHT + VPADDING + 40,20,20,new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO controller.move
+                        gui.repaint();
+                    }
+                });
+                WButton.setImage(WArrow);
+
+                final Button EButton = gui.createButton(HPADDING + 40 ,verticalTiles*TILEHEIGHT + VPADDING + 40,20,20,new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO controller.move
+                        gui.repaint();
+                    }
+                });
+                EButton.setImage(EArrow);
+
+                final Button SWButton = gui.createButton(HPADDING ,verticalTiles*TILEHEIGHT + VPADDING + 60,20,20,new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO controller.move
+                        gui.repaint();
+                    }
+                });
+                SWButton.setImage(SWArrow);
+
+                final Button SButton = gui.createButton(HPADDING +20 ,verticalTiles*TILEHEIGHT + VPADDING + 60,20,20,new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO controller.move
+                        gui.repaint();
+                    }
+                });
+                SButton.setImage(SArrow);
+
+                final Button SEButton = gui.createButton(HPADDING +40 ,verticalTiles*TILEHEIGHT + VPADDING + 60,20,20,new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO controller.move
+                        gui.repaint();
+                    }
+                });
+                SEButton.setImage(SEArrow);
+
+
+
+
 
 
                 final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
