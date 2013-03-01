@@ -51,19 +51,57 @@ public class Grid {
     /**
      * NOTE: BUILDER pattern might be useful here if multiple grid setup strategies are needed (or TEMPLATE METHOD)
      */
-    public void setupGrid() {
+    public void setupGrid(Square p1Square,Square p2Square) {
         setupWalls();
-        setupItems();
+        setupItems(p1Square,p2Square);
     }
 
-    private void setupItems() {
+    private void setupItems(Square p1Square, Square p2Square) {
         int numberOfItems = (int) Math.ceil(PERCENTAGE_OF_ITEMS * (squares.length * squares[0].length));
-
+        System.out.println(numberOfItems);
 
         //players 3x3 square
+        for (Square square:getAllNeighboursFromSquare(p1Square)){
+            if(getAllNeighboursFromSquare(square).size() == 8){
+                placeLightMineInArea(square);
+                numberOfItems --;
+            }
+        }
+
+        for (Square square:getAllNeighboursFromSquare(p2Square)){
+            if(getAllNeighboursFromSquare(square).size() == 8){
+                placeLightMineInArea(square);
+                numberOfItems --;
+            }
+        }
 
         //rest mines
         placeOtherMines(numberOfItems);
+
+    }
+
+    private List<Square> getAllNeighboursFromSquare(Square square){
+        List<Square> neigbourSquares = new ArrayList<Square>();
+        for(Direction d: Direction.values()){
+            if(square.getNeighbour(d) != null){
+                neigbourSquares.add(square.getNeighbour(d));
+            }
+        }
+        return neigbourSquares;
+    }
+
+    private void placeLightMineInArea(Square square){
+        List<Square> possibleSquares = getAllNeighboursFromSquare(square);
+        List<Square> goodSquares = new ArrayList<Square>();
+        possibleSquares.add(square);
+        for(Square s:possibleSquares){
+            if(!s.isObstructed() && s.getAvailableItems().size() == 0){
+                goodSquares.add(s);
+            }
+        }
+
+        int randomIndex = getRandomWithMax(0,goodSquares.size());
+        goodSquares.get(randomIndex).addItem(new LightMine());
 
     }
 
