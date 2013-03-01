@@ -14,7 +14,6 @@ import java.util.List;
  *         Time: 07:04
  */
 public class Grid {
-
     private Square[][] squares;
     private GridBuilder gridBuilder;
 
@@ -59,11 +58,11 @@ public class Grid {
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Square current = squares[vertical][horizontal];
-                for (Direction d : Direction.values()) {
-                    int horIndex = d.applyHorizontalOperation(horizontal);
-                    int vertIndex = d.applyVerticalOperation(vertical);
+                for (Direction direction : Direction.values()) {
+                    int horIndex = direction.applyHorizontalOperation(horizontal);
+                    int vertIndex = direction.applyVerticalOperation(vertical);
                     if (validIndex(horIndex, vertIndex)) {
-                        current.addNeighbour(d, squares[vertIndex][horIndex]);
+                        current.addNeighbour(direction, squares[vertIndex][horIndex]);
                     }
                 }
             }
