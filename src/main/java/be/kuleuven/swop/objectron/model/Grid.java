@@ -11,14 +11,20 @@ import java.util.List;
  */
 public class Grid {
 
+
+    public static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
+    public static final int MIN_WALL_LENGTH = 2;
+    public static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
+
+
     public static final double PERCENTAGE_OF_ITEMS = 0.05;
+
     private Square[][] squares;
     private List<Wall> walls;
 
     public Grid(int width, int height) {
         this.squares = new Square[height][width];
-
-        setupGrid();
+        setupNeighbours();
     }
 
     public void makeMove(Direction direction, Player player) throws InvalidMoveException {
@@ -45,8 +51,7 @@ public class Grid {
     /**
      * NOTE: BUILDER pattern might be useful here if multiple grid setup strategies are needed (or TEMPLATE METHOD)
      */
-    private void setupGrid() {
-        setupNeighbours();
+    public void setupGrid() {
         setupWalls();
         setupItems();
     }
@@ -75,30 +80,27 @@ public class Grid {
     private void setupWalls() {
         walls = new ArrayList<Wall>();
 
-        int maxNumberOfWalls = (int) Math.floor(0.2 * ((squares.length * squares[0].length) / 2));
-        int numberOfWalls = getRandomWithMax(maxNumberOfWalls + 1);
-        if (numberOfWalls == 0) {
-            numberOfWalls = 1;
-        }
+        int maxNumberOfWalls = (int) Math.floor(MAX_WALL_COVERAGE_PERCENTAGE * ((squares.length * squares[0].length) / 2));
+        int numberOfWalls = getRandomWithMax(1, maxNumberOfWalls + 1);
 
         boolean twentyPercentReached = false;
         while (walls.size() < numberOfWalls && !twentyPercentReached) {
             twentyPercentReached = makeWall();
         }
+    }
 
+    private void print() {
         System.out.println("wallpercentage: " + calculateWallPercentage(0));
 
-        for(int j = 0;j < squares[0].length;j++) {
-            for(int i = 0;i < squares.length;i++){
-               if(squares[i][j].isObstructed())
-                   System.out.print("1 ");
-               else
-                   System.out.print("0 ");
+        for (int j = 0; j < squares[0].length; j++) {
+            for (int i = 0; i < squares.length; i++) {
+                if (squares[i][j].isObstructed())
+                    System.out.print("1 ");
+                else
+                    System.out.print("0 ");
             }
-        System.out.print("\n");
+            System.out.print("\n");
         }
-
-
     }
 
     private double calculateWallPercentage(int extraWalls) {
@@ -107,8 +109,7 @@ public class Grid {
         }
         double wallArea = (double) extraWalls;
         double gridArea = (double) squares.length * squares[0].length;
-        double percentage = wallArea / gridArea;
-        return percentage;
+        return wallArea / gridArea;
     }
 
     private boolean makeWall() {
@@ -121,69 +122,60 @@ public class Grid {
         //Direction bepalen
         Direction direction;
         Double rand = Math.random();
+        int maxLength;
         if (rand < 0.5) {
             direction = Direction.UP;
+            maxLength = getRandomWithMax(MIN_WALL_LENGTH, squares.length * MAX_WALL_LENGTH_PERCENTAGE);
         } else {
             direction = Direction.LEFT;
-        }
-
-        //max lengte wall bepalen
-        int maxLength;
-        if (direction == Direction.UP) {
-            maxLength = getRandomWithMax(squares.length / 2);
-        } else {
-            maxLength = getRandomWithMax(squares[0].length / 2);
+            maxLength = getRandomWithMax(MIN_WALL_LENGTH, squares[0].length * MAX_WALL_LENGTH_PERCENTAGE);
         }
 
         generateValidWall(randomSquare, direction, maxLength);
-        return !(calculateWallPercentage(1) <= 0.2);
+        return !(calculateWallPercentage(1) <= MAX_WALL_COVERAGE_PERCENTAGE);
     }
 
     private Square getRandomSquare() {
-        int vertIndex = getRandomWithMax(squares.length);
-        int horIndex = getRandomWithMax(squares[0].length);
+        int vertIndex = getRandomWithMax(0, squares.length);
+        int horIndex = getRandomWithMax(0, squares[0].length);
 
         return getSquareAtPosition(vertIndex, horIndex);
     }
 
     private boolean isValidWallPosition(Square square) {
-        boolean valid = true;
         for (Direction d : Direction.values()) {
-              if(square.getNeighbour(d) != null) {
-
-                if (square.getNeighbour(d).isObstructed()) {
-                    valid = false;
-                }
-              }
+            if (square.getNeighbour(d) != null && square.getNeighbour(d).isObstructed()) {
+                return false;
+            }
         }
-        return valid;
+        return true;
     }
 
-    private int getRandomWithMax(double max) {
-        double rand = Math.random() * max;
+    private int getRandomWithMax(double min, double max) {
+        double rand = min + Math.random() * (max - min);
         return (int) Math.floor(rand);
     }
 
     private void generateValidWall(Square currentSquare, Direction direction, int maxLength) {
         int length = 1;
-        boolean notInvalid = true;
+        boolean isValid = true;
         Wall wall = new Wall();
         wall.addSquare(currentSquare);
 
-        while (length <= maxLength && notInvalid && calculateWallPercentage(length + 1) <= 0.2) {
+        while (length <= maxLength && isValid && calculateWallPercentage(length + 1) <= MAX_WALL_COVERAGE_PERCENTAGE) {
             currentSquare = currentSquare.getNeighbour(direction);
             if (currentSquare != null)
                 if (isValidWallPosition(currentSquare)) {
                     wall.addSquare(currentSquare);
                     length++;
                 } else {
-                    notInvalid = false;
+                    isValid = false;
                 }
             else
-                notInvalid = false;
+                isValid = false;
         }
 
-        if (length >= 2) {
+        if (length >= MIN_WALL_LENGTH) {
             wall.build();
             walls.add(wall);
         }
@@ -215,8 +207,5 @@ public class Grid {
     private boolean validIndex(int horIndex, int vertIndex) {
         return horIndex > -1 && horIndex < squares[0].length
                 && vertIndex > -1 && vertIndex < squares.length;
-    }
-
-    public void initializeGrid() {
     }
 }

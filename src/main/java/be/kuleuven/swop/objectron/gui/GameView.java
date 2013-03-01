@@ -1,6 +1,8 @@
 package be.kuleuven.swop.objectron.gui;
 
 import be.kuleuven.swop.objectron.controller.GameController;
+import be.kuleuven.swop.objectron.model.GameOverException;
+import be.kuleuven.swop.objectron.model.InventoryEmptyException;
 
 import java.awt.*;
 
@@ -114,7 +116,11 @@ public class GameView {
 
                 final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
-                        //TODO controller.showInventory();
+                        try {
+                            controller.showInventory();
+                        } catch (InventoryEmptyException e) {
+                            new Dialog("Your inventory is empty");
+                        }
                         gui.repaint();
                     }
                 });
@@ -122,12 +128,47 @@ public class GameView {
 
                 final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
-                        //TODO controller.endTurn();
+                        try {
+                            controller.endTurn();
+                        } catch (GameOverException e) {
+                            new Dialog("You lost the game!");
+                        }
                         gui.repaint();
                     }
                 });
                 endTurnButton.setText("End turn");
             }
         });
+    }
+
+    private class Dialog{
+        SimpleGUI dialog;
+
+        Dialog(final String text){
+            dialog = new SimpleGUI("Dialog", 300, 200){
+
+                @Override
+                public void paint(Graphics2D graphics) {
+                    graphics.drawString(text, 10, 10);
+
+                }
+
+
+            };
+            Button btnOk = gui.createButton(120,150,60,30, new Runnable() {
+                @Override
+                public void run() {
+                    dialog = null;
+                }
+            });
+            btnOk.setText("ok");
+        }
+    }
+
+    private class Inventory{
+        SimpleGUI inv;
+        Inventory(){
+
+        }
     }
 }

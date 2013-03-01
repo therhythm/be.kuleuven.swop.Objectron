@@ -33,6 +33,7 @@ public class RunObjectron {
         GameState state = new GameState(player1Name, player2Name, horizontalTiles, verticalTiles);
         GameController controller = new GameController(state);
         GameView view = new GameView(controller, horizontalTiles, verticalTiles);
+        view.run();
     }
 
     public static void main(String[] args) {

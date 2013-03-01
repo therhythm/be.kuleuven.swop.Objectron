@@ -20,9 +20,9 @@ public class GameState {
 
     public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) {
         gameGrid = new Grid(horizontalTiles, verticalTiles);
-        gameGrid.initializeGrid();
         Player p1 = new PlayerImpl(player1Name, gameGrid.getSquareAtPosition(verticalTiles - 1, 0));
         Player p2 = new PlayerImpl(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
+        gameGrid.setupGrid();
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);
