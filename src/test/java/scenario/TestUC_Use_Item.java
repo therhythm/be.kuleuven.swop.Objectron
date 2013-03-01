@@ -45,17 +45,17 @@ public class TestUC_Use_Item
     }
 
     @Test
-    public void showInventoryTest() throws InventoryFullException, InventoryEmptyException {
+    public void showInventoryTest() throws InventoryFullException, InventoryEmptyException, NotEnoughActionsException {
         player.addToInventory(item);
 
         List<Item> inventoryItems = controller.showInventory();
 
         assertFalse(inventoryItems.isEmpty());
-        assertEquals(player.getInventoryItems(),inventoryItems);
+        assertEquals(player.getInventoryItems(), inventoryItems);
     }
 
     @Test
-    public void selectItemTest() throws InventoryFullException {
+    public void selectItemTest() throws InventoryFullException, NotEnoughActionsException {
         player.addToInventory(item);
 
         controller.selectItemFromInventory(0);
@@ -65,7 +65,7 @@ public class TestUC_Use_Item
     }
 
     @Test
-    public void useItemTest() throws InventoryFullException, SquareOccupiedException {
+    public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException {
         player.addToInventory(item);
 
         int initialAvailableActions = player.getAvailableActions();
@@ -81,17 +81,16 @@ public class TestUC_Use_Item
     }
 
     @Test(expected = SquareOccupiedException.class)
-    public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException {
+    public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException, NotEnoughActionsException {
         player.getCurrentSquare().setActiveItem(item);
         player.addToInventory(item);
 
         controller.selectItemFromInventory(0);
         controller.useCurrentItem();
-
     }
 
     @Test
-    public void cancelItemUsageTest() throws InventoryFullException {
+    public void cancelItemUsageTest() throws InventoryFullException, NotEnoughActionsException {
         player.addToInventory(item);
 
         int initialAvailableActions = player.getAvailableActions();

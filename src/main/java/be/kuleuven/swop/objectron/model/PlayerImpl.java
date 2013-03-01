@@ -38,15 +38,14 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public void addToInventory(Item itemToAdd) throws InventoryFullException {
-       this.inventory.addItem(itemToAdd);
+    public void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException {
+        checkEnoughActions();
+        this.inventory.addItem(itemToAdd);
     }
 
     @Override
     public void move(Square newPosition) throws NotEnoughActionsException {
-        if(!hasEnoughActions()){
-            throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
-        }
+        checkEnoughActions();
         reduceAvailableActions();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
@@ -54,8 +53,10 @@ public class PlayerImpl implements Player {
         hasMoved = true;
     }
 
-    private boolean hasEnoughActions() {
-        return availableActions > 0;
+    private void checkEnoughActions() throws NotEnoughActionsException {
+        if (availableActions==0) {
+            throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
+        }
     }
 
 
@@ -90,9 +91,11 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public void useCurrentItem() throws SquareOccupiedException {
-        inventory.removeItem(currentlySelectedItem);
+    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException {
+        checkEnoughActions();
         currentlySelectedItem.use(currentSquare);
+        inventory.removeItem(currentlySelectedItem);
+
         reduceAvailableActions();
     }
 
@@ -107,7 +110,7 @@ public class PlayerImpl implements Player {
         return hasMoved;
     }
 
-    private void reduceAvailableActions(){
+    private void reduceAvailableActions() {
         availableActions--;
         lightTrail.reduce();
     }

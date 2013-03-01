@@ -85,12 +85,14 @@ public class GameController {
     public void selectItemFromInventory(int identifier) {
         Item selectedItem = state.getCurrentPlayer().getInventoryItem(identifier);
         state.getCurrentPlayer().setCurrentlySelectedItem(selectedItem);
-
+        doPlayerUpdate();
     }
 
     private void doPlayerUpdate() {
+        Player current = state.getCurrentPlayer();
         for(GameEventListener listener : listeners){
-            listener.playerUpdated(0,0, state.getCurrentPlayer().getAvailableActions());
+            //todo make small wrapper object
+            listener.playerUpdated(0,0, current.getAvailableActions(), current.getCurrentlySelectedItem() == null ? "no item" : current.getCurrentlySelectedItem().getClass().getSimpleName());
         }
     }
 
@@ -103,12 +105,15 @@ public class GameController {
      * @post The player's available actions is reduced by 1
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
-    public void useCurrentItem() throws SquareOccupiedException {
+    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException {
         try {
             state.getCurrentPlayer().useCurrentItem();
             doPlayerUpdate();
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
+            throw e;
+        } catch (NotEnoughActionsException e) {
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do use an item when he had no actions remaining.");
             throw e;
         }
     }
@@ -121,6 +126,7 @@ public class GameController {
      */
     public void cancelItemUsage() {
         state.getCurrentPlayer().setCurrentlySelectedItem(null);
+        doPlayerUpdate();
     }
 
 
@@ -155,7 +161,7 @@ public class GameController {
      * @post The item is added to the inventory of the current player.
      * | state.getCurrentPlayer().getInventoryItems().get(selectionId)
      */
-    public void pickUpItem(int selectionId) throws InventoryFullException {
+    public void pickUpItem(int selectionId) throws InventoryFullException, NotEnoughActionsException {
         Player currentPlayer = state.getCurrentPlayer();
         Square currentSquare = currentPlayer.getCurrentSquare();
 
@@ -167,6 +173,9 @@ public class GameController {
         } catch (InventoryFullException e) {
             currentSquare.addItem(selectedItem);
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has a full inventory!");
+            throw e;
+        } catch (NotEnoughActionsException e) {
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to add an item to the inventory when he had no actions remaining.");
             throw e;
         }
     }
@@ -183,8 +192,8 @@ public class GameController {
         if (!state.getCurrentPlayer().hasMoved()) {
             throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");
         } else {
-            state.nextPlayer();
             state.getCurrentPlayer().endTurn();
+            state.nextPlayer();
         }
     }
 

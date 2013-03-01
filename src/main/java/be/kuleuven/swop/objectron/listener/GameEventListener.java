@@ -6,7 +6,6 @@ package be.kuleuven.swop.objectron.listener;
  *         Time: 10:03
  */
 public interface GameEventListener {
-    void playerUpdated(int hPosition, int vPosition, int availableActions);
+    void playerUpdated(int hPosition, int vPosition, int availableActions, String selectedItem);
     void playerChanged(String name, int availableActions);
-
 }

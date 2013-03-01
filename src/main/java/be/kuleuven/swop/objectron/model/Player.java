@@ -21,7 +21,7 @@ public interface Player {
      *
      * @param itemToAdd: the item to add to the inventory
      */
-    void addToInventory(Item itemToAdd) throws InventoryFullException;
+    void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException;
 
     /**
      * Move the player to the newPosition
@@ -51,7 +51,7 @@ public interface Player {
 
     void setCurrentlySelectedItem(Item selectedItem);
 
-    void useCurrentItem() throws SquareOccupiedException;
+    void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException;
 
     void endTurn();
 

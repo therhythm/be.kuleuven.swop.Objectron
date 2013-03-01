@@ -124,20 +124,6 @@ public class Grid {
         }
     }
 
-    private void print() {
-        System.out.println("wallpercentage: " + calculateWallPercentage(0));
-
-        for (int j = 0; j < squares[0].length; j++) {
-            for (int i = 0; i < squares.length; i++) {
-                if (squares[i][j].isObstructed())
-                    System.out.print("1 ");
-                else
-                    System.out.print("0 ");
-            }
-            System.out.print("\n");
-        }
-    }
-
     private double calculateWallPercentage(int extraWalls) {
         for (Wall w : walls) {
             extraWalls += w.getLength();

@@ -28,6 +28,7 @@ public class GameView implements GameEventListener{
     private int horizontalTiles;
     private int verticalTiles;
     private String currentPlayer = "blaat";
+    private String selectedItem = "no item";
     private int availableMoves = 3;
     private SimpleGUI gui;
 
@@ -61,7 +62,8 @@ public class GameView implements GameEventListener{
                             }
                         }
                         graphics.drawString(currentPlayer, 20, 20 );
-                        graphics.drawString("moves remaining: " + availableMoves, 100, 20);
+                        graphics.drawString("moves remaining: " + availableMoves, 20, 40);
+                        graphics.drawString("selected item: " + selectedItem, 200, 20);
                     }
 
                     @Override
@@ -90,6 +92,7 @@ public class GameView implements GameEventListener{
                 int hMultiplier = 0;
                 int vMultiplier = 0;
                 int vCount = 0;
+                // generate direction buttons
                 for(final Direction direction : Direction.values()){
 
                     gui.createButton(HPADDING + hMultiplier * 20,verticalTiles*TILEHEIGHT + VPADDING + 20 + vMultiplier * 20,20,20,new Runnable() {
@@ -128,6 +131,8 @@ public class GameView implements GameEventListener{
                                     controller.pickUpItem(index);
                                 } catch (InventoryFullException e) {
                                     new DialogView("Your inventory is full!");
+                                } catch (NotEnoughActionsException e) {
+                                    new DialogView("You have no actions remaining, end the turn.");
                                 }
                             }
                         };
@@ -175,15 +180,17 @@ public class GameView implements GameEventListener{
     }
 
     @Override
-    public void playerUpdated(int hPosition, int vPosition, int availableActions) {
+    public void playerUpdated(int hPosition, int vPosition, int availableActions, String selectedItem) {
         availableMoves = availableActions;
-
+        this.selectedItem = selectedItem;
+        gui.repaint();
     }
 
     @Override
     public void playerChanged(String name, int availableActions) {
         currentPlayer = name;
         availableMoves = availableActions;
+        gui.repaint();
     }
 
 
