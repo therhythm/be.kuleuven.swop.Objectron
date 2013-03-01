@@ -17,10 +17,10 @@ import java.util.Map;
  *         Date: 25/02/13
  *         Time: 21:24
  */
-public class GameView implements GameEventListener{
+public class GameView implements GameEventListener {
 
-    public enum SquareStates{
-        WALL, P1_LIGHT_WALL, P2_LIGHT_WALL, PLAYER1, PLAYER2, EMPTY
+    public enum SquareStates {
+        WALL, P1_LIGHT_WALL, P2_LIGHT_WALL, PLAYER1, PLAYER2, EMPTY, P1_FINISH, P2_FINISH
     }
 
     private static int HPADDING = 10;
@@ -29,6 +29,7 @@ public class GameView implements GameEventListener{
     private static int TILEHEIGHT = 40;
 
     private SquareStates gameGrid[][];
+    private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
 
     private GameController controller;
     private int horizontalTiles;
@@ -42,19 +43,15 @@ public class GameView implements GameEventListener{
         this.verticalTiles = verticalTiles;
         this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
         this.currentPlayer = current;
+        for (int i = 0; i < gameGrid.length; i++) {
+            for (int j = 0; j < gameGrid[0].length; j++) {
+                gameGrid[i][j] = SquareStates.EMPTY;
+            }
+        }
     }
 
     public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
-            Image playerRed
-                    ,
-                    playerBlue
-                    ,
-                    cell
-                    ,
-                    cellFinishBlue
-                    ,
-                    cellFinishRed;
             int buttonWidth = horizontalTiles * TILEWIDTH / 4;
 
             public void run() {
@@ -64,10 +61,10 @@ public class GameView implements GameEventListener{
                     public void paint(Graphics2D graphics) {
                         for (int i = 0; i < horizontalTiles; i++) {
                             for (int j = 0; j < verticalTiles; j++) {
-                                graphics.drawImage(cell, HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+                                graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                             }
                         }
-                        graphics.drawString(currentPlayer.getName(), 20, 20 );
+                        graphics.drawString(currentPlayer.getName(), 20, 20);
                         graphics.drawString("moves remaining: " + currentPlayer.getAvailableActions(), 20, 40);
                         graphics.drawString("selected item: " + currentPlayer.getSelectedItem().getName(), 200, 20);
                     }
@@ -79,29 +76,34 @@ public class GameView implements GameEventListener{
 
                 };
 
-                playerRed = gui.loadImage("src/main/resources/player_red.png", TILEWIDTH, TILEHEIGHT);
-                playerBlue = gui.loadImage("src/main/resources/player_blue.png", TILEWIDTH, TILEHEIGHT);
-                cell = gui.loadImage("src/main/resources/cell.png", TILEWIDTH, TILEHEIGHT);
-                cellFinishBlue = gui.loadImage("src/main/resources/cell_finish_blue.png", TILEWIDTH, TILEHEIGHT);
-                cellFinishRed = gui.loadImage("src/main/resources/cell_finish_red.png", TILEWIDTH, TILEHEIGHT);
+
+                gridImageMap.put(SquareStates.PLAYER1, gui.loadImage("player_red.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER2, gui.loadImage("player_blue.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.EMPTY, gui.loadImage("cell.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P1_FINISH, gui.loadImage("cell_finish_red.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P2_FINISH, gui.loadImage("cell_finish_blue.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
+
 
                 Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
-                directionImageMap.put(Direction.UP_LEFT, gui.loadImage("src/main/resources/arrow_NW.png",20,20));
-                directionImageMap.put(Direction.UP, gui.loadImage("src/main/resources/arrow_N.png",20,20));
-                directionImageMap.put(Direction.UP_RIGHT, gui.loadImage("src/main/resources/arrow_NE.png",20,20));
-                directionImageMap.put(Direction.LEFT, gui.loadImage("src/main/resources/arrow_W.png",20,20));
-                directionImageMap.put(Direction.RIGHT, gui.loadImage("src/main/resources/arrow_E.png",20,20));
-                directionImageMap.put(Direction.DOWN_LEFT, gui.loadImage("src/main/resources/arrow_SW.png",20,20));
-                directionImageMap.put(Direction.DOWN, gui.loadImage("src/main/resources/arrow_S.png",20,20));
-                directionImageMap.put(Direction.DOWN_RIGHT, gui.loadImage("src/main/resources/arrow_SE.png",20,20));
+                directionImageMap.put(Direction.UP_LEFT, gui.loadImage("arrow_NW.png", 20, 20));
+                directionImageMap.put(Direction.UP, gui.loadImage("arrow_N.png", 20, 20));
+                directionImageMap.put(Direction.UP_RIGHT, gui.loadImage("arrow_NE.png", 20, 20));
+                directionImageMap.put(Direction.LEFT, gui.loadImage("arrow_W.png", 20, 20));
+                directionImageMap.put(Direction.RIGHT, gui.loadImage("arrow_E.png", 20, 20));
+                directionImageMap.put(Direction.DOWN_LEFT, gui.loadImage("arrow_SW.png", 20, 20));
+                directionImageMap.put(Direction.DOWN, gui.loadImage("arrow_S.png", 20, 20));
+                directionImageMap.put(Direction.DOWN_RIGHT, gui.loadImage("arrow_SE.png", 20, 20));
 
                 int hMultiplier = 0;
                 int vMultiplier = 0;
                 int vCount = 0;
                 // generate direction buttons
-                for(final Direction direction : Direction.values()){
+                for (final Direction direction : Direction.values()) {
 
-                    gui.createButton(HPADDING + hMultiplier * 20,verticalTiles*TILEHEIGHT + VPADDING + 20 + vMultiplier * 20,20,20,new Runnable() {
+                    gui.createButton(HPADDING + hMultiplier * 20, verticalTiles * TILEHEIGHT + VPADDING + 20 + vMultiplier * 20, 20, 20, new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -114,20 +116,21 @@ public class GameView implements GameEventListener{
                             gui.repaint();
                         }
                     }).setImage(directionImageMap.get(direction));
-                    vCount ++;
-                    if(vCount == 3 || (vMultiplier==1 && vCount==2)){
+                    vCount++;
+                    if (vCount == 3 || (vMultiplier == 1 && vCount == 2)) {
                         vMultiplier++;
                         vCount = 0;
                         hMultiplier = 0;
-                    }else if(vMultiplier==1 && hMultiplier==0){
-                        hMultiplier+=2;
-                    }else{
+                    } else if (vMultiplier == 1 && hMultiplier == 0) {
+                        hMultiplier += 2;
+                    } else {
                         hMultiplier++;
                     }
                 }
 
                 final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
+
 
                         try{
                             final List<Item> items = controller.getAvailableItems();
@@ -149,7 +152,6 @@ public class GameView implements GameEventListener{
                         } catch (NotEnoughActionsException e){
                             new DialogView("You have no actions remaining, end the tun.");
                         }
-
                         gui.repaint();
                     }
                 });
@@ -159,7 +161,7 @@ public class GameView implements GameEventListener{
                     public void run() {
                         try {
                             final List<Item> items = controller.showInventory();
-                            ItemSelectionAction action = new ItemSelectionAction(){
+                            ItemSelectionAction action = new ItemSelectionAction() {
 
                                 @Override
                                 public void doAction(int index) {

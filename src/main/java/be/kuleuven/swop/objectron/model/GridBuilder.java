@@ -34,7 +34,7 @@ public class GridBuilder {
         walls = new ArrayList<Wall>();
 
         int maxNumberOfWalls = (int) Math.floor(MAX_WALL_COVERAGE_PERCENTAGE *
-                ((squares.length * squares[0].length)/2));
+                ((squares.length * squares[0].length) / MIN_WALL_LENGTH));
         int numberOfWalls = getRandomWithMax(1, maxNumberOfWalls + 1);
 
         boolean twentyPercentReached = false;
@@ -46,21 +46,20 @@ public class GridBuilder {
     private void setupItems(Square playerOneSquare, Square playerTwoSquare) {
         int numberOfItems = (int) Math.ceil(PERCENTAGE_OF_ITEMS * (squares.length * squares[0].length));
 
-        for (Square square:getAllNeighboursFromSquare(playerOneSquare)) {
-            if (getAllNeighboursFromSquare(square).size() == 8) {
-                placeLightMineInArea(square);
-                numberOfItems--;
-            }
-        }
+        placeLightMineCloseToPlayer(playerOneSquare);
+        placeLightMineCloseToPlayer(playerTwoSquare);
 
-        for (Square square:getAllNeighboursFromSquare(playerTwoSquare)) {
-            if (getAllNeighboursFromSquare(square).size() == 8) {
-                placeLightMineInArea(square);
-                numberOfItems--;
-            }
-        }
-
+        numberOfItems -= 2;
         placeOtherMines(numberOfItems);
+    }
+
+    private void placeLightMineCloseToPlayer(Square playerOneSquare) {
+        for (Square square:getAllNeighboursFromSquare(playerOneSquare)) {
+            //find the middle tile
+            if (getAllNeighboursFromSquare(square).size() == 8) {
+                placeLightMineInArea(square);
+            }
+        }
     }
 
     private void placeOtherMines(int numberOfItems) {
@@ -94,8 +93,6 @@ public class GridBuilder {
         }
         return neighbourSquares;
     }
-
-
 
     private boolean makeWall() {
         Square randomSquare = getRandomSquare();
