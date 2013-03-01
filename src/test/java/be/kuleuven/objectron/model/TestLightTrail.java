@@ -23,10 +23,10 @@ public class TestLightTrail {
 
     @Test
     public void test_expand_retract(){
-        Square s1 = new Square();
-        Square s2 = new Square();
-        Square s3 = new Square();
-        Square s4 = new Square();
+        Square s1 = new Square(0,0);
+        Square s2 = new Square(1,1);
+        Square s3 = new Square(1,2);
+        Square s4 = new Square(1,4);
 
         trail.expand(s1);
         assertTrue(s1.isObstructed());

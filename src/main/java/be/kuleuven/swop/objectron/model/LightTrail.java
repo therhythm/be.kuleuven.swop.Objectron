@@ -1,5 +1,10 @@
 package be.kuleuven.swop.objectron.model;
 
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author : Nik Torfs
  *         Date: 27/02/13
@@ -44,5 +49,16 @@ public class LightTrail {
             remainingActions[i]--;
         }
         retract();
+    }
+
+    public List<SquareViewModel> getLightTrailViewModel() {
+        List<SquareViewModel> list = new ArrayList<SquareViewModel>();
+
+        for(Square s:trail){
+            if(s!=null){
+                list.add(s.getSquareViewModel());
+            }
+        }
+        return list;
     }
 }

@@ -6,6 +6,8 @@ import be.kuleuven.swop.objectron.model.Direction;
 import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
+import be.kuleuven.swop.objectron.viewmodel.WallViewModel;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -30,25 +32,41 @@ public class GameView implements GameEventListener {
 
     private SquareStates gameGrid[][];
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
+    private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
 
     private GameController controller;
     private int horizontalTiles;
     private SimpleGUI gui;
     private int verticalTiles;
-    PlayerViewModel currentPlayer = null;
+    private SquareViewModel p1_finish;
+    private SquareViewModel p2_finish;
 
-    public GameView(GameController controller, int horizontalTiles, int verticalTiles, PlayerViewModel current) {
+    PlayerViewModel currentPlayer;
+
+    public GameView(GameController controller, int horizontalTiles, int verticalTiles, PlayerViewModel p1, PlayerViewModel p2, List<WallViewModel> walls) {
         this.controller = controller;
         this.horizontalTiles = horizontalTiles;
         this.verticalTiles = verticalTiles;
         this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
-        this.currentPlayer = current;
+        this.currentPlayer = p1;
         for (int i = 0; i < gameGrid.length; i++) {
             for (int j = 0; j < gameGrid[0].length; j++) {
                 gameGrid[i][j] = SquareStates.EMPTY;
             }
         }
+        for (WallViewModel vm : walls) {
+            for (SquareViewModel sVm : vm.getSquares()) {
+                gameGrid[sVm.getVIndex()][sVm.getHIndex()] = SquareStates.WALL;
+            }
+        }
+        playerColorMap.put(p1.getName(), new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL, SquareStates.P1_FINISH});
+        playerColorMap.put(p2.getName(), new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL, SquareStates.P2_FINISH});
+        gameGrid[p1.getVPosition()][p1.getHPosition()] = SquareStates.PLAYER1;
+        gameGrid[p2.getVPosition()][p2.getHPosition()] = SquareStates.PLAYER2;
+        p1_finish = new SquareViewModel(p1.getHPosition(), p1.getVPosition());
+        p2_finish = new SquareViewModel(p2.getHPosition(), p2.getVPosition());
     }
+
 
     public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -61,7 +79,18 @@ public class GameView implements GameEventListener {
                     public void paint(Graphics2D graphics) {
                         for (int i = 0; i < horizontalTiles; i++) {
                             for (int j = 0; j < verticalTiles; j++) {
-                                graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+                                if (gameGrid[j][i] == SquareStates.EMPTY){
+                                    if(p1_finish.getHIndex() == i && p1_finish.getVIndex() == j){
+                                        graphics.drawImage(gridImageMap.get(SquareStates.P1_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+
+                                    }else if(p2_finish.getHIndex() == i && p2_finish.getVIndex() == j) {
+                                        graphics.drawImage(gridImageMap.get(SquareStates.P2_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+                                    }else{
+                                        graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+                                    }
+                                }else{
+                                    graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+                                }
                             }
                         }
                         graphics.drawString(currentPlayer.getName(), 20, 20);
@@ -189,9 +218,17 @@ public class GameView implements GameEventListener {
 
     @Override
     public void playerUpdated(PlayerViewModel playerViewModel) {
+        if (currentPlayer.getName().equals(playerViewModel.getName())) {
+            gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = SquareStates.EMPTY;
+            for (SquareViewModel svm : currentPlayer.getLightTrail()) {
+                gameGrid[svm.getVIndex()][svm.getHIndex()] = SquareStates.EMPTY;
+            }
+        }
         currentPlayer = playerViewModel;
+        gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = playerColorMap.get(currentPlayer.getName())[0];
+        for (SquareViewModel svm : currentPlayer.getLightTrail()) {
+            gameGrid[svm.getVIndex()][svm.getHIndex()] = playerColorMap.get(currentPlayer.getName())[1];
+        }
         gui.repaint();
     }
-
-
 }

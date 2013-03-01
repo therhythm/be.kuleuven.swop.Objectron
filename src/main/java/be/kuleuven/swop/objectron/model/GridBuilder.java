@@ -30,6 +30,10 @@ public class GridBuilder {
         return squares;
     }
 
+    public List<Wall> getWalls() {
+        return walls;
+    }
+
     private void setupWalls() {
         walls = new ArrayList<Wall>();
 

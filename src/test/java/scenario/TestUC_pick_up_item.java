@@ -29,7 +29,7 @@ public class TestUC_pick_up_item {
 
     @Before
     public void setUp(){
-        currentSquare = new Square();
+        currentSquare = new Square(0,0);
         player = new PlayerImpl("p1", currentSquare);
 
         GameState stateMock = mock(GameState.class);

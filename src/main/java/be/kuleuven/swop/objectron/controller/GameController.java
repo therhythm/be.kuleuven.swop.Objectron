@@ -212,6 +212,7 @@ public class GameController {
         } else {
             state.getCurrentPlayer().endTurn();
             state.nextPlayer();
+            doPlayerUpdate();
         }
     }
 

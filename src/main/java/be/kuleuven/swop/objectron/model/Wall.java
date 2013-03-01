@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.model;
 
+import be.kuleuven.swop.objectron.viewmodel.WallViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,5 +28,9 @@ public class Wall {
         for(Square square: squares){
             square.setObstructed(true);
         }
+    }
+
+    public WallViewModel getWallViewModel(){
+        return new WallViewModel(squares);
     }
 }

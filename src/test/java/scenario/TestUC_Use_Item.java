@@ -31,7 +31,7 @@ public class TestUC_Use_Item
     @Before
     public void setUp() throws Exception
     {
-        Square square = new Square();
+        Square square = new Square(0,0);
         player = new PlayerImpl("p1", square);
 
         GameState stateMock = mock(GameState.class);
