@@ -69,4 +69,14 @@ public abstract class SimpleGUI {
         return image;
     }
 
+    public void setCloseOperation(int operation){
+        frame.setDefaultCloseOperation(operation);
+
+    }
+
+    public void dispose(){
+        frame.dispose();
+    }
+
+
 }

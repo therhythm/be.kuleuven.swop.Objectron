@@ -1,10 +1,12 @@
 package be.kuleuven.swop.objectron.gui;
 
 import be.kuleuven.swop.objectron.controller.GameController;
-import be.kuleuven.swop.objectron.model.GameOverException;
-import be.kuleuven.swop.objectron.model.InventoryEmptyException;
+import be.kuleuven.swop.objectron.model.*;
 
+import javax.swing.*;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * @author : Nik Torfs
@@ -76,7 +78,8 @@ public class GameView {
 
                 final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
-                        //TODO controller.pickUpItem();
+                        final List<Item> items = controller.getAvailableItems();
+
                         gui.repaint();
                     }
                 });
@@ -85,7 +88,8 @@ public class GameView {
                 final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
-                            controller.showInventory();
+                            final List<Item> items = controller.showInventory();
+                            new Inventory(items, controller);
                         } catch (InventoryEmptyException e) {
                             new Dialog("Your inventory is empty");
                         }
@@ -113,30 +117,84 @@ public class GameView {
         SimpleGUI dialog;
 
         Dialog(final String text){
-            dialog = new SimpleGUI("Dialog", 300, 200){
+            dialog = new SimpleGUI("Dialog", 300, 100){
 
                 @Override
                 public void paint(Graphics2D graphics) {
-                    graphics.drawString(text, 10, 10);
+                    graphics.drawString(text, 50, 50);
 
                 }
 
 
             };
-            Button btnOk = gui.createButton(120,150,60,30, new Runnable() {
+            dialog.setCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            dialog.createButton(120,70,60,30, new Runnable() {
                 @Override
                 public void run() {
-                    dialog = null;
+                    dialog.dispose();
                 }
-            });
-            btnOk.setText("ok");
+            }).setText("ok");
+
         }
     }
 
     private class Inventory{
-        SimpleGUI inv;
-        Inventory(){
+        Map<Class<?>, Image> itemMap = new HashMap<Class<?>, Image>();
 
+        SimpleGUI inv;
+        Inventory(final List<Item> items,final GameController controller){
+            inv = new SimpleGUI("Inventory",150, 100) {
+                @Override
+                public void paint(Graphics2D graphics) {
+
+                }
+            };
+
+            itemMap.put(LightMine.class, inv.loadImage("src/main/resources/player_red.png", 40, 40));
+            int hcount = 0, vcount = 0;
+            for(int i = 0; i< items.size(); i++){
+                final int index = i;
+                inv.createButton(10 + hcount * 40, 10 + vcount * 40, 40, 40, new Runnable() {
+                    @Override
+                    public void run() {
+                        controller.selectItemFromInventory(index);
+                        inv.dispose();
+                    }
+                }).setImage(itemMap.get(items.get(index).getClass()));
+
+            }
+        }
+    }
+
+    private class ItemList{
+        Map<Class<?>, Image> itemMap = new HashMap<Class<?>, Image>();
+
+        SimpleGUI inv;
+        ItemList(final List<Item> items,final GameController controller){
+            inv = new SimpleGUI("Inventory",150, 100) {
+                @Override
+                public void paint(Graphics2D graphics) {
+
+                }
+            };
+
+            itemMap.put(LightMine.class, inv.loadImage("src/main/resources/player_red.png", 40, 40));
+            int hcount = 0, vcount = 0;
+            for(int i = 0; i< items.size(); i++){
+                final int index = i;
+                inv.createButton(10 + hcount * 40, 10 + vcount * 40, 40, 40, new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            controller.pickUpItem(index);
+                        } catch (InventoryFullException e) {
+                            new Dialog("Your inventory is full!");
+                        }
+                        inv.dispose();
+                    }
+                }).setImage(itemMap.get(items.get(index).getClass()));
+
+            }
         }
     }
 }
