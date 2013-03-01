@@ -89,7 +89,7 @@ public class GameView {
                             try {
                                 controller.move(direction);
                             } catch (InvalidMoveException e) {
-                                new Dialog("Sorry that is not a valid move");
+                                new DialogView("Sorry that is not a valid move");
                             }
                             gui.repaint();
                         }
@@ -109,7 +109,7 @@ public class GameView {
                 final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         final List<Item> items = controller.getAvailableItems();
-                        new ItemList(items, controller);
+                        new ItemListView(items, controller);
                         gui.repaint();
                     }
                 });
@@ -119,9 +119,9 @@ public class GameView {
                     public void run() {
                         try {
                             final List<Item> items = controller.showInventory();
-                            new Inventory(items, controller);
+                            new InventoryView(items, controller);
                         } catch (InventoryEmptyException e) {
-                            new Dialog("Your inventory is empty");
+                            new DialogView("Your inventory is empty");
                         }
                         gui.repaint();
                     }
@@ -133,7 +133,7 @@ public class GameView {
                         try {
                             controller.endTurn();
                         } catch (GameOverException e) {
-                            new Dialog("You lost the game!");
+                            new DialogView("You lost the game!");
                         }
                         gui.repaint();
                     }
@@ -141,89 +141,5 @@ public class GameView {
                 endTurnButton.setText("End turn");
             }
         });
-    }
-
-    private class Dialog{
-        SimpleGUI dialog;
-
-        Dialog(final String text){
-            dialog = new SimpleGUI("Dialog", 300, 100){
-
-                @Override
-                public void paint(Graphics2D graphics) {
-                    graphics.drawString(text, 50, 50);
-
-                }
-
-
-            };
-            dialog.setCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            dialog.createButton(120,70,60,30, new Runnable() {
-                @Override
-                public void run() {
-                    dialog.dispose();
-                }
-            }).setText("ok");
-
-        }
-    }
-
-    private class Inventory{
-        Map<Class<?>, Image> itemMap = new HashMap<Class<?>, Image>();
-
-        SimpleGUI inv;
-        Inventory(final List<Item> items,final GameController controller){
-            inv = new SimpleGUI("Inventory",150, 100) {
-                @Override
-                public void paint(Graphics2D graphics) {
-
-                }
-            };
-
-            itemMap.put(LightMine.class, inv.loadImage("src/main/resources/player_red.png", 40, 40));
-            int hcount = 0, vcount = 0;
-            for(int i = 0; i< items.size(); i++){
-                final int index = i;
-                inv.createButton(10 + hcount * 40, 10 + vcount * 40, 40, 40, new Runnable() {
-                    @Override
-                    public void run() {
-                        controller.selectItemFromInventory(index);
-                        inv.dispose();
-                    }
-                }).setImage(itemMap.get(items.get(index).getClass()));
-
-            }
-        }
-    }
-
-    private class ItemList{
-        Map<Class<?>, Image> itemMap = new HashMap<Class<?>, Image>();
-
-        SimpleGUI inv;
-        ItemList(final List<Item> items,final GameController controller){
-            inv = new SimpleGUI("Inventory",150, 100) {
-                @Override
-                public void paint(Graphics2D graphics) {
-
-                }
-            };
-
-            itemMap.put(LightMine.class, inv.loadImage("src/main/resources/player_red.png", 40, 40));
-            int hcount = 0, vcount = 0;
-            for(int i = 0; i< items.size(); i++){
-                final int index = i;
-                inv.createButton(10 + hcount * 40, 10 + vcount * 40, 40, 40, new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            controller.pickUpItem(index);
-                        } catch (InventoryFullException e) {
-                            new Dialog("Your inventory is full!");
-                        }
-                        inv.dispose();
-                    }
-                }).setImage(itemMap.get(items.get(index).getClass()));
-            }
-        }
     }
 }
