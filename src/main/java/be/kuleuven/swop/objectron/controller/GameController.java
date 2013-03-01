@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.controller;
 import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.gui.GameView;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
+import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.model.*;
@@ -39,7 +40,7 @@ public class GameController {
      * Move the player in a given direction.
      *
      * @param direction The direction the player wants to move in.
-     * @throws InvalidMoveException This is an invalid move.
+     * @throws be.kuleuven.swop.objectron.model.exception.InvalidMoveException This is an invalid move.
      *                              | !state.getGrid().validPosition(
      *                              |  player.getCurrentSquare().getNeighbour(direction))
      * @post The player is moved in the chosen direction.
@@ -64,7 +65,7 @@ public class GameController {
      * Retrieve the inventory of the current player.
      *
      * @return A list of the items in the inventory of the current player.
-     * @throws InventoryEmptyException The current player's inventory is empty
+     * @throws be.kuleuven.swop.objectron.model.exception.InventoryEmptyException The current player's inventory is empty
      *                                 | getCurrentPlayer().getInventory().isEmpty()
      */
     public List<Item> showInventory() throws InventoryEmptyException {
@@ -184,7 +185,7 @@ public class GameController {
     /**
      * End the current player's turn.
      *
-     * @throws GameOverException The player hasn't moved during this turn and loses the game.
+     * @throws be.kuleuven.swop.objectron.model.exception.GameOverException The player hasn't moved during this turn and loses the game.
      *                           | !state.getCurrentPlayer().hasMoved()
      * @post The current player is switched to a new player.
      * | new.state.getCurrentPlayer() != state.getCurrentPlayer()

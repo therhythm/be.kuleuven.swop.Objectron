@@ -1,13 +1,13 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.model.exception;
 
 /**
- * Exception to indicate a full inventory
+ * Exception to indicate an empty inventory
  *
  * @author : Kasper Vervaecke
- *         Date: 25/02/13
- *         Time: 19:00
+ *         Date: 25/02/2013
+ *         Time: 14:36
  */
-public class InventoryFullException extends Exception {
+public class InventoryEmptyException extends Exception {
 
     /**
      * Initialize this exception with a given message.
@@ -16,7 +16,7 @@ public class InventoryFullException extends Exception {
      * @post The new error message for this exception equals the given message.
      * | new.getMessage == message
      */
-    public InventoryFullException(String message) {
+    public InventoryEmptyException(String message) {
         super(message);
     }
 }

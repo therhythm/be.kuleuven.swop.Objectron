@@ -1,6 +1,8 @@
 package be.kuleuven.swop.objectron.model;
 
 
+import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.model.item.LightMine;
 
 import java.util.ArrayList;

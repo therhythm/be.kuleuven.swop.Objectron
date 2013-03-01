@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.LightMine;
 import org.junit.Before;

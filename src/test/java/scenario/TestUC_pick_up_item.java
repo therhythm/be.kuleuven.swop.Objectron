@@ -3,6 +3,8 @@ package scenario;
 import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.controller.GameController;
 import be.kuleuven.swop.objectron.model.*;
+import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
+import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.LightMine;
 import org.junit.Before;
@@ -53,7 +55,7 @@ public class TestUC_pick_up_item {
 
     @Test(expected = IllegalStateException.class)
     public void  test_no_items_on_square(){
-        assertTrue(currentSquare.getAvailableItems().size()==0);
+        assertTrue(currentSquare.getAvailableItems().size() == 0);
         gameController.getAvailableItems();
     }
 

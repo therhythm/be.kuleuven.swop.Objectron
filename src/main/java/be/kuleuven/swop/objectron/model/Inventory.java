@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.model;
 
+import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.model.item.Item;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.model.item;
 
 import be.kuleuven.swop.objectron.model.Square;
-import be.kuleuven.swop.objectron.model.SquareOccupiedException;
+import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 
 /**
  * @author : Peter Bosmans

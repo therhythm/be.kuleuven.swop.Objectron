@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.gui;
 
 import be.kuleuven.swop.objectron.controller.GameController;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
+import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.model.*;

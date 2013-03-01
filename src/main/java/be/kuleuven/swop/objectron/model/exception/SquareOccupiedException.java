@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.model.exception;
 
 /**
  * Exception to indicate a square is occupied

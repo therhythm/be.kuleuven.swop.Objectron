@@ -1,5 +1,8 @@
 package be.kuleuven.swop.objectron.model;
 
+import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
+import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
