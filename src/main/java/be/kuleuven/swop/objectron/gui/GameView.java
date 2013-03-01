@@ -159,21 +159,28 @@ public class GameView implements GameEventListener {
 
                 final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
-                        final List<Item> items = controller.getAvailableItems();
-                        ItemSelectionAction action = new ItemSelectionAction() {
 
-                            @Override
-                            public void doAction(int index) {
-                                try {
-                                    controller.pickUpItem(index);
-                                } catch (InventoryFullException e) {
-                                    new DialogView("Your inventory is full!");
-                                } catch (NotEnoughActionsException e) {
-                                    new DialogView("You have no actions remaining, end the turn.");
-                                }
-                            }
-                        };
-                        new ItemListView(items, action);
+
+                        try{
+                            final List<Item> items = controller.getAvailableItems();
+                            ItemSelectionAction action = new ItemSelectionAction(){
+                                @Override
+                                public void doAction(int index) {
+                                    try {
+                                        controller.pickUpItem(index);
+                                    } catch (InventoryFullException e) {
+                                        new DialogView("Your inventory is full!");
+                                    } catch (NotEnoughActionsException e) {
+                                        new DialogView("You have no actions remaining, end the turn.");
+                                    }
+                                 }
+                             };
+                            new ItemListView(items, action);
+                        } catch (SquareEmptyException e){
+                            new DialogView("The current square is empty");
+                        } catch (NotEnoughActionsException e){
+                            new DialogView("You have no actions remaining, end the tun.");
+                        }
                         gui.repaint();
                     }
                 });

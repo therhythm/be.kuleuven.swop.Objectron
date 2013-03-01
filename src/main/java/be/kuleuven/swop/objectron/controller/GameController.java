@@ -153,13 +153,16 @@ public class GameController {
      * @throws IllegalStateException The current square has no items
      *                               | currentSquare.availableItems().size() == 0
      */
-    public List<Item> getAvailableItems() {
+    public List<Item> getAvailableItems() throws SquareEmptyException, NotEnoughActionsException{
         Player currentPlayer = this.state.getCurrentPlayer();
         Square currentSquare = currentPlayer.getCurrentSquare();
 
         List<Item> availableItems = currentSquare.getAvailableItems();
-        if (availableItems.size() == 0) {
-            throw new IllegalStateException("no items in current square");
+        if(currentPlayer.getAvailableActions() == 0){
+            throw new NotEnoughActionsException("You don't have the actions to do this");
+        }
+        else if (availableItems.size() == 0) {
+            throw new SquareEmptyException("no items in current square");
         }
 
         return availableItems;
