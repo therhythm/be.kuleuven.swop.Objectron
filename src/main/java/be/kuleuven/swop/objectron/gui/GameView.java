@@ -61,16 +61,48 @@ public class GameView {
                 playerRed = gui.loadImage("src/main/resources/player_red.png", TILEWIDTH, TILEHEIGHT);
                 playerBlue = gui.loadImage("src/main/resources/player_blue.png", TILEWIDTH, TILEHEIGHT);
                 cell = gui.loadImage("src/main/resources/cell.png", TILEWIDTH, TILEHEIGHT);
-                cellFinishBlue = gui.loadImage("src/main/resource/cell_finish_blue.png", TILEWIDTH, TILEHEIGHT);
-                cellFinishRed = gui.loadImage("src/main/resource/cell_finish_red.png", TILEWIDTH, TILEHEIGHT);
+                cellFinishBlue = gui.loadImage("src/main/resources/cell_finish_blue.png", TILEWIDTH, TILEHEIGHT);
+                cellFinishRed = gui.loadImage("src/main/resources/cell_finish_red.png", TILEWIDTH, TILEHEIGHT);
 
-                final Button moveButton = gui.createButton(HPADDING, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                Image NWArrow = gui.loadImage("src/main/resources/arrow_NW.png",20,20);
+                Image NArrow = gui.loadImage("src/main/resources/arrow_N.png",20,20);
+                Image NEArrow = gui.loadImage("src/main/resources/arrow_NE.png",20,20);
+
+
+            /*    final Button moveButton = gui.createButton(HPADDING, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         //TODO controller.selectDirection();
                         gui.repaint();
                     }
                 });
-                moveButton.setText("Make a move");
+                moveButton.setText("Make a move");*/
+                final Button NWButton = gui.createButton(HPADDING,verticalTiles*TILEHEIGHT + VPADDING + 20,20,20,new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO controller.move
+                        gui.repaint();
+                    }
+                });
+                NWButton.setImage(NWArrow);
+
+                final Button NButton = gui.createButton(HPADDING + 20,verticalTiles*TILEHEIGHT + VPADDING + 20,20,20,new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO controller.move
+                        gui.repaint();
+                    }
+                });
+                NWButton.setImage(NArrow);
+
+                final Button NEButton = gui.createButton(HPADDING + 40,verticalTiles*TILEHEIGHT + VPADDING + 20,20,20,new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO controller.move
+                        gui.repaint();
+                    }
+                });
+                NWButton.setImage(NEArrow);
+
 
                 final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
