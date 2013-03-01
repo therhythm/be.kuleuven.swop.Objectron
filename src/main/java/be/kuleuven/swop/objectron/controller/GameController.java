@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.gui.GameView;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
 import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.model.item.NullItem;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.model.*;
 
@@ -127,7 +128,7 @@ public class GameController {
      * | new.state.getCurrentPlayer().getCurrentlySelectedItem() == null
      */
     public void cancelItemUsage() {
-        state.getCurrentPlayer().setCurrentlySelectedItem(null);
+        state.getCurrentPlayer().setCurrentlySelectedItem(new NullItem());
         doPlayerUpdate();
     }
 

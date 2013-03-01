@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.model.item;
 
+import be.kuleuven.swop.objectron.util.Nullable;
 import be.kuleuven.swop.objectron.model.Square;
 import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 
@@ -8,7 +9,7 @@ import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
  *         Date: 21/02/13
  *         Time: 23:52
  */
-public interface Item {
+public interface Item extends Nullable {
 
     /**
      * Use the item on the specified square
@@ -18,4 +19,9 @@ public interface Item {
     void use(Square square) throws SquareOccupiedException;
 
     ItemSpecification getSpecification();
+
+    /**
+     * activate the item TODO
+     */
+    void activate();
 }

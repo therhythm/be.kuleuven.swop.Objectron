@@ -24,4 +24,14 @@ public class NullItem implements Item{
     public ItemSpecification getSpecification() {
         return itemSpecification;
     }
+
+    @Override
+    public void activate() {
+        //
+    }
+
+    @Override
+    public boolean isNull(){
+        return true;
+    }
 }

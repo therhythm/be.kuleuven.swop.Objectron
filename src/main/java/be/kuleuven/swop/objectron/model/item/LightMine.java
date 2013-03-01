@@ -30,7 +30,17 @@ public class LightMine implements Item {
         return itemSpecification;
     }
 
+    @Override
+    public void activate() {
+        // TODO
+    }
+
     private boolean canHaveAsSquare(Square square) {
         return square != null && !square.hasActiveItem();
+    }
+
+    @Override
+    public boolean isNull() {
+        return false;
     }
 }

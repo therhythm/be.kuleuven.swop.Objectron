@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.model;
 
 import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.model.item.NullItem;
 
 import java.util.*;
 
@@ -14,7 +15,7 @@ public class Square {
     Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
     private List<Item> items = new ArrayList<Item>();
     private boolean isObstructed = false;
-    private Item activeItem = null;
+    private Item activeItem = new NullItem();
 
     public void addNeighbour(Direction direction, Square neighbour) {
         neighbours.put(direction, neighbour);
@@ -35,9 +36,7 @@ public class Square {
     //TODO win scenarios
     public void stepOn(Player player){
         setObstructed(true);
-        if(hasActiveItem()) {
-            player.blind();
-        }
+        activeItem.activate();
     }
 
     public List<Item> getAvailableItems() {
@@ -56,7 +55,7 @@ public class Square {
     }
 
     public boolean hasActiveItem() {
-        return activeItem != null;
+        return !activeItem.isNull();
     }
 
     public void setActiveItem(Item activeItem) {

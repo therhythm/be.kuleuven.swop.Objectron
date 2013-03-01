@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.LightMine;
+import be.kuleuven.swop.objectron.model.item.NullItem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -80,7 +81,6 @@ public class TestUC_Use_Item
         assertEquals(initialAvailableActions - 1, player.getAvailableActions());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
         assertTrue(player.getCurrentSquare().hasActiveItem());
-        assertEquals(item, player.getCurrentSquare().getActiveItem());
     }
 
     @Test(expected = SquareOccupiedException.class)
