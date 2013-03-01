@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.model.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.LightMine;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 import static org.junit.Assert.*;
@@ -34,7 +35,7 @@ public class TestUC_pick_up_item {
         gameController = new GameController(stateMock);
     }
 
-    @org.junit.Test
+    @Test
     public void  test_basic_flow() throws InventoryFullException, NotEnoughActionsException {
         // fixture
         Item i1 = new LightMine();
@@ -50,13 +51,13 @@ public class TestUC_pick_up_item {
         assertTrue(player.getInventoryItems().contains(i1));
     }
 
-    @org.junit.Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void  test_no_items_on_square(){
         assertTrue(currentSquare.getAvailableItems().size()==0);
         gameController.getAvailableItems();
     }
 
-    @org.junit.Test(expected = InventoryFullException.class)
+    @Test(expected = InventoryFullException.class)
     public void  test_player_inventory_full() throws InventoryFullException, NotEnoughActionsException {
         currentSquare.addItem(mock(LightMine.class));
         assertTrue(currentSquare.getAvailableItems().size() != 0);
@@ -66,6 +67,18 @@ public class TestUC_pick_up_item {
         }
 
         gameController.getAvailableItems();
+        gameController.pickUpItem(0);
+    }
+
+    @Test(expected = NotEnoughActionsException.class)
+    public void test_no_more_actions() throws InventoryFullException, NotEnoughActionsException, IllegalStateException{
+        for(int i=0; i<4; i++){
+            currentSquare.addItem(mock(LightMine.class));
+        }
+
+        gameController.pickUpItem(0);
+        gameController.pickUpItem(0);
+        gameController.pickUpItem(0);
         gameController.pickUpItem(0);
     }
 
