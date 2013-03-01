@@ -3,11 +3,13 @@ package be.kuleuven.swop.objectron.controller;
 import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.gui.GameView;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
+import be.kuleuven.swop.objectron.model.Direction;
+import be.kuleuven.swop.objectron.model.Player;
+import be.kuleuven.swop.objectron.model.Square;
 import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.NullItem;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
-import be.kuleuven.swop.objectron.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,8 @@ public class GameController {
      * @throws be.kuleuven.swop.objectron.model.exception.InvalidMoveException This is an invalid move.
      *                              | !state.getGrid().validPosition(
      *                              |  player.getCurrentSquare().getNeighbour(direction))
+     * @throws NotEnoughActionsException The player has not enough actions remaining.
+     *                              | state.getCurrentPlayer().getAvailableActions() == 0
      * @post The player is moved in the chosen direction.
      * | new.state.getCurrentPlayer().getCurrentSquare()
      * |  != state.getCurrentPlayer().getCurrentSquare()
@@ -92,6 +96,9 @@ public class GameController {
         doPlayerUpdate();
     }
 
+    /**
+     * Send player updates to the game event listeners.
+     */
     private void doPlayerUpdate() {
         PlayerViewModel viewModel = state.getCurrentPlayer().getPlayerViewModel();
         for(GameEventListener listener : listeners){
@@ -103,6 +110,10 @@ public class GameController {
      * Use the currently selected item
      *
      * @return A boolean to indicate whether the item was successfully used
+     * @throws SquareOccupiedException The square the player is trying to access, is occupied.
+     *         | state.getCurrentPlayer().getCurrentSquare().hasActiveItem()
+     * @throws NotEnoughActionsException The player has no more available actions.
+     *         | state.getCurrentPlayer().getAvailableActions() == 0
      * @post The item is removed from the player's inventory
      * | !currentPlayer.getInventory().contains(currentPlayer.getCurrentlySelectedItem())
      * @post The player's available actions is reduced by 1
@@ -158,6 +169,10 @@ public class GameController {
      * Pick up an item from the current square.
      *
      * @param selectionId The ID of the item to pick up.
+     * @throws InventoryFullException The player's inventory is full.
+     *         | state.getCurrentPlayer().getInventoryItems() == 6
+     * @throws NotEnoughActionsException The player has no more available actions.
+     *         | state.getCurrentPlayer().getAvailableActions() == 0
      * @post The item is removed from the current square.
      * | !state.getCurrentPlayer().getCurrentSquare().
      * |  getAvailableItems().get(selectionId)
@@ -200,6 +215,13 @@ public class GameController {
         }
     }
 
+    /**
+     * Add a game event listener to the list of listeners.
+     *
+     * @param gameEventListener The game event listener to add.
+     * @post The listener is added to the list.
+     *       | new.listeners.contains(gameEventListener)
+     */
     public void addGameEventListener(GameView gameEventListener) {
         this.listeners.add(gameEventListener);
     }
