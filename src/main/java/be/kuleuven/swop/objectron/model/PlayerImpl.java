@@ -41,6 +41,7 @@ public class PlayerImpl implements Player {
     public void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException {
         checkEnoughActions();
         this.inventory.addItem(itemToAdd);
+        reduceAvailableActions();
     }
 
     @Override

@@ -103,4 +103,13 @@ public class TestUC_Use_Item
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
         assertFalse(player.getCurrentSquare().hasActiveItem());
     }
+
+    @Test(expected = NotEnoughActionsException.class)
+    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException{
+       player.addToInventory(new LightMine());
+       player.addToInventory(new LightMine());
+       player.addToInventory(new LightMine());
+       controller.selectItemFromInventory(0);
+       controller.useCurrentItem();
+    }
 }
