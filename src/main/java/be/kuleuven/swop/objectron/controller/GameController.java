@@ -3,6 +3,8 @@ package be.kuleuven.swop.objectron.controller;
 import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.gui.GameView;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
+import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.model.*;
 
 import java.util.ArrayList;
@@ -89,10 +91,9 @@ public class GameController {
     }
 
     private void doPlayerUpdate() {
-        Player current = state.getCurrentPlayer();
+        PlayerViewModel viewModel = state.getCurrentPlayer().getPlayerViewModel();
         for(GameEventListener listener : listeners){
-            //todo make small wrapper object
-            listener.playerUpdated(0,0, current.getAvailableActions(), current.getCurrentlySelectedItem() == null ? "no item" : current.getCurrentlySelectedItem().getClass().getSimpleName());
+            listener.playerUpdated(viewModel);
         }
     }
 

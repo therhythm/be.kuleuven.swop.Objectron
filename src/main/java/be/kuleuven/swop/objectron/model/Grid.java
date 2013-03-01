@@ -1,6 +1,8 @@
 package be.kuleuven.swop.objectron.model;
 
 
+import be.kuleuven.swop.objectron.model.item.LightMine;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +15,6 @@ public class Grid {
     public static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
     public static final int MIN_WALL_LENGTH = 2;
     public static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
-
-
     public static final double PERCENTAGE_OF_ITEMS = 0.05;
 
     private Square[][] squares;

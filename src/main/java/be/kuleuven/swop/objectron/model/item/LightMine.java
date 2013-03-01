@@ -1,4 +1,7 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.model.item;
+
+import be.kuleuven.swop.objectron.model.Square;
+import be.kuleuven.swop.objectron.model.SquareOccupiedException;
 
 /**
  * @author : Peter Bosmans
@@ -7,6 +10,12 @@ package be.kuleuven.swop.objectron.model;
  */
 public class LightMine implements Item {
 
+    private static ItemSpecification itemSpecification;
+
+    static {
+        itemSpecification = new ItemSpecification("Light Mine", "A mine that blinds the player that steps on it.");
+    }
+
     @Override
     public void use(Square square) throws SquareOccupiedException {
         if (canHaveAsSquare(square)) {
@@ -14,6 +23,11 @@ public class LightMine implements Item {
         } else {
             throw new SquareOccupiedException("invalid square or square already has a light grenade");
         }
+    }
+
+    @Override
+    public ItemSpecification getSpecification() {
+        return itemSpecification;
     }
 
     private boolean canHaveAsSquare(Square square) {

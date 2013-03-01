@@ -1,5 +1,8 @@
 package be.kuleuven.swop.objectron.model;
 
+import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
+
 import java.util.List;
 
 /**
@@ -59,5 +62,5 @@ public interface Player {
 
     void blind();
 
-    boolean isBlinded();
+    PlayerViewModel getPlayerViewModel();
 }
