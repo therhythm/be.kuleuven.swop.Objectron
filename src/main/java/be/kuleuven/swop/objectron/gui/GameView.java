@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.gui;
 
 import be.kuleuven.swop.objectron.controller.GameController;
+import be.kuleuven.swop.objectron.listener.GameEventListener;
 import be.kuleuven.swop.objectron.model.*;
 
 import javax.swing.*;
@@ -13,7 +14,11 @@ import java.util.List;
  *         Date: 25/02/13
  *         Time: 21:24
  */
-public class GameView {
+public class GameView implements GameEventListener{
+
+    public enum SquareStates{
+        WALL, LIGHT_WALL, PLAYER
+    }
     private static int HPADDING = 10;
     private static int VPADDING = 50;
     private static int TILEWIDTH = 40;
@@ -22,6 +27,8 @@ public class GameView {
     private GameController controller;
     private int horizontalTiles;
     private int verticalTiles;
+    private String currentPlayer = "blaat";
+    private int availableMoves = 3;
     private SimpleGUI gui;
 
     public GameView(GameController controller, int horizontalTiles, int verticalTiles) {
@@ -53,6 +60,8 @@ public class GameView {
                                 graphics.drawImage(cell, HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                             }
                         }
+                        graphics.drawString(currentPlayer, 20, 20 );
+                        graphics.drawString("moves remaining: " + availableMoves, 100, 20);
                     }
 
                     @Override
@@ -90,6 +99,8 @@ public class GameView {
                                 controller.move(direction);
                             } catch (InvalidMoveException e) {
                                 new DialogView("Sorry that is not a valid move");
+                            } catch (NotEnoughActionsException e) {
+                                new DialogView("You have no actions remaining, end the turn.");
                             }
                             gui.repaint();
                         }
@@ -109,7 +120,18 @@ public class GameView {
                 final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         final List<Item> items = controller.getAvailableItems();
-                        new ItemListView(items, controller);
+                        ItemSelectionAction action = new ItemSelectionAction(){
+
+                            @Override
+                            public void doAction(int index) {
+                                try {
+                                    controller.pickUpItem(index);
+                                } catch (InventoryFullException e) {
+                                    new DialogView("Your inventory is full!");
+                                }
+                            }
+                        };
+                        new ItemListView(items, action);
                         gui.repaint();
                     }
                 });
@@ -119,7 +141,14 @@ public class GameView {
                     public void run() {
                         try {
                             final List<Item> items = controller.showInventory();
-                            new InventoryView(items, controller);
+                            ItemSelectionAction action = new ItemSelectionAction(){
+
+                                @Override
+                                public void doAction(int index) {
+                                    controller.selectItemFromInventory(index);
+                                }
+                            };
+                            new ItemListView(items, action);
                         } catch (InventoryEmptyException e) {
                             new DialogView("Your inventory is empty");
                         }
@@ -134,12 +163,28 @@ public class GameView {
                             controller.endTurn();
                         } catch (GameOverException e) {
                             new DialogView("You lost the game!");
+                            gui.dispose();
                         }
                         gui.repaint();
                     }
                 });
                 endTurnButton.setText("End turn");
+
             }
         });
     }
+
+    @Override
+    public void playerUpdated(int hPosition, int vPosition, int availableActions) {
+        availableMoves = availableActions;
+
+    }
+
+    @Override
+    public void playerChanged(String name, int availableActions) {
+        currentPlayer = name;
+        availableMoves = availableActions;
+    }
+
+
 }

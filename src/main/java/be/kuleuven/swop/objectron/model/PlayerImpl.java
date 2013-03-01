@@ -43,13 +43,21 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public void move(Square newPosition) {
+    public void move(Square newPosition) throws NotEnoughActionsException {
+        if(!hasEnoughActions()){
+            throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
+        }
         reduceAvailableActions();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
         currentSquare.stepOn(this);
         hasMoved = true;
     }
+
+    private boolean hasEnoughActions() {
+        return availableActions > 0;
+    }
+
 
     @Override
     public String getName() {

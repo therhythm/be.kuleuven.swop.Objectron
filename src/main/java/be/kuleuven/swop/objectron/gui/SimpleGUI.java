@@ -77,6 +77,4 @@ public abstract class SimpleGUI {
     public void dispose(){
         frame.dispose();
     }
-
-
 }

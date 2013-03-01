@@ -28,7 +28,7 @@ public interface Player {
      *
      * @param newPosition
      */
-    void move(Square newPosition);
+    void move(Square newPosition) throws NotEnoughActionsException;
 
     String getName();
 

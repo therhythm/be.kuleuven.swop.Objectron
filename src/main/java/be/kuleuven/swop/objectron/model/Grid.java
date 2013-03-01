@@ -10,8 +10,6 @@ import java.util.List;
  *         Time: 07:04
  */
 public class Grid {
-
-
     public static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
     public static final int MIN_WALL_LENGTH = 2;
     public static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
@@ -27,7 +25,7 @@ public class Grid {
         setupNeighbours();
     }
 
-    public void makeMove(Direction direction, Player player) throws InvalidMoveException {
+    public void makeMove(Direction direction, Player player) throws InvalidMoveException, NotEnoughActionsException {
         Square neighbour = player.getCurrentSquare().getNeighbour(direction);
         if (!validPosition(neighbour)) {
             throw new InvalidMoveException();
@@ -58,7 +56,6 @@ public class Grid {
 
     private void setupItems(Square p1Square, Square p2Square) {
         int numberOfItems = (int) Math.ceil(PERCENTAGE_OF_ITEMS * (squares.length * squares[0].length));
-        System.out.println(numberOfItems);
 
         //players 3x3 square
         for (Square square:getAllNeighboursFromSquare(p1Square)){

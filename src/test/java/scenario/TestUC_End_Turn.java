@@ -29,7 +29,7 @@ public class TestUC_End_Turn {
     }
 
     @Test
-    public void test_end_turn_with_move() throws InvalidMoveException, GameOverException {
+    public void test_end_turn_with_move() throws InvalidMoveException, GameOverException, NotEnoughActionsException {
         Player oldPlayer = state.getCurrentPlayer();
         controller.move(Direction.UP);
         controller.endTurn();

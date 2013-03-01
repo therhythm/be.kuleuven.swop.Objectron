@@ -1,8 +1,11 @@
 package be.kuleuven.swop.objectron.controller;
 
 import be.kuleuven.swop.objectron.GameState;
+import be.kuleuven.swop.objectron.gui.GameView;
+import be.kuleuven.swop.objectron.listener.GameEventListener;
 import be.kuleuven.swop.objectron.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +20,7 @@ import java.util.logging.Logger;
 public class GameController {
     private static final Logger logger = Logger.getLogger(GameController.class.getCanonicalName());
     private GameState state;
+    private List<GameEventListener> listeners = new ArrayList<GameEventListener>();
 
     /**
      * Initialize the game controller with a give game state.
@@ -40,11 +44,15 @@ public class GameController {
      * | new.state.getCurrentPlayer().getCurrentSquare()
      * |  != state.getCurrentPlayer().getCurrentSquare()
      */
-    public void move(Direction direction) throws InvalidMoveException {
+    public void move(Direction direction) throws InvalidMoveException, NotEnoughActionsException {
         try {
             state.getGrid().makeMove(direction, state.getCurrentPlayer());
+            doPlayerUpdate();
         } catch (InvalidMoveException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");
+            throw e;
+        } catch (NotEnoughActionsException e) {
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do a move when he had no actions remaining.");
             throw e;
         }
     }
@@ -77,6 +85,13 @@ public class GameController {
     public void selectItemFromInventory(int identifier) {
         Item selectedItem = state.getCurrentPlayer().getInventoryItem(identifier);
         state.getCurrentPlayer().setCurrentlySelectedItem(selectedItem);
+
+    }
+
+    private void doPlayerUpdate() {
+        for(GameEventListener listener : listeners){
+            listener.playerUpdated(0,0, state.getCurrentPlayer().getAvailableActions());
+        }
     }
 
     /**
@@ -91,6 +106,7 @@ public class GameController {
     public void useCurrentItem() throws SquareOccupiedException {
         try {
             state.getCurrentPlayer().useCurrentItem();
+            doPlayerUpdate();
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
             throw e;
@@ -147,6 +163,7 @@ public class GameController {
 
         try {
             currentPlayer.addToInventory(selectedItem);
+            doPlayerUpdate();
         } catch (InventoryFullException e) {
             currentSquare.addItem(selectedItem);
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has a full inventory!");
@@ -169,5 +186,9 @@ public class GameController {
             state.nextPlayer();
             state.getCurrentPlayer().endTurn();
         }
+    }
+
+    public void addGameEventListener(GameView gameEventListener) {
+        this.listeners.add(gameEventListener);
     }
 }

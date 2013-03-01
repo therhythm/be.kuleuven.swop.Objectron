@@ -34,6 +34,7 @@ public class RunObjectron {
         GameController controller = new GameController(state);
         GameView view = new GameView(controller, horizontalTiles, verticalTiles);
         view.run();
+        controller.addGameEventListener(view);
     }
 
     public static void main(String[] args) {

@@ -15,7 +15,8 @@ public class ItemListView {
 
     SimpleGUI inv;
 
-    public ItemListView(final java.util.List<Item> items, final GameController controller) {
+
+    public ItemListView(final java.util.List<Item> items,final ItemSelectionAction action) {
         inv = new SimpleGUI("Inventory", 150, 100) {
             @Override
             public void paint(Graphics2D graphics) {
@@ -30,14 +31,11 @@ public class ItemListView {
             inv.createButton(10 + hcount * 40, 10 + vcount * 40, 40, 40, new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        controller.pickUpItem(index);
-                    } catch (InventoryFullException e) {
-                        new DialogView("Your inventory is full!");
-                    }
+                    action.doAction(index);
                     inv.dispose();
                 }
             }).setImage(itemMap.get(items.get(index).getClass()));
         }
     }
+
 }

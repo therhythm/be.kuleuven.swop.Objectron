@@ -37,7 +37,7 @@ public class TestUC_Move {
     }
 
     @Test
-    public void test_main_flow() throws InvalidMoveException {
+    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException {
         Square prev = player.getCurrentSquare();
 
         controller.move(Direction.UP);
@@ -49,12 +49,15 @@ public class TestUC_Move {
     }
 
     @Test(expected = InvalidMoveException.class)
-    public void test_wrong_positioning() throws InvalidMoveException {
+    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException {
         controller.move(Direction.DOWN);
     }
 
-    @Test
-    public void test_endgame_move(){
-
+    @Test(expected = NotEnoughActionsException.class)
+    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException {
+        controller.move(Direction.UP);
+        controller.move(Direction.UP);
+        controller.move(Direction.UP);
+        controller.move(Direction.UP);
     }
 }

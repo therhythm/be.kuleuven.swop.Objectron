@@ -13,12 +13,11 @@ public class DialogView {
     SimpleGUI dialog;
 
     public DialogView(final String text) {
-        dialog = new SimpleGUI("Dialog", 300, 100) {
+        dialog = new SimpleGUI("Dialog", 400, 100) {
 
             @Override
             public void paint(Graphics2D graphics) {
                 graphics.drawString(text, 50, 50);
-
             }
 
 
