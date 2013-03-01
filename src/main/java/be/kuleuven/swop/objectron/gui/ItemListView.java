@@ -1,9 +1,7 @@
 package be.kuleuven.swop.objectron.gui;
 
-import be.kuleuven.swop.objectron.controller.GameController;
-import be.kuleuven.swop.objectron.model.InventoryFullException;
-import be.kuleuven.swop.objectron.model.Item;
-import be.kuleuven.swop.objectron.model.LightMine;
+import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.model.item.LightMine;
 
 import java.awt.*;
 import java.util.HashMap;

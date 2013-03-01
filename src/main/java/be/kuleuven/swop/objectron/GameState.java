@@ -13,7 +13,6 @@ import java.util.List;
  *         Time: 21:02
  */
 public class GameState {
-
     private Grid gameGrid;
     private Player currentPlayer;
     private List<Player> players = new ArrayList<Player>();

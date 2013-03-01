@@ -1,5 +1,12 @@
 package be.kuleuven.swop.objectron.model;
 
+import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
+import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.model.item.NullItem;
+import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
+
 import java.util.List;
 
 /**
@@ -13,23 +20,17 @@ public class PlayerImpl implements Player {
 
     private String name;
     private Square currentSquare;
-    private Item currentlySelectedItem = null;
+    private Item currentlySelectedItem = new NullItem();
     private int availableActions = NB_ACTIONS_EACH_TURN;
-    private LightTrail lightTrail;
-    private Inventory inventory;
+    private LightTrail lightTrail = new LightTrail();
+    private Inventory inventory = new InventoryImpl();
     private boolean hasMoved;
-    private boolean isBlinded;
-    private int remainingActionsBlinded;
+    private int remainingActionsBlinded = 0;
 
     public PlayerImpl(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
         currentSquare.setObstructed(true);
-        lightTrail = new LightTrail();
-        inventory = new InventoryImpl();
-        hasMoved = false;
-        isBlinded = false;
-        remainingActionsBlinded = 0;
     }
 
     @Override
@@ -41,6 +42,7 @@ public class PlayerImpl implements Player {
     public void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException {
         checkEnoughActions();
         this.inventory.addItem(itemToAdd);
+        reduceAvailableActions();
     }
 
     @Override
@@ -58,7 +60,6 @@ public class PlayerImpl implements Player {
             throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
         }
     }
-
 
     @Override
     public String getName() {
@@ -117,13 +118,13 @@ public class PlayerImpl implements Player {
 
     @Override
     public void blind() {
-        isBlinded = true;
         remainingActionsBlinded = NB_ACTIONS_BLINDED - availableActions;
         endTurn();
     }
 
     @Override
-    public boolean isBlinded() {
-        return isBlinded;
+    public PlayerViewModel getPlayerViewModel() {
+        //TODO positioning
+        return new PlayerViewModel(getName(), 0 ,0 , getAvailableActions(), getCurrentlySelectedItem().getSpecification());
     }
 }

@@ -2,12 +2,15 @@ package be.kuleuven.swop.objectron.gui;
 
 import be.kuleuven.swop.objectron.controller.GameController;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
-import be.kuleuven.swop.objectron.model.*;
+import be.kuleuven.swop.objectron.model.Direction;
+import be.kuleuven.swop.objectron.model.exception.*;
+import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : Nik Torfs
@@ -17,25 +20,28 @@ import java.util.List;
 public class GameView implements GameEventListener{
 
     public enum SquareStates{
-        WALL, LIGHT_WALL, PLAYER
+        WALL, P1_LIGHT_WALL, P2_LIGHT_WALL, PLAYER1, PLAYER2, EMPTY
     }
+
     private static int HPADDING = 10;
     private static int VPADDING = 50;
     private static int TILEWIDTH = 40;
     private static int TILEHEIGHT = 40;
 
+    private SquareStates gameGrid[][];
+
     private GameController controller;
     private int horizontalTiles;
-    private int verticalTiles;
-    private String currentPlayer = "blaat";
-    private String selectedItem = "no item";
-    private int availableMoves = 3;
     private SimpleGUI gui;
+    private int verticalTiles;
+    PlayerViewModel currentPlayer = null;
 
-    public GameView(GameController controller, int horizontalTiles, int verticalTiles) {
+    public GameView(GameController controller, int horizontalTiles, int verticalTiles, PlayerViewModel current) {
         this.controller = controller;
         this.horizontalTiles = horizontalTiles;
         this.verticalTiles = verticalTiles;
+        this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
+        this.currentPlayer = current;
     }
 
     public void run() {
@@ -61,9 +67,9 @@ public class GameView implements GameEventListener{
                                 graphics.drawImage(cell, HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                             }
                         }
-                        graphics.drawString(currentPlayer, 20, 20 );
-                        graphics.drawString("moves remaining: " + availableMoves, 20, 40);
-                        graphics.drawString("selected item: " + selectedItem, 200, 20);
+                        graphics.drawString(currentPlayer.getName(), 20, 20 );
+                        graphics.drawString("moves remaining: " + currentPlayer.getAvailableActions(), 20, 40);
+                        graphics.drawString("selected item: " + currentPlayer.getSelectedItem().getName(), 200, 20);
                     }
 
                     @Override
@@ -180,16 +186,8 @@ public class GameView implements GameEventListener{
     }
 
     @Override
-    public void playerUpdated(int hPosition, int vPosition, int availableActions, String selectedItem) {
-        availableMoves = availableActions;
-        this.selectedItem = selectedItem;
-        gui.repaint();
-    }
-
-    @Override
-    public void playerChanged(String name, int availableActions) {
-        currentPlayer = name;
-        availableMoves = availableActions;
+    public void playerUpdated(PlayerViewModel playerViewModel) {
+        currentPlayer = playerViewModel;
         gui.repaint();
     }
 

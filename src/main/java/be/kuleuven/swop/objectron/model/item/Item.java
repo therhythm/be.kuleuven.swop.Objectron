@@ -1,4 +1,7 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.model.item;
+
+import be.kuleuven.swop.objectron.model.Square;
+import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 
 /**
  * @author : Nik Torfs
@@ -13,4 +16,6 @@ public interface Item {
      * @param square: square where the item is used
      */
     void use(Square square) throws SquareOccupiedException;
+
+    ItemSpecification getSpecification();
 }

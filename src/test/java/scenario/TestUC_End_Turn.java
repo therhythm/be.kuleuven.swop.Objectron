@@ -4,6 +4,9 @@ package scenario;
 import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.controller.GameController;
 import be.kuleuven.swop.objectron.model.*;
+import be.kuleuven.swop.objectron.model.exception.GameOverException;
+import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import org.junit.Before;
 import org.junit.Test;
 

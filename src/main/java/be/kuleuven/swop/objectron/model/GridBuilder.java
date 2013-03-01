@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.model;
 
+import be.kuleuven.swop.objectron.model.item.LightMine;
+
 import java.util.ArrayList;
 import java.util.List;
 

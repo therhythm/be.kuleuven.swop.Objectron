@@ -7,6 +7,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import be.kuleuven.swop.objectron.model.exception.*;
+import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.model.item.LightMine;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -102,5 +105,14 @@ public class TestUC_Use_Item
         assertEquals(initialAvailableActions, player.getAvailableActions());
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
         assertFalse(player.getCurrentSquare().hasActiveItem());
+    }
+
+    @Test(expected = NotEnoughActionsException.class)
+    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException{
+       player.addToInventory(new LightMine());
+       player.addToInventory(new LightMine());
+       player.addToInventory(new LightMine());
+       controller.selectItemFromInventory(0);
+       controller.useCurrentItem();
     }
 }

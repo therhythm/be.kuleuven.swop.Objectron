@@ -3,7 +3,12 @@ package be.kuleuven.swop.objectron.controller;
 import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.gui.GameView;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
-import be.kuleuven.swop.objectron.model.*;
+import be.kuleuven.swop.objectron.model.Direction;
+import be.kuleuven.swop.objectron.model.Player;
+import be.kuleuven.swop.objectron.model.Square;
+import be.kuleuven.swop.objectron.model.exception.*;
+import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +42,7 @@ public class GameController {
      * Move the player in a given direction.
      *
      * @param direction The direction the player wants to move in.
-     * @throws InvalidMoveException This is an invalid move.
+     * @throws be.kuleuven.swop.objectron.model.exception.InvalidMoveException This is an invalid move.
      *                              | !state.getGrid().validPosition(
      *                              |  player.getCurrentSquare().getNeighbour(direction))
      * @throws NotEnoughActionsException The player has not enough actions remaining.
@@ -64,7 +69,7 @@ public class GameController {
      * Retrieve the inventory of the current player.
      *
      * @return A list of the items in the inventory of the current player.
-     * @throws InventoryEmptyException The current player's inventory is empty
+     * @throws be.kuleuven.swop.objectron.model.exception.InventoryEmptyException The current player's inventory is empty
      *                                 | getCurrentPlayer().getInventory().isEmpty()
      */
     public List<Item> showInventory() throws InventoryEmptyException {
@@ -94,10 +99,9 @@ public class GameController {
      * Send player updates to the game event listeners.
      */
     private void doPlayerUpdate() {
-        Player current = state.getCurrentPlayer();
+        PlayerViewModel viewModel = state.getCurrentPlayer().getPlayerViewModel();
         for(GameEventListener listener : listeners){
-            //todo make small wrapper object
-            listener.playerUpdated(0,0, current.getAvailableActions(), current.getCurrentlySelectedItem() == null ? "no item" : current.getCurrentlySelectedItem().getClass().getSimpleName());
+            listener.playerUpdated(viewModel);
         }
     }
 
@@ -196,7 +200,7 @@ public class GameController {
     /**
      * End the current player's turn.
      *
-     * @throws GameOverException The player hasn't moved during this turn and loses the game.
+     * @throws be.kuleuven.swop.objectron.model.exception.GameOverException The player hasn't moved during this turn and loses the game.
      *                           | !state.getCurrentPlayer().hasMoved()
      * @post The current player is switched to a new player.
      * | new.state.getCurrentPlayer() != state.getCurrentPlayer()
