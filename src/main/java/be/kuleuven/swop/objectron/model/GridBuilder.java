@@ -18,6 +18,7 @@ public class GridBuilder {
 
     private Square[][] squares;
     private List<Wall> walls;
+    private List<Square> invalidSquares;
 
     public GridBuilder(int gridWidth, int gridHeight) {
         squares = new Square[gridHeight][gridWidth];
@@ -25,6 +26,7 @@ public class GridBuilder {
 
     public Square[][] build(Square playerOneSquare, Square playerTwoSquare, Square[][] squares) {
         this.squares = squares;
+        invalidSquares = new ArrayList<Square>();
         setupWalls();
         setupItems(playerOneSquare, playerTwoSquare);
         return squares;
@@ -42,7 +44,7 @@ public class GridBuilder {
         int numberOfWalls = getRandomWithMax(1, maxNumberOfWalls + 1);
 
         boolean twentyPercentReached = false;
-        while (walls.size() < numberOfWalls && !twentyPercentReached) {
+        while (walls.size() < numberOfWalls && !twentyPercentReached && ! (invalidSquares.size() > (0.8 * squares.length * squares[0].length))) {
             twentyPercentReached = makeWall();
         }
     }
@@ -100,7 +102,8 @@ public class GridBuilder {
 
     private boolean makeWall() {
         Square randomSquare = getRandomSquare();
-        while (!isValidWallPosition(randomSquare) && !randomSquare.isObstructed()) {
+        while (!isValidWallPosition(randomSquare) && ! (invalidSquares.size() > (0.8 * squares.length * squares[0].length))) {
+            invalidSquares.add(randomSquare);
             randomSquare = getRandomSquare();
         }
 
@@ -160,6 +163,9 @@ public class GridBuilder {
     }
 
     private boolean isValidWallPosition(Square square) {
+        if(square.isObstructed()){
+            return false;
+        }
         for (Direction d:Direction.values()) {
             if (square.getNeighbour(d) != null && square.getNeighbour(d).isObstructed()) {
                 return false;
