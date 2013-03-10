@@ -3,10 +3,12 @@ package be.kuleuven.swop.objectron.model;
 import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.model.item.Effect;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.NullItem;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +18,6 @@ import java.util.List;
  */
 public class PlayerImpl implements Player {
     private static final int NB_ACTIONS_EACH_TURN = 3;
-    private static final int NB_ACTIONS_BLINDED = 3;
 
     private String name;
     private Square currentSquare;
@@ -24,8 +25,8 @@ public class PlayerImpl implements Player {
     private int availableActions = NB_ACTIONS_EACH_TURN;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new InventoryImpl();
+    private List<Effect> effects = new ArrayList<Effect>();
     private boolean hasMoved;
-    private int remainingActionsBlinded = 0;
 
     public PlayerImpl(String name, Square currentSquare) {
         this.name = name;
@@ -102,7 +103,10 @@ public class PlayerImpl implements Player {
 
     @Override
     public void endTurn() {
-        availableActions = NB_ACTIONS_EACH_TURN - remainingActionsBlinded;
+        for(Effect effect : effects){
+            effect.activate(this);
+        }
+        availableActions = NB_ACTIONS_EACH_TURN;
         hasMoved = false;
     }
 
@@ -111,15 +115,27 @@ public class PlayerImpl implements Player {
         return hasMoved;
     }
 
-    private void reduceAvailableActions() {
-        availableActions--;
-        lightTrail.reduce();
+    @Override
+    public void addEffect(Effect effect) {
+        this.effects.add(effect);
     }
 
     @Override
-    public void blind() {
-        remainingActionsBlinded = NB_ACTIONS_BLINDED - availableActions;
-        endTurn();
+    public void removeEffect(Effect effect) {
+        this.effects.remove(effect);
+    }
+
+    @Override
+    public void reduceRemainingActions(int amount) {
+        if(amount > getAvailableActions())
+            throw new IllegalArgumentException("The amount of actions to reduce is more than the remaining actions");
+
+        this.availableActions -= amount;
+    }
+
+    private void reduceAvailableActions() {
+        reduceRemainingActions(1);
+        lightTrail.reduce();
     }
 
     @Override

@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
  *         Time: 20:56
  */
 public class LightMine implements Item {
+    private static final int NB_ACTIONS_BLINDED = 3;
     private static final String name = "Light Mine";
 
     @Override
@@ -26,8 +27,8 @@ public class LightMine implements Item {
     }
 
     @Override
-    public void activate() {
-        // TODO
+    public Effect activate() {
+        return new ReduceAvailableActionsEffect(NB_ACTIONS_BLINDED);
     }
 
     private boolean canHaveAsSquare(Square square) {

@@ -22,8 +22,8 @@ public class NullItem implements Item{
     }
 
     @Override
-    public void activate() {
-        //
+    public Effect activate() {
+        return null;//TODO this might make the null item dangerous..
     }
 
     @Override

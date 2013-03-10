@@ -23,5 +23,5 @@ public interface Item extends Nullable {
     /**
      * activate the item TODO
      */
-    void activate();
+    Effect activate();
 }
