@@ -9,11 +9,7 @@ import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
  *         Time: 13:37
  */
 public class NullItem implements Item{
-    private static ItemSpecification itemSpecification;
-
-    static{
-        itemSpecification = new ItemSpecification("No Item", "");
-    }
+    private static final String name = "No Item";
 
     @Override
     public void use(Square square) throws SquareOccupiedException {
@@ -21,8 +17,8 @@ public class NullItem implements Item{
     }
 
     @Override
-    public ItemSpecification getSpecification() {
-        return itemSpecification;
+    public String getName() {
+        return name;
     }
 
     @Override

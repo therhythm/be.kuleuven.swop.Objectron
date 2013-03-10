@@ -9,12 +9,7 @@ import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
  *         Time: 20:56
  */
 public class LightMine implements Item {
-
-    private static ItemSpecification itemSpecification;
-
-    static {
-        itemSpecification = new ItemSpecification("Light Mine", "A mine that blinds the player that steps on it.");
-    }
+    private static final String name = "Light Mine";
 
     @Override
     public void use(Square square) throws SquareOccupiedException {
@@ -26,8 +21,8 @@ public class LightMine implements Item {
     }
 
     @Override
-    public ItemSpecification getSpecification() {
-        return itemSpecification;
+    public String getName() {
+        return name;
     }
 
     @Override

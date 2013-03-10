@@ -13,6 +13,7 @@ import java.util.List;
 public class LightTrail {
     private static int MAX_TRAIL_COVERAGE = 3;
     private static int LIGHT_TRAIL_LIFETIME = 3;
+
     private Square[] trail;
     private int[] remainingActions;
 

@@ -1,7 +1,5 @@
 package be.kuleuven.swop.objectron.viewmodel;
 
-import be.kuleuven.swop.objectron.model.item.ItemSpecification;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -10,10 +8,10 @@ public class PlayerViewModel {
     private final int hPosition;
     private final int vPosition;
     private final int availableActions;
-    private final ItemSpecification selectedItem;
+    private final String selectedItem;
     private final List<SquareViewModel> lightTrail;
 
-    public PlayerViewModel(String name, int hPosition, int vPosition, int availableActions, ItemSpecification selectedItem, List<SquareViewModel> lightTrailViewModel) {
+    public PlayerViewModel(String name, int hPosition, int vPosition, int availableActions, String selectedItem, List<SquareViewModel> lightTrailViewModel) {
         this.name = name;
         this.hPosition = hPosition;
         this.vPosition = vPosition;
@@ -38,7 +36,7 @@ public class PlayerViewModel {
         return availableActions;
     }
 
-    public ItemSpecification getSelectedItem() {
+    public String getSelectedItem() {
         return selectedItem;
     }
 

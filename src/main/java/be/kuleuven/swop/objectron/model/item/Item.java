@@ -18,7 +18,7 @@ public interface Item extends Nullable {
      */
     void use(Square square) throws SquareOccupiedException;
 
-    ItemSpecification getSpecification();
+    String getName();
 
     /**
      * activate the item TODO

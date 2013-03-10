@@ -95,7 +95,7 @@ public class GameView implements GameEventListener {
                         }
                         graphics.drawString(currentPlayer.getName(), 20, 20);
                         graphics.drawString("moves remaining: " + currentPlayer.getAvailableActions(), 20, 40);
-                        graphics.drawString("selected item: " + currentPlayer.getSelectedItem().getName(), 200, 20);
+                        graphics.drawString("selected item: " + currentPlayer.getSelectedItem(), 200, 20);
                     }
 
                     @Override

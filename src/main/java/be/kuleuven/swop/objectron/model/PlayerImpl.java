@@ -124,6 +124,11 @@ public class PlayerImpl implements Player {
 
     @Override
     public PlayerViewModel getPlayerViewModel() {
-        return new PlayerViewModel(getName(), currentSquare.getHorizontalIndex(),currentSquare.getVerticalIndex() , getAvailableActions(), getCurrentlySelectedItem().getSpecification(),lightTrail.getLightTrailViewModel());
+        return new PlayerViewModel(getName(),
+                currentSquare.getHorizontalIndex(),
+                currentSquare.getVerticalIndex() ,
+                getAvailableActions(),
+                getCurrentlySelectedItem().getName(),
+                lightTrail.getLightTrailViewModel());
     }
 }
