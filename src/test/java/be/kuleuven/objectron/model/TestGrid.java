@@ -32,7 +32,10 @@ public class TestGrid {
 
     @Before
     public void setUp(){
-         grid = new Grid(10, 10);
+        GameState state = new GameState("p1", "p2",10, 10);
+
+        GameController controller = new GameController(state);
+         grid = state.getGrid();
         Square square1 = grid.getSquareAtPosition(9,0);
 
         player1 = new PlayerImpl("p1", square1);
