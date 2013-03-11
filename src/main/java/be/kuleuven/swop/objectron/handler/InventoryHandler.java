@@ -82,7 +82,7 @@ public class InventoryHandler {
 
         try {
             currentPlayer.addToInventory(selectedItem);
-            doPlayerUpdate();
+            //doPlayerUpdate();
         } catch (InventoryFullException e) {
             currentSquare.addItem(selectedItem);
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has a full inventory!");

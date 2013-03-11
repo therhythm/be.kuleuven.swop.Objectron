@@ -1,6 +1,5 @@
 package be.kuleuven.swop.objectron;
 
-import be.kuleuven.swop.objectron.controller.GameController;
 import be.kuleuven.swop.objectron.gui.GameView;
 import be.kuleuven.swop.objectron.handler.InventoryHandler;
 import be.kuleuven.swop.objectron.handler.PlayerHandler;
@@ -35,7 +34,6 @@ public class RunObjectron {
     public void run() {
         GameState state = new GameState(player1Name, player2Name, horizontalTiles, verticalTiles);
 
-        GameController controller = new GameController(state);
         PlayerHandler playerHandler = new PlayerHandler(state);
         InventoryHandler inventoryHandler = new InventoryHandler(state);
 
@@ -45,7 +43,6 @@ public class RunObjectron {
         state.nextPlayer();
         GameView view = new GameView(playerHandler, inventoryHandler, horizontalTiles, verticalTiles, p1, p2, state.getGrid().getWalls());
         view.run();
-        controller.addGameEventListener(view);
         playerHandler.addGameEventListener(view);
         inventoryHandler.addGameEventListener(view);
 
