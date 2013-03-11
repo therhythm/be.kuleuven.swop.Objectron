@@ -81,4 +81,12 @@ public class Square {
     public SquareViewModel getSquareViewModel(){
         return new SquareViewModel(getHorizontalIndex(), getVerticalIndex());
     }
+
+    public String toString(){
+        String result = "";
+        result += "Horizontal position: " + this.horizontalIndex + "\n";
+        result += "Vertical position: " + this.verticalIndex + "\n";
+
+        return result;
+    }
 }
