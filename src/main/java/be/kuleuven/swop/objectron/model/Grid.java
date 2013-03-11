@@ -3,7 +3,7 @@ package be.kuleuven.swop.objectron.model;
 
 import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.viewmodel.WallViewModel;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +77,8 @@ public class Grid {
                 && vertIndex > -1 && vertIndex < squares.length;
     }
 
-    public List<WallViewModel> getWalls() {
-        List<WallViewModel> wallViewModels = new ArrayList<WallViewModel>();
+    public List<List<SquareViewModel>> getWalls() {
+        List<List<SquareViewModel>> wallViewModels = new ArrayList<List<SquareViewModel>>();
         for(Wall w : gridBuilder.getWalls()){
             wallViewModels.add(w.getWallViewModel());
         }

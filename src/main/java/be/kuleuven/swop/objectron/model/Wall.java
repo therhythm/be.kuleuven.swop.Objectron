@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.model;
 
-import be.kuleuven.swop.objectron.viewmodel.WallViewModel;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,11 @@ public class Wall {
         }
     }
 
-    public WallViewModel getWallViewModel(){
-        return new WallViewModel(squares);
+    public List<SquareViewModel> getWallViewModel(){
+        List<SquareViewModel> squaresVm = new ArrayList<SquareViewModel>();
+        for(Square s : this.squares){
+            squaresVm.add(s.getSquareViewModel());
+        }
+        return squaresVm;
     }
 }

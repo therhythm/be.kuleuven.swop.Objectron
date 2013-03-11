@@ -1,6 +1,5 @@
 package be.kuleuven.swop.objectron.gui;
 
-import be.kuleuven.swop.objectron.controller.GameController;
 import be.kuleuven.swop.objectron.handler.InventoryHandler;
 import be.kuleuven.swop.objectron.handler.PlayerHandler;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
@@ -9,7 +8,6 @@ import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
-import be.kuleuven.swop.objectron.viewmodel.WallViewModel;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -48,7 +46,7 @@ public class GameView implements GameEventListener {
 
     PlayerViewModel currentPlayer;
 
-    public GameView(PlayerHandler playerHandler, InventoryHandler inventoryHandler, int horizontalTiles, int verticalTiles, PlayerViewModel p1, PlayerViewModel p2, List<WallViewModel> walls) {
+    public GameView(PlayerHandler playerHandler, InventoryHandler inventoryHandler, int horizontalTiles, int verticalTiles, PlayerViewModel p1, PlayerViewModel p2, List<List<SquareViewModel>> walls) {
         this.playerHandler = playerHandler;
         this.inventoryHandler = inventoryHandler;
         this.horizontalTiles = horizontalTiles;
@@ -60,8 +58,8 @@ public class GameView implements GameEventListener {
                 gameGrid[i][j] = SquareStates.EMPTY;
             }
         }
-        for (WallViewModel vm : walls) {
-            for (SquareViewModel sVm : vm.getSquares()) {
+        for (List<SquareViewModel> vm : walls) {
+            for (SquareViewModel sVm : vm) {
                 gameGrid[sVm.getVIndex()][sVm.getHIndex()] = SquareStates.WALL;
             }
         }
