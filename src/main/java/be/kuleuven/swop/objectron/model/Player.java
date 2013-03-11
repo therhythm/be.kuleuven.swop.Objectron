@@ -24,7 +24,7 @@ public class Player {
     private Item currentlySelectedItem = new NullItem();
     private int availableActions = NB_ACTIONS_EACH_TURN;
     private LightTrail lightTrail = new LightTrail();
-    private Inventory inventory = new InventoryImpl();
+    private Inventory inventory = new Inventory();
     private List<Effect> effects = new ArrayList<Effect>();
     private boolean hasMoved;
 
@@ -72,7 +72,7 @@ public class Player {
     }
 
     public List<Item> getInventoryItems() {
-        return inventory.getItems();
+        return inventory.getAllItems();
     }
 
     public Item getInventoryItem(int identifier) {
