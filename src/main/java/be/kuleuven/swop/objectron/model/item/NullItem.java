@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.model.item;
 
+import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.Square;
 import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 
@@ -13,7 +14,7 @@ public class NullItem implements Item{
 
     @Override
     public void use(Square square) throws SquareOccupiedException {
-        //TODO
+        //do nothing, null object
     }
 
     @Override
@@ -22,8 +23,8 @@ public class NullItem implements Item{
     }
 
     @Override
-    public Effect activate() {
-        return null;//TODO this might make the null item dangerous..
+    public void activate(Player player) {
+        //do nothing, null object
     }
 
     @Override

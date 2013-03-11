@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.model.item;
 
+import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.Square;
 import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 
@@ -11,6 +12,12 @@ import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 public class LightMine implements Item {
     private static final int NB_ACTIONS_BLINDED = 3;
     private static final String name = "Light Mine";
+
+    private Effect effect;
+
+    public LightMine(){
+        effect = new ReduceAvailableActionsEffect(NB_ACTIONS_BLINDED);
+    }
 
     @Override
     public void use(Square square) throws SquareOccupiedException {
@@ -27,8 +34,8 @@ public class LightMine implements Item {
     }
 
     @Override
-    public Effect activate() {
-        return new ReduceAvailableActionsEffect(NB_ACTIONS_BLINDED);
+    public void activate(Player player) {
+        player.addEffect(effect);
     }
 
     private boolean canHaveAsSquare(Square square) {

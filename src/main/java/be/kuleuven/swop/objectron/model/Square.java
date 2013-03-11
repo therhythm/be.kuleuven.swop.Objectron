@@ -44,7 +44,7 @@ public class Square {
 
     public void stepOn(Player player){
         setObstructed(true);
-        activeItem.activate();
+        activeItem.activate(player);
     }
 
     public List<Item> getAvailableItems() {
