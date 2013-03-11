@@ -1,6 +1,8 @@
 package be.kuleuven.swop.objectron.gui;
 
 import be.kuleuven.swop.objectron.controller.GameController;
+import be.kuleuven.swop.objectron.handler.InventoryHandler;
+import be.kuleuven.swop.objectron.handler.PlayerHandler;
 import be.kuleuven.swop.objectron.listener.GameEventListener;
 import be.kuleuven.swop.objectron.model.Direction;
 import be.kuleuven.swop.objectron.model.exception.*;
@@ -34,7 +36,10 @@ public class GameView implements GameEventListener {
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
     private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
 
-    private GameController controller;
+
+    private PlayerHandler playerHandler;
+    private InventoryHandler inventoryHandler;
+
     private int horizontalTiles;
     private SimpleGUI gui;
     private int verticalTiles;
@@ -43,8 +48,9 @@ public class GameView implements GameEventListener {
 
     PlayerViewModel currentPlayer;
 
-    public GameView(GameController controller, int horizontalTiles, int verticalTiles, PlayerViewModel p1, PlayerViewModel p2, List<WallViewModel> walls) {
-        this.controller = controller;
+    public GameView(PlayerHandler playerHandler, InventoryHandler inventoryHandler, int horizontalTiles, int verticalTiles, PlayerViewModel p1, PlayerViewModel p2, List<WallViewModel> walls) {
+        this.playerHandler = playerHandler;
+        this.inventoryHandler = inventoryHandler;
         this.horizontalTiles = horizontalTiles;
         this.verticalTiles = verticalTiles;
         this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
@@ -136,7 +142,7 @@ public class GameView implements GameEventListener {
                         @Override
                         public void run() {
                             try {
-                                controller.move(direction);
+                                playerHandler.move(direction);
                             } catch (InvalidMoveException e) {
                                 new DialogView("Sorry that is not a valid move");
                             } catch (NotEnoughActionsException e) {
@@ -162,12 +168,12 @@ public class GameView implements GameEventListener {
 
 
                         try{
-                            final List<Item> items = controller.getAvailableItems();
+                            final List<Item> items = playerHandler.getAvailableItems();
                             ItemSelectionAction action = new ItemSelectionAction(){
                                 @Override
                                 public void doAction(int index) {
                                     try {
-                                        controller.pickUpItem(index);
+                                        inventoryHandler.pickUpItem(index);
                                     } catch (InventoryFullException e) {
                                         new DialogView("Your inventory is full!");
                                     } catch (NotEnoughActionsException e) {
@@ -189,12 +195,12 @@ public class GameView implements GameEventListener {
                 final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
-                            final List<Item> items = controller.showInventory();
+                            final List<Item> items = inventoryHandler.showInventory();
                             ItemSelectionAction action = new ItemSelectionAction() {
 
                                 @Override
                                 public void doAction(int index) {
-                                    controller.selectItemFromInventory(index);
+                                    inventoryHandler.selectItemFromInventory(index);
                                 }
                             };
                             new ItemListView(items, action);
@@ -209,7 +215,7 @@ public class GameView implements GameEventListener {
                 final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
-                            controller.endTurn();
+                            playerHandler.endTurn();
                         } catch (GameOverException e) {
                             new DialogView("You lost the game!");
                             gui.dispose();
