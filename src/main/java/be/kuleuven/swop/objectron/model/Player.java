@@ -5,8 +5,10 @@ import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.model.item.Effect;
 import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.model.item.NullItem;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,83 +16,119 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public interface Player {
+public class Player {
+    private static final int NB_ACTIONS_EACH_TURN = 3;
 
-    /**
-     * Retrieve the square on which the player is standing
-     *
-     * @return the currentSquare square
-     */
-    Square getCurrentSquare();
+    private String name;
+    private Square currentSquare;
+    private Item currentlySelectedItem = new NullItem();
+    private int availableActions = NB_ACTIONS_EACH_TURN;
+    private LightTrail lightTrail = new LightTrail();
+    private Inventory inventory = new InventoryImpl();
+    private List<Effect> effects = new ArrayList<Effect>();
+    private boolean hasMoved;
 
-    /**
-     * Add an item to the player's inventory
-     *
-     * @param itemToAdd: the item to add to the inventory
-     */
-    void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException;
+    public Player(String name, Square currentSquare) {
+        this.name = name;
+        this.currentSquare = currentSquare;
+        currentSquare.setObstructed(true);
+    }
 
-    /**
-     * Move the player to the newPosition
-     *
-     * @param newPosition
-     */
-    void move(Square newPosition) throws NotEnoughActionsException;
+    public Square getCurrentSquare() {
+        return currentSquare;
+    }
 
-    String getName();
+    public void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException {
+        checkEnoughActions();
+        this.inventory.addItem(itemToAdd);
+        reduceAvailableActions();
+    }
 
-    /* Retrieve number of available actions
-    *
-    * @return the number of remaining actions
-    */
-    int getAvailableActions();
+    public void move(Square newPosition) throws NotEnoughActionsException {
+        checkEnoughActions();
+        reduceAvailableActions();
+        lightTrail.expand(currentSquare);
+        currentSquare = newPosition;
+        currentSquare.stepOn(this);
+        hasMoved = true;
+    }
 
-    /**
-     * Retrieve currently selected item
-     *
-     * @return the currently selected item for this player
-     */
-    Item getCurrentlySelectedItem();
+    private void checkEnoughActions() throws NotEnoughActionsException {
+        if (availableActions==0) {
+            throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
+        }
+    }
 
-    List<Item> getInventoryItems();
+    public String getName() {
+        return this.name;
+    }
 
-    Item getInventoryItem(int identifier);
+    public int getAvailableActions() {
+        return availableActions;
+    }
 
-    void setCurrentlySelectedItem(Item selectedItem);
+    public Item getCurrentlySelectedItem() {
+        return currentlySelectedItem;
+    }
 
-    void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException;
+    public List<Item> getInventoryItems() {
+        return inventory.getItems();
+    }
 
-    void endTurn();
+    public Item getInventoryItem(int identifier) {
+        return inventory.retrieveItem(identifier);
+    }
 
-    boolean hasMoved();
+    public void setCurrentlySelectedItem(Item currentlySelectedItem) {
+        this.currentlySelectedItem = currentlySelectedItem;
+    }
 
-    /**
-     * Add an external effect to the player (like a blinding effect from a lightmine)
-     * This effect will be executed when added
-     *
-     * Effects that remain will also be executed on the start of a new player turn.
-     *
-     * @param effect
-     */
-    void addEffect(Effect effect);
+    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException {
+        checkEnoughActions();
+        currentlySelectedItem.use(currentSquare);
+        inventory.removeItem(currentlySelectedItem);
 
-    /**
-     * Remove an effect from the player so that it will never be activated again
-     * @param effect
-     */
-    void removeEffect(Effect effect);
+        reduceAvailableActions();
+    }
 
-    /**
-     * reduce the remaining actions of a player by a certain amount
-     * @param amount
-     */
-    void reduceRemainingActions(int amount);
+    public void endTurn() {
+        for(Effect effect : effects){
+            effect.activate(this);
+        }
+        availableActions = NB_ACTIONS_EACH_TURN;
+        hasMoved = false;
+    }
 
+    public boolean hasMoved() {
+        return hasMoved;
+    }
 
-    /**
-     *
-     * @return a viewmodel that represents the player.
-     * This way the callers of handler methods don't have any control over players
-     */
-    PlayerViewModel getPlayerViewModel();
+    public void addEffect(Effect effect) {
+        this.effects.add(effect);
+    }
+
+    public void removeEffect(Effect effect) {
+        this.effects.remove(effect);
+    }
+
+    public void reduceRemainingActions(int amount) {
+        if(amount > getAvailableActions())
+            throw new IllegalArgumentException("The amount of actions to reduce is more than the remaining actions");
+
+        this.availableActions -= amount;
+    }
+
+    private void reduceAvailableActions() {
+        reduceRemainingActions(1);
+        lightTrail.reduce();
+    }
+
+    public PlayerViewModel getPlayerViewModel() {
+        return new PlayerViewModel(getName(),
+                currentSquare.getHorizontalIndex(),
+                currentSquare.getVerticalIndex() ,
+                getAvailableActions(),
+                getCurrentlySelectedItem().getName(),
+                lightTrail.getLightTrailViewModel());
+    }
 }

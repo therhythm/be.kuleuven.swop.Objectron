@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.LightMine;
-import be.kuleuven.swop.objectron.model.item.NullItem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,14 +24,14 @@ import java.util.List;
 public class TestUC_Use_Item
 {
     private GameController controller;
-    private PlayerImpl player;
+    private Player player;
     private Item item;
 
     @Before
     public void setUp() throws Exception
     {
         Square square = new Square(0,0);
-        player = new PlayerImpl("p1", square);
+        player = new Player("p1", square);
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
