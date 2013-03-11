@@ -31,7 +31,7 @@ public class TestUC_pick_up_item {
     @Before
     public void setUp(){
         currentSquare = new Square(0,0);
-        player = new PlayerImpl("p1", currentSquare);
+        player = new Player("p1", currentSquare);
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
