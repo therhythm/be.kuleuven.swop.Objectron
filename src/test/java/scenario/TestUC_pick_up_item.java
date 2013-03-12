@@ -98,15 +98,15 @@ public class TestUC_pick_up_item {
     public void test_inventoryFull() throws InventoryFullException, NotEnoughActionsException, IllegalStateException, GameOverException {
 
         for (int i = 0; i < 7; i++) {
-            currentSquare.addItem(new NullItem());
+            currentSquare.addItem(new LightMine());
         }
         for(int i = 0;i<3;i++){
-            player.addToInventory(new NullItem());
+            player.addToInventory(new LightMine());
 
         }
         player.endTurn();
         for(int i = 0;i<3;i++){
-            player.addToInventory(new NullItem());
+            player.addToInventory(new LightMine());
         }
         player.endTurn();
 
@@ -121,7 +121,7 @@ public class TestUC_pick_up_item {
     public void test_getAvailableItems_notEnoughActions() throws InventoryFullException, NotEnoughActionsException, SquareEmptyException {
 
         for (int i = 0; i < 4; i++) {
-            currentSquare.addItem(new NullItem());
+            currentSquare.addItem(new LightMine());
         }
 
         for(int i = 0;i<3;i++){

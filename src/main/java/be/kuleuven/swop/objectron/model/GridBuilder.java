@@ -64,7 +64,7 @@ public class GridBuilder {
         for (Square square : getAllNeighboursFromSquare(playerOneSquare)) {
             //find the middle tile
             if (getAllNeighboursFromSquare(square).size() == 8) {
-                placeLightMineInArea(square);
+                placeLightMineInArea(square,playerOneSquare);
             }
         }
     }
@@ -80,12 +80,12 @@ public class GridBuilder {
         }
     }
 
-    private void placeLightMineInArea(Square square) {
+    private void placeLightMineInArea(Square square, Square playerOneSquare) {
         List<Square> possibleSquares = getAllNeighboursFromSquare(square);
         List<Square> goodSquares = new ArrayList<Square>();
         possibleSquares.add(square);
         for (Square s : possibleSquares) {
-            if (!s.isObstructed() && s.getAvailableItems().size() == 0) {
+            if (!s.isObstructed() && s.getAvailableItems().size() == 0 && !s.equals(playerOneSquare)) {
                 goodSquares.add(s);
             }
         }
