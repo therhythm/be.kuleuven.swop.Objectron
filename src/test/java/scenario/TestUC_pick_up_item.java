@@ -9,7 +9,6 @@ import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.model.exception.SquareEmptyException;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.LightMine;
-import be.kuleuven.swop.objectron.model.item.NullItem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -66,11 +65,11 @@ public class TestUC_pick_up_item {
 
     @Test(expected = InventoryFullException.class)
     public void test_player_inventory_full() throws InventoryFullException, NotEnoughActionsException, SquareEmptyException {
-        currentSquare.addItem(new NullItem());
+        currentSquare.addItem(new LightMine());
         assertTrue(currentSquare.getAvailableItems().size() != 0);
 
         for (int i = 0; i < 6; i++) {
-            player.addToInventory(new NullItem());
+            player.addToInventory(new LightMine());
             player.endTurn();//keeps remaining actions up
         }
 
@@ -81,7 +80,7 @@ public class TestUC_pick_up_item {
     @Test(expected = NotEnoughActionsException.class)
     public void test_no_more_actions() throws InventoryFullException, NotEnoughActionsException, IllegalStateException {
         for (int i = 0; i < 4; i++) {
-            currentSquare.addItem(new NullItem());
+            currentSquare.addItem(new LightMine());
         }
 
         pickUpItemHandler.pickUpItem(0);

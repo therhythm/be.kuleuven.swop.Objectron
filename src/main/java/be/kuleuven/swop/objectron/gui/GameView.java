@@ -27,6 +27,7 @@ public class GameView {
     private static int TILEWIDTH = 40;
     private static int TILEHEIGHT = 40;
     private PlayerViewModel currentPlayer;
+    private String selectedItem = "no item";
     private SquareStates gameGrid[][];
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
     private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
@@ -95,7 +96,7 @@ public class GameView {
                         }
                         graphics.drawString(currentPlayer.getName(), 20, 20);
                         graphics.drawString("moves remaining: " + currentPlayer.getAvailableActions(), 20, 40);
-                        graphics.drawString("selected item: " + currentPlayer.getSelectedItem(), 200, 20);
+                        graphics.drawString("selected item: " + selectedItem, 200, 20);
                     }
 
                     @Override
@@ -196,8 +197,8 @@ public class GameView {
 
                                 @Override
                                 public void doAction(int index) {
-                                    PlayerViewModel vm = useItemHandler.selectItemFromInventory(index);
-                                    updatePlayer(vm);
+                                    selectedItem = useItemHandler.selectItemFromInventory(index);
+                                    gui.repaint();
                                 }
                             };
                             new ItemListView(items, action);
