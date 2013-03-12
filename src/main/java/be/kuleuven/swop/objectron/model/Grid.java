@@ -31,7 +31,8 @@ public class Grid {
         Square neighbour = player.getCurrentSquare().getNeighbour(direction);
         if (player.getAvailableActions() == 0) {
             throw new NotEnoughActionsException("You don't have enough actions left");
-        } else if (!validPosition(neighbour)) {
+        }
+        else if (!validPosition(neighbour,direction)) {
             throw new InvalidMoveException();
         }
 
@@ -45,9 +46,32 @@ public class Grid {
 
         return squares[vertIndex][horIndex];
     }
+       //TODO proberder programmeren, evt implementeren op square niveau?
+    private boolean validPosition(Square neighbour, Direction direction) {
+        if(neighbour ==null)
+            return false;
+        if ( neighbour.isObstructed())
+            return false;
 
-    private boolean validPosition(Square neighbour) {
-        return neighbour != null && !neighbour.isObstructed();
+        //diagonaal check
+        if(direction == Direction.UP_LEFT)
+              if(neighbour.getNeighbour(Direction.RIGHT).isObstructed() && neighbour.getNeighbour(Direction.DOWN).isObstructed())
+                  return false;
+
+        if(direction == Direction.DOWN_LEFT)
+            if(neighbour.getNeighbour(Direction.RIGHT).isObstructed() && neighbour.getNeighbour(Direction.UP).isObstructed())
+                return false;
+
+        if(direction == Direction.UP_RIGHT)
+            if(neighbour.getNeighbour(Direction.LEFT).isObstructed() && neighbour.getNeighbour(Direction.DOWN).isObstructed())
+                return false;
+
+        if(direction == Direction.DOWN_RIGHT)
+            if(neighbour.getNeighbour(Direction.LEFT).isObstructed() && neighbour.getNeighbour(Direction.UP).isObstructed())
+                return false;
+
+        return true;
+
     }
 
     private void setupNeighbours() {
