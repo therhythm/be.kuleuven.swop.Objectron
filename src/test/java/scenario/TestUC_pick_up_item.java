@@ -1,9 +1,12 @@
 package scenario;
 
+import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.GameStateImpl;
+import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.Square;
+import be.kuleuven.swop.objectron.model.exception.GameOverException;
 import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.model.exception.SquareEmptyException;
@@ -30,16 +33,18 @@ public class TestUC_pick_up_item {
     private PickUpItemHandler pickUpItemHandler;
     private Player player;
     private Square currentSquare;
+    private GameState gameState;
+    private EndTurnHandler endTurnHandler;
 
     @Before
     public void setUp() {
-        currentSquare = new Square(0, 0);
-        player = new Player("p1", currentSquare);
+        gameState = new GameStateImpl("p1","p2",10,10);
+        pickUpItemHandler = new PickUpItemHandler(gameState);
+        player = gameState.getCurrentPlayer();
+        currentSquare = player.getCurrentSquare();
 
-        GameStateImpl stateMock = mock(GameStateImpl.class);
-        when(stateMock.getCurrentPlayer()).thenReturn(player);
-
-        pickUpItemHandler = new PickUpItemHandler(stateMock);
+        pickUpItemHandler = new PickUpItemHandler(gameState);
+        endTurnHandler = new EndTurnHandler(gameState);
     }
 
     @Test
@@ -89,5 +94,46 @@ public class TestUC_pick_up_item {
         pickUpItemHandler.pickUpItem(0);
         pickUpItemHandler.pickUpItem(0);
     }
+
+    @Test(expected = InventoryFullException.class)
+    public void test_inventoryFull() throws InventoryFullException, NotEnoughActionsException, IllegalStateException, GameOverException {
+
+        for (int i = 0; i < 7; i++) {
+            currentSquare.addItem(new NullItem());
+        }
+        for(int i = 0;i<3;i++){
+            player.addToInventory(new NullItem());
+
+        }
+        player.endTurn();
+        for(int i = 0;i<3;i++){
+            player.addToInventory(new NullItem());
+        }
+        player.endTurn();
+
+        pickUpItemHandler.pickUpItem(0);
+
+
+
+
+     }
+
+    @Test (expected = NotEnoughActionsException.class)
+    public void test_getAvailableItems_notEnoughActions() throws InventoryFullException, NotEnoughActionsException, SquareEmptyException {
+
+        for (int i = 0; i < 4; i++) {
+            currentSquare.addItem(new NullItem());
+        }
+
+        for(int i = 0;i<3;i++){
+            pickUpItemHandler.pickUpItem(0);
+        }
+
+        pickUpItemHandler.getAvailableItems();
+    }
+
+
+
+
 
 }
