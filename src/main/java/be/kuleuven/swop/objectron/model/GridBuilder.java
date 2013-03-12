@@ -4,7 +4,6 @@ import be.kuleuven.swop.objectron.model.item.LightMine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author : Kasper Vervaecke
@@ -90,9 +89,8 @@ public class GridBuilder {
             }
         }
 
-       Random generator = new Random();
-       int randomIndex = generator.nextInt(goodSquares.size());
-        goodSquares.get(randomIndex).addItem(new LightMine());
+        int random = (int) Math.round(Math.random() * (goodSquares.size() - 1));
+        goodSquares.get(random).addItem(new LightMine());
 
     }
 

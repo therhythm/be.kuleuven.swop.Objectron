@@ -5,8 +5,6 @@ import be.kuleuven.swop.objectron.model.exception.InventoryEmptyException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.model.item.Item;
-import be.kuleuven.swop.objectron.model.item.NullItem;
-import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -19,6 +17,8 @@ import java.util.logging.Logger;
  */
 public class UseItemHandler extends Handler {
     private static Logger logger = Logger.getLogger(UseItemHandler.class.getCanonicalName());
+
+    private Item currentlySelectedItem;
 
     public UseItemHandler(GameState state) {
         super(state);
@@ -49,10 +49,9 @@ public class UseItemHandler extends Handler {
      * | currentPlayer.getCurrentlySelectedItem()
      * |  == currentPlayer.getInventory().retrieveItem(identifier)
      */
-    public PlayerViewModel selectItemFromInventory(int identifier) {
-        Item selectedItem = state.getCurrentPlayer().getInventoryItem(identifier);
-        state.getCurrentPlayer().setCurrentlySelectedItem(selectedItem);
-        return state.getCurrentPlayer().getPlayerViewModel();
+    public String selectItemFromInventory(int identifier) {
+        currentlySelectedItem =  state.getCurrentPlayer().getInventoryItem(identifier);
+        return currentlySelectedItem.getName();
     }
 
     /**
@@ -70,10 +69,9 @@ public class UseItemHandler extends Handler {
      * @post The player's available actions is reduced by 1
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
-    public PlayerViewModel useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException {
+    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException {
         try {
-            state.getCurrentPlayer().useCurrentItem();
-            return state.getCurrentPlayer().getPlayerViewModel();
+            state.getCurrentPlayer().useItem(currentlySelectedItem);
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
             throw e;
@@ -89,8 +87,7 @@ public class UseItemHandler extends Handler {
      * @post The item is no longer selected.
      * | new.state.getCurrentPlayer().getCurrentlySelectedItem() == null
      */
-    public PlayerViewModel cancelItemUsage() {
-        state.getCurrentPlayer().setCurrentlySelectedItem(new NullItem());
-        return state.getCurrentPlayer().getPlayerViewModel();
+    public void cancelItemUsage() {
+        currentlySelectedItem = null;
     }
 }
