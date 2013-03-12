@@ -3,40 +3,17 @@ package be.kuleuven.swop.objectron;
 import be.kuleuven.swop.objectron.model.Grid;
 import be.kuleuven.swop.objectron.model.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * @author : Nik Torfs
- *         Date: 26/02/13
- *         Time: 21:02
+ * Created with IntelliJ IDEA.
+ * User: Piet
+ * Date: 12/03/13
+ * Time: 15:13
+ * To change this template use File | Settings | File Templates.
  */
-public class GameState {
-    private Grid gameGrid;
-    private Player currentPlayer;
-    private List<Player> players = new ArrayList<Player>();
+public interface GameState {
+    Player getCurrentPlayer();
 
-    public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) {
-        gameGrid = new Grid(horizontalTiles, verticalTiles);
-        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalTiles - 1, 0));
-        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
-        gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
-        currentPlayer = p1;
-        players.add(p1);
-        players.add(p2);
-    }
+    Grid getGrid();
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public Grid getGrid() {
-        return gameGrid;
-    }
-
-    public void nextPlayer() {
-        int index = players.indexOf(currentPlayer);
-        index = (index + 1) % players.size();
-        currentPlayer = players.get(index);
-    }
+    void nextPlayer();
 }

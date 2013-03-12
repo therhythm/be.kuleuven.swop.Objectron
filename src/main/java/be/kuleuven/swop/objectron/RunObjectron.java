@@ -34,7 +34,7 @@ public class RunObjectron {
     }
 
     public void run() {
-        GameState state = new GameState(player1Name, player2Name, horizontalTiles, verticalTiles);
+        GameStateImpl state = new GameStateImpl(player1Name, player2Name, horizontalTiles, verticalTiles);
 
         EndTurnHandler endTurnHandler = new EndTurnHandler(state);
         PickUpItemHandler pickUpItemHandler = new PickUpItemHandler(state);

@@ -1,6 +1,6 @@
 package scenario;
 
-import be.kuleuven.swop.objectron.GameState;
+import be.kuleuven.swop.objectron.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.Square;
@@ -36,7 +36,7 @@ public class TestUC_pick_up_item {
         currentSquare = new Square(0, 0);
         player = new Player("p1", currentSquare);
 
-        GameState stateMock = mock(GameState.class);
+        GameStateImpl stateMock = mock(GameStateImpl.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
 
         pickUpItemHandler = new PickUpItemHandler(stateMock);

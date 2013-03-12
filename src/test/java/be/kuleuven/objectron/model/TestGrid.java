@@ -1,7 +1,7 @@
 package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.GameState;
-
+import be.kuleuven.swop.objectron.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.model.*;
@@ -11,11 +11,11 @@ import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
-import static org.mockito.Matchers.contains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,37 +31,36 @@ public class TestGrid {
     private Player player1;
     private Player player2;
     private Grid grid;
-
+    private GameState state;
 
     @Before
     public void setUp(){
-        GameState state = new GameState("p1", "p2",10, 10);
+         //square 1
+        //vert pos = 1
+        //hor pos = 8
+
+        //square 2
+        //vert pos = 3
+        //hor pos = 8
+        state = new GameStateStub("p1", "p2",10, 10,1,8,3,8);
 
 
         grid = state.getGrid();
-        Square square1 = grid.getSquareAtPosition(9,0);
+        movePlayerHandler = new MovePlayerHandler(state);
+        endTurnHandler = new EndTurnHandler(state);
 
-        player1 = new Player("p1", square1);
-
-
-
-        GameState stateMock = mock(GameState.class);
-        when(stateMock.getCurrentPlayer()).thenReturn(player1);
-        when(stateMock.getGrid()).thenReturn(grid);
-
-        endTurnHandler = new EndTurnHandler(stateMock);
-        movePlayerHandler = new MovePlayerHandler(stateMock);
     }
-    @Test
-    public void test_valid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException {
-        Square square2 = grid.getSquareAtPosition(7,1);
-        player2 = new Player("p2", square2);
+    @Test (expected = InvalidMoveException.class)
+    public void test_invalid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException {
+        player1 = state.getCurrentPlayer();
 
-        Square prev = player1.getCurrentSquare();
         try {
-            movePlayerHandler.move(Direction.UP);
-            movePlayerHandler.move(Direction.UP);
+            //System.out.println("player1");
+            //System.out.println(player1.getCurrentSquare());
+            movePlayerHandler.move(Direction.RIGHT);
+            //System.out.println(player1.getCurrentSquare());
             movePlayerHandler.move(Direction.UP_RIGHT);
+            //System.out.println(player1.getCurrentSquare());
 
 
             endTurnHandler.endTurn();
@@ -69,29 +68,44 @@ public class TestGrid {
             fail();
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        movePlayerHandler.move(Direction.UP_LEFT);
+        //System.out.println("player2");
+        player2 = state.getCurrentPlayer();
 
+        //System.out.println(player2.getCurrentSquare());
+        movePlayerHandler.move(Direction.UP_LEFT);
+        //System.out.println(player2.getCurrentSquare());
 
     }
-    @Test(expected = InvalidMoveException.class)
-    public void test_lightTrail() throws InvalidMoveException, NotEnoughActionsException {
-        Square square2 = grid.getSquareAtPosition(9,3);
-        player2 = new Player("p2", square2);
 
-        Square prev = player1.getCurrentSquare();
+    @Test
+    public void test_valid_move_diagonal() throws  InvalidMoveException,NotEnoughActionsException{
 
-        movePlayerHandler.move(Direction.UP);
-        movePlayerHandler.move(Direction.UP);
-        movePlayerHandler.move(Direction.UP_LEFT);
+        player1 = state.getCurrentPlayer();
+
         try {
+            //System.out.println("player1");
+            //System.out.println(player1.getCurrentSquare());
+            movePlayerHandler.move(Direction.RIGHT);
+            //System.out.println(player1.getCurrentSquare());
+            movePlayerHandler.move(Direction.UP_RIGHT);
+            //System.out.println(player1.getCurrentSquare());
+
+
             endTurnHandler.endTurn();
         } catch (GameOverException e) {
             fail();
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+        //System.out.println("player2");
+        player2 = state.getCurrentPlayer();
+
+        //System.out.println(player2.getCurrentSquare());
         movePlayerHandler.move(Direction.DOWN_LEFT);
-
-
+        //System.out.println(player2.getCurrentSquare());
+        movePlayerHandler.move(Direction.LEFT);
+        //System.out.println(player2.getCurrentSquare());
+        movePlayerHandler.move(Direction.UP_LEFT);
+        //System.out.println(player2.getCurrentSquare());
     }
 
     /**
@@ -109,4 +123,45 @@ public class TestGrid {
     }
         assertTrue(hasItems);
     }
+    public class GameStateStub implements GameState{
+        private Grid gameGrid;
+        private Player currentPlayer;
+        private List<Player> players = new ArrayList<Player>();
+
+        public GameStateStub(String player1Name, String player2Name, int horizontalTiles, int verticalTiles,int square1HorizontalPosition,int square1VerticalPosition,int square2HorizontalPosition,int square2VerticalPosition) {
+            gameGrid = new Grid(horizontalTiles, verticalTiles);
+            Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(square1VerticalPosition, square1HorizontalPosition));
+            Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(square2VerticalPosition, square2HorizontalPosition));
+            gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
+            currentPlayer = p1;
+            players.add(p1);
+            players.add(p2);
+
+        }
+
+        public Player getPlayer1(){
+            return this.players.get(0);
+        }
+
+        public Player getPlayer2(){
+            return this.players.get(1);
+        }
+
+
+
+        public Player getCurrentPlayer() {
+            return currentPlayer;
+        }
+
+        public Grid getGrid() {
+            return gameGrid;
+        }
+
+        public void nextPlayer() {
+            int index = players.indexOf(currentPlayer);
+            index = (index + 1) % players.size();
+            currentPlayer = players.get(index);
+        }
+    }
+
 }

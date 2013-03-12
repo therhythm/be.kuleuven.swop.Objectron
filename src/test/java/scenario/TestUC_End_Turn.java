@@ -1,7 +1,7 @@
 package scenario;
 
 
-import be.kuleuven.swop.objectron.GameState;
+import be.kuleuven.swop.objectron.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.model.Direction;
@@ -19,11 +19,11 @@ public class TestUC_End_Turn {
 
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
-    private GameState state;
+    private GameStateImpl state;
 
     @Before
     public void setUp() throws Exception {
-        state = new GameState("jos", "piet", 10, 10);
+        state = new GameStateImpl("jos", "piet", 10, 10);
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);
     }
