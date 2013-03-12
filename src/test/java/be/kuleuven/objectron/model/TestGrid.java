@@ -123,6 +123,24 @@ public class TestGrid {
     }
         assertTrue(hasItems);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_getInvalidSquare(){
+        grid.getSquareAtPosition(11,11);
+    }
+
+    @Test (expected = InvalidMoveException.class)
+    public void test_invalid_move_neighbor()throws  InvalidMoveException,NotEnoughActionsException{
+        player1 = state.getCurrentPlayer();
+
+
+            movePlayerHandler.move(Direction.RIGHT);
+            movePlayerHandler.move(Direction.RIGHT);
+
+
+
+    }
+
     public class GameStateStub implements GameState{
         private Grid gameGrid;
         private Player currentPlayer;
@@ -162,6 +180,8 @@ public class TestGrid {
             index = (index + 1) % players.size();
             currentPlayer = players.get(index);
         }
+
+
     }
 
 }
