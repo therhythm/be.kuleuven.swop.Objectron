@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class GridBuilder {
     private static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
-    private static final int    MIN_WALL_LENGTH = 2;
+    private static final int MIN_WALL_LENGTH = 2;
     private static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
     private static final double PERCENTAGE_OF_ITEMS = 0.05;
 
@@ -44,7 +44,7 @@ public class GridBuilder {
         int numberOfWalls = getRandomWithMax(1, maxNumberOfWalls + 1);
 
         boolean twentyPercentReached = false;
-        while (walls.size() < numberOfWalls && !twentyPercentReached && ! (invalidSquares.size() > (0.8 * squares.length * squares[0].length))) {
+        while (walls.size() < numberOfWalls && !twentyPercentReached && !(invalidSquares.size() > (0.8 * squares.length * squares[0].length))) {
             twentyPercentReached = makeWall();
         }
     }
@@ -60,7 +60,7 @@ public class GridBuilder {
     }
 
     private void placeLightMineCloseToPlayer(Square playerOneSquare) {
-        for (Square square:getAllNeighboursFromSquare(playerOneSquare)) {
+        for (Square square : getAllNeighboursFromSquare(playerOneSquare)) {
             //find the middle tile
             if (getAllNeighboursFromSquare(square).size() == 8) {
                 placeLightMineInArea(square);
@@ -69,7 +69,7 @@ public class GridBuilder {
     }
 
     private void placeOtherMines(int numberOfItems) {
-        for (int i = 0; i<numberOfItems ; i++) {
+        for (int i = 0; i < numberOfItems; i++) {
             Square randomSquare = getRandomSquare();
             while (randomSquare.getAvailableItems().size() != 0
                     && !randomSquare.isObstructed()) {
@@ -83,7 +83,7 @@ public class GridBuilder {
         List<Square> possibleSquares = getAllNeighboursFromSquare(square);
         List<Square> goodSquares = new ArrayList<Square>();
         possibleSquares.add(square);
-        for (Square s:possibleSquares) {
+        for (Square s : possibleSquares) {
             if (!s.isObstructed() && s.getAvailableItems().size() == 0) {
                 goodSquares.add(s);
             }
@@ -92,7 +92,7 @@ public class GridBuilder {
 
     private List<Square> getAllNeighboursFromSquare(Square square) {
         List<Square> neighbourSquares = new ArrayList<Square>();
-        for (Direction d: Direction.values()) {
+        for (Direction d : Direction.values()) {
             if (square.getNeighbour(d) != null) {
                 neighbourSquares.add(square.getNeighbour(d));
             }
@@ -102,7 +102,7 @@ public class GridBuilder {
 
     private boolean makeWall() {
         Square randomSquare = getRandomSquare();
-        while (!isValidWallPosition(randomSquare) && ! (invalidSquares.size() > (0.8 * squares.length * squares[0].length))) {
+        while (!isValidWallPosition(randomSquare) && !(invalidSquares.size() > (0.8 * squares.length * squares[0].length))) {
             invalidSquares.add(randomSquare);
             randomSquare = getRandomSquare();
         }
@@ -163,10 +163,10 @@ public class GridBuilder {
     }
 
     private boolean isValidWallPosition(Square square) {
-        if(square.isObstructed()){
+        if (square.isObstructed()) {
             return false;
         }
-        for (Direction d:Direction.values()) {
+        for (Direction d : Direction.values()) {
             if (square.getNeighbour(d) != null && square.getNeighbour(d).isObstructed()) {
                 return false;
             }
@@ -180,12 +180,12 @@ public class GridBuilder {
     }
 
     private double calculateWallPercentage(int extraWalls) {
-        for (Wall w:walls) {
+        for (Wall w : walls) {
             extraWalls += w.getLength();
         }
         double wallArea = (double) extraWalls;
         double gridArea = (double) squares.length * squares[0].length;
-        return wallArea/gridArea;
+        return wallArea / gridArea;
     }
 
     private boolean validIndex(int horizontalIndex, int verticalIndex) {

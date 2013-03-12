@@ -1,12 +1,9 @@
 package scenario;
 
 import be.kuleuven.swop.objectron.GameState;
-import be.kuleuven.swop.objectron.controller.GameController;
-import be.kuleuven.swop.objectron.model.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import be.kuleuven.swop.objectron.handler.UseItemHandler;
+import be.kuleuven.swop.objectron.model.Player;
+import be.kuleuven.swop.objectron.model.Square;
 import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.LightMine;
@@ -15,28 +12,31 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
  * Scenario test for UC Use Item
+ *
  * @author : Kasper Vervaecke
  *         Date: 22/02/13
  *         Time: 15:59
  */
-public class TestUC_Use_Item
-{
-    private GameController controller;
+public class TestUC_Use_Item {
+    private UseItemHandler useItemHandler;
     private Player player;
     private Item item;
 
     @Before
-    public void setUp() throws Exception
-    {
-        Square square = new Square(0,0);
+    public void setUp() throws Exception {
+        Square square = new Square(0, 0);
         player = new Player("p1", square);
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
 
-        controller = new GameController(stateMock);
+        useItemHandler = new UseItemHandler(stateMock);
 
         item = new LightMine();
 
@@ -44,14 +44,14 @@ public class TestUC_Use_Item
 
     @Test(expected = InventoryEmptyException.class)
     public void showInventoryEmptyTest() throws InventoryEmptyException {
-        controller.showInventory();
+        useItemHandler.showInventory();
     }
 
     @Test
     public void showInventoryTest() throws InventoryFullException, InventoryEmptyException, NotEnoughActionsException {
         player.addToInventory(item);
 
-        List<Item> inventoryItems = controller.showInventory();
+        List<Item> inventoryItems = useItemHandler.showInventory();
 
         assertFalse(inventoryItems.isEmpty());
         assertEquals(player.getInventoryItems(), inventoryItems);
@@ -61,7 +61,7 @@ public class TestUC_Use_Item
     public void selectItemTest() throws InventoryFullException, NotEnoughActionsException {
         player.addToInventory(item);
 
-        controller.selectItemFromInventory(0);
+        useItemHandler.selectItemFromInventory(0);
 
         assertNotNull(player.getCurrentlySelectedItem());
         assertEquals(item, player.getCurrentlySelectedItem());
@@ -74,8 +74,8 @@ public class TestUC_Use_Item
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
-        controller.selectItemFromInventory(0);
-        controller.useCurrentItem();
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentItem();
 
         assertEquals(initialAvailableActions - 1, player.getAvailableActions());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
@@ -87,8 +87,8 @@ public class TestUC_Use_Item
         player.getCurrentSquare().setActiveItem(item);
         player.addToInventory(item);
 
-        controller.selectItemFromInventory(0);
-        controller.useCurrentItem();
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentItem();
     }
 
     @Test
@@ -98,8 +98,8 @@ public class TestUC_Use_Item
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
-        controller.selectItemFromInventory(0);
-        controller.cancelItemUsage();
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.cancelItemUsage();
 
         assertEquals(initialAvailableActions, player.getAvailableActions());
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
@@ -107,11 +107,11 @@ public class TestUC_Use_Item
     }
 
     @Test(expected = NotEnoughActionsException.class)
-    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException{
-       player.addToInventory(new LightMine());
-       player.addToInventory(new LightMine());
-       player.addToInventory(new LightMine());
-       controller.selectItemFromInventory(0);
-       controller.useCurrentItem();
+    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException {
+        player.addToInventory(new LightMine());
+        player.addToInventory(new LightMine());
+        player.addToInventory(new LightMine());
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentItem();
     }
 }

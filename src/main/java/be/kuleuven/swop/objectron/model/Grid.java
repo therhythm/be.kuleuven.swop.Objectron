@@ -24,15 +24,14 @@ public class Grid {
     }
 
     public void buildGrid(Square playerOneSquare, Square playerTwoSquare) {
-        squares = gridBuilder.build(playerOneSquare,playerTwoSquare, squares);
+        squares = gridBuilder.build(playerOneSquare, playerTwoSquare, squares);
     }
 
     public void makeMove(Direction direction, Player player) throws InvalidMoveException, NotEnoughActionsException {
         Square neighbour = player.getCurrentSquare().getNeighbour(direction);
-        if(player.getAvailableActions() == 0){
+        if (player.getAvailableActions() == 0) {
             throw new NotEnoughActionsException("You don't have enough actions left");
-        }
-        else if (!validPosition(neighbour)) {
+        } else if (!validPosition(neighbour)) {
             throw new InvalidMoveException();
         }
 
@@ -54,7 +53,7 @@ public class Grid {
     private void setupNeighbours() {
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
-                squares[vertical][horizontal] = new Square(horizontal,vertical);
+                squares[vertical][horizontal] = new Square(horizontal, vertical);
             }
         }
 
@@ -79,7 +78,7 @@ public class Grid {
 
     public List<List<SquareViewModel>> getWalls() {
         List<List<SquareViewModel>> wallViewModels = new ArrayList<List<SquareViewModel>>();
-        for(Wall w : gridBuilder.getWalls()){
+        for (Wall w : gridBuilder.getWalls()) {
             wallViewModels.add(w.getWallViewModel());
         }
         return wallViewModels;

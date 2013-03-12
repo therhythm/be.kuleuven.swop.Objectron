@@ -1,8 +1,9 @@
 package be.kuleuven.swop.objectron.gui;
 
-import be.kuleuven.swop.objectron.handler.InventoryHandler;
-import be.kuleuven.swop.objectron.handler.PlayerHandler;
-import be.kuleuven.swop.objectron.listener.GameEventListener;
+import be.kuleuven.swop.objectron.handler.EndTurnHandler;
+import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
+import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
+import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import be.kuleuven.swop.objectron.model.Direction;
 import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
@@ -19,36 +20,32 @@ import java.util.Map;
  *         Date: 25/02/13
  *         Time: 21:24
  */
-public class GameView implements GameEventListener {
-
-    public enum SquareStates {
-        WALL, P1_LIGHT_WALL, P2_LIGHT_WALL, PLAYER1, PLAYER2, EMPTY, P1_FINISH, P2_FINISH
-    }
+public class GameView {
 
     private static int HPADDING = 10;
     private static int VPADDING = 50;
     private static int TILEWIDTH = 40;
     private static int TILEHEIGHT = 40;
-
+    private PlayerViewModel currentPlayer;
     private SquareStates gameGrid[][];
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
     private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
-
-
-    private PlayerHandler playerHandler;
-    private InventoryHandler inventoryHandler;
-
+    private EndTurnHandler endTurnHandler;
+    private UseItemHandler useItemHandler;
+    private MovePlayerHandler movePlayerHandler;
+    private PickUpItemHandler pickUpItemHandler;
     private int horizontalTiles;
     private SimpleGUI gui;
     private int verticalTiles;
     private SquareViewModel p1_finish;
     private SquareViewModel p2_finish;
 
-    PlayerViewModel currentPlayer;
+    public GameView(EndTurnHandler endTurnHandler, PickUpItemHandler pickUpItemHandler, MovePlayerHandler movePlayerHandler, UseItemHandler useItemHandler, int horizontalTiles, int verticalTiles, PlayerViewModel p1, PlayerViewModel p2, List<List<SquareViewModel>> walls) {
+        this.endTurnHandler = endTurnHandler;
+        this.pickUpItemHandler = pickUpItemHandler;
+        this.useItemHandler = useItemHandler;
+        this.movePlayerHandler = movePlayerHandler;
 
-    public GameView(PlayerHandler playerHandler, InventoryHandler inventoryHandler, int horizontalTiles, int verticalTiles, PlayerViewModel p1, PlayerViewModel p2, List<List<SquareViewModel>> walls) {
-        this.playerHandler = playerHandler;
-        this.inventoryHandler = inventoryHandler;
         this.horizontalTiles = horizontalTiles;
         this.verticalTiles = verticalTiles;
         this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
@@ -71,7 +68,6 @@ public class GameView implements GameEventListener {
         p2_finish = new SquareViewModel(p2.getHPosition(), p2.getVPosition());
     }
 
-
     public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
             int buttonWidth = horizontalTiles * TILEWIDTH / 4;
@@ -83,16 +79,16 @@ public class GameView implements GameEventListener {
                     public void paint(Graphics2D graphics) {
                         for (int i = 0; i < horizontalTiles; i++) {
                             for (int j = 0; j < verticalTiles; j++) {
-                                if (gameGrid[j][i] == SquareStates.EMPTY){
-                                    if(p1_finish.getHIndex() == i && p1_finish.getVIndex() == j){
+                                if (gameGrid[j][i] == SquareStates.EMPTY) {
+                                    if (p1_finish.getHIndex() == i && p1_finish.getVIndex() == j) {
                                         graphics.drawImage(gridImageMap.get(SquareStates.P1_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
 
-                                    }else if(p2_finish.getHIndex() == i && p2_finish.getVIndex() == j) {
+                                    } else if (p2_finish.getHIndex() == i && p2_finish.getVIndex() == j) {
                                         graphics.drawImage(gridImageMap.get(SquareStates.P2_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
-                                    }else{
+                                    } else {
                                         graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                                     }
-                                }else{
+                                } else {
                                     graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                                 }
                             }
@@ -140,7 +136,8 @@ public class GameView implements GameEventListener {
                         @Override
                         public void run() {
                             try {
-                                playerHandler.move(direction);
+                                PlayerViewModel vm = movePlayerHandler.move(direction);
+                                updatePlayer(vm);
                             } catch (InvalidMoveException e) {
                                 new DialogView("Sorry that is not a valid move");
                             } catch (NotEnoughActionsException e) {
@@ -165,24 +162,25 @@ public class GameView implements GameEventListener {
                     public void run() {
 
 
-                        try{
-                            final List<Item> items = playerHandler.getAvailableItems();
-                            ItemSelectionAction action = new ItemSelectionAction(){
+                        try {
+                            final List<Item> items = pickUpItemHandler.getAvailableItems();
+                            ItemSelectionAction action = new ItemSelectionAction() {
                                 @Override
                                 public void doAction(int index) {
                                     try {
-                                        inventoryHandler.pickUpItem(index);
+                                        pickUpItemHandler.pickUpItem(index);
+
                                     } catch (InventoryFullException e) {
                                         new DialogView("Your inventory is full!");
                                     } catch (NotEnoughActionsException e) {
                                         new DialogView("You have no actions remaining, end the turn.");
                                     }
-                                 }
-                             };
+                                }
+                            };
                             new ItemListView(items, action);
-                        } catch (SquareEmptyException e){
+                        } catch (SquareEmptyException e) {
                             new DialogView("The current square is empty");
-                        } catch (NotEnoughActionsException e){
+                        } catch (NotEnoughActionsException e) {
                             new DialogView("You have no actions remaining, end the tun.");
                         }
                         gui.repaint();
@@ -193,12 +191,13 @@ public class GameView implements GameEventListener {
                 final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
-                            final List<Item> items = inventoryHandler.showInventory();
+                            final List<Item> items = useItemHandler.showInventory();
                             ItemSelectionAction action = new ItemSelectionAction() {
 
                                 @Override
                                 public void doAction(int index) {
-                                    inventoryHandler.selectItemFromInventory(index);
+                                    PlayerViewModel vm = useItemHandler.selectItemFromInventory(index);
+                                    updatePlayer(vm);
                                 }
                             };
                             new ItemListView(items, action);
@@ -213,7 +212,8 @@ public class GameView implements GameEventListener {
                 final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
-                            playerHandler.endTurn();
+                            PlayerViewModel vm = endTurnHandler.endTurn();
+                            updatePlayer(vm);
                         } catch (GameOverException e) {
                             new DialogView("You lost the game!");
                             gui.dispose();
@@ -227,8 +227,9 @@ public class GameView implements GameEventListener {
         });
     }
 
-    @Override
-    public void playerUpdated(PlayerViewModel playerViewModel) {
+
+    //TODO cleanup or not GUI stuff...
+    private void updatePlayer(PlayerViewModel playerViewModel) {
         if (currentPlayer.getName().equals(playerViewModel.getName())) {
             gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = SquareStates.EMPTY;
             for (SquareViewModel svm : currentPlayer.getLightTrail()) {
@@ -241,5 +242,9 @@ public class GameView implements GameEventListener {
             gameGrid[svm.getVIndex()][svm.getHIndex()] = playerColorMap.get(currentPlayer.getName())[1];
         }
         gui.repaint();
+    }
+
+    public enum SquareStates {
+        WALL, P1_LIGHT_WALL, P2_LIGHT_WALL, PLAYER1, PLAYER2, EMPTY, P1_FINISH, P2_FINISH
     }
 }

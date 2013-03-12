@@ -1,8 +1,10 @@
 package be.kuleuven.swop.objectron;
 
 import be.kuleuven.swop.objectron.gui.GameView;
-import be.kuleuven.swop.objectron.handler.InventoryHandler;
-import be.kuleuven.swop.objectron.handler.PlayerHandler;
+import be.kuleuven.swop.objectron.handler.EndTurnHandler;
+import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
+import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
+import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -34,18 +36,18 @@ public class RunObjectron {
     public void run() {
         GameState state = new GameState(player1Name, player2Name, horizontalTiles, verticalTiles);
 
-        PlayerHandler playerHandler = new PlayerHandler(state);
-        InventoryHandler inventoryHandler = new InventoryHandler(state);
+        EndTurnHandler endTurnHandler = new EndTurnHandler(state);
+        PickUpItemHandler pickUpItemHandler = new PickUpItemHandler(state);
+        MovePlayerHandler movePlayerHandler = new MovePlayerHandler(state);
+        UseItemHandler useItemHandler = new UseItemHandler(state);
 
         PlayerViewModel p1 = state.getCurrentPlayer().getPlayerViewModel();
         state.nextPlayer();
         PlayerViewModel p2 = state.getCurrentPlayer().getPlayerViewModel();
         state.nextPlayer();
-        GameView view = new GameView(playerHandler, inventoryHandler, horizontalTiles, verticalTiles, p1, p2, state.getGrid().getWalls());
+        //TODO clean this up maybe a sort of catalog for all the handlers!
+        GameView view = new GameView(endTurnHandler, pickUpItemHandler, movePlayerHandler, useItemHandler, horizontalTiles, verticalTiles, p1, p2, state.getGrid().getWalls());
         view.run();
-        playerHandler.addGameEventListener(view);
-        inventoryHandler.addGameEventListener(view);
-
     }
 
     public static void main(String[] args) {

@@ -16,23 +16,23 @@ public class Wall {
 
     private List<Square> squares = new ArrayList<Square>();
 
-    public void addSquare(Square square){
+    public void addSquare(Square square) {
         squares.add(square);
     }
 
-    public int getLength(){
+    public int getLength() {
         return squares.size();
     }
 
-    public void build(){
-        for(Square square: squares){
+    public void build() {
+        for (Square square : squares) {
             square.setObstructed(true);
         }
     }
 
-    public List<SquareViewModel> getWallViewModel(){
+    public List<SquareViewModel> getWallViewModel() {
         List<SquareViewModel> squaresVm = new ArrayList<SquareViewModel>();
-        for(Square s : this.squares){
+        for (Square s : this.squares) {
             squaresVm.add(s.getSquareViewModel());
         }
         return squaresVm;

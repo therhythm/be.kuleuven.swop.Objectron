@@ -42,7 +42,7 @@ public class Square {
         isObstructed = value;
     }
 
-    public void stepOn(Player player){
+    public void stepOn(Player player) {
         setObstructed(true);
         activeItem.activate(player);
     }
@@ -78,7 +78,7 @@ public class Square {
         this.activeItem = activeItem;
     }
 
-    public SquareViewModel getSquareViewModel(){
+    public SquareViewModel getSquareViewModel() {
         return new SquareViewModel(getHorizontalIndex(), getVerticalIndex());
     }
 }

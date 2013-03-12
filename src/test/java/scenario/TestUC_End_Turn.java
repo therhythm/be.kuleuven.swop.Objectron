@@ -2,40 +2,42 @@ package scenario;
 
 
 import be.kuleuven.swop.objectron.GameState;
-import be.kuleuven.swop.objectron.controller.GameController;
-import be.kuleuven.swop.objectron.model.*;
+import be.kuleuven.swop.objectron.handler.EndTurnHandler;
+import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
+import be.kuleuven.swop.objectron.model.Direction;
+import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.exception.GameOverException;
 import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.*;
-
+import static org.junit.Assert.assertFalse;
 
 
 public class TestUC_End_Turn {
 
-    private GameController controller;
+    private EndTurnHandler endTurnHandler;
+    private MovePlayerHandler movePlayerHandler;
     private GameState state;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         state = new GameState("jos", "piet", 10, 10);
-        controller = new GameController(state);
+        endTurnHandler = new EndTurnHandler(state);
+        movePlayerHandler = new MovePlayerHandler(state);
     }
 
     @Test(expected = GameOverException.class)
     public void test_end_turn_no_moves() throws GameOverException {
-        controller.endTurn();
+        endTurnHandler.endTurn();
     }
 
     @Test
     public void test_end_turn_with_move() throws InvalidMoveException, GameOverException, NotEnoughActionsException {
         Player oldPlayer = state.getCurrentPlayer();
-        controller.move(Direction.UP);
-        controller.endTurn();
+        movePlayerHandler.move(Direction.UP);
+        endTurnHandler.endTurn();
         assertFalse(state.getCurrentPlayer().equals(oldPlayer));
 
     }

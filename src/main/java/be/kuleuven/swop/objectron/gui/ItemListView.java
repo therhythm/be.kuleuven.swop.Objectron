@@ -14,7 +14,7 @@ public class ItemListView {
     SimpleGUI inv;
 
 
-    public ItemListView(final java.util.List<Item> items,final ItemSelectionAction action) {
+    public ItemListView(final java.util.List<Item> items, final ItemSelectionAction action) {
         inv = new SimpleGUI("Inventory", 150, 100) {
             @Override
             public void paint(Graphics2D graphics) {

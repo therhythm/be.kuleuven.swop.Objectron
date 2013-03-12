@@ -7,10 +7,10 @@ import be.kuleuven.swop.objectron.model.Player;
  *         Date: 10/03/13
  *         Time: 22:25
  */
-public class ReduceAvailableActionsEffect implements Effect{
+public class ReduceAvailableActionsEffect implements Effect {
     private int amountToReduce;
 
-    public ReduceAvailableActionsEffect(int amountToReduce){
+    public ReduceAvailableActionsEffect(int amountToReduce) {
         this.amountToReduce = amountToReduce;
     }
 
@@ -20,7 +20,7 @@ public class ReduceAvailableActionsEffect implements Effect{
         player.reduceRemainingActions(amountToReduceWith);
         amountToReduce -= amountToReduceWith;
 
-        if(amountToReduce == 0){
+        if (amountToReduce == 0) {
             player.removeEffect(this);
         }
     }

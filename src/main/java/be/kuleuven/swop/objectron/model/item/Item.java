@@ -1,9 +1,9 @@
 package be.kuleuven.swop.objectron.model.item;
 
 import be.kuleuven.swop.objectron.model.Player;
-import be.kuleuven.swop.objectron.util.Nullable;
 import be.kuleuven.swop.objectron.model.Square;
 import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.util.Nullable;
 
 /**
  * @author : Nik Torfs

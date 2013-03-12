@@ -55,8 +55,8 @@ public class LightTrail {
     public List<SquareViewModel> getLightTrailViewModel() {
         List<SquareViewModel> list = new ArrayList<SquareViewModel>();
 
-        for(Square s:trail){
-            if(s!=null){
+        for (Square s : trail) {
+            if (s != null) {
                 list.add(s.getSquareViewModel());
             }
         }

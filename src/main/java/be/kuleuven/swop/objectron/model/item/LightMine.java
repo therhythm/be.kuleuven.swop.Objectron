@@ -15,7 +15,7 @@ public class LightMine implements Item {
 
     private Effect effect;
 
-    public LightMine(){
+    public LightMine() {
         effect = new ReduceAvailableActionsEffect(NB_ACTIONS_BLINDED);
     }
 

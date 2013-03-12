@@ -13,8 +13,8 @@ public class SquareOccupiedException extends Exception {
      * Initialize this exception with a given message.
      *
      * @param message The message for this exception.
-     * @post  The new error message for this exception equals the given message
-     *        | new.getMessage == message
+     * @post The new error message for this exception equals the given message
+     * | new.getMessage == message
      */
     public SquareOccupiedException(String message) {
         super(message);

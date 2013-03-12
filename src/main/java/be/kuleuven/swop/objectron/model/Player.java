@@ -54,7 +54,7 @@ public class Player {
     }
 
     private void checkEnoughActions() throws NotEnoughActionsException {
-        if (availableActions==0) {
+        if (availableActions == 0) {
             throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
         }
     }
@@ -92,7 +92,7 @@ public class Player {
     }
 
     public void endTurn() {
-        for(Effect effect : effects){
+        for (Effect effect : effects) {
             effect.activate(this);
         }
         availableActions = NB_ACTIONS_EACH_TURN;
@@ -112,7 +112,7 @@ public class Player {
     }
 
     public void reduceRemainingActions(int amount) {
-        if(amount > getAvailableActions())
+        if (amount > getAvailableActions())
             throw new IllegalArgumentException("The amount of actions to reduce is more than the remaining actions");
 
         this.availableActions -= amount;
@@ -126,7 +126,7 @@ public class Player {
     public PlayerViewModel getPlayerViewModel() {
         return new PlayerViewModel(getName(),
                 currentSquare.getHorizontalIndex(),
-                currentSquare.getVerticalIndex() ,
+                currentSquare.getVerticalIndex(),
                 getAvailableActions(),
                 getCurrentlySelectedItem().getName(),
                 lightTrail.getLightTrailViewModel());

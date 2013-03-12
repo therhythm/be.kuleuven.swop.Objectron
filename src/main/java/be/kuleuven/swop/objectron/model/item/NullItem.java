@@ -9,7 +9,7 @@ import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
  *         Date: 01/03/13
  *         Time: 13:37
  */
-public class NullItem implements Item{
+public class NullItem implements Item {
     private static final String name = "No Item";
 
     @Override
@@ -28,7 +28,7 @@ public class NullItem implements Item{
     }
 
     @Override
-    public boolean isNull(){
+    public boolean isNull() {
         return true;
     }
 }
