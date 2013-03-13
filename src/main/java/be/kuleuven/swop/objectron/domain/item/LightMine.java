@@ -20,15 +20,6 @@ public class LightMine implements Item {
     }
 
     @Override
-    public void use(Square square) throws SquareOccupiedException {
-        if (canHaveAsSquare(square)) {
-            square.setActiveItem(this);
-        } else {
-            throw new SquareOccupiedException("invalid square or square already has a light grenade");
-        }
-    }
-
-    @Override
     public String getName() {
         return name;
     }
@@ -36,14 +27,5 @@ public class LightMine implements Item {
     @Override
     public void activate(Player player) {
         player.addEffect(effect);
-    }
-
-    private boolean canHaveAsSquare(Square square) {
-        return square != null && !square.hasActiveItem();
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
     }
 }

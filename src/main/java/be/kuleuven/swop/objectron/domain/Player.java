@@ -75,7 +75,7 @@ public class Player {
 
     public void useItem(Item item) throws SquareOccupiedException, NotEnoughActionsException {
         checkEnoughActions();
-        item.use(currentSquare);
+        currentSquare.setActiveItem(item);
         inventory.removeItem(item);
 
         reduceAvailableActions();
