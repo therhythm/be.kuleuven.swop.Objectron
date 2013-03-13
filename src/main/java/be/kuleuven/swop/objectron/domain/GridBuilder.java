@@ -66,6 +66,7 @@ public class GridBuilder {
             //find the middle tile
             if (getAllNeighboursFromSquare(square).size() == 8) {
                 placeLightMineInArea(square);
+                break;
             }
         }
     }
@@ -74,7 +75,7 @@ public class GridBuilder {
         for (int i = 0; i < numberOfItems; i++) {
             Square randomSquare = getRandomSquare();
             while (randomSquare.getAvailableItems().size() != 0
-                    && !randomSquare.isObstructed()) {
+                    || randomSquare.isObstructed()) {
                 randomSquare = getRandomSquare();
             }
             randomSquare.addItem(new LightMine());
