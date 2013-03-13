@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.model;
 
 
+import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
@@ -14,14 +15,25 @@ import java.util.List;
  *         Time: 07:04
  */
 public class Grid {
+    private static final int MIN_WIDTH = 10;
+    private static final int MIN_HEIGHT = 10;
+
     private Square[][] squares;
     private GridBuilder gridBuilder;
 
-    public Grid(int width, int height) {
+    public Grid(int width, int height) throws GridTooSmallException{
+        if(!validDimensions(width,height)){
+            throw new GridTooSmallException("The dimensions of the grid need to be at least 10x10");
+        }
         gridBuilder = new GridBuilder(width, height);
         this.squares = new Square[height][width];
         setupNeighbours();
     }
+
+    private boolean validDimensions(int width, int height) {
+        return width >= MIN_WIDTH && height >= MIN_HEIGHT;
+    }
+
 
     public void buildGrid(Square playerOneSquare, Square playerTwoSquare) {
         squares = gridBuilder.build(playerOneSquare, playerTwoSquare, squares);

@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.model.Direction;
 import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.exception.GameOverException;
+import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import org.junit.Before;
@@ -22,7 +23,7 @@ public class TestUC_End_Turn {
     private GameStateImpl state;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws GridTooSmallException {
         state = new GameStateImpl("jos", "piet", 10, 10);
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);

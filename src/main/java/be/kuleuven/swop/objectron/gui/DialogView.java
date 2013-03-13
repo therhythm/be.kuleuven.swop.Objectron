@@ -13,17 +13,17 @@ public class DialogView {
     SimpleGUI dialog;
 
     public DialogView(final String text) {
-        dialog = new SimpleGUI("Dialog", 400, 100) {
+        dialog = new SimpleGUI("Dialog", 500, 70) {
 
             @Override
             public void paint(Graphics2D graphics) {
-                graphics.drawString(text, 50, 50);
+                graphics.drawString(text, 20, 20);
             }
 
 
         };
         dialog.setCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dialog.createButton(120, 70, 60, 30, new Runnable() {
+        dialog.createButton(20, 30, 60, 30, new Runnable() {
             @Override
             public void run() {
                 dialog.dispose();

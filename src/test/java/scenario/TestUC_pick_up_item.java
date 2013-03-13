@@ -6,10 +6,7 @@ import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.Square;
-import be.kuleuven.swop.objectron.model.exception.GameOverException;
-import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
-import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.model.exception.SquareEmptyException;
+import be.kuleuven.swop.objectron.model.exception.*;
 import be.kuleuven.swop.objectron.model.item.Item;
 import be.kuleuven.swop.objectron.model.item.LightMine;
 import org.junit.Before;
@@ -36,7 +33,7 @@ public class TestUC_pick_up_item {
     private EndTurnHandler endTurnHandler;
 
     @Before
-    public void setUp() {
+    public void setUp() throws GridTooSmallException{
         gameState = new GameStateImpl("p1","p2",10,10);
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getCurrentPlayer();

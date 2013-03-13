@@ -98,12 +98,6 @@ public class GameView {
                         graphics.drawString("moves remaining: " + currentPlayer.getAvailableActions(), 20, 40);
                         graphics.drawString("selected item: " + selectedItem, 200, 20);
                     }
-
-                    @Override
-                    public void handleMouseClick(int x, int y, boolean doubleClick) {
-                        System.out.println((doubleClick ? "Doubleclicked" : "Clicked") + " at (" + x + ", " + y + ")");
-                    }
-
                 };
 
 

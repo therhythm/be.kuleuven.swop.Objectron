@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.model.*;
 import be.kuleuven.swop.objectron.model.exception.GameOverException;
+import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import org.junit.Before;
@@ -14,8 +15,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,7 +34,8 @@ public class TestGrid {
     private GameState state;
 
     @Before
-    public void setUp(){
+
+    public void setUp()throws GridTooSmallException{
          //square 1
         //vert pos = 1
         //hor pos = 8
@@ -146,7 +147,7 @@ public class TestGrid {
         private Player currentPlayer;
         private List<Player> players = new ArrayList<Player>();
 
-        public GameStateStub(String player1Name, String player2Name, int horizontalTiles, int verticalTiles,int square1HorizontalPosition,int square1VerticalPosition,int square2HorizontalPosition,int square2VerticalPosition) {
+        public GameStateStub(String player1Name, String player2Name, int horizontalTiles, int verticalTiles,int square1HorizontalPosition,int square1VerticalPosition,int square2HorizontalPosition,int square2VerticalPosition) throws GridTooSmallException{
             gameGrid = new Grid(horizontalTiles, verticalTiles);
             Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(square1VerticalPosition, square1HorizontalPosition));
             Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(square2VerticalPosition, square2HorizontalPosition));
