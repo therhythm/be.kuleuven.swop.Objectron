@@ -7,14 +7,22 @@ import be.kuleuven.swop.objectron.domain.Player;
  *         Date: 13/03/13
  *         Time: 03:00
  */
-public class PoweredSquare implements SquareState {
+public class PoweredSquareState implements SquareState {
+
     @Override
-    public void newTurn() {
-        //do nothing
+    public void newTurn(Player player) {
+        // do nothing
     }
 
     @Override
-    public void stepOn(Player player) {
+    public void stepOn(Player player, Square sq) {
+        if(sq.hasActiveItem()){
+
+        }
+    }
+
+    @Override
+    public void powerFailure() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

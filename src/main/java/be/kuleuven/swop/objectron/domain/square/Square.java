@@ -14,10 +14,11 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square {
-    final int horizontalIndex;
-    final int verticalIndex;
+    private final int horizontalIndex;
+    private final int verticalIndex;
 
-    Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
+    private SquareState state;
+    private Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
     private List<Item> items = new ArrayList<Item>();
     private boolean isObstructed = false;
     private Item activeItem;
@@ -25,6 +26,8 @@ public class Square {
     public Square(int horizontalIndex, int verticalIndex) {
         this.horizontalIndex = horizontalIndex;
         this.verticalIndex = verticalIndex;
+
+        this.state = new PoweredSquareState();
     }
 
     public void addNeighbour(Direction direction, Square neighbour) {
@@ -44,6 +47,8 @@ public class Square {
     }
 
     public void stepOn(Player player) {
+        state.stepOn(player);
+
         setObstructed(true);
         if(hasActiveItem()){
             activeItem.activate(player);
