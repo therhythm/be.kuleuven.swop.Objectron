@@ -42,15 +42,10 @@ public class PickUpItemHandler extends Handler {
      */
     public void pickUpItem(int selectionId) throws InventoryFullException, NotEnoughActionsException {
         Player currentPlayer = state.getCurrentPlayer();
-        Square currentSquare = currentPlayer.getCurrentSquare();
-
-        Item selectedItem = currentSquare.pickUpItem(selectionId);
 
         try {
-            currentPlayer.addToInventory(selectedItem);
-            //doPlayerUpdate();
+            currentPlayer.pickupItem(selectionId);
         } catch (InventoryFullException e) {
-            currentSquare.addItem(selectedItem);
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has a full inventory!");
             throw e;
         } catch (NotEnoughActionsException e) {

@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.domain;
 
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
@@ -76,7 +77,10 @@ public class Square {
         return activeItem != null;
     }
 
-    public void setActiveItem(Item activeItem) {
+    public void setActiveItem(Item activeItem) throws SquareOccupiedException {
+        if(hasActiveItem()){
+            throw new SquareOccupiedException("The square already has an active item");
+        }
         this.activeItem = activeItem;
     }
 

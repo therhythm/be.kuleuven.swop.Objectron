@@ -29,7 +29,6 @@ public class TestUC_pick_up_item {
     private Player player;
     private Square currentSquare;
     private GameState gameState;
-    private EndTurnHandler endTurnHandler;
 
     @Before
     public void setUp() throws GridTooSmallException{
@@ -39,7 +38,6 @@ public class TestUC_pick_up_item {
         currentSquare = player.getCurrentSquare();
 
         pickUpItemHandler = new PickUpItemHandler(gameState);
-        endTurnHandler = new EndTurnHandler(gameState);
     }
 
     @Test
@@ -70,7 +68,8 @@ public class TestUC_pick_up_item {
         assertTrue(currentSquare.getAvailableItems().size() != 0);
 
         for (int i = 0; i < 6; i++) {
-            player.addToInventory(new LightMine());
+            player.pickupItem(0);
+            currentSquare.addItem(new LightMine());
             player.endTurn();//keeps remaining actions up
         }
 
@@ -82,36 +81,9 @@ public class TestUC_pick_up_item {
     public void test_no_more_actions() throws InventoryFullException, NotEnoughActionsException, IllegalStateException {
         for (int i = 0; i < 4; i++) {
             currentSquare.addItem(new LightMine());
+            pickUpItemHandler.pickUpItem(0);
         }
-
-        pickUpItemHandler.pickUpItem(0);
-        pickUpItemHandler.pickUpItem(0);
-        pickUpItemHandler.pickUpItem(0);
-        pickUpItemHandler.pickUpItem(0);
     }
-
-    @Test(expected = InventoryFullException.class)
-    public void test_inventoryFull() throws InventoryFullException, NotEnoughActionsException, IllegalStateException, GameOverException {
-
-        for (int i = 0; i < 7; i++) {
-            currentSquare.addItem(new LightMine());
-        }
-        for(int i = 0;i<3;i++){
-            player.addToInventory(new LightMine());
-
-        }
-        player.endTurn();
-        for(int i = 0;i<3;i++){
-            player.addToInventory(new LightMine());
-        }
-        player.endTurn();
-
-        pickUpItemHandler.pickUpItem(0);
-
-
-
-
-     }
 
     @Test (expected = NotEnoughActionsException.class)
     public void test_getAvailableItems_notEnoughActions() throws InventoryFullException, NotEnoughActionsException, SquareEmptyException {
@@ -126,9 +98,5 @@ public class TestUC_pick_up_item {
 
         pickUpItemHandler.getAvailableItems();
     }
-
-
-
-
 
 }

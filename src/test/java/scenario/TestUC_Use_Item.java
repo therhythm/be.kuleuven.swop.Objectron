@@ -28,9 +28,12 @@ public class TestUC_Use_Item {
     private Player player;
     private Item item;
 
+
     @Before
     public void setUp() throws Exception {
         Square square = new Square(0, 0);
+        item = new LightMine();
+        square.addItem(item);
         player = new Player("p1", square);
 
         GameStateImpl stateMock = mock(GameStateImpl.class);
@@ -38,7 +41,7 @@ public class TestUC_Use_Item {
 
         useItemHandler = new UseItemHandler(stateMock);
 
-        item = new LightMine();
+
 
     }
 
@@ -49,7 +52,7 @@ public class TestUC_Use_Item {
 
     @Test
     public void showInventoryTest() throws InventoryFullException, InventoryEmptyException, NotEnoughActionsException {
-        player.addToInventory(item);
+        player.pickupItem(0);
 
         List<Item> inventoryItems = useItemHandler.showInventory();
 
@@ -59,7 +62,7 @@ public class TestUC_Use_Item {
 
     @Test
     public void selectItemTest() throws InventoryFullException, NotEnoughActionsException {
-        player.addToInventory(item);
+        player.pickupItem(0);
 
         String selected = useItemHandler.selectItemFromInventory(0);
 
@@ -68,7 +71,7 @@ public class TestUC_Use_Item {
 
     @Test
     public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException {
-        player.addToInventory(item);
+        player.pickupItem(0);
 
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
@@ -84,7 +87,7 @@ public class TestUC_Use_Item {
     @Test(expected = SquareOccupiedException.class)
     public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException, NotEnoughActionsException {
         player.getCurrentSquare().setActiveItem(item);
-        player.addToInventory(item);
+        player.pickupItem(0);
 
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
@@ -92,7 +95,7 @@ public class TestUC_Use_Item {
 
     @Test
     public void cancelItemUsageTest() throws InventoryFullException, NotEnoughActionsException {
-        player.addToInventory(item);
+        player.pickupItem(0);
 
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
@@ -107,9 +110,11 @@ public class TestUC_Use_Item {
 
     @Test(expected = NotEnoughActionsException.class)
     public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException {
-        player.addToInventory(new LightMine());
-        player.addToInventory(new LightMine());
-        player.addToInventory(new LightMine());
+        player.pickupItem(0);
+        player.getCurrentSquare().addItem(new LightMine());
+        player.pickupItem(0);
+        player.getCurrentSquare().addItem(new LightMine());
+        player.pickupItem(0);
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
     }

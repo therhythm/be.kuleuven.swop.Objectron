@@ -38,13 +38,17 @@ public class Player {
         return currentSquare;
     }
 
-    public Square getInitialSquare() {
-        return initialSquare;
-    }
-
     public void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException {
         checkEnoughActions();
-        this.inventory.addItem(itemToAdd);
+        Item item = currentSquare.pickUpItem(identifier);
+
+        try{
+            this.inventory.addItem(item);
+        }catch(InventoryFullException ex){
+            currentSquare.addItem(item);
+            throw ex;
+        }
+
         reduceAvailableActions();
     }
 
@@ -81,7 +85,7 @@ public class Player {
 
     public void useItem(Item item) throws SquareOccupiedException, NotEnoughActionsException {
         checkEnoughActions();
-        item.use(currentSquare);
+        currentSquare.setActiveItem(item);
         inventory.removeItem(item);
 
         reduceAvailableActions();
