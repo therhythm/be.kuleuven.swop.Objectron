@@ -44,7 +44,7 @@ public class Grid {
         if (player.getAvailableActions() == 0) {
             throw new NotEnoughActionsException("You don't have enough actions left");
         }
-        else if (!validPosition(neighbour,direction)) {
+        else if (!neighbour.isValidPosition(direction)) {
             throw new InvalidMoveException();
         }
 
@@ -58,33 +58,7 @@ public class Grid {
 
         return squares[vertIndex][horIndex];
     }
-       //TODO properder programmeren indien mogelijk, evt implementeren op square niveau?
-    private boolean validPosition(Square square, Direction direction) {
-        if(square ==null)
-            return false;
-        if ( square.isObstructed())
-            return false;
 
-        //diagonaal check
-        if(direction == Direction.UP_LEFT)
-              if(square.getNeighbour(Direction.RIGHT).isObstructed() && square.getNeighbour(Direction.DOWN).isObstructed())
-                  return false;
-
-        if(direction == Direction.DOWN_LEFT)
-            if(square.getNeighbour(Direction.RIGHT).isObstructed() && square.getNeighbour(Direction.UP).isObstructed())
-                return false;
-
-        if(direction == Direction.UP_RIGHT)
-            if(square.getNeighbour(Direction.LEFT).isObstructed() && square.getNeighbour(Direction.DOWN).isObstructed())
-                return false;
-
-        if(direction == Direction.DOWN_RIGHT)
-            if(square.getNeighbour(Direction.LEFT).isObstructed() && square.getNeighbour(Direction.UP).isObstructed())
-                return false;
-
-        return true;
-
-    }
 
     private void setupNeighbours() {
         for (int vertical = 0; vertical < squares.length; vertical++) {

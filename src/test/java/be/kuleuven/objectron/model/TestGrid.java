@@ -51,7 +51,7 @@ public class TestGrid {
 
     }
     @Test (expected = InvalidMoveException.class)
-    public void test_invalid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException {
+    public void test_invalid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         player1 = state.getCurrentPlayer();
 
         try {
@@ -78,7 +78,7 @@ public class TestGrid {
     }
 
     @Test
-    public void test_valid_move_diagonal() throws  InvalidMoveException,NotEnoughActionsException{
+    public void test_valid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
 
         player1 = state.getCurrentPlayer();
 
@@ -130,7 +130,7 @@ public class TestGrid {
     }
 
     @Test (expected = InvalidMoveException.class)
-    public void test_invalid_move_neighbor()throws  InvalidMoveException,NotEnoughActionsException{
+    public void test_invalid_move_neighbor() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         player1 = state.getCurrentPlayer();
 
 

@@ -31,15 +31,10 @@ public class EndTurnHandler extends Handler {
         if (!state.getCurrentPlayer().hasMoved()) {
             throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");
         }
-        Player currentPlayer = state.getCurrentPlayer();
         state.getCurrentPlayer().endTurn();
         state.nextPlayer();
 
-        Square startSquareOtherPlayer = state.getCurrentPlayer().getInitialSquare();
 
-        if(currentPlayer.getCurrentSquare().equals(startSquareOtherPlayer)){
-            throw new GameOverException(currentPlayer.getName() + ", you win the game!");
-        }
 
         return state.getCurrentPlayer().getPlayerViewModel();
     }
