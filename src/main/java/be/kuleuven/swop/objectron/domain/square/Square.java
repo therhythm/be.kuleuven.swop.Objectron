@@ -1,5 +1,7 @@
-package be.kuleuven.swop.objectron.domain;
+package be.kuleuven.swop.objectron.domain.square;
 
+import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
