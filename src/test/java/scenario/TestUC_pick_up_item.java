@@ -84,4 +84,19 @@ public class TestUC_pick_up_item {
             pickUpItemHandler.pickUpItem(0);
         }
     }
+
+    @Test (expected = NotEnoughActionsException.class)
+    public void test_getAvailableItems_notEnoughActions() throws InventoryFullException, NotEnoughActionsException, SquareEmptyException {
+
+        for (int i = 0; i < 4; i++) {
+            currentSquare.addItem(new LightMine());
+        }
+
+        for(int i = 0;i<3;i++){
+            pickUpItemHandler.pickUpItem(0);
+        }
+
+        pickUpItemHandler.getAvailableItems();
+    }
+
 }
