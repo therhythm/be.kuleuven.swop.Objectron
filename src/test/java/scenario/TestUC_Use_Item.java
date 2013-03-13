@@ -61,10 +61,9 @@ public class TestUC_Use_Item {
     public void selectItemTest() throws InventoryFullException, NotEnoughActionsException {
         player.addToInventory(item);
 
-        useItemHandler.selectItemFromInventory(0);
+        String selected = useItemHandler.selectItemFromInventory(0);
 
-        assertNotNull(player.getCurrentlySelectedItem());
-        assertEquals(item, player.getCurrentlySelectedItem());
+        assertEquals(item.getName(), selected);
     }
 
     @Test

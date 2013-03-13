@@ -88,6 +88,10 @@ public class GridBuilder {
                 goodSquares.add(s);
             }
         }
+
+        int random = (int) Math.round(Math.random() * (goodSquares.size() - 1));
+        goodSquares.get(random).addItem(new LightMine());
+
     }
 
     private List<Square> getAllNeighboursFromSquare(Square square) {

@@ -5,7 +5,6 @@ import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.model.item.Effect;
 import be.kuleuven.swop.objectron.model.item.Item;
-import be.kuleuven.swop.objectron.model.item.NullItem;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class Player {
 
     private String name;
     private Square currentSquare;
-    private Item currentlySelectedItem = new NullItem();
     private int availableActions = NB_ACTIONS_EACH_TURN;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
@@ -67,10 +65,6 @@ public class Player {
         return availableActions;
     }
 
-    public Item getCurrentlySelectedItem() {
-        return currentlySelectedItem;
-    }
-
     public List<Item> getInventoryItems() {
         return inventory.getAllItems();
     }
@@ -79,14 +73,10 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void setCurrentlySelectedItem(Item currentlySelectedItem) {
-        this.currentlySelectedItem = currentlySelectedItem;
-    }
-
-    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException {
+    public void useItem(Item item) throws SquareOccupiedException, NotEnoughActionsException {
         checkEnoughActions();
-        currentlySelectedItem.use(currentSquare);
-        inventory.removeItem(currentlySelectedItem);
+        item.use(currentSquare);
+        inventory.removeItem(item);
 
         reduceAvailableActions();
     }
@@ -128,7 +118,6 @@ public class Player {
                 currentSquare.getHorizontalIndex(),
                 currentSquare.getVerticalIndex(),
                 getAvailableActions(),
-                getCurrentlySelectedItem().getName(),
                 lightTrail.getLightTrailViewModel());
     }
 }
