@@ -58,28 +58,28 @@ public class Grid {
 
         return squares[vertIndex][horIndex];
     }
-       //TODO proberder programmeren, evt implementeren op square niveau?
-    private boolean validPosition(Square neighbour, Direction direction) {
-        if(neighbour ==null)
+       //TODO properder programmeren indien mogelijk, evt implementeren op square niveau?
+    private boolean validPosition(Square square, Direction direction) {
+        if(square ==null)
             return false;
-        if ( neighbour.isObstructed())
+        if ( square.isObstructed())
             return false;
 
         //diagonaal check
         if(direction == Direction.UP_LEFT)
-              if(neighbour.getNeighbour(Direction.RIGHT).isObstructed() && neighbour.getNeighbour(Direction.DOWN).isObstructed())
+              if(square.getNeighbour(Direction.RIGHT).isObstructed() && square.getNeighbour(Direction.DOWN).isObstructed())
                   return false;
 
         if(direction == Direction.DOWN_LEFT)
-            if(neighbour.getNeighbour(Direction.RIGHT).isObstructed() && neighbour.getNeighbour(Direction.UP).isObstructed())
+            if(square.getNeighbour(Direction.RIGHT).isObstructed() && square.getNeighbour(Direction.UP).isObstructed())
                 return false;
 
         if(direction == Direction.UP_RIGHT)
-            if(neighbour.getNeighbour(Direction.LEFT).isObstructed() && neighbour.getNeighbour(Direction.DOWN).isObstructed())
+            if(square.getNeighbour(Direction.LEFT).isObstructed() && square.getNeighbour(Direction.DOWN).isObstructed())
                 return false;
 
         if(direction == Direction.DOWN_RIGHT)
-            if(neighbour.getNeighbour(Direction.LEFT).isObstructed() && neighbour.getNeighbour(Direction.UP).isObstructed())
+            if(square.getNeighbour(Direction.LEFT).isObstructed() && square.getNeighbour(Direction.UP).isObstructed())
                 return false;
 
         return true;

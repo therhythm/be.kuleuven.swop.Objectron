@@ -20,6 +20,7 @@ public class Player {
 
     private String name;
     private Square currentSquare;
+    private Square initialSquare;
     private int availableActions = NB_ACTIONS_EACH_TURN;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
@@ -29,11 +30,16 @@ public class Player {
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
+        this.initialSquare = currentSquare;
         currentSquare.setObstructed(true);
     }
 
     public Square getCurrentSquare() {
         return currentSquare;
+    }
+
+    public Square getInitialSquare() {
+        return initialSquare;
     }
 
     public void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException {

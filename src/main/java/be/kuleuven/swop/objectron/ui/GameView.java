@@ -210,7 +210,7 @@ public class GameView {
                             PlayerViewModel vm = endTurnHandler.endTurn();
                             updatePlayer(vm);
                         } catch (GameOverException e) {
-                            new DialogView("You lost the game!");
+                            new DialogView(e.getMessage());
                             gui.dispose();
                         }
                         gui.repaint();
