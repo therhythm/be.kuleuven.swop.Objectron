@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron;
 
 import be.kuleuven.swop.objectron.model.Grid;
 import be.kuleuven.swop.objectron.model.Player;
+import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class GameState {
     private Player currentPlayer;
     private List<Player> players = new ArrayList<Player>();
 
-    public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) {
+    public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) throws GridTooSmallException{
         gameGrid = new Grid(horizontalTiles, verticalTiles);
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalTiles - 1, 0));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
@@ -25,6 +26,7 @@ public class GameState {
         players.add(p1);
         players.add(p2);
     }
+
 
     public Player getCurrentPlayer() {
         return currentPlayer;

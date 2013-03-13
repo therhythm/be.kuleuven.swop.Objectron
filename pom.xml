@@ -141,7 +141,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>be.kuleuven.swop.objectron.RunObjectron</mainClass>
+                            <mainClass>be.kuleuven.swop.objectron.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

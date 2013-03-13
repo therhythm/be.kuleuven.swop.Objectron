@@ -57,6 +57,15 @@ public abstract class SimpleGUI {
         return b;
     }
 
+    public final JTextField createTextField(int x, int y, int width, int height){
+        JTextField textField = new JTextField();
+        textField.setLocation(x,y);
+        textField.setSize(width, height);
+        panel.add(textField);
+        textField.setVisible(true);
+        return textField;
+    }
+
     public final Image loadImage(String url, int width, int height) {
         Image image = panel.getToolkit().createImage(ClassLoader.getSystemClassLoader().getResource(url));
         MediaTracker tracker = new MediaTracker(panel);
@@ -75,5 +84,10 @@ public abstract class SimpleGUI {
 
     public void dispose() {
         frame.dispose();
+
+    }
+
+    public void setVisible(boolean value){
+        frame.setVisible(value);
     }
 }

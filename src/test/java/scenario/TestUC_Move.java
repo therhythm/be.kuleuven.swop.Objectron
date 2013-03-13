@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.model.Grid;
 import be.kuleuven.swop.objectron.model.Player;
 import be.kuleuven.swop.objectron.model.Square;
 import be.kuleuven.swop.objectron.model.exception.GameOverException;
+import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class TestUC_Move {
 
 
     @Before
-    public void setUp() {
+    public void setUp() throws GridTooSmallException {
         Grid grid = new Grid(10, 10);
         Square square1 = grid.getSquareAtPosition(9,0);
         Square square2 = grid.getSquareAtPosition(6,0);
