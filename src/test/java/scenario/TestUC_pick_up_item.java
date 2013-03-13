@@ -4,11 +4,11 @@ import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
-import be.kuleuven.swop.objectron.model.Player;
-import be.kuleuven.swop.objectron.model.Square;
-import be.kuleuven.swop.objectron.model.exception.*;
-import be.kuleuven.swop.objectron.model.item.Item;
-import be.kuleuven.swop.objectron.model.item.LightMine;
+import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.Square;
+import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.LightMine;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +16,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.

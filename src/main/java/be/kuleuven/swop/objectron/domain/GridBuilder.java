@@ -1,6 +1,6 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.model.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.LightMine;
 
 import java.util.ArrayList;
 import java.util.List;

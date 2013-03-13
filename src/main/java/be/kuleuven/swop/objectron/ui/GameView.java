@@ -1,12 +1,12 @@
-package be.kuleuven.swop.objectron.gui;
+package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import be.kuleuven.swop.objectron.handler.UseItemHandler;
-import be.kuleuven.swop.objectron.model.Direction;
-import be.kuleuven.swop.objectron.model.exception.*;
-import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 

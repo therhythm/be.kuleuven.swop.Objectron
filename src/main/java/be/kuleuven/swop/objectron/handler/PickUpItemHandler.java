@@ -1,12 +1,12 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.GameState;
-import be.kuleuven.swop.objectron.model.Player;
-import be.kuleuven.swop.objectron.model.Square;
-import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
-import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.model.exception.SquareEmptyException;
-import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.Square;
+import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
+import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
+import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -28,10 +28,10 @@ public class PickUpItemHandler extends Handler {
      * Pick up an item from the current square.
      *
      * @param selectionId The ID of the item to pick up.
-     * @throws be.kuleuven.swop.objectron.model.exception.InventoryFullException
+     * @throws be.kuleuven.swop.objectron.domain.exception.InventoryFullException
      *          The player's inventory is full.
      *          | state.getCurrentPlayer().getInventoryItems() == 6
-     * @throws be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException
+     * @throws be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException
      *          The player has no more available actions.
      *          | state.getCurrentPlayer().getAvailableActions() == 0
      * @post The item is removed from the current square.

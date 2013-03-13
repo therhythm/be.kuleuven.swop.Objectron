@@ -1,10 +1,10 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
-import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.model.item.Effect;
-import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
+import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.item.Effect;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.ArrayList;

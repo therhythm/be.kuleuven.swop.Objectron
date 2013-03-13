@@ -2,11 +2,9 @@ package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.GameState;
 import be.kuleuven.swop.objectron.GameStateImpl;
-import be.kuleuven.swop.objectron.gui.GameView;
-import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.ui.GameView;
+import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
-
-import javax.swing.*;
 
 /**
  * @author : Nik Torfs

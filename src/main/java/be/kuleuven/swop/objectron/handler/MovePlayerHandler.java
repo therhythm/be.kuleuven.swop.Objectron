@@ -1,9 +1,9 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.GameState;
-import be.kuleuven.swop.objectron.model.Direction;
-import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.logging.Level;
@@ -25,11 +25,11 @@ public class MovePlayerHandler extends Handler {
      * Move the player in a given direction.
      *
      * @param direction The direction the player wants to move in.
-     * @throws be.kuleuven.swop.objectron.model.exception.InvalidMoveException
+     * @throws be.kuleuven.swop.objectron.domain.exception.InvalidMoveException
      *          This is an invalid move.
      *          | !state.getGrid().validPosition(
      *          |  player.getCurrentSquare().getNeighbour(direction))
-     * @throws be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException
+     * @throws be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException
      *          The player has not enough actions remaining.
      *          | state.getCurrentPlayer().getAvailableActions() == 0
      * @post The player is moved in the chosen direction.

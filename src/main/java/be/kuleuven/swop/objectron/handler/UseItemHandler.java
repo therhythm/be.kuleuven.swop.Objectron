@@ -1,10 +1,10 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.GameState;
-import be.kuleuven.swop.objectron.model.exception.InventoryEmptyException;
-import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.model.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
+import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -28,7 +28,7 @@ public class UseItemHandler extends Handler {
      * Retrieve the inventory of the current player.
      *
      * @return A list of the items in the inventory of the current player.
-     * @throws be.kuleuven.swop.objectron.model.exception.InventoryEmptyException
+     * @throws be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException
      *          The current player's inventory is empty
      *          | getCurrentPlayer().getInventory().isEmpty()
      */
@@ -58,10 +58,10 @@ public class UseItemHandler extends Handler {
      * Use the currently selected item
      *
      * @return A boolean to indicate whether the item was successfully used
-     * @throws be.kuleuven.swop.objectron.model.exception.SquareOccupiedException
+     * @throws be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException
      *          The square the player is trying to access, is occupied.
      *          | state.getCurrentPlayer().getCurrentSquare().hasActiveItem()
-     * @throws be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException
+     * @throws be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException
      *          The player has no more available actions.
      *          | state.getCurrentPlayer().getAvailableActions() == 0
      * @post The item is removed from the player's inventory

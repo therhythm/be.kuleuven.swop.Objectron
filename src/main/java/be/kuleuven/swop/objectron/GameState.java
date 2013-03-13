@@ -1,8 +1,7 @@
 package be.kuleuven.swop.objectron;
 
-import be.kuleuven.swop.objectron.model.Grid;
-import be.kuleuven.swop.objectron.model.Player;
-import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.Grid;
+import be.kuleuven.swop.objectron.domain.Player;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,7 +1,7 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.model.LightTrail;
-import be.kuleuven.swop.objectron.model.Square;
+import be.kuleuven.swop.objectron.domain.LightTrail;
+import be.kuleuven.swop.objectron.domain.Square;
 import org.junit.Before;
 import org.junit.Test;
 

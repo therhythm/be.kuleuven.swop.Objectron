@@ -2,11 +2,11 @@ package scenario;
 
 import be.kuleuven.swop.objectron.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.UseItemHandler;
-import be.kuleuven.swop.objectron.model.Player;
-import be.kuleuven.swop.objectron.model.Square;
-import be.kuleuven.swop.objectron.model.exception.*;
-import be.kuleuven.swop.objectron.model.item.Item;
-import be.kuleuven.swop.objectron.model.item.LightMine;
+import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.Square;
+import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.LightMine;
 import org.junit.Before;
 import org.junit.Test;
 

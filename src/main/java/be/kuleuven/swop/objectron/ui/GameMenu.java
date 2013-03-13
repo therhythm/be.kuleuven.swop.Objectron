@@ -1,7 +1,7 @@
-package be.kuleuven.swop.objectron.gui;
+package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.handler.StartGameHandler;
-import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,6 @@
-package be.kuleuven.swop.objectron.model.item;
+package be.kuleuven.swop.objectron.domain.item;
 
-import be.kuleuven.swop.objectron.model.Player;
+import be.kuleuven.swop.objectron.domain.Player;
 
 /**
  * @author : Nik Torfs

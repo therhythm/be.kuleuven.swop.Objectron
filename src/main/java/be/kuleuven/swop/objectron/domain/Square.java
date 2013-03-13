@@ -1,6 +1,6 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.*;

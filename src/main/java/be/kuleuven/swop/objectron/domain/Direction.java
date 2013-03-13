@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.domain;
 
 /**
  * @author : Nik Torfs

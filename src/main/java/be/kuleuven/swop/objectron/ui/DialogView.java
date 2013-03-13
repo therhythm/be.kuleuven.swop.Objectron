@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.gui;
+package be.kuleuven.swop.objectron.ui;
 
 import javax.swing.*;
 import java.awt.*;

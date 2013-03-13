@@ -4,12 +4,12 @@ package scenario;
 import be.kuleuven.swop.objectron.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
-import be.kuleuven.swop.objectron.model.Direction;
-import be.kuleuven.swop.objectron.model.Player;
-import be.kuleuven.swop.objectron.model.exception.GameOverException;
-import be.kuleuven.swop.objectron.model.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.model.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.model.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.GameOverException;
+import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import org.junit.Before;
 import org.junit.Test;
 

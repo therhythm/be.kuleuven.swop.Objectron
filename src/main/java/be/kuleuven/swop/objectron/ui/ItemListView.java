@@ -1,7 +1,7 @@
-package be.kuleuven.swop.objectron.gui;
+package be.kuleuven.swop.objectron.ui;
 
-import be.kuleuven.swop.objectron.model.item.Item;
-import be.kuleuven.swop.objectron.model.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.LightMine;
 
 import java.awt.*;
 import java.util.HashMap;

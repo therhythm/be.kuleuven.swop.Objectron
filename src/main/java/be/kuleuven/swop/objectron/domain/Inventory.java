@@ -1,7 +1,7 @@
-package be.kuleuven.swop.objectron.model;
+package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.model.exception.InventoryFullException;
-import be.kuleuven.swop.objectron.model.item.Item;
+import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
+import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.ArrayList;
 import java.util.Collections;
