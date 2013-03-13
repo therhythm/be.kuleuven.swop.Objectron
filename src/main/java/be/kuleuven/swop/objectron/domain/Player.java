@@ -121,8 +121,7 @@ public class Player {
 
     public PlayerViewModel getPlayerViewModel() {
         return new PlayerViewModel(getName(),
-                currentSquare.getHorizontalIndex(),
-                currentSquare.getVerticalIndex(),
+                currentSquare.getSquareViewModel(),initialSquare.getSquareViewModel(),
                 getAvailableActions(),
                 lightTrail.getLightTrailViewModel());
     }
