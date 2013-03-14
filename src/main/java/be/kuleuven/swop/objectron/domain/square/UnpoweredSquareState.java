@@ -26,7 +26,7 @@ public class UnpoweredSquareState implements SquareState {
 
         remainingTurns--;
         if(remainingTurns == 0){
-            sq.transitionState(new PoweredSquareState());
+            //sq.transitionState(new PoweredSquareState());
         }
     }
 

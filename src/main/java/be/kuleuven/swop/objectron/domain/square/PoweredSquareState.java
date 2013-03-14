@@ -10,8 +10,8 @@ import be.kuleuven.swop.objectron.domain.Player;
 public class PoweredSquareState implements SquareState {
 
     @Override
-    public void newTurn(Player player) {
-        // do nothing
+    public void newTurn(Player player, Square sq) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

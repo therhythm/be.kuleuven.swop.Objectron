@@ -1,7 +1,10 @@
 package be.kuleuven.swop.objectron.domain.square;
 
+
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
@@ -47,7 +50,7 @@ public class Square {
     }
 
     public void stepOn(Player player) {
-        state.stepOn(player);
+        state.stepOn(player, this);
 
         setObstructed(true);
         if(hasActiveItem()){
@@ -83,7 +86,10 @@ public class Square {
         return activeItem != null;
     }
 
-    public void setActiveItem(Item activeItem) {
+    public void setActiveItem(Item activeItem) throws SquareOccupiedException {
+        if(hasActiveItem()){
+            throw new SquareOccupiedException("The square already has an active item");
+        }
         this.activeItem = activeItem;
     }
 
