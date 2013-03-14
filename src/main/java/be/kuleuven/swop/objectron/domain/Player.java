@@ -91,10 +91,10 @@ public class Player {
     }
 
     public void endTurn() {
+        availableActions = NB_ACTIONS_EACH_TURN;
         for (Effect effect : effects) {
             effect.activate(this);
         }
-        availableActions = NB_ACTIONS_EACH_TURN;
         hasMoved = false;
     }
 
