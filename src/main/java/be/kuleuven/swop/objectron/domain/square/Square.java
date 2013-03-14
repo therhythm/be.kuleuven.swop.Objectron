@@ -115,13 +115,14 @@ public class Square {
         state.powerFailure(this);
     }
 
-    private void newTurn(){ //TODO this should be notified (and public)... Observer?
+    private void newTurn(Player player){ //TODO this should be notified (and public)... Observer?
         if(hasPowerFailure()){
             receivePowerFailure();
             for(Square neighbour : neighbours.values()){
                 neighbour.receivePowerFailure();
             }
         }
+        state.newTurn(player, this);
     }
 
     private boolean hasPowerFailure(){

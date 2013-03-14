@@ -13,11 +13,7 @@ public class UnpoweredSquareState implements SquareState {
     private static final int NB_TURNS_WITHOUT_POWER = 3;
 
     private int remainingTurns = NB_TURNS_WITHOUT_POWER;
-        
-    public UnpoweredSquareState(){
-                
-    }
-    
+
     @Override
     public void newTurn(Player player, Square sq) {
         remainingTurns--;
@@ -39,6 +35,6 @@ public class UnpoweredSquareState implements SquareState {
 
     @Override
     public void powerFailure(Square context) {
-        //TODO depends on how this constraint is supposed to work, waiting for clarification
+        remainingTurns = NB_TURNS_WITHOUT_POWER;
     }
 }
