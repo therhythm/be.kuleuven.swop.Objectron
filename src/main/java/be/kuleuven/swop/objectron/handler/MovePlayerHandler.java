@@ -2,8 +2,11 @@ package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.logging.Level;
@@ -36,9 +39,12 @@ public class MovePlayerHandler extends Handler {
      * | new.state.getCurrentPlayer().getCurrentSquare()
      * |  != state.getCurrentPlayer().getCurrentSquare()
      */
-    public PlayerViewModel move(Direction direction) throws InvalidMoveException, NotEnoughActionsException {
+    public PlayerViewModel move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         try {
             state.getGrid().makeMove(direction, state.getCurrentPlayer());
+            if(checkWon())
+                throw new GameOverException(state.getCurrentPlayer().getName() + ", you win the game!");
+
             return state.getCurrentPlayer().getPlayerViewModel();
         } catch (InvalidMoveException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");
@@ -47,5 +53,15 @@ public class MovePlayerHandler extends Handler {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do a move when he had no actions remaining.");
             throw e;
         }
+    }
+
+    private boolean checkWon() {
+        Player currentPlayer = state.getCurrentPlayer();
+
+        state.nextPlayer();
+        Square startSquareOtherPlayer = state.getCurrentPlayer().getInitialSquare();
+        state.nextPlayer();
+
+        return currentPlayer.getCurrentSquare().equals(startSquareOtherPlayer);
     }
 }

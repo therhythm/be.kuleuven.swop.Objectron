@@ -1,19 +1,20 @@
 package be.kuleuven.swop.objectron.viewmodel;
 
+
 import java.util.Collections;
 import java.util.List;
 
 public class PlayerViewModel {
     private final String name;
-    private final int hPosition;
-    private final int vPosition;
+    private final SquareViewModel currentSquare;
+    private final SquareViewModel initialSquare;
     private final int availableActions;
     private final List<SquareViewModel> lightTrail;
 
-    public PlayerViewModel(String name, int hPosition, int vPosition, int availableActions, List<SquareViewModel> lightTrailViewModel) {
+    public PlayerViewModel(String name, SquareViewModel currentSquare, SquareViewModel initialSquare, int availableActions, List<SquareViewModel> lightTrailViewModel) {
         this.name = name;
-        this.hPosition = hPosition;
-        this.vPosition = vPosition;
+        this.currentSquare = currentSquare;
+        this.initialSquare = initialSquare;
         this.availableActions = availableActions;
         this.lightTrail = lightTrailViewModel;
     }
@@ -23,11 +24,11 @@ public class PlayerViewModel {
     }
 
     public int getHPosition() {
-        return hPosition;
+        return currentSquare.getHIndex();
     }
 
     public int getVPosition() {
-        return vPosition;
+        return currentSquare.getVIndex();
     }
 
     public int getAvailableActions() {

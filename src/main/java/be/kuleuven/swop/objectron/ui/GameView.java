@@ -131,6 +131,11 @@ public class GameView {
                                 new DialogView("Sorry that is not a valid move");
                             } catch (NotEnoughActionsException e) {
                                 new DialogView("You have no actions remaining, end the turn.");
+                            }  catch(GameOverException e){
+
+                                new DialogView(e.getMessage());
+
+                               gui.dispose();
                             }
                             gui.repaint();
                         }
@@ -207,7 +212,7 @@ public class GameView {
                             PlayerViewModel vm = endTurnHandler.endTurn();
                             updatePlayer(vm);
                         } catch (GameOverException e) {
-                            new DialogView("You lost the game!");
+                            new DialogView(e.getMessage());
                             gui.dispose();
                         }
                         gui.repaint();

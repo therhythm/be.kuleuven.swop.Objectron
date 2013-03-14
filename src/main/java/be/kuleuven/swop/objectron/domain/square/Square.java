@@ -98,6 +98,33 @@ public class Square {
     public SquareViewModel getSquareViewModel() {
         return new SquareViewModel(getHorizontalIndex(), getVerticalIndex());
     }
+    //TODO properder programmeren indien mogelijk, evt implementeren op square niveau?
+    public boolean isValidPosition(Direction direction) {
+        if(this ==null)
+            return false;
+        if ( this.isObstructed())
+            return false;
+
+        //diagonaal check
+        if(direction == Direction.UP_LEFT)
+            if(this.getNeighbour(Direction.RIGHT).isObstructed() && this.getNeighbour(Direction.DOWN).isObstructed())
+                return false;
+
+        if(direction == Direction.DOWN_LEFT)
+            if(this.getNeighbour(Direction.RIGHT).isObstructed() && this.getNeighbour(Direction.UP).isObstructed())
+                return false;
+
+        if(direction == Direction.UP_RIGHT)
+            if(this.getNeighbour(Direction.LEFT).isObstructed() && this.getNeighbour(Direction.DOWN).isObstructed())
+                return false;
+
+        if(direction == Direction.DOWN_RIGHT)
+            if(this.getNeighbour(Direction.LEFT).isObstructed() && this.getNeighbour(Direction.UP).isObstructed())
+                return false;
+
+        return true;
+
+    }
 
     public String toString(){
         String result = "";

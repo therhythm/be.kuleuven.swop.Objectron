@@ -22,6 +22,7 @@ public class DialogView {
 
 
         };
+        dialog.setCloseOperation(JFrame.EXIT_ON_CLOSE);
         dialog.setCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.createButton(20, 30, 60, 30, new Runnable() {
             @Override

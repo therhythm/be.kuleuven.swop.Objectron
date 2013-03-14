@@ -1,6 +1,8 @@
 package scenario;
 
 
+
+import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.Direction;
@@ -49,7 +51,7 @@ public class TestUC_Move {
     }
 
     @Test
-    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException {
+    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         Square prev = player1.getCurrentSquare();
 
         movePlayerHandler.move(Direction.UP);
@@ -60,12 +62,12 @@ public class TestUC_Move {
     }
 
     @Test(expected = InvalidMoveException.class)
-    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException {
+    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         movePlayerHandler.move(Direction.DOWN);
     }
 
     @Test(expected = NotEnoughActionsException.class)
-    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException {
+    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         movePlayerHandler.move(Direction.UP);
         movePlayerHandler.move(Direction.UP);
         movePlayerHandler.move(Direction.UP);

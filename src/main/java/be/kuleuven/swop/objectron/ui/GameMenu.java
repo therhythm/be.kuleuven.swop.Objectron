@@ -40,21 +40,21 @@ public class GameMenu {
                         || nbVerticalTilesField .getText().isEmpty()
                         || p1NameField.getText().isEmpty()
                         || p2NameField.getText().isEmpty()){
-                    new DialogView("Please fill in all textfields");
+                    new DialogView("Please fill in all textfields", false);
                 }else{
                     try{
                         int nbHorizontalTiles = Integer.parseInt(nbHorizontalTilesField.getText());
                         int nbVerticalTiles = Integer.parseInt(nbVerticalTilesField.getText());
                         if(nbHorizontalTiles < 0 || nbVerticalTiles < 1){
-                            new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!");
+                            new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!", false);
                         }
                         GameStartViewModel vm = handler.startNewGame(p1NameField.getText(), p2NameField.getText(), nbHorizontalTiles, nbVerticalTiles);
                         new GameView(vm).run();
                         gui.dispose();
                     }catch(NumberFormatException ex){
-                        new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!");
+                        new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!", false);
                     } catch (GridTooSmallException e) {
-                        new DialogView("The given grid dimensions are too small (min 10x10)");
+                        new DialogView("The given grid dimensions are too small (min 10x10)", false);
                     }
                 }
             }
