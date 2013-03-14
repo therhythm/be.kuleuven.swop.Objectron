@@ -56,7 +56,7 @@ public class Square {
 
         setObstructed(true);
         if(hasActiveItem()){
-            activeItem.activate(player);
+            player.addEffect(activeItem.getEffect());
             activeItem = null;
         }
     }

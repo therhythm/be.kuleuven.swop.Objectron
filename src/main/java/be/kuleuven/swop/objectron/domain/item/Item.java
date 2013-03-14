@@ -11,8 +11,5 @@ public interface Item{
 
     String getName();
 
-    /**
-     * activate the item
-     */
-    void activate(Player player);
+    Effect getEffect();
 }

@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
  *         Date: 27/02/13
  *         Time: 20:56
  */
+//TODO singleton by factory? no special state to be kept
 public class LightMine implements Item {
     private static final int NB_ACTIONS_BLINDED = 3;
     private static final String name = "Light Mine";
@@ -25,7 +26,7 @@ public class LightMine implements Item {
     }
 
     @Override
-    public void activate(Player player) {
-        player.addEffect(effect);
+    public Effect getEffect(){
+        return effect;
     }
 }
