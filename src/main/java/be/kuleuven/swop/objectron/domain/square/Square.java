@@ -17,6 +17,8 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square {
+    private static final int POWER_FAILURE_CHANCE = 5;
+
     private final int horizontalIndex;
     private final int verticalIndex;
 
@@ -103,5 +105,27 @@ public class Square {
         result += "Vertical position: " + this.verticalIndex + "\n";
 
         return result;
+    }
+
+    public void transitionState(SquareState newState) {
+        this.state = newState;
+    }
+
+    public void receivePowerFailure(){
+        state.powerFailure(this);
+    }
+
+    private void newTurn(){ //TODO this should be notified (and public)... Observer?
+        if(hasPowerFailure()){
+            receivePowerFailure();
+            for(Square neighbour : neighbours.values()){
+                neighbour.receivePowerFailure();
+            }
+        }
+    }
+
+    private boolean hasPowerFailure(){
+        int r = (int) (Math.random() * 100);
+        return r <= POWER_FAILURE_CHANCE;
     }
 }

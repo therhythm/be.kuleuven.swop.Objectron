@@ -10,7 +10,7 @@ import be.kuleuven.swop.objectron.domain.item.ReduceAvailableActionsEffect;
  *         Time: 03:01
  */
 public class UnpoweredSquareState implements SquareState {
-    private static final int NB_TURNS_WITHOUT_POWER = 2; //3-1 because one turn is the one we're in at this moment 
+    private static final int NB_TURNS_WITHOUT_POWER = 3;
 
     private int remainingTurns = NB_TURNS_WITHOUT_POWER;
         
@@ -20,13 +20,11 @@ public class UnpoweredSquareState implements SquareState {
     
     @Override
     public void newTurn(Player player, Square sq) {
-        if(player.getCurrentSquare().equals(sq)){
-            player.addEffect(new ReduceAvailableActionsEffect(1));
-        }
-
         remainingTurns--;
         if(remainingTurns == 0){
-            //sq.transitionState(new PoweredSquareState());
+            sq.transitionState(new PoweredSquareState());
+        }else if(player.getCurrentSquare().equals(sq)){
+            player.addEffect(new ReduceAvailableActionsEffect(1));
         }
     }
 
@@ -35,12 +33,12 @@ public class UnpoweredSquareState implements SquareState {
         if(sq.hasActiveItem()){
             player.addEffect(new ReduceAvailableActionsEffect(1));
         }else{
-            player.endTurn(); //TODO
+            player.endTurn(); //TODO ending turn should also change gamestate
         }
     }
 
     @Override
-    public void powerFailure() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void powerFailure(Square context) {
+        //TODO depends on how this constraint is supposed to work, waiting for clarification
     }
 }

@@ -10,19 +10,17 @@ import be.kuleuven.swop.objectron.domain.Player;
 public class PoweredSquareState implements SquareState {
 
     @Override
-    public void newTurn(Player player, Square sq) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void newTurn(Player player, Square context) {
+        // do nothing
     }
 
     @Override
-    public void stepOn(Player player, Square sq) {
-        if(sq.hasActiveItem()){
-
-        }
+    public void stepOn(Player player, Square context) {
+        // do nothing
     }
 
     @Override
-    public void powerFailure() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void powerFailure(Square context) {
+        context.transitionState(new UnpoweredSquareState());
     }
 }
