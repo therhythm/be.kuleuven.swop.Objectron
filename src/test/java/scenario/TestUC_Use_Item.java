@@ -1,6 +1,6 @@
 package scenario;
 
-import be.kuleuven.swop.objectron.GameStateImpl;
+import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;

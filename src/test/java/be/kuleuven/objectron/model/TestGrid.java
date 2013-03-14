@@ -1,6 +1,6 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.*;

@@ -1,7 +1,7 @@
 package scenario;
 
 
-import be.kuleuven.swop.objectron.GameStateImpl;
+import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Grid;

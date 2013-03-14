@@ -1,8 +1,7 @@
 package scenario;
 
-import be.kuleuven.swop.objectron.GameState;
-import be.kuleuven.swop.objectron.GameStateImpl;
-import be.kuleuven.swop.objectron.handler.EndTurnHandler;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;

@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.handler;
 
-import be.kuleuven.swop.objectron.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;

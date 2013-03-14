@@ -1,12 +1,10 @@
 package be.kuleuven.swop.objectron.ui;
 
-import be.kuleuven.swop.objectron.handler.EndTurnHandler;
-import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
-import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
-import be.kuleuven.swop.objectron.handler.UseItemHandler;
+import be.kuleuven.swop.objectron.handler.*;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
@@ -31,36 +29,31 @@ public class GameView {
     private SquareStates gameGrid[][];
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
     private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
-    private EndTurnHandler endTurnHandler;
-    private UseItemHandler useItemHandler;
-    private MovePlayerHandler movePlayerHandler;
-    private PickUpItemHandler pickUpItemHandler;
+    private HandlerCatalog catalog;
     private int horizontalTiles;
     private SimpleGUI gui;
     private int verticalTiles;
     private SquareViewModel p1_finish;
     private SquareViewModel p2_finish;
 
-    public GameView(EndTurnHandler endTurnHandler, PickUpItemHandler pickUpItemHandler, MovePlayerHandler movePlayerHandler, UseItemHandler useItemHandler, int horizontalTiles, int verticalTiles, PlayerViewModel p1, PlayerViewModel p2, List<List<SquareViewModel>> walls) {
-        this.endTurnHandler = endTurnHandler;
-        this.pickUpItemHandler = pickUpItemHandler;
-        this.useItemHandler = useItemHandler;
-        this.movePlayerHandler = movePlayerHandler;
-
-        this.horizontalTiles = horizontalTiles;
-        this.verticalTiles = verticalTiles;
+    public GameView(GameStartViewModel vm) {
+        this.catalog = vm.getCatalog();
+        this.horizontalTiles = vm.getNbHorizontalTiles();
+        this.verticalTiles = vm.getNbVerticalTiles();
         this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
-        this.currentPlayer = p1;
+        this.currentPlayer = vm.getP1();
         for (int i = 0; i < gameGrid.length; i++) {
             for (int j = 0; j < gameGrid[0].length; j++) {
                 gameGrid[i][j] = SquareStates.EMPTY;
             }
         }
-        for (List<SquareViewModel> vm : walls) {
-            for (SquareViewModel sVm : vm) {
+        for (List<SquareViewModel> sqvm : vm.getWalls()) {
+            for (SquareViewModel sVm : sqvm) {
                 gameGrid[sVm.getVIndex()][sVm.getHIndex()] = SquareStates.WALL;
             }
         }
+        PlayerViewModel p1 = vm.getP1();
+        PlayerViewModel p2 = vm.getP2();
         playerColorMap.put(p1.getName(), new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL, SquareStates.P1_FINISH});
         playerColorMap.put(p2.getName(), new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL, SquareStates.P2_FINISH});
         gameGrid[p1.getVPosition()][p1.getHPosition()] = SquareStates.PLAYER1;
@@ -131,6 +124,7 @@ public class GameView {
                         @Override
                         public void run() {
                             try {
+                                MovePlayerHandler movePlayerHandler = (MovePlayerHandler) catalog.getHandler(MovePlayerHandler.class);
                                 PlayerViewModel vm = movePlayerHandler.move(direction);
                                 updatePlayer(vm);
                             } catch (InvalidMoveException e) {
@@ -158,6 +152,7 @@ public class GameView {
 
 
                         try {
+                            final PickUpItemHandler pickUpItemHandler = (PickUpItemHandler) catalog.getHandler(PickUpItemHandler.class);
                             final List<Item> items = pickUpItemHandler.getAvailableItems();
                             ItemSelectionAction action = new ItemSelectionAction() {
                                 @Override
@@ -186,6 +181,7 @@ public class GameView {
                 final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
+                            final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
                             final List<Item> items = useItemHandler.showInventory();
                             ItemSelectionAction action = new ItemSelectionAction() {
 
@@ -207,6 +203,7 @@ public class GameView {
                 final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
+                            final EndTurnHandler endTurnHandler = (EndTurnHandler) catalog.getHandler(EndTurnHandler.class);
                             PlayerViewModel vm = endTurnHandler.endTurn();
                             updatePlayer(vm);
                         } catch (GameOverException e) {
