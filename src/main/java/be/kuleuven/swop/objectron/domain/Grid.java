@@ -41,6 +41,10 @@ public class Grid {
 
     public void makeMove(Direction direction, Player player) throws InvalidMoveException, NotEnoughActionsException {
         Square neighbour = player.getCurrentSquare().getNeighbour(direction);
+
+        if(neighbour==null)
+            throw new InvalidMoveException();
+
         if (player.getAvailableActions() == 0) {
             throw new NotEnoughActionsException("You don't have enough actions left");
         }

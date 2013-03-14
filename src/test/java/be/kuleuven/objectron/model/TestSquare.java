@@ -3,6 +3,7 @@ package be.kuleuven.objectron.model;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Square;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -21,9 +22,9 @@ public class TestSquare {
     private Player player;
 
     @Before
-    public void setUp()throws GridTooSmallException {
+    public void setUp()throws GridTooSmallException, SquareOccupiedException {
           square = new Square(5,5);
-        square.addItem(new LightMine());
+        square.setActiveItem(new LightMine());
         player = new Player("test",new Square(5,4));
     }
 

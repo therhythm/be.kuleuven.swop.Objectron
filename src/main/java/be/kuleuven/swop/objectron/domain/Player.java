@@ -38,7 +38,12 @@ public class Player {
         return currentSquare;
     }
 
-    public void addToInventory(Item itemToAdd) throws InventoryFullException, NotEnoughActionsException {
+    public Square getInitialSquare() {
+        return initialSquare;
+    }
+
+
+    public void pickupItem(int identifier) throws InventoryFullException, NotEnoughActionsException {
         checkEnoughActions();
         Item item = currentSquare.pickUpItem(identifier);
 
