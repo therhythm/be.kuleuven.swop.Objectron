@@ -1,17 +1,24 @@
 package be.kuleuven.swop.objectron.domain;
-
+import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
- * @author : Kasper Vervaecke
- *         Date: 01/03/13
- *         Time: 12:31
+ * Created with IntelliJ IDEA.
+ * User: Piet
+ * Date: 15/03/13
+ * Time: 11:54
+ * To change this template use File | Settings | File Templates.
  */
-public class GridBuilder {
+
+
+public class GridFactory {
+    private SquareStates squareStates[][];
+    private Grid gameGrid;
     private static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
     private static final int MIN_WALL_LENGTH = 2;
     private static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
@@ -20,21 +27,53 @@ public class GridBuilder {
     private Square[][] squares;
     private List<Wall> walls;
     private List<Square> invalidSquares;
+    private static final int MIN_WIDTH = 10;
+    private static final int MIN_HEIGHT = 10;
 
-    public GridBuilder(int gridWidth, int gridHeight) {
-        squares = new Square[gridHeight][gridWidth];
+    public Grid getGameGrid() {
+        return gameGrid;
     }
 
-    public Square[][] build(Square playerOneSquare, Square playerTwoSquare, Square[][] squares) {
-        this.squares = squares;
+    public GridFactory(int horizontalTiles, int verticalTiles) throws GridTooSmallException {
+        if(!validDimensions(horizontalTiles,verticalTiles)){
+            throw new GridTooSmallException("The dimensions of the grid need to be at least 10x10");
+        }
+        this.squareStates = new SquareStates[verticalTiles][horizontalTiles];
+
+        this.squares = new Square[horizontalTiles][verticalTiles];
+        setupNeighbours();
+
+    }
+    private boolean validDimensions(int width, int height) {
+        return width >= MIN_WIDTH && height >= MIN_HEIGHT;
+    }
+
+    public void buildGrid(Square playerOneSquare, Square playerTwoSquare)  {
         invalidSquares = new ArrayList<Square>();
         setupWalls();
         setupItems(playerOneSquare, playerTwoSquare);
-        return squares;
+        gameGrid = new Grid(squares,walls);
     }
 
-    public List<Wall> getWalls() {
-        return walls;
+    private void setupNeighbours() {
+        for (int vertical = 0; vertical < squares.length; vertical++) {
+            for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
+                squares[vertical][horizontal] = new Square(horizontal, vertical);
+            }
+        }
+
+        for (int vertical = 0; vertical < squares.length; vertical++) {
+            for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
+                Square current = squares[vertical][horizontal];
+                for (Direction direction : Direction.values()) {
+                    int horIndex = direction.applyHorizontalOperation(horizontal);
+                    int vertIndex = direction.applyVerticalOperation(vertical);
+                    if (validIndex(horIndex, vertIndex)) {
+                        current.addNeighbour(direction, squares[vertIndex][horIndex]);
+                    }
+                }
+            }
+        }
     }
 
     private void setupWalls() {
@@ -91,8 +130,8 @@ public class GridBuilder {
             }
         }
 
-       Random generator = new Random();
-       int randomIndex = generator.nextInt(goodSquares.size());
+        Random generator = new Random();
+        int randomIndex = generator.nextInt(goodSquares.size());
         goodSquares.get(randomIndex).addItem(new LightMine());
 
     }
@@ -162,13 +201,6 @@ public class GridBuilder {
         }
     }
 
-    private Square getSquareAtPosition(int verticalIndex, int horizontalIndex) {
-        if (!validIndex(horizontalIndex, verticalIndex)) {
-            throw new IllegalArgumentException("Not a valid square index");
-        }
-        return squares[verticalIndex][horizontalIndex];
-    }
-
     private boolean isValidWallPosition(Square square) {
         if (square.isObstructed()) {
             return false;
@@ -199,4 +231,16 @@ public class GridBuilder {
         return horizontalIndex > -1 && horizontalIndex < squares[0].length
                 && verticalIndex > -1 && verticalIndex < squares.length;
     }
+
+    public Square getSquareAtPosition(int verticalIndex, int horizontalIndex) {
+        if (!validIndex(horizontalIndex, verticalIndex)) {
+            throw new IllegalArgumentException("Not a valid square index");
+        }
+        return squares[verticalIndex][horizontalIndex];
+    }
+
+    public enum SquareStates {
+        WALL, P1_LIGHT_WALL, P2_LIGHT_WALL, PLAYER1, PLAYER2, EMPTY, P1_FINISH, P2_FINISH
+    }
+
 }

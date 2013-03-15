@@ -2,12 +2,9 @@ package scenario;
 
 
 import be.kuleuven.swop.objectron.GameStateImpl;
+import be.kuleuven.swop.objectron.domain.*;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
-import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Grid;
-import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.Square;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
@@ -30,20 +27,25 @@ public class TestUC_Move {
     //private EndTurnHandler endTurnHandler;
 
     private Player player1;
+    private  Player player2;
 
 
 
     @Before
     public void setUp() throws GridTooSmallException {
-        Grid grid = new Grid(10, 10);
-        Square square1 = grid.getSquareAtPosition(9,0);
+        GridFactory gridFactory = new GridFactory(10,10);
+
+
+        Square square1 = gridFactory.getSquareAtPosition(9,0);
+        Square square2 = gridFactory.getSquareAtPosition(5,0);
 
         player1 = new Player("p1", square1);
-
+        player2 = new Player("p1", square2);
+        gridFactory.buildGrid(player1.getCurrentSquare(),player2.getCurrentSquare());
 
         GameStateImpl stateMock = mock(GameStateImpl.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player1);
-        when(stateMock.getGrid()).thenReturn(grid);
+        when(stateMock.getGrid()).thenReturn(gridFactory.getGameGrid());
 
         movePlayerHandler = new MovePlayerHandler(stateMock);
        // endTurnHandler = new EndTurnHandler(stateMock);
