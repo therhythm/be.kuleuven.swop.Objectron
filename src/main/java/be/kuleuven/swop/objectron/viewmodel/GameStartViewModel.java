@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.viewmodel;
 
+import be.kuleuven.swop.objectron.domain.gamestate.GameObservable;
 import be.kuleuven.swop.objectron.handler.*;
 
 import java.util.HashMap;
@@ -18,19 +19,22 @@ public class GameStartViewModel {
     private PlayerViewModel p1;
     private PlayerViewModel p2;
     private List<List<SquareViewModel>> walls;
+    private GameObservable observable;
 
     public GameStartViewModel(HandlerCatalog catalog,
                               int nbHorizontalTiles,
                               int nbVerticalTiles,
                               PlayerViewModel p1,
                               PlayerViewModel p2,
-                              List<List<SquareViewModel>> walls) {
+                              List<List<SquareViewModel>> walls,
+                              GameObservable observable) {
         this.catalog = catalog;
         this.nbHorizontalTiles = nbHorizontalTiles;
         this.nbVerticalTiles = nbVerticalTiles;
         this.p1 = p1;
         this.p2 = p2;
         this.walls = walls;
+        this.observable = observable;
     }
 
     public HandlerCatalog getCatalog() {
@@ -55,5 +59,9 @@ public class GameStartViewModel {
 
     public List<List<SquareViewModel>> getWalls() {
         return walls;
+    }
+
+    public GameObservable getObservable() {
+        return observable;
     }
 }

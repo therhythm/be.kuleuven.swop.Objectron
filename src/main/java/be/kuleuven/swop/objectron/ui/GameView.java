@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.ui;
 
+import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.handler.*;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
@@ -18,7 +19,7 @@ import java.util.Map;
  *         Date: 25/02/13
  *         Time: 21:24
  */
-public class GameView {
+public class GameView implements GameObserver {
 
     private static int HPADDING = 10;
     private static int VPADDING = 50;
@@ -36,8 +37,10 @@ public class GameView {
     private SquareViewModel p1_finish;
     private SquareViewModel p2_finish;
 
+
     public GameView(GameStartViewModel vm) {
         this.catalog = vm.getCatalog();
+        vm.getObservable().attach(this);
         this.horizontalTiles = vm.getNbHorizontalTiles();
         this.verticalTiles = vm.getNbVerticalTiles();
         this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
@@ -125,8 +128,7 @@ public class GameView {
                         public void run() {
                             try {
                                 MovePlayerHandler movePlayerHandler = (MovePlayerHandler) catalog.getHandler(MovePlayerHandler.class);
-                                PlayerViewModel vm = movePlayerHandler.move(direction);
-                                updatePlayer(vm);
+                                movePlayerHandler.move(direction);
                             } catch (InvalidMoveException e) {
                                 new DialogView("Sorry that is not a valid move");
                             } catch (NotEnoughActionsException e) {
@@ -211,6 +213,7 @@ public class GameView {
                         try {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
                             useItemHandler.useCurrentItem();
+                            selectedItem = "No item";
                             gui.repaint();
                         } catch (SquareOccupiedException e) {
                             new DialogView("The square is already occupied.");
@@ -225,13 +228,23 @@ public class GameView {
                 });
                 useItemButton.setText("Use Item");
 
+                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth,verticalTiles * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
+                    public void run() {
+                        final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
+                        useItemHandler.cancelItemUsage();
+                        selectedItem = "No item";
+                        gui.repaint();
+                        gui.repaint();
+                    }
+                });
+                cancelItemButton.setText("Unselect item");
 
                 final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
                             final EndTurnHandler endTurnHandler = (EndTurnHandler) catalog.getHandler(EndTurnHandler.class);
-                            PlayerViewModel vm = endTurnHandler.endTurn();
-                            updatePlayer(vm);
+                            endTurnHandler.endTurn();
+
                         } catch (GameOverException e) {
                             new DialogView(e.getMessage());
                             gui.dispose();
@@ -260,6 +273,11 @@ public class GameView {
             gameGrid[svm.getVIndex()][svm.getHIndex()] = playerColorMap.get(currentPlayer.getName())[1];
         }
         gui.repaint();
+    }
+
+    @Override
+    public void playerUpdated(PlayerViewModel vm) {
+        updatePlayer(vm);
     }
 
     public enum SquareStates {

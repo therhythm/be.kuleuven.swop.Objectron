@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Grid;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ public class GameStateImpl implements GameState {
     private Grid gameGrid;
     private Player currentPlayer;
     private List<Player> players = new ArrayList<Player>();
+    private List<GameObserver> observers = new ArrayList<>();
+    private Item currentItem = null;
 
     public GameStateImpl(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) throws GridTooSmallException{
         gameGrid = new Grid(horizontalTiles, verticalTiles);
@@ -43,5 +46,36 @@ public class GameStateImpl implements GameState {
         int index = players.indexOf(currentPlayer);
         index = (index + 1) % players.size();
         currentPlayer = players.get(index);
+
+        currentItem = null;
+        notifyObservers();
+    }
+
+    @Override
+    public void notifyObservers(){
+        for(GameObserver observer : observers){
+            observer.playerUpdated(currentPlayer.getPlayerViewModel());
+        }
+    }
+
+    @Override
+    public void attach(GameObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(GameObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public Item getCurrentItem() {
+        return currentItem;
+    }
+
+    @Override
+    public void setCurrentItem(Item item) {
+        currentItem = item;
+        notifyObservers();
     }
 }

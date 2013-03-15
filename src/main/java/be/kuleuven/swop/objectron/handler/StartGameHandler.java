@@ -27,6 +27,6 @@ public class StartGameHandler {
         PlayerViewModel p2 = state.getCurrentPlayer().getPlayerViewModel();
         state.nextPlayer();
         //TODO clean this up maybe a sort of catalog for all the handlers!
-        return new GameStartViewModel(catalog, nbHorizontalTiles, nbVerticalTiles, p1, p2, state.getGrid().getWalls());
+        return new GameStartViewModel(catalog, nbHorizontalTiles, nbVerticalTiles, p1, p2, state.getGrid().getWalls(), state);
     }
 }

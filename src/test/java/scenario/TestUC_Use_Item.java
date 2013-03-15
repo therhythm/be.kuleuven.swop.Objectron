@@ -27,6 +27,7 @@ public class TestUC_Use_Item {
     private UseItemHandler useItemHandler;
     private Player player;
     private Item item;
+    private GameStateImpl stateMock;
 
 
     @Before
@@ -36,8 +37,9 @@ public class TestUC_Use_Item {
         square.addItem(item);
         player = new Player("p1", square);
 
-        GameStateImpl stateMock = mock(GameStateImpl.class);
+        stateMock = mock(GameStateImpl.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
+
 
         useItemHandler = new UseItemHandler(stateMock);
 
@@ -72,6 +74,7 @@ public class TestUC_Use_Item {
     @Test
     public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
         player.pickupItem(0);
+        when(stateMock.getCurrentItem()).thenReturn(item);
 
         int initialAvailableActions = player.getAvailableActions();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
@@ -88,6 +91,7 @@ public class TestUC_Use_Item {
     public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException, NotEnoughActionsException, NoItemSelectedException {
         player.getCurrentSquare().setActiveItem(item);
         player.pickupItem(0);
+        when(stateMock.getCurrentItem()).thenReturn(item);
 
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
@@ -115,6 +119,7 @@ public class TestUC_Use_Item {
         player.pickupItem(0);
         player.getCurrentSquare().addItem(new LightMine());
         player.pickupItem(0);
+        when(stateMock.getCurrentItem()).thenReturn(item);
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
     }

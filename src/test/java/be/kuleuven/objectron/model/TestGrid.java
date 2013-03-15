@@ -1,6 +1,8 @@
 package be.kuleuven.objectron.model;
 
+import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.*;
@@ -184,7 +186,31 @@ public class TestGrid {
             currentPlayer = players.get(index);
         }
 
+        @Override
+        public Item getCurrentItem() {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
 
+        @Override
+        public void setCurrentItem(Item item) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+
+        @Override
+        public void attach(GameObserver observer) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public void detach(GameObserver observer) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public void notifyObservers() {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
 
 }

@@ -19,8 +19,6 @@ import java.util.logging.Logger;
 public class UseItemHandler extends Handler {
     private static Logger logger = Logger.getLogger(UseItemHandler.class.getCanonicalName());
 
-    private Item currentlySelectedItem;
-
     public UseItemHandler(GameState state) {
         super(state);
     }
@@ -51,14 +49,14 @@ public class UseItemHandler extends Handler {
      * |  == currentPlayer.getInventory().retrieveItem(identifier)
      */
     public String selectItemFromInventory(int identifier) {
-        currentlySelectedItem =  state.getCurrentPlayer().getInventoryItem(identifier);
+        Item currentlySelectedItem =  state.getCurrentPlayer().getInventoryItem(identifier);
+        state.setCurrentItem(currentlySelectedItem);
         return currentlySelectedItem.getName();
     }
 
     /**
      * Use the currently selected item
      *
-     * @return A boolean to indicate whether the item was successfully used
      * @throws be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException
      *          The square the player is trying to access, is occupied.
      *          | state.getCurrentPlayer().getCurrentSquare().hasActiveItem()
@@ -71,11 +69,12 @@ public class UseItemHandler extends Handler {
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
     public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
-        if(currentlySelectedItem == null){
+        if(state.getCurrentItem() == null){
             throw new NoItemSelectedException("You don't have an item selected.") ;
         }
         try {
-            state.getCurrentPlayer().useItem(currentlySelectedItem);
+            state.getCurrentPlayer().useItem(state.getCurrentItem());
+            state.setCurrentItem(null);
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
             throw e;
@@ -92,6 +91,6 @@ public class UseItemHandler extends Handler {
      * | new.state.getCurrentPlayer().getCurrentlySelectedItem() == null
      */
     public void cancelItemUsage() {
-        currentlySelectedItem = null;
+        state.setCurrentItem(null);
     }
 }

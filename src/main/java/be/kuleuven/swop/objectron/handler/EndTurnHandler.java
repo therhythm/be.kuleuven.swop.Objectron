@@ -27,7 +27,7 @@ public class EndTurnHandler extends Handler {
      * @post The current player is switched to a new player.
      * | new.state.getCurrentPlayer() != state.getCurrentPlayer()
      */
-    public PlayerViewModel endTurn() throws GameOverException {
+    public void endTurn() throws GameOverException {
         if (!state.getCurrentPlayer().hasMoved()) {
             throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");
         }
@@ -36,7 +36,5 @@ public class EndTurnHandler extends Handler {
         Player current = state.getCurrentPlayer();
         state.getGrid().newTurn(current);
         current.newTurn();
-
-        return state.getCurrentPlayer().getPlayerViewModel();
     }
 }

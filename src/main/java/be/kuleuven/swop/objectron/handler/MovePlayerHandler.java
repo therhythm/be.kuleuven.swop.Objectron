@@ -39,7 +39,7 @@ public class MovePlayerHandler extends Handler {
      * | new.state.getCurrentPlayer().getCurrentSquare()
      * |  != state.getCurrentPlayer().getCurrentSquare()
      */
-    public PlayerViewModel move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+    public void move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         try {
             Player current = state.getCurrentPlayer();
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
@@ -48,7 +48,7 @@ public class MovePlayerHandler extends Handler {
             if(checkWin())
                 throw new GameOverException(current.getName() + ", you win the game!");
 
-            return current.getPlayerViewModel();
+            state.notifyObservers();
         } catch (InvalidMoveException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");
             throw e;
