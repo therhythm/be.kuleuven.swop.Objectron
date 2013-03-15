@@ -33,19 +33,24 @@ public class TestUC_Move {
 
     @Before
     public void setUp() throws GridTooSmallException {
-        GridFactory gridFactory = new GridFactory(10,10);
+        int horizontalPositionPlayer1  =0;
+        int verticalPositionPlayer1 = 9;
+        int horizontalPositionPlayer2  =0;
+        int verticalPositionPlayer2 = 5;
+
+        GridFactory gridFactory = new GridFactory(10,10,horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
+        Grid grid = gridFactory.getGameGrid();
 
 
-        Square square1 = gridFactory.getSquareAtPosition(9,0);
-        Square square2 = gridFactory.getSquareAtPosition(5,0);
+        Square square1 = grid.getSquareAtPosition(verticalPositionPlayer1,horizontalPositionPlayer1);
+        Square square2 = grid.getSquareAtPosition(verticalPositionPlayer2,horizontalPositionPlayer2);
 
         player1 = new Player("p1", square1);
         player2 = new Player("p1", square2);
-        gridFactory.buildGrid(player1.getCurrentSquare(),player2.getCurrentSquare());
 
         GameStateImpl stateMock = mock(GameStateImpl.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player1);
-        when(stateMock.getGrid()).thenReturn(gridFactory.getGameGrid());
+        when(stateMock.getGrid()).thenReturn(grid);
 
         movePlayerHandler = new MovePlayerHandler(stateMock);
        // endTurnHandler = new EndTurnHandler(stateMock);

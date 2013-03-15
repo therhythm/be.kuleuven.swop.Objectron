@@ -34,7 +34,7 @@ public class GridFactory {
         return gameGrid;
     }
 
-    public GridFactory(int horizontalTiles, int verticalTiles) throws GridTooSmallException {
+    public GridFactory(int horizontalTiles, int verticalTiles, int horizontalPositionPlayer1, int verticalPositionPlayer1,int horizontalPositionPlayer2, int verticalPositionPlayer2) throws GridTooSmallException {
         if(!validDimensions(horizontalTiles,verticalTiles)){
             throw new GridTooSmallException("The dimensions of the grid need to be at least 10x10");
         }
@@ -42,13 +42,15 @@ public class GridFactory {
 
         this.squares = new Square[horizontalTiles][verticalTiles];
         setupNeighbours();
+        buildGrid(getSquareAtPosition(verticalPositionPlayer1,horizontalPositionPlayer1),getSquareAtPosition(verticalPositionPlayer1,horizontalPositionPlayer1));
+
 
     }
     private boolean validDimensions(int width, int height) {
         return width >= MIN_WIDTH && height >= MIN_HEIGHT;
     }
 
-    public void buildGrid(Square playerOneSquare, Square playerTwoSquare)  {
+    private void buildGrid(Square playerOneSquare, Square playerTwoSquare)  {
         invalidSquares = new ArrayList<Square>();
         setupWalls();
         setupItems(playerOneSquare, playerTwoSquare);
@@ -232,7 +234,7 @@ public class GridFactory {
                 && verticalIndex > -1 && verticalIndex < squares.length;
     }
 
-    public Square getSquareAtPosition(int verticalIndex, int horizontalIndex) {
+    private Square getSquareAtPosition(int verticalIndex, int horizontalIndex) {
         if (!validIndex(horizontalIndex, verticalIndex)) {
             throw new IllegalArgumentException("Not a valid square index");
         }

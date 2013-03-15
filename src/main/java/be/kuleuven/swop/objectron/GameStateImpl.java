@@ -21,13 +21,16 @@ public class GameStateImpl implements GameState {
     public GameStateImpl(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) throws GridTooSmallException{
 
         //gameGrid = new Grid(horizontalTiles, verticalTiles);
-        GridFactory gridFactory = new GridFactory(horizontalTiles,verticalTiles);
-        Player p1 = new Player(player1Name, gridFactory.getSquareAtPosition(verticalTiles - 1, 0));
-        Player p2 = new Player(player2Name, gridFactory.getSquareAtPosition(0, horizontalTiles - 1));
+        int horizontalPositionPlayer1  = 0;
+        int verticalPositionPlayer1 = verticalTiles - 1;
+        int horizontalPositionPlayer2  =horizontalTiles - 1;
+        int verticalPositionPlayer2 = 0;
 
 
-        gridFactory.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
+        GridFactory gridFactory = new GridFactory(horizontalTiles,verticalTiles,horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
         this.gameGrid = gridFactory.getGameGrid();
+        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
+        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
 
        // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
         currentPlayer = p1;

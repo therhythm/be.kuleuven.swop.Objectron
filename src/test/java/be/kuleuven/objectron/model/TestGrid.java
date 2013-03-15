@@ -148,11 +148,13 @@ public class TestGrid {
         private List<Player> players = new ArrayList<Player>();
 
         public GameStateStub(String player1Name, String player2Name, int horizontalTiles, int verticalTiles,int square1HorizontalPosition,int square1VerticalPosition,int square2HorizontalPosition,int square2VerticalPosition) throws GridTooSmallException{
-            gridFactory = new GridFactory(horizontalTiles, verticalTiles);
-            Player p1 = new Player(player1Name, gridFactory.getSquareAtPosition(square1VerticalPosition, square1HorizontalPosition));
-            Player p2 = new Player(player2Name, gridFactory.getSquareAtPosition(square2VerticalPosition, square2HorizontalPosition));
 
-            gridFactory.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
+            gridFactory = new GridFactory(horizontalTiles, verticalTiles,square1HorizontalPosition,square1VerticalPosition,square2HorizontalPosition,square2VerticalPosition);
+            gameGrid = gridFactory.getGameGrid();
+            Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(square1VerticalPosition, square1HorizontalPosition));
+            Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(square2VerticalPosition, square2HorizontalPosition));
+
+
             gameGrid = gridFactory.getGameGrid();
             currentPlayer = p1;
             players.add(p1);
