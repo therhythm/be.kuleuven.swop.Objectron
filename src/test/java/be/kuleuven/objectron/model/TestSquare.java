@@ -34,4 +34,15 @@ public class TestSquare {
         square.stepOn(player);
         assertFalse(square.hasActiveItem());
     }
+
+    @Test
+    public void test_square_lose_power(){
+        Square otherSquare = new Square(5,3);
+        Player otherPlayer = new Player("tester", otherSquare);
+        otherSquare.receivePowerFailure();
+        otherSquare.newTurn(otherPlayer);
+        assertEquals(otherPlayer.getAvailableActions(),2);
+    }
+
+
 }
