@@ -38,19 +38,14 @@ public class Grid {
         squares = gridBuilder.build(playerOneSquare, playerTwoSquare, squares);
     }
 
-    public void makeMove(Direction direction, Player player) throws InvalidMoveException, NotEnoughActionsException {
-        Square neighbour = player.getCurrentSquare().getNeighbour(direction);
+    public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException, NotEnoughActionsException {
+        Square neighbour = currentSquare.getNeighbour(direction);
 
-        if (neighbour == null)
-            throw new InvalidMoveException();
-
-        if (player.getAvailableActions() == 0) {
-            throw new NotEnoughActionsException("You don't have enough actions left");
-        } else if (!neighbour.isValidPosition(direction)) {
+        if (neighbour == null || !neighbour.isValidPosition(direction)){
             throw new InvalidMoveException();
         }
 
-        player.move(neighbour);
+        return neighbour;
     }
 
     public Square getSquareAtPosition(int vertIndex, int horIndex) {
