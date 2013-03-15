@@ -47,7 +47,6 @@ public class Grid {
         if (!neighbour.isValidPosition(direction)) {
             throw new InvalidMoveException();
         }
-    player.checkEnoughActions();
 
 
         player.move(neighbour);

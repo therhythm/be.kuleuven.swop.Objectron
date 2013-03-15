@@ -66,7 +66,7 @@ public class Player {
         hasMoved = true;
     }
 
-    public void checkEnoughActions() throws NotEnoughActionsException {
+    private void checkEnoughActions() throws NotEnoughActionsException {
         if (availableActions == 0) {
             throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
         }
