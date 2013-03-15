@@ -3,7 +3,6 @@ package be.kuleuven.swop.objectron.domain;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.item.Effect;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
@@ -23,9 +22,9 @@ public class Player {
     private Square currentSquare;
     private Square initialSquare;
     private int availableActions = NB_ACTIONS_EACH_TURN;
+    private int remainingActionsSlowed = 0;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
-    private List<Effect> effects = new ArrayList<Effect>();
     private boolean hasMoved;
 
     public Player(String name, Square currentSquare) {
@@ -97,11 +96,16 @@ public class Player {
         reduceAvailableActions();
     }
 
-    public void endTurn() {
-        availableActions = NB_ACTIONS_EACH_TURN;
-        for (Effect effect : effects) {
-            effect.activate(this);
+    public void newTurn() {
+        int temp = NB_ACTIONS_EACH_TURN - remainingActionsSlowed;
+        if(temp >= 0){
+            availableActions = NB_ACTIONS_EACH_TURN - remainingActionsSlowed;
+            remainingActionsSlowed = 0;
+        }else{
+            remainingActionsSlowed = Math.abs(temp);
+            availableActions = 0;
         }
+
         hasMoved = false;
     }
 
@@ -109,19 +113,13 @@ public class Player {
         return hasMoved;
     }
 
-    public void addEffect(Effect effect) {
-        this.effects.add(effect);
-    }
-
-    public void removeEffect(Effect effect) {
-        this.effects.remove(effect);
-    }
-
     public void reduceRemainingActions(int amount) {
-        if (amount > getAvailableActions())
-            throw new IllegalArgumentException("The amount of actions to reduce is more than the remaining actions");
-
-        this.availableActions -= amount;
+        if (amount > getAvailableActions()){
+            remainingActionsSlowed = amount - availableActions;
+            availableActions = 0;
+        }else{
+            availableActions = availableActions - amount;
+        }
     }
 
     private void reduceAvailableActions() {

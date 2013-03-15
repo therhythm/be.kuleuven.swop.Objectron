@@ -15,7 +15,7 @@ public class PoweredSquareState implements SquareState {
     }
 
     @Override
-    public void stepOn(Player player, Square context) {
+    public void stepOn(Player player) {
         // do nothing
     }
 

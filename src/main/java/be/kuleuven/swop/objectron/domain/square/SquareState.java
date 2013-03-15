@@ -10,7 +10,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 public interface SquareState {
     void newTurn(Player player, Square context);
 
-    void stepOn(Player player, Square context);
+    void stepOn(Player player);
 
     void powerFailure(Square context);
 }

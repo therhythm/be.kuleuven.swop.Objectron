@@ -18,12 +18,11 @@ import java.util.List;
 public class Grid {
     private static final int MIN_WIDTH = 10;
     private static final int MIN_HEIGHT = 10;
-
     private Square[][] squares;
     private GridBuilder gridBuilder;
 
-    public Grid(int width, int height) throws GridTooSmallException{
-        if(!validDimensions(width,height)){
+    public Grid(int width, int height) throws GridTooSmallException {
+        if (!validDimensions(width, height)) {
             throw new GridTooSmallException("The dimensions of the grid need to be at least 10x10");
         }
         gridBuilder = new GridBuilder(width, height);
@@ -35,7 +34,6 @@ public class Grid {
         return width >= MIN_WIDTH && height >= MIN_HEIGHT;
     }
 
-
     public void buildGrid(Square playerOneSquare, Square playerTwoSquare) {
         squares = gridBuilder.build(playerOneSquare, playerTwoSquare, squares);
     }
@@ -43,13 +41,12 @@ public class Grid {
     public void makeMove(Direction direction, Player player) throws InvalidMoveException, NotEnoughActionsException {
         Square neighbour = player.getCurrentSquare().getNeighbour(direction);
 
-        if(neighbour==null)
+        if (neighbour == null)
             throw new InvalidMoveException();
 
         if (player.getAvailableActions() == 0) {
             throw new NotEnoughActionsException("You don't have enough actions left");
-        }
-        else if (!neighbour.isValidPosition(direction)) {
+        } else if (!neighbour.isValidPosition(direction)) {
             throw new InvalidMoveException();
         }
 
@@ -63,7 +60,6 @@ public class Grid {
 
         return squares[vertIndex][horIndex];
     }
-
 
     private void setupNeighbours() {
         for (int vertical = 0; vertical < squares.length; vertical++) {
@@ -97,5 +93,13 @@ public class Grid {
             wallViewModels.add(w.getWallViewModel());
         }
         return wallViewModels;
+    }
+
+    public void newTurn(Player player) {
+        for (Square[] square : squares) {
+            for (Square sq : square) {
+                sq.newTurn(player);
+            }
+        }
     }
 }

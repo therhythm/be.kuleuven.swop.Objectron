@@ -101,10 +101,13 @@ public class TestGrid {
 
         //System.out.println(player2.getCurrentSquare());
         movePlayerHandler.move(Direction.DOWN_LEFT);
+        player2.newTurn();
         //System.out.println(player2.getCurrentSquare());
         movePlayerHandler.move(Direction.LEFT);
+        player2.newTurn();
         //System.out.println(player2.getCurrentSquare());
         movePlayerHandler.move(Direction.UP_LEFT);
+        player2.newTurn();
         //System.out.println(player2.getCurrentSquare());
     }
 

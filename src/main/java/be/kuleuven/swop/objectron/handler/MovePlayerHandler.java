@@ -42,7 +42,7 @@ public class MovePlayerHandler extends Handler {
     public PlayerViewModel move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         try {
             state.getGrid().makeMove(direction, state.getCurrentPlayer());
-            if(checkWon())
+            if(checkWin())
                 throw new GameOverException(state.getCurrentPlayer().getName() + ", you win the game!");
 
             return state.getCurrentPlayer().getPlayerViewModel();
@@ -55,7 +55,7 @@ public class MovePlayerHandler extends Handler {
         }
     }
 
-    private boolean checkWon() {
+    private boolean checkWin() {
         Player currentPlayer = state.getCurrentPlayer();
 
         state.nextPlayer();

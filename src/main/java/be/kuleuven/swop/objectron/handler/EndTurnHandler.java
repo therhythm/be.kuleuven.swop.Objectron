@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.handler;
 
 
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
@@ -30,8 +31,11 @@ public class EndTurnHandler extends Handler {
         if (!state.getCurrentPlayer().hasMoved()) {
             throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");
         }
-        state.getCurrentPlayer().endTurn();
+
         state.nextPlayer();
+        Player current = state.getCurrentPlayer();
+        state.getGrid().newTurn(current);
+        current.newTurn();
 
         return state.getCurrentPlayer().getPlayerViewModel();
     }

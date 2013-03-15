@@ -14,19 +14,12 @@ public class LightMine implements Item {
     private static final int NB_ACTIONS_BLINDED = 3;
     private static final String name = "Light Mine";
 
-    private Effect effect;
-
-    public LightMine() {
-        effect = new ReduceAvailableActionsEffect(NB_ACTIONS_BLINDED);
-    }
-
     @Override
     public String getName() {
         return name;
     }
 
-    @Override
-    public Effect getEffect(){
-        return effect;
+    public void activate(Player player){
+        player.reduceRemainingActions(NB_ACTIONS_BLINDED);
     }
 }

@@ -3,6 +3,8 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Grid;
 import be.kuleuven.swop.objectron.domain.Player;
 
+import java.util.Observable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Piet

@@ -52,11 +52,11 @@ public class Square {
     }
 
     public void stepOn(Player player) {
-        state.stepOn(player, this);
+        state.stepOn(player);
 
         setObstructed(true);
         if(hasActiveItem()){
-            player.addEffect(activeItem.getEffect());
+            activeItem.activate(player);
             activeItem = null;
         }
     }
@@ -142,18 +142,18 @@ public class Square {
         state.powerFailure(this);
     }
 
-    private void newTurn(Player player){ //TODO this should be notified (and public)... Observer?
-        if(hasPowerFailure()){
+    private boolean losingPower(){
+        int r = (int) (Math.random() * 100);
+        return r <= POWER_FAILURE_CHANCE;
+    }
+
+    public void newTurn(Player player){
+        if(losingPower()){
             receivePowerFailure();
             for(Square neighbour : neighbours.values()){
                 neighbour.receivePowerFailure();
             }
         }
         state.newTurn(player, this);
-    }
-
-    private boolean hasPowerFailure(){
-        int r = (int) (Math.random() * 100);
-        return r <= POWER_FAILURE_CHANCE;
     }
 }
