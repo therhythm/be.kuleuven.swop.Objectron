@@ -46,9 +46,9 @@ public class MovePlayerHandler extends Handler {
             current.move(newSquare);
 
             if(checkWin())
-                throw new GameOverException(state.getCurrentPlayer().getName() + ", you win the game!");
+                throw new GameOverException(current.getName() + ", you win the game!");
 
-            return state.getCurrentPlayer().getPlayerViewModel();
+            return current.getPlayerViewModel();
         } catch (InvalidMoveException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");
             throw e;

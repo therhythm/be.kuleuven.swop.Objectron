@@ -15,7 +15,9 @@ public class UnpoweredSquareState implements SquareState {
 
     @Override
     public void newTurn(Player player, Square context) {
-        player.reduceRemainingActions(ACTIONS_TO_REDUCE);
+        if(player.getCurrentSquare().equals(context)){
+            player.reduceRemainingActions(ACTIONS_TO_REDUCE);
+        }
         remainingTurns--;
         if(remainingTurns == 0){
             context.transitionState(new PoweredSquareState());
