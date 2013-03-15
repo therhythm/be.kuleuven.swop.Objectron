@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.handler;
 
+import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
@@ -69,7 +70,10 @@ public class UseItemHandler extends Handler {
      * @post The player's available actions is reduced by 1
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
-    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException {
+    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
+        if(currentlySelectedItem == null){
+            throw new NoItemSelectedException("You don't have an item selected.") ;
+        }
         try {
             state.getCurrentPlayer().useItem(currentlySelectedItem);
         } catch (SquareOccupiedException e) {

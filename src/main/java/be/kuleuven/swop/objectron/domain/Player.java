@@ -101,12 +101,12 @@ public class Player {
         if(temp >= 0){
             availableActions = NB_ACTIONS_EACH_TURN - remainingActionsSlowed;
             remainingActionsSlowed = 0;
+            hasMoved = false;
         }else{
             remainingActionsSlowed = Math.abs(temp);
             availableActions = 0;
+            hasMoved = true;
         }
-
-        hasMoved = false;
     }
 
     public boolean hasMoved() {
