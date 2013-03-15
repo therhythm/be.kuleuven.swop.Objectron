@@ -10,7 +10,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 public class PoweredSquareState implements SquareState {
 
     @Override
-    public void newTurn(Player player, Square context) {
+    public void newTurn(Player player, boolean currentSquare, Transitionable<SquareState> context) {
         // do nothing
     }
 
@@ -20,7 +20,7 @@ public class PoweredSquareState implements SquareState {
     }
 
     @Override
-    public void powerFailure(Square context) {
+    public void powerFailure(Transitionable<SquareState> context) {
         context.transitionState(new UnpoweredSquareState());
     }
 }

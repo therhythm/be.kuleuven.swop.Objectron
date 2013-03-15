@@ -16,7 +16,7 @@ import java.util.*;
  *         Date: 22/02/13
  *         Time: 00:03
  */
-public class Square {
+public class Square implements Transitionable<SquareState> {
     private static final int POWER_FAILURE_CHANCE = 5;
 
     private final int horizontalIndex;
@@ -134,6 +134,7 @@ public class Square {
         return result;
     }
 
+    @Override
     public void transitionState(SquareState newState) {
         this.state = newState;
     }
@@ -154,6 +155,7 @@ public class Square {
                 neighbour.receivePowerFailure();
             }
         }
-        state.newTurn(player, this);
+        boolean currentSquare = player.getCurrentSquare().equals(this);
+        state.newTurn(player, currentSquare, this);
     }
 }

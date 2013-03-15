@@ -14,8 +14,8 @@ public class UnpoweredSquareState implements SquareState {
     private int remainingTurns = NB_TURNS_WITHOUT_POWER;
 
     @Override
-    public void newTurn(Player player, Square context) {
-        if(player.getCurrentSquare().equals(context)){
+    public void newTurn(Player player, boolean currentSquare, Transitionable<SquareState> context) {
+        if(currentSquare){
             player.reduceRemainingActions(ACTIONS_TO_REDUCE);
         }
         remainingTurns--;
@@ -34,7 +34,7 @@ public class UnpoweredSquareState implements SquareState {
     }
 
     @Override
-    public void powerFailure(Square context) {
+    public void powerFailure(Transitionable<SquareState> context) {
         remainingTurns = NB_TURNS_WITHOUT_POWER;
     }
 }

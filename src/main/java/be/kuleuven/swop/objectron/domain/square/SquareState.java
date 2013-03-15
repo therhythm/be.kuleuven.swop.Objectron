@@ -8,9 +8,9 @@ import be.kuleuven.swop.objectron.domain.Player;
  *         Time: 02:57
  */
 public interface SquareState {
-    void newTurn(Player player, Square context);
+    void newTurn(Player player, boolean currentSquare, Transitionable<SquareState> context);
 
     void stepOn(Player player);
 
-    void powerFailure(Square context);
+    void powerFailure(Transitionable<SquareState> context);
 }
