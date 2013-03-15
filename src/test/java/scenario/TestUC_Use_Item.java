@@ -70,7 +70,7 @@ public class TestUC_Use_Item {
     }
 
     @Test
-    public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException {
+    public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
         player.pickupItem(0);
 
         int initialAvailableActions = player.getAvailableActions();
@@ -85,7 +85,7 @@ public class TestUC_Use_Item {
     }
 
     @Test(expected = SquareOccupiedException.class)
-    public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException, NotEnoughActionsException {
+    public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException, NotEnoughActionsException, NoItemSelectedException {
         player.getCurrentSquare().setActiveItem(item);
         player.pickupItem(0);
 
@@ -109,13 +109,18 @@ public class TestUC_Use_Item {
     }
 
     @Test(expected = NotEnoughActionsException.class)
-    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException {
+    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException, NoItemSelectedException {
         player.pickupItem(0);
         player.getCurrentSquare().addItem(new LightMine());
         player.pickupItem(0);
         player.getCurrentSquare().addItem(new LightMine());
         player.pickupItem(0);
         useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentItem();
+    }
+
+    @Test(expected = NoItemSelectedException.class)
+    public void test_no_item_selected() throws NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException{
         useItemHandler.useCurrentItem();
     }
 }

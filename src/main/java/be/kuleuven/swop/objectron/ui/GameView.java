@@ -164,6 +164,7 @@ public class GameView {
                                 public void doAction(int index) {
                                     try {
                                         pickUpItemHandler.pickUpItem(index);
+                                        gui.repaint();
 
                                     } catch (InventoryFullException e) {
                                         new DialogView("Your inventory is full!");
@@ -204,6 +205,26 @@ public class GameView {
                     }
                 });
                 inventoryButton.setText("Open inventory");
+
+                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth,verticalTiles * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
+                    public void run() {
+                        try {
+                            final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
+                            useItemHandler.useCurrentItem();
+                            gui.repaint();
+                        } catch (SquareOccupiedException e) {
+                            new DialogView("The square is already occupied.");
+                        } catch (NotEnoughActionsException e) {
+                            new DialogView("You have no actions remaining, end the turn.");
+                        } catch (NoItemSelectedException e){
+                            new DialogView("You don't have an item selected");
+                        }
+
+                        gui.repaint();
+                    }
+                });
+                useItemButton.setText("Use Item");
+
 
                 final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
