@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Grid;
+import be.kuleuven.swop.objectron.domain.GridFactory;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -22,10 +23,20 @@ public class GameStateImpl implements GameState {
     private Item currentItem = null;
 
     public GameStateImpl(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) throws GridTooSmallException{
-        gameGrid = new Grid(horizontalTiles, verticalTiles);
-        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalTiles - 1, 0));
-        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(0, horizontalTiles - 1));
-        gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
+
+        //gameGrid = new Grid(horizontalTiles, verticalTiles);
+        int horizontalPositionPlayer1  = 0;
+        int verticalPositionPlayer1 = verticalTiles - 1;
+        int horizontalPositionPlayer2  =horizontalTiles - 1;
+        int verticalPositionPlayer2 = 0;
+
+
+        GridFactory gridFactory = new GridFactory(horizontalTiles,verticalTiles,horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
+        this.gameGrid = gridFactory.getGameGrid();
+        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
+        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
+
+       // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);

@@ -1,14 +1,12 @@
 package scenario;
 
 
+import be.kuleuven.swop.objectron.domain.*;
 
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
-import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
-import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Grid;
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
@@ -31,15 +29,26 @@ public class TestUC_Move {
     //private EndTurnHandler endTurnHandler;
 
     private Player player1;
+    private  Player player2;
 
 
 
     @Before
     public void setUp() throws GridTooSmallException {
-        Grid grid = new Grid(10, 10);
-        Square square1 = grid.getSquareAtPosition(9,0);
+        int horizontalPositionPlayer1  =0;
+        int verticalPositionPlayer1 = 9;
+        int horizontalPositionPlayer2  =0;
+        int verticalPositionPlayer2 = 5;
+
+        GridFactory gridFactory = new GridFactory(10,10,horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
+        Grid grid = gridFactory.getGameGrid();
+
+
+        Square square1 = grid.getSquareAtPosition(verticalPositionPlayer1,horizontalPositionPlayer1);
+        Square square2 = grid.getSquareAtPosition(verticalPositionPlayer2,horizontalPositionPlayer2);
 
         player1 = new Player("p1", square1);
+        player2 = new Player("p1", square2);
 
 
         GameStateImpl stateMock = mock(GameStateImpl.class);
@@ -66,11 +75,10 @@ public class TestUC_Move {
         movePlayerHandler.move(Direction.DOWN);
     }
 
+
     @Test(expected = NotEnoughActionsException.class)
     public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
-        movePlayerHandler.move(Direction.UP);
-        movePlayerHandler.move(Direction.UP);
-        movePlayerHandler.move(Direction.UP);
+        player1.reduceRemainingActions(3);
         movePlayerHandler.move(Direction.UP);
     }
 }

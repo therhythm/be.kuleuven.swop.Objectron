@@ -98,10 +98,8 @@ public class Square implements Transitionable<SquareState> {
     public SquareViewModel getSquareViewModel() {
         return new SquareViewModel(getHorizontalIndex(), getVerticalIndex());
     }
-    //TODO properder programmeren indien mogelijk, evt implementeren op square niveau?
+
     public boolean isValidPosition(Direction direction) {
-        if(this ==null)
-            return false;
         if ( this.isObstructed())
             return false;
 

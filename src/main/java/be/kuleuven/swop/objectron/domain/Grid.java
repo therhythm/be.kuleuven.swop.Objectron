@@ -16,32 +16,20 @@ import java.util.List;
  *         Time: 07:04
  */
 public class Grid {
-    private static final int MIN_WIDTH = 10;
-    private static final int MIN_HEIGHT = 10;
     private Square[][] squares;
-    private GridBuilder gridBuilder;
+    private List<Wall> walls;
 
-    public Grid(int width, int height) throws GridTooSmallException {
-        if (!validDimensions(width, height)) {
-            throw new GridTooSmallException("The dimensions of the grid need to be at least 10x10");
-        }
-        gridBuilder = new GridBuilder(width, height);
-        this.squares = new Square[height][width];
-        setupNeighbours();
-    }
-
-    private boolean validDimensions(int width, int height) {
-        return width >= MIN_WIDTH && height >= MIN_HEIGHT;
-    }
-
-    public void buildGrid(Square playerOneSquare, Square playerTwoSquare) {
-        squares = gridBuilder.build(playerOneSquare, playerTwoSquare, squares);
+    public Grid(Square[][] squares,List<Wall> walls){
+        this.squares = squares;
+        this.walls = walls;
     }
 
     public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException, NotEnoughActionsException {
         Square neighbour = currentSquare.getNeighbour(direction);
 
-        if (neighbour == null || !neighbour.isValidPosition(direction)){
+        if(neighbour==null)
+            throw new InvalidMoveException();
+        if (!neighbour.isValidPosition(direction)) {
             throw new InvalidMoveException();
         }
 
@@ -56,26 +44,6 @@ public class Grid {
         return squares[vertIndex][horIndex];
     }
 
-    private void setupNeighbours() {
-        for (int vertical = 0; vertical < squares.length; vertical++) {
-            for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
-                squares[vertical][horizontal] = new Square(horizontal, vertical);
-            }
-        }
-
-        for (int vertical = 0; vertical < squares.length; vertical++) {
-            for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
-                Square current = squares[vertical][horizontal];
-                for (Direction direction : Direction.values()) {
-                    int horIndex = direction.applyHorizontalOperation(horizontal);
-                    int vertIndex = direction.applyVerticalOperation(vertical);
-                    if (validIndex(horIndex, vertIndex)) {
-                        current.addNeighbour(direction, squares[vertIndex][horIndex]);
-                    }
-                }
-            }
-        }
-    }
 
     private boolean validIndex(int horIndex, int vertIndex) {
         return horIndex > -1 && horIndex < squares[0].length
@@ -84,7 +52,7 @@ public class Grid {
 
     public List<List<SquareViewModel>> getWalls() {
         List<List<SquareViewModel>> wallViewModels = new ArrayList<List<SquareViewModel>>();
-        for (Wall w : gridBuilder.getWalls()) {
+        for (Wall w : this.walls) {
             wallViewModels.add(w.getWallViewModel());
         }
         return wallViewModels;

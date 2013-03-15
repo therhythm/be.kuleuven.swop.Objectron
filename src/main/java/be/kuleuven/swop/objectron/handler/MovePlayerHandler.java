@@ -7,7 +7,6 @@ import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
