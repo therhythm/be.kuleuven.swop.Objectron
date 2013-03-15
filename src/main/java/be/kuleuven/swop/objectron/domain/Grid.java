@@ -44,13 +44,11 @@ public class Grid {
 
         if(neighbour==null)
             throw new InvalidMoveException();
-
-        if (player.getAvailableActions() == 0) {
-            throw new NotEnoughActionsException("You don't have enough actions left");
-        }
-        else if (!neighbour.isValidPosition(direction)) {
+        if (!neighbour.isValidPosition(direction)) {
             throw new InvalidMoveException();
         }
+    player.checkEnoughActions();
+
 
         player.move(neighbour);
     }
