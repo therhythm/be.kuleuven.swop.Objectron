@@ -40,7 +40,8 @@ public class TestUC_Move {
         int horizontalPositionPlayer2  =0;
         int verticalPositionPlayer2 = 5;
 
-        GridFactory gridFactory = new GridFactory(10,10,horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
+        GridFactoryImpl gridFactory = new GridFactoryImpl(10,10);
+       gridFactory.buildGrid(horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
         Grid grid = gridFactory.getGameGrid();
 
 

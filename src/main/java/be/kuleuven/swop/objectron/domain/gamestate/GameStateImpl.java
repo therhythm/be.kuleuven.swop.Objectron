@@ -1,14 +1,13 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Grid;
-import be.kuleuven.swop.objectron.domain.GridFactory;
+import be.kuleuven.swop.objectron.domain.GridFactoryImpl;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * @author : Nik Torfs
@@ -31,8 +30,11 @@ public class GameStateImpl implements GameState {
         int verticalPositionPlayer2 = 0;
 
 
-        GridFactory gridFactory = new GridFactory(horizontalTiles,verticalTiles,horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
+        GridFactoryImpl gridFactory = new GridFactoryImpl(horizontalTiles,verticalTiles);
+        gridFactory.buildGrid(verticalPositionPlayer1,horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer1);
+
         this.gameGrid = gridFactory.getGameGrid();
+
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
 

@@ -44,7 +44,7 @@ public class TestGrid {
         //square 2
         //vert pos = 3
         //hor pos = 8
-        state = new GameStateStub("p1", "p2",10, 10,1,8,3,8);
+        state = neGameStateStub("p1", "p2",10, 10,1,8,3,8);
 
 
         grid = state.getGrid();
@@ -148,13 +148,14 @@ public class TestGrid {
 
     public class GameStateStub implements GameState{
         private Grid gameGrid;
-        private GridFactory gridFactory;
+        private GridFactoryImpl gridFactory;
         private Player currentPlayer;
         private List<Player> players = new ArrayList<Player>();
 
         public GameStateStub(String player1Name, String player2Name, int horizontalTiles, int verticalTiles,int square1HorizontalPosition,int square1VerticalPosition,int square2HorizontalPosition,int square2VerticalPosition) throws GridTooSmallException{
 
-            gridFactory = new GridFactory(horizontalTiles, verticalTiles,square1HorizontalPosition,square1VerticalPosition,square2HorizontalPosition,square2VerticalPosition);
+            gridFactory = new GridFactoryImpl(horizontalTiles, verticalTiles);
+            gridFactory.buildGrid(square1HorizontalPosition,square1VerticalPosition,square2HorizontalPosition,square2VerticalPosition);
             gameGrid = gridFactory.getGameGrid();
             Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(square1VerticalPosition, square1HorizontalPosition));
             Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(square2VerticalPosition, square2HorizontalPosition));
