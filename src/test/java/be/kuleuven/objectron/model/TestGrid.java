@@ -44,7 +44,7 @@ public class TestGrid {
         //square 2
         //vert pos = 3
         //hor pos = 8
-        state = neGameStateStub("p1", "p2",10, 10,1,8,3,8);
+        state = new GameStateStub("p1", "p2",10, 10,1,8,3,8);
 
 
         grid = state.getGrid();
