@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
@@ -14,7 +13,7 @@ import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 public class StartGameHandler {
 
     public GameStartViewModel startNewGame(String p1Name, String p2Name, int nbHorizontalTiles, int nbVerticalTiles) throws GridTooSmallException{
-        GameState state = new GameStateImpl(p1Name, p2Name, nbHorizontalTiles, nbVerticalTiles);
+        GameState state = new GameState(p1Name, p2Name, nbHorizontalTiles, nbVerticalTiles);
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(state));

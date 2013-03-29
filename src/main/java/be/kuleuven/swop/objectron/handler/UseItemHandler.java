@@ -1,10 +1,10 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.List;

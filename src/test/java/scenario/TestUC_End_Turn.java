@@ -1,7 +1,7 @@
 package scenario;
 
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.Direction;
@@ -20,11 +20,11 @@ public class TestUC_End_Turn {
 
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
-    private GameStateImpl state;
+    private GameState state;
 
     @Before
     public void setUp() throws GridTooSmallException {
-        state = new GameStateImpl("jos", "piet", 10, 10);
+        state = new GameState("jos", "piet", 10, 10);
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);
     }

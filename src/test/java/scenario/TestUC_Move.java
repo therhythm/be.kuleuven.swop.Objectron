@@ -4,7 +4,7 @@ package scenario;
 import be.kuleuven.swop.objectron.domain.*;
 
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
@@ -40,7 +40,7 @@ public class TestUC_Move {
         int horizontalPositionPlayer2  =0;
         int verticalPositionPlayer2 = 5;
 
-        GridFactoryImpl gridFactory = new GridFactoryImpl(10,10);
+        GridFactory gridFactory = new GridFactoryImplNoWalls(10,10);
        gridFactory.buildGrid(horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
         Grid grid = gridFactory.getGameGrid();
 
@@ -52,7 +52,7 @@ public class TestUC_Move {
         player2 = new Player("p1", square2);
 
 
-        GameStateImpl stateMock = mock(GameStateImpl.class);
+        GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player1);
         when(stateMock.getGrid()).thenReturn(grid);
 

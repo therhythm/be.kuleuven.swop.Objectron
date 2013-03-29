@@ -1,9 +1,6 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
-import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.*;
@@ -14,12 +11,8 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,7 +48,7 @@ public class TestGrid {
         GridFactory gridFactory = new GridFactoryImplNoWalls(10,10);
         gridFactory.buildGrid(horizontalPositionPlayer1, verticalPositionPlayer1, horizontalPositionPlayer2, verticalPositionPlayer2);
         grid = gridFactory.getGameGrid();
-        state = new GameStateImpl("p1","p2",horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2,grid);
+        state = new GameState("p1","p2",horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2,grid);
 
         //grid = state.getGrid();
         movePlayerHandler = new MovePlayerHandler(state);

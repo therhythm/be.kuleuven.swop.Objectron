@@ -1,7 +1,6 @@
 package scenario;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -31,7 +30,7 @@ public class TestUC_pick_up_item {
 
     @Before
     public void setUp() throws GridTooSmallException{
-        gameState = new GameStateImpl("p1","p2",10,10);
+        gameState = new GameState("p1","p2",10,10);
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
