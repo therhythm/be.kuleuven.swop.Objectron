@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Grid;
+import be.kuleuven.swop.objectron.domain.GridFactory;
 import be.kuleuven.swop.objectron.domain.GridFactoryImpl;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
@@ -38,7 +39,42 @@ public class GameStateImpl implements GameState {
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
 
-       // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
+        // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
+        currentPlayer = p1;
+        players.add(p1);
+        players.add(p2);
+    }
+
+    public GameStateImpl(String player1Name, String player2Name, int horizontalTiles, int verticalTiles,Grid gameGrid) throws GridTooSmallException{
+
+        //gameGrid = new Grid(horizontalTiles, verticalTiles);
+        int horizontalPositionPlayer1  = 0;
+        int verticalPositionPlayer1 = verticalTiles - 1;
+        int horizontalPositionPlayer2  =horizontalTiles - 1;
+        int verticalPositionPlayer2 = 0;
+
+        this.gameGrid = gameGrid;
+
+        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
+        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
+
+        // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
+        currentPlayer = p1;
+        players.add(p1);
+        players.add(p2);
+    }
+
+    public GameStateImpl(String player1Name, String player2Name, int horizontalPositionPlayer1, int verticalPositionPlayer1,int horizontalPositionPlayer2, int verticalPositionPlayer2,Grid gameGrid) throws GridTooSmallException{
+
+        //gameGrid = new Grid(horizontalTiles, verticalTiles);
+
+
+        this.gameGrid = gameGrid;
+
+        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
+        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
+
+        // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);

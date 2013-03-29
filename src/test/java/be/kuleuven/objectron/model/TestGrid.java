@@ -2,6 +2,7 @@ package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.GameStateImpl;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +38,6 @@ public class TestGrid {
     private GameState state;
 
     @Before
-
     public void setUp()throws GridTooSmallException{
          //square 1
         //vert pos = 1
@@ -44,10 +46,18 @@ public class TestGrid {
         //square 2
         //vert pos = 3
         //hor pos = 8
-        state = new GameStateStub("p1", "p2",10, 10,1,8,3,8);
+       // state = new GameStateStub("p1", "p2",10, 10,1,8,3,8);
+        int horizontalPositionPlayer1=1;
+        int verticalPositionPlayer1=8;
+        int horizontalPositionPlayer2=3;
+        int verticalPositionPlayer2=8;
 
+        GridFactory gridFactory = new GridFactoryImplNoWalls(10,10);
+        gridFactory.buildGrid(horizontalPositionPlayer1, verticalPositionPlayer1, horizontalPositionPlayer2, verticalPositionPlayer2);
+        grid = gridFactory.getGameGrid();
+        state = new GameStateImpl("p1","p2",horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2,grid);
 
-        grid = state.getGrid();
+        //grid = state.getGrid();
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
 
@@ -136,16 +146,24 @@ public class TestGrid {
 
     @Test (expected = InvalidMoveException.class)
     public void test_invalid_move_neighbor() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+
         player1 = state.getCurrentPlayer();
 
-
+            System.out.println("player1");
+            System.out.println(player1.getCurrentSquare());
             movePlayerHandler.move(Direction.RIGHT);
+        System.out.println(player1.getCurrentSquare());
             movePlayerHandler.move(Direction.RIGHT);
+        System.out.println(player1.getCurrentSquare());
 
+        endTurnHandler.endTurn();
+        player2 = state.getCurrentPlayer();
+        System.out.println("player2");
+        System.out.println(player2.getCurrentSquare());
 
 
     }
-
+      /*
     public class GameStateStub implements GameState{
         private Grid gameGrid;
         private GridFactoryImpl gridFactory;
@@ -218,5 +236,5 @@ public class TestGrid {
             //To change body of implemented methods use File | Settings | File Templates.
         }
     }
-
+     */
 }

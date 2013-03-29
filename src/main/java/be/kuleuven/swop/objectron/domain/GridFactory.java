@@ -8,4 +8,7 @@ package be.kuleuven.swop.objectron.domain;
  * To change this template use File | Settings | File Templates.
  */
 public interface GridFactory {
-}
+    public void buildGrid(int horizontalPositionPlayer1, int verticalPositionPlayer1, int horizontalPositionPlayer2, int verticalPositionPlayer2);
+
+    public Grid getGameGrid();
+    }
