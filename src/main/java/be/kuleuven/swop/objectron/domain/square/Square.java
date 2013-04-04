@@ -4,8 +4,10 @@ package be.kuleuven.swop.objectron.domain.square;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 
+import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.*;
@@ -17,10 +19,7 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Transitionable<SquareState> {
-    private static final int POWER_FAILURE_CHANCE = 5;
-
-    private final int horizontalIndex;
-    private final int verticalIndex;
+    private final Position position;
 
     private SquareState state;
     private Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
@@ -28,10 +27,8 @@ public class Square implements Transitionable<SquareState> {
     private boolean isObstructed = false;
     private Item activeItem;
 
-    public Square(int horizontalIndex, int verticalIndex) {
-        this.horizontalIndex = horizontalIndex;
-        this.verticalIndex = verticalIndex;
-
+    public Square(final Position position) {
+        this.position = position;
         this.state = new PoweredSquareState();
     }
 
@@ -69,12 +66,8 @@ public class Square implements Transitionable<SquareState> {
         this.items.add(item);
     }
 
-    public int getHorizontalIndex() {
-        return horizontalIndex;
-    }
-
-    public int getVerticalIndex() {
-        return verticalIndex;
+    public Position getPosition(){
+        return this.position;
     }
 
     public Item pickUpItem(int selectionId) {
@@ -93,10 +86,6 @@ public class Square implements Transitionable<SquareState> {
             throw new SquareOccupiedException("The square already has an active item");
         }
         this.activeItem = activeItem;
-    }
-
-    public SquareViewModel getSquareViewModel() {
-        return new SquareViewModel(getHorizontalIndex(), getVerticalIndex());
     }
 
     public boolean isValidPosition(Direction direction) {
@@ -125,11 +114,7 @@ public class Square implements Transitionable<SquareState> {
     }
 
     public String toString(){
-        String result = "";
-        result += "Horizontal position: " + this.horizontalIndex + "\n";
-        result += "Vertical position: " + this.verticalIndex + "\n";
-
-        return result;
+        return position.toString();
     }
 
     @Override
@@ -143,7 +128,7 @@ public class Square implements Transitionable<SquareState> {
 
     private boolean losingPower(){
         int r = (int) (Math.random() * 100);
-        return r <= POWER_FAILURE_CHANCE;
+        return r <= Settings.POWER_FAILURE_CHANCE;
     }
 
     public void newTurn(Player player){

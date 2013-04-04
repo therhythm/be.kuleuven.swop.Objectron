@@ -1,11 +1,12 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
-import be.kuleuven.swop.objectron.domain.Grid;
-import be.kuleuven.swop.objectron.domain.GridFactory;
-import be.kuleuven.swop.objectron.domain.GridFactoryImpl;
+import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,74 +23,52 @@ public class GameState implements GameObservable {
     private List<GameObserver> observers = new ArrayList<>();
     private Item currentItem = null;
 
-    public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles) throws GridTooSmallException{
+    public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException{
 
-        //gameGrid = new Grid(horizontalTiles, verticalTiles);
-        int horizontalPositionPlayer1  = 0;
-        int verticalPositionPlayer1 = verticalTiles - 1;
-        int horizontalPositionPlayer2  =horizontalTiles - 1;
-        int verticalPositionPlayer2 = 0;
+        Position p1Pos = new Position(0, dimension.getHeight() -1);
+        Position p2Pos = new Position(dimension.getWidth()-1, 0);
+        this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos);
 
+        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
+        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
 
-        GridFactoryImpl gridFactory = new GridFactoryImpl(horizontalTiles,verticalTiles);
-        gridFactory.buildGrid(verticalPositionPlayer1,horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer1);
-
-        this.gameGrid = gridFactory.getGameGrid();
-
-        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
-        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
-
-        // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);
     }
 
-    public GameState(String player1Name, String player2Name, int horizontalTiles, int verticalTiles, Grid gameGrid) throws GridTooSmallException{
-
-        //gameGrid = new Grid(horizontalTiles, verticalTiles);
-        int horizontalPositionPlayer1  = 0;
-        int verticalPositionPlayer1 = verticalTiles - 1;
-        int horizontalPositionPlayer2  =horizontalTiles - 1;
-        int verticalPositionPlayer2 = 0;
+    public GameState(String player1Name, String player2Name, Dimension dimension, Grid gameGrid) throws GridTooSmallException{
+        Position p1Pos = new Position(0, dimension.getHeight() -1);
+        Position p2Pos = new Position(dimension.getWidth()-1, 0);
 
         this.gameGrid = gameGrid;
 
-        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
-        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
+        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
+        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
 
-        // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);
     }
 
-    public GameState(String player1Name, String player2Name, int horizontalPositionPlayer1, int verticalPositionPlayer1, int horizontalPositionPlayer2, int verticalPositionPlayer2, Grid gameGrid) throws GridTooSmallException{
-
-        //gameGrid = new Grid(horizontalTiles, verticalTiles);
-
-
+    public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos, Grid gameGrid) throws GridTooSmallException{
         this.gameGrid = gameGrid;
 
-        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(verticalPositionPlayer1, horizontalPositionPlayer1));
-        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(verticalPositionPlayer2, horizontalPositionPlayer2));
+        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
+        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
 
-        // gameGrid.buildGrid(p1.getCurrentSquare(), p2.getCurrentSquare());
         currentPlayer = p1;
         players.add(p1);
         players.add(p2);
     }
-
 
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-
     public Grid getGrid() {
         return gameGrid;
     }
-
 
     public void nextPlayer() {
         int index = players.indexOf(currentPlayer);
@@ -100,28 +79,23 @@ public class GameState implements GameObservable {
         notifyObservers();
     }
 
-
     public void notifyObservers(){
         for(GameObserver observer : observers){
             observer.playerUpdated(currentPlayer.getPlayerViewModel());
         }
     }
 
-
     public void attach(GameObserver observer) {
         observers.add(observer);
     }
-
 
     public void detach(GameObserver observer) {
         observers.remove(observer);
     }
 
-
     public Item getCurrentItem() {
         return currentItem;
     }
-
 
     public void setCurrentItem(Item item) {
         currentItem = item;

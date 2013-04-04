@@ -16,12 +16,11 @@ import java.util.List;
  *         Time: 00:06
  */
 public class Player {
-    private static final int NB_ACTIONS_EACH_TURN = 3;
 
     private String name;
     private Square currentSquare;
     private Square initialSquare;
-    private int availableActions = NB_ACTIONS_EACH_TURN;
+    private int availableActions = Settings.PLAYER_ACTIONS_EACH_TURN;
     private int remainingActionsSlowed = 0;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
@@ -97,9 +96,9 @@ public class Player {
     }
 
     public void newTurn() {
-        int temp = NB_ACTIONS_EACH_TURN - remainingActionsSlowed;
+        int temp = Settings.PLAYER_ACTIONS_EACH_TURN - remainingActionsSlowed;
         if(temp >= 0){
-            availableActions = NB_ACTIONS_EACH_TURN - remainingActionsSlowed;
+            availableActions = Settings.PLAYER_ACTIONS_EACH_TURN - remainingActionsSlowed;
             remainingActionsSlowed = 0;
             hasMoved = false;
         }else{
@@ -129,7 +128,8 @@ public class Player {
 
     public PlayerViewModel getPlayerViewModel() {
         return new PlayerViewModel(getName(),
-                currentSquare.getSquareViewModel(),initialSquare.getSquareViewModel(),
+                currentSquare.getPosition(),
+                initialSquare.getPosition(),
                 getAvailableActions(),
                 lightTrail.getLightTrailViewModel());
     }

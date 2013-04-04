@@ -1,6 +1,7 @@
 package scenario;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -32,7 +33,7 @@ public class TestUC_Use_Item {
 
     @Before
     public void setUp() throws Exception {
-        Square square = new Square(0, 0);
+        Square square = new Square(new Position(0, 0));
         item = new LightMine();
         square.addItem(item);
         player = new Player("p1", square);

@@ -5,7 +5,11 @@ import be.kuleuven.swop.objectron.domain.*;
 
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
@@ -35,29 +39,19 @@ public class TestUC_Move {
 
     @Before
     public void setUp() throws GridTooSmallException {
-        int horizontalPositionPlayer1  =0;
-        int verticalPositionPlayer1 = 9;
-        int horizontalPositionPlayer2  =0;
-        int verticalPositionPlayer2 = 5;
+        Position p1Pos = new Position(0, 9);
+        Position p2Pos = new Position(0, 5);
+        Dimension dimension = new Dimension(10, 10);
+        Grid grid = GridFactory.gridWithoutWalls(dimension, p1Pos, p2Pos);
 
-        GridFactory gridFactory = new GridFactoryImplNoWalls(10,10);
-       gridFactory.buildGrid(horizontalPositionPlayer1,verticalPositionPlayer1,horizontalPositionPlayer2,verticalPositionPlayer2);
-        Grid grid = gridFactory.getGameGrid();
-
-
-        Square square1 = grid.getSquareAtPosition(verticalPositionPlayer1,horizontalPositionPlayer1);
-        Square square2 = grid.getSquareAtPosition(verticalPositionPlayer2,horizontalPositionPlayer2);
-
-        player1 = new Player("p1", square1);
-        player2 = new Player("p1", square2);
-
+        player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
+        player2 = new Player("p1", grid.getSquareAtPosition(p2Pos));
 
         GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player1);
         when(stateMock.getGrid()).thenReturn(grid);
 
         movePlayerHandler = new MovePlayerHandler(stateMock);
-       // endTurnHandler = new EndTurnHandler(stateMock);
     }
 
     @Test

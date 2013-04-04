@@ -1,9 +1,11 @@
 package scenario;
 
 
-import be.kuleuven.swop.objectron.domain.GridFactory;
-import be.kuleuven.swop.objectron.domain.GridFactoryImplNoWalls;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.domain.Direction;
@@ -26,9 +28,9 @@ public class TestUC_End_Turn {
 
     @Before
     public void setUp() throws GridTooSmallException {
-        GridFactory gridFactory = new GridFactoryImplNoWalls(10,10);
-        gridFactory.buildGrid(0,9,9,0);
-        state = new GameState("jos", "piet", 10, 10,gridFactory.getGameGrid());
+        Dimension dimension = new Dimension(10, 10);
+        Grid grid = GridFactory.gridWithoutWalls(dimension, new Position(0, 9), new Position(9, 0));
+        state = new GameState("jos", "piet", dimension, grid);
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);
     }

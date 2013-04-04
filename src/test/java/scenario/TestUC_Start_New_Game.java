@@ -3,6 +3,7 @@ package scenario;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.handler.StartGameHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,26 +24,17 @@ public class TestUC_Start_New_Game {
     @Before
     public void setUp() throws Exception {
         startGameHandler = new StartGameHandler();
-
     }
 
     @Test
     public void test_basic_flow() throws InventoryEmptyException, GridTooSmallException {
-         int horizontal = 10;
-         int vertical = 10;
-         startGameHandler.startNewGame(player1,player2,horizontal,vertical);
-
-
-
-
+         Dimension dimension = new Dimension(10, 10);
+         startGameHandler.startNewGame(player1, player2, dimension);
     }
 
     @Test (expected = GridTooSmallException.class)
     public void test_invalid_size() throws InventoryEmptyException, GridTooSmallException {
-        int horizontal = 9;
-        int vertical = 10;
-        startGameHandler.startNewGame(player1,player2,horizontal,vertical);
-
-
+        Dimension dimension = new Dimension(9, 10);
+        startGameHandler.startNewGame(player1,player2,dimension);
     }
 }

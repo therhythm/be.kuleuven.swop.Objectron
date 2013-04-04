@@ -2,6 +2,7 @@ package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.LightTrail;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,10 +23,10 @@ public class TestLightTrail {
 
     @Test
     public void test_expand_retract() {
-        Square s1 = new Square(0, 0);
-        Square s2 = new Square(1, 1);
-        Square s3 = new Square(1, 2);
-        Square s4 = new Square(1, 4);
+        Square s1 = new Square(new Position(0, 0));
+        Square s2 = new Square(new Position(1, 1));
+        Square s3 = new Square(new Position(1, 2));
+        Square s4 = new Square(new Position(1, 4));
 
         trail.expand(s1);
         assertTrue(s1.isObstructed());

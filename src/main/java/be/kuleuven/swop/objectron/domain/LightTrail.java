@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain;
 
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.ArrayList;
@@ -12,32 +13,30 @@ import java.util.List;
  *         Time: 22:45
  */
 public class LightTrail {
-    private static int MAX_TRAIL_COVERAGE = 3;
-    private static int LIGHT_TRAIL_LIFETIME = 3;
 
     private Square[] trail;
     private int[] remainingActions;
 
     public LightTrail() {
-        trail = new Square[MAX_TRAIL_COVERAGE];
-        remainingActions = new int[MAX_TRAIL_COVERAGE];
+        trail = new Square[Settings.MAX_LIGHT_TRAIL_COVERAGE];
+        remainingActions = new int[Settings.MAX_LIGHT_TRAIL_COVERAGE];
     }
 
     public void expand(Square newSquare) {
-        if (trail[MAX_TRAIL_COVERAGE - 1] != null) {
-            trail[MAX_TRAIL_COVERAGE - 1].setObstructed(false);
+        if (trail[Settings.MAX_LIGHT_TRAIL_COVERAGE - 1] != null) {
+            trail[Settings.MAX_LIGHT_TRAIL_COVERAGE - 1].setObstructed(false);
         }
 
-        System.arraycopy(trail, 0, trail, 1, MAX_TRAIL_COVERAGE - 1);
-        System.arraycopy(remainingActions, 0, remainingActions, 1, MAX_TRAIL_COVERAGE - 1);
+        System.arraycopy(trail, 0, trail, 1, Settings.MAX_LIGHT_TRAIL_COVERAGE - 1);
+        System.arraycopy(remainingActions, 0, remainingActions, 1, Settings.MAX_LIGHT_TRAIL_COVERAGE - 1);
 
         trail[0] = newSquare;
-        remainingActions[0] = LIGHT_TRAIL_LIFETIME;
+        remainingActions[0] = Settings.LIGHT_TRAIL_LIFETIME;
         newSquare.setObstructed(true);
     }
 
     private void retract() {
-        for (int i = 0; i < MAX_TRAIL_COVERAGE; i++) {
+        for (int i = 0; i < Settings.MAX_LIGHT_TRAIL_COVERAGE; i++) {
             if (remainingActions[i] == 0) {
                 trail[i].setObstructed(false);
                 trail[i] = null;
@@ -47,18 +46,18 @@ public class LightTrail {
     }
 
     public void reduce() {
-        for (int i = 0; i < MAX_TRAIL_COVERAGE; i++) {
+        for (int i = 0; i < Settings.MAX_LIGHT_TRAIL_COVERAGE; i++) {
             remainingActions[i]--;
         }
         retract();
     }
 
-    public List<SquareViewModel> getLightTrailViewModel() {
-        List<SquareViewModel> list = new ArrayList<SquareViewModel>();
+    public List<Position> getLightTrailViewModel() {
+        List<Position> list = new ArrayList<Position>();
 
         for (Square s : trail) {
             if (s != null) {
-                list.add(s.getSquareViewModel());
+                list.add(s.getPosition());
             }
         }
         return list;

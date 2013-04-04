@@ -1,6 +1,8 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
@@ -8,6 +10,7 @@ import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
+
 
 import java.awt.*;
 import java.util.HashMap;
@@ -31,9 +34,8 @@ public class GameView implements GameObserver {
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
     private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
     private HandlerCatalog catalog;
-    private int horizontalTiles;
+    private Dimension dimension;
     private SimpleGUI gui;
-    private int verticalTiles;
     private SquareViewModel p1_finish;
     private SquareViewModel p2_finish;
 
@@ -41,17 +43,16 @@ public class GameView implements GameObserver {
     public GameView(GameStartViewModel vm) {
         this.catalog = vm.getCatalog();
         vm.getObservable().attach(this);
-        this.horizontalTiles = vm.getNbHorizontalTiles();
-        this.verticalTiles = vm.getNbVerticalTiles();
-        this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
+        this.dimension = vm.getDimension();
+        this.gameGrid = new SquareStates[dimension.getHeight()][dimension.getWidth()];
         this.currentPlayer = vm.getP1();
-        for (int i = 0; i < gameGrid.length; i++) {
-            for (int j = 0; j < gameGrid[0].length; j++) {
+        for (int i = 0; i < dimension.getHeight(); i++) {
+            for (int j = 0; j < dimension.getWidth(); j++) {
                 gameGrid[i][j] = SquareStates.EMPTY;
             }
         }
-        for (List<SquareViewModel> sqvm : vm.getWalls()) {
-            for (SquareViewModel sVm : sqvm) {
+        for (List<Position> sqvm : vm.getWalls()) {
+            for (Position sVm : sqvm) {
                 gameGrid[sVm.getVIndex()][sVm.getHIndex()] = SquareStates.WALL;
             }
         }
@@ -67,15 +68,15 @@ public class GameView implements GameObserver {
 
     public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
-            int buttonWidth = horizontalTiles * TILEWIDTH / 4;
+            int buttonWidth = dimension.getWidth() * TILEWIDTH / 4;
 
             public void run() {
-                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * horizontalTiles, TILEHEIGHT * verticalTiles + 3 * VPADDING) {
+                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * dimension.getWidth(), TILEHEIGHT * dimension.getHeight() + 3 * VPADDING) {
 
                     @Override
                     public void paint(Graphics2D graphics) {
-                        for (int i = 0; i < horizontalTiles; i++) {
-                            for (int j = 0; j < verticalTiles; j++) {
+                        for (int i = 0; i < dimension.getWidth(); i++) {
+                            for (int j = 0; j < dimension.getHeight(); j++) {
                                 if (gameGrid[j][i] == SquareStates.EMPTY) {
                                     if (p1_finish.getHIndex() == i && p1_finish.getVIndex() == j) {
                                         graphics.drawImage(gridImageMap.get(SquareStates.P1_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
@@ -123,7 +124,7 @@ public class GameView implements GameObserver {
                 // generate direction buttons
                 for (final Direction direction : Direction.values()) {
 
-                    gui.createButton(HPADDING + hMultiplier * 20, verticalTiles * TILEHEIGHT + VPADDING + 20 + vMultiplier * 20, 20, 20, new Runnable() {
+                    gui.createButton(HPADDING + hMultiplier * 20, dimension.getHeight() * TILEHEIGHT + VPADDING + 20 + vMultiplier * 20, 20, 20, new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -154,7 +155,7 @@ public class GameView implements GameObserver {
                     }
                 }
 
-                final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button pickupButton = gui.createButton(HPADDING + buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
 
 
@@ -186,7 +187,7 @@ public class GameView implements GameObserver {
                 });
                 pickupButton.setText("Pickup item");
 
-                final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
@@ -208,7 +209,7 @@ public class GameView implements GameObserver {
                 });
                 inventoryButton.setText("Open inventory");
 
-                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth,verticalTiles * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
+                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth,dimension.getHeight() * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
@@ -228,7 +229,7 @@ public class GameView implements GameObserver {
                 });
                 useItemButton.setText("Use Item");
 
-                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth,verticalTiles * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
+                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth,dimension.getHeight() * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
                     public void run() {
                         final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
                         useItemHandler.cancelItemUsage();
@@ -239,7 +240,7 @@ public class GameView implements GameObserver {
                 });
                 cancelItemButton.setText("Unselect item");
 
-                final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
                             final EndTurnHandler endTurnHandler = (EndTurnHandler) catalog.getHandler(EndTurnHandler.class);
@@ -263,13 +264,13 @@ public class GameView implements GameObserver {
     private void updatePlayer(PlayerViewModel playerViewModel) {
         if (currentPlayer.getName().equals(playerViewModel.getName())) {
             gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = SquareStates.EMPTY;
-            for (SquareViewModel svm : currentPlayer.getLightTrail()) {
+            for (Position svm : currentPlayer.getLightTrail()) {
                 gameGrid[svm.getVIndex()][svm.getHIndex()] = SquareStates.EMPTY;
             }
         }
         currentPlayer = playerViewModel;
         gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = playerColorMap.get(currentPlayer.getName())[0];
-        for (SquareViewModel svm : currentPlayer.getLightTrail()) {
+        for (Position svm : currentPlayer.getLightTrail()) {
             gameGrid[svm.getVIndex()][svm.getHIndex()] = playerColorMap.get(currentPlayer.getName())[1];
         }
         gui.repaint();
