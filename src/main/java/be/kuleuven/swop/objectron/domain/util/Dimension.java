@@ -8,6 +8,7 @@ package be.kuleuven.swop.objectron.domain.util;
  * To change this template use File | Settings | File Templates.
  */
 public class Dimension {
+
     private final int width;
     private final int height;
 

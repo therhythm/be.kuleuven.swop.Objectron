@@ -8,6 +8,7 @@ package be.kuleuven.swop.objectron.domain;
  * To change this template use File | Settings | File Templates.
  */
 public class Settings {
+
     // Grid settings
     public static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
     public static final int MIN_WALL_LENGTH = 2;

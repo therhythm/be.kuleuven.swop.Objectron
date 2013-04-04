@@ -7,6 +7,7 @@ package be.kuleuven.swop.objectron.domain.util;
  * Time: 1:49 AM
  * To change this template use File | Settings | File Templates.
  */
+
 public class Position {
     private final int hIndex;
     private final int vIndex;
