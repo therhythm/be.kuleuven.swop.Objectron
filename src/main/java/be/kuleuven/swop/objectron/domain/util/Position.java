@@ -3,11 +3,10 @@ package be.kuleuven.swop.objectron.domain.util;
 /**
  * Created with IntelliJ IDEA.
  * User: Nik
- * Date: 4/4/13
- * Time: 1:49 AM
+ * Date: 4/5/13
+ * Time: 2:36 AM
  * To change this template use File | Settings | File Templates.
  */
-
 public class Position {
     private final int hIndex;
     private final int vIndex;

@@ -3,7 +3,6 @@ package be.kuleuven.swop.objectron.viewmodel;
 
 import be.kuleuven.swop.objectron.domain.util.Position;
 
-import java.util.Collections;
 import java.util.List;
 
 public class PlayerViewModel {

@@ -8,7 +8,6 @@ import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.*;
 

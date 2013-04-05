@@ -2,7 +2,6 @@ package be.kuleuven.swop.objectron.domain;
 
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
