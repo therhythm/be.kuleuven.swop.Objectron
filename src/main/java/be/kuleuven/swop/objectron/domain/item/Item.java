@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item;
 
-import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.game.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
 /**
  * @author : Nik Torfs

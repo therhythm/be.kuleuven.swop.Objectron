@@ -1,10 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Settings;
-import be.kuleuven.swop.objectron.domain.game.Turn;
-import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
 /**
  * @author : Peter Bosmans

@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.domain.game;
+package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -16,13 +16,13 @@ import java.util.List;
  *         Date: 26/02/13
  *         Time: 21:02
  */
-public class Game implements GameObservable {
+public class GameState implements GameObservable {
     private Grid gameGrid;
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
     private Turn currentTurn;
 
-    public Game(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException{
+    public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException{
         Position p1Pos = new Position(0, dimension.getHeight() -1);
         Position p2Pos = new Position(dimension.getWidth()-1, 0);
         this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos);
@@ -35,7 +35,7 @@ public class Game implements GameObservable {
         players.add(p2);
     }
 
-    public Game(String player1Name, String player2Name, Dimension dimension, Grid gameGrid) throws GridTooSmallException{
+    public GameState(String player1Name, String player2Name, Dimension dimension, Grid gameGrid) throws GridTooSmallException{
         this(player1Name,
                 player2Name,
                 new Position(0, dimension.getHeight() -1),
@@ -43,7 +43,7 @@ public class Game implements GameObservable {
                 gameGrid);
     }
 
-    public Game(String player1Name, String player2Name, Position p1Pos, Position p2Pos, Grid gameGrid) throws GridTooSmallException{
+    public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos, Grid gameGrid) throws GridTooSmallException{
         this.gameGrid = gameGrid;
 
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));

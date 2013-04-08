@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.domain.game;
+package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 

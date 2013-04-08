@@ -4,7 +4,7 @@ package scenario;
 import be.kuleuven.swop.objectron.domain.*;
 
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
-import be.kuleuven.swop.objectron.domain.game.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -40,7 +40,7 @@ public class TestUC_Move {
 
         player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
 
-        Game stateMock = mock(Game.class);
+        GameState stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player1);
         when(stateMock.getGrid()).thenReturn(grid);
 

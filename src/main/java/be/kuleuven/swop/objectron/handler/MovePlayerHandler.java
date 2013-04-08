@@ -5,8 +5,8 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.domain.game.Game;
-import be.kuleuven.swop.objectron.domain.game.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.logging.Level;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class MovePlayerHandler extends Handler {
     private static Logger logger = Logger.getLogger(MovePlayerHandler.class.getCanonicalName());
 
-    public MovePlayerHandler(Game state) {
+    public MovePlayerHandler(GameState state) {
         super(state);
     }
 
@@ -46,9 +46,9 @@ public class MovePlayerHandler extends Handler {
             Player current = currentTurn.getCurrentPlayer();
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
             current.move(newSquare);
-
+            newSquare.stepOn(state);
             if(state.checkWin())
-                throw new GameOverException(current.getName() + ", you win the game!");
+                throw new GameOverException(current.getName() + ", you win the gamestate!");
 
             state.notifyObservers();
         } catch (InvalidMoveException e) {

@@ -56,7 +56,6 @@ public class Player {
         actionPerformed();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
-        currentSquare.stepOn(this);
     }
 
     public String getName() {

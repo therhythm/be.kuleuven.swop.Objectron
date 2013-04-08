@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.handler;
 
-import be.kuleuven.swop.objectron.domain.game.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 
 /**
  * @author : Nik Torfs
@@ -8,9 +8,9 @@ import be.kuleuven.swop.objectron.domain.game.Game;
  *         Time: 01:14
  */
 public abstract class Handler {
-    protected Game state;
+    protected GameState state;
 
-    protected Handler(Game state) {
+    protected Handler(GameState state) {
         this.state = state;
     }
 }

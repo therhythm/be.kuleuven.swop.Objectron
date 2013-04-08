@@ -1,6 +1,6 @@
 package scenario;
 
-import be.kuleuven.swop.objectron.domain.game.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -30,13 +30,13 @@ public class TestUC_pick_up_item {
     private PickUpItemHandler pickUpItemHandler;
     private Player player;
     private Square currentSquare;
-    private Game gameState;
+    private GameState gameState;
 
     @Before
     public void setUp() throws GridTooSmallException{
         Dimension dimension = new Dimension(10, 10);
         Grid grid = GridFactory.gridWithoutItems(dimension, new Position(0, 9), new Position(9, 0));
-        gameState = new Game("p1", "p2", dimension, grid);
+        gameState = new GameState("p1", "p2", dimension, grid);
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
@@ -74,7 +74,8 @@ public class TestUC_pick_up_item {
         for (int i = 0; i < 6; i++) {
             player.pickupItem(0);
             currentSquare.addItem(new LightMine());
-            player.newTurn();//keeps remaining actions up
+            gameState.endTurn();
+            gameState.endTurn();
         }
 
         pickUpItemHandler.getAvailableItems();

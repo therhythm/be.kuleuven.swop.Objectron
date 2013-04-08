@@ -1,8 +1,8 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.game.Game;
-import be.kuleuven.swop.objectron.domain.game.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class PickUpItemHandler extends Handler {
     private static Logger logger = Logger.getLogger(PickUpItemHandler.class.getCanonicalName());
 
-    public PickUpItemHandler(Game state) {
+    public PickUpItemHandler(GameState state) {
         super(state);
     }
 

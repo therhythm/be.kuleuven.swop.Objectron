@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.domain.square;
 
-import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.game.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
 /**
  * @author : Nik Torfs
@@ -16,7 +16,7 @@ public class PoweredSquareState implements SquareState {
     }
 
     @Override
-    public void stepOn(Player player) {
+    public void stepOn(GameState gameState) {
         // do nothing
     }
 

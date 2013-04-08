@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.viewmodel;
 
-import be.kuleuven.swop.objectron.domain.game.GameObservable;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObservable;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
