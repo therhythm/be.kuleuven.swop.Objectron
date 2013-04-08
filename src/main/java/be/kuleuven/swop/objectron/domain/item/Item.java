@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.game.Turn;
 
 /**
  * @author : Nik Torfs
@@ -11,5 +12,5 @@ public interface Item{
 
     String getName();
 
-    void activate(Player player);
+    void activate(Turn currentTurn);
 }

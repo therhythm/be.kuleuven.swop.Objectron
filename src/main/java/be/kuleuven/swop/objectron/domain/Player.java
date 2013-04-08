@@ -20,11 +20,9 @@ public class Player {
     private String name;
     private Square currentSquare;
     private Square initialSquare;
-    private int availableActions = Settings.PLAYER_ACTIONS_EACH_TURN;
     private int remainingActionsSlowed = 0;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
-    private boolean hasMoved;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
@@ -41,9 +39,7 @@ public class Player {
         return initialSquare;
     }
 
-
-    public void pickupItem(int identifier) throws InventoryFullException, NotEnoughActionsException {
-        checkEnoughActions();
+    public void pickupItem(int identifier) throws InventoryFullException {
         Item item = currentSquare.pickUpItem(identifier);
 
         try{
@@ -53,30 +49,18 @@ public class Player {
             throw ex;
         }
 
-        reduceAvailableActions();
+        actionPerformed();
     }
 
-    public void move(Square newPosition) throws NotEnoughActionsException {
-        checkEnoughActions();
-        reduceAvailableActions();
+    public void move(Square newPosition) {
+        actionPerformed();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
         currentSquare.stepOn(this);
-        hasMoved = true;
-    }
-
-    public void checkEnoughActions() throws NotEnoughActionsException {
-        if (availableActions == 0) {
-            throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
-        }
     }
 
     public String getName() {
         return this.name;
-    }
-
-    public int getAvailableActions() {
-        return availableActions;
     }
 
     public List<Item> getInventoryItems() {
@@ -87,42 +71,14 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item) throws SquareOccupiedException, NotEnoughActionsException {
-        checkEnoughActions();
+    public void useItem(Item item) throws SquareOccupiedException {
         currentSquare.setActiveItem(item);
         inventory.removeItem(item);
 
-        reduceAvailableActions();
+        actionPerformed();
     }
 
-    public void newTurn() {
-        int temp = Settings.PLAYER_ACTIONS_EACH_TURN - remainingActionsSlowed;
-        if(temp >= 0){
-            availableActions = Settings.PLAYER_ACTIONS_EACH_TURN - remainingActionsSlowed;
-            remainingActionsSlowed = 0;
-            hasMoved = false;
-        }else{
-            remainingActionsSlowed = Math.abs(temp);
-            availableActions = 0;
-            hasMoved = true;
-        }
-    }
-
-    public boolean hasMoved() {
-        return hasMoved;
-    }
-
-    public void reduceRemainingActions(int amount) {
-        if (amount > getAvailableActions()){
-            remainingActionsSlowed = amount - availableActions;
-            availableActions = 0;
-        }else{
-            availableActions = availableActions - amount;
-        }
-    }
-
-    private void reduceAvailableActions() {
-        reduceRemainingActions(1);
+    private void actionPerformed() {
         lightTrail.reduce();
     }
 
@@ -130,7 +86,6 @@ public class Player {
         return new PlayerViewModel(getName(),
                 currentSquare.getPosition(),
                 initialSquare.getPosition(),
-                getAvailableActions(),
                 lightTrail.getLightTrailViewModel());
     }
 }

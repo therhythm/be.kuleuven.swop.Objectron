@@ -1,10 +1,12 @@
 package be.kuleuven.swop.objectron.handler;
 
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.game.Game;
+import be.kuleuven.swop.objectron.domain.game.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.List;
@@ -73,7 +75,9 @@ public class UseItemHandler extends Handler {
             throw new NoItemSelectedException("You don't have an item selected.") ;
         }
         try {
-            state.getCurrentPlayer().useItem(state.getCurrentItem());
+            Turn currentTurn = state.getCurrentTurn();
+            currentTurn.checkEnoughActions();
+            currentTurn.getCurrentPlayer().useItem(state.getCurrentItem());
             state.setCurrentItem(null);
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");

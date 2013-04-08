@@ -17,6 +17,7 @@ public class GameStartViewModel {
     private Dimension dimension;
     private PlayerViewModel p1;
     private PlayerViewModel p2;
+    private TurnViewModel currentTurn;
     private List<List<Position>> walls;
     private GameObservable observable;
 
@@ -24,12 +25,14 @@ public class GameStartViewModel {
                               Dimension dimension,
                               PlayerViewModel p1,
                               PlayerViewModel p2,
+                              TurnViewModel currentTurn,
                               List<List<Position>> walls,
                               GameObservable observable) {
         this.catalog = catalog;
         this.dimension = dimension;
         this.p1 = p1;
         this.p2 = p2;
+        this.currentTurn = currentTurn;
         this.walls = walls;
         this.observable = observable;
     }
@@ -48,6 +51,10 @@ public class GameStartViewModel {
 
     public PlayerViewModel getP2() {
         return p2;
+    }
+
+    public TurnViewModel getCurrentTurn(){
+        return this.currentTurn;
     }
 
     public List<List<Position>> getWalls() {

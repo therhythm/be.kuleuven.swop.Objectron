@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.game.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -69,10 +70,10 @@ public class Grid {
         return this.dimension;
     }
 
-    public void newTurn(Player player) {
+    public void newTurn(Turn currentTurn) {
         for (Square[] square : squares) {
             for (Square sq : square) {
-                sq.newTurn(player);
+                sq.newTurn(currentTurn);
             }
         }
     }

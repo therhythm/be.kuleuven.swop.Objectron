@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 
 import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.game.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -130,14 +131,14 @@ public class Square implements Transitionable<SquareState> {
         return r <= Settings.POWER_FAILURE_CHANCE;
     }
 
-    public void newTurn(Player player){
+    public void newTurn(Turn currentTurn){
         if(losingPower()){
             receivePowerFailure();
             for(Square neighbour : neighbours.values()){
                 neighbour.receivePowerFailure();
             }
         }
-        boolean currentSquare = player.getCurrentSquare().equals(this);
-        state.newTurn(player, currentSquare, this);
+        boolean currentSquare = currentTurn.getCurrentPlayer().getCurrentSquare().equals(this);
+        state.newTurn(currentTurn, currentSquare, this);
     }
 }

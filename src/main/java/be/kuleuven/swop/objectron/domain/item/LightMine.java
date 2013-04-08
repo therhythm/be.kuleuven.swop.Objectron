@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Settings;
+import be.kuleuven.swop.objectron.domain.game.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 
@@ -19,8 +20,8 @@ public class LightMine implements Item {
         return name;
     }
 
-    public void activate(Player player){
+    public void activate(Turn currentTurn){
 
-        player.reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);
+        currentTurn.reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);
     }
 }

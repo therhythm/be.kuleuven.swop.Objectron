@@ -26,6 +26,6 @@ public class StartGameHandler {
         state.endTurn();
         PlayerViewModel p2 = state.getCurrentPlayer().getPlayerViewModel();
         state.endTurn();
-        return new GameStartViewModel(catalog, dimension, p1, p2, state.getGrid().getWalls(), state);
+        return new GameStartViewModel(catalog, dimension, p1, p2, state.getCurrentTurn().getViewModel(), state.getGrid().getWalls(), state);
     }
 }

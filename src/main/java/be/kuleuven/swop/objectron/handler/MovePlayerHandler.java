@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.game.Game;
+import be.kuleuven.swop.objectron.domain.game.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.logging.Level;
@@ -40,7 +41,9 @@ public class MovePlayerHandler extends Handler {
      */
     public void move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         try {
-            Player current = state.getCurrentPlayer();
+            Turn currentTurn = state.getCurrentTurn();
+            currentTurn.checkEnoughActions();
+            Player current = currentTurn.getCurrentPlayer();
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
             current.move(newSquare);
 

@@ -2,7 +2,9 @@ package be.kuleuven.swop.objectron.domain.game;
 
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Settings;
+import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,10 +17,13 @@ public class Turn {
     private Player currentPlayer;
     private Item currentItem;
     private int actionsRemaining;
+    private boolean hasMoved;
 
     public Turn(Player player){
         this.currentPlayer = player;
         this.actionsRemaining = Settings.PLAYER_ACTIONS_EACH_TURN; //TODO - player.getRemainingPenalties();
+        this.hasMoved = false;
+        this.currentItem = null;
     }
 
     public int getActionsRemaining(){
@@ -37,13 +42,31 @@ public class Turn {
         return currentPlayer;
     }
 
+    public void setMoved(boolean hasMoved){
+        this.hasMoved = hasMoved;
+    }
+
+    public boolean hasMoved(){
+        return hasMoved;
+    }
+
     public void reduceRemainingActions(int amount){
         if(actionsRemaining > amount){
             actionsRemaining -= amount;
         }else{
             //TODO currentPlayer.setRemainingPenalties(amount - actionsRemaining);
             actionsRemaining = 0;
+            hasMoved = true;
         }
     }
 
+    public void checkEnoughActions() throws NotEnoughActionsException {
+        if (actionsRemaining == 0) {
+            throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
+        }
+    }
+
+    public TurnViewModel getViewModel(){
+        return new TurnViewModel(actionsRemaining, currentPlayer.getPlayerViewModel());
+    }
 }

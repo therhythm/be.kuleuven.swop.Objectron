@@ -18,10 +18,8 @@ import java.util.List;
  */
 public class Game implements GameObservable {
     private Grid gameGrid;
-    //private Player currentPlayer;
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
-    //private Item currentItem = null;
     private Turn currentTurn;
 
     public Game(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException{
@@ -67,11 +65,9 @@ public class Game implements GameObservable {
     public void endTurn(){
         int index = players.indexOf(currentTurn.getCurrentPlayer());
         index = (index + 1) % players.size();
-        Player current = players.get(index);
 
         currentTurn = new Turn(players.get(index));
-        gameGrid.newTurn(current);
-        current.newTurn();
+        gameGrid.newTurn(currentTurn);
 
         notifyObservers();
     }
@@ -88,6 +84,10 @@ public class Game implements GameObservable {
 
     public void detach(GameObserver observer) {
         observers.remove(observer);
+    }
+
+    public Turn getCurrentTurn(){
+        return this.currentTurn;
     }
 
     public Item getCurrentItem() {

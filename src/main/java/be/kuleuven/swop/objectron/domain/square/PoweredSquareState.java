@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.game.Turn;
 
 /**
  * @author : Nik Torfs
@@ -10,7 +11,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 public class PoweredSquareState implements SquareState {
 
     @Override
-    public void newTurn(Player player, boolean currentSquare, Transitionable<SquareState> context) {
+    public void newTurn(Turn currentTurn, boolean currentSquare, Transitionable<SquareState> context) {
         // do nothing
     }
 
