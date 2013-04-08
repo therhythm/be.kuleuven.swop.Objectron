@@ -4,7 +4,7 @@ import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.game.Game;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class UseItemHandler extends Handler {
     private static Logger logger = Logger.getLogger(UseItemHandler.class.getCanonicalName());
 
-    public UseItemHandler(GameState state) {
+    public UseItemHandler(Game state) {
         super(state);
     }
 

@@ -1,6 +1,6 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.game.Game;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -32,7 +32,7 @@ public class TestGrid {
     private Player player1;
     private Player player2;
     private Grid grid;
-    private GameState state;
+    private Game state;
 
     @Before
     public void setUp()throws GridTooSmallException{
@@ -40,7 +40,7 @@ public class TestGrid {
         Position p2Pos = new Position(3, 8);
         Dimension dimension = new Dimension(10, 10);
         grid = GridFactory.gridWithoutWalls(dimension, p1Pos, p2Pos);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        state = new Game("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
     }

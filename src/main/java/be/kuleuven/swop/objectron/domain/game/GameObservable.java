@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.domain.gamestate;
+package be.kuleuven.swop.objectron.domain.game;
 
 /**
  * @author : Nik Torfs

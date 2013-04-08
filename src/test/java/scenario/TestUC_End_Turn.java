@@ -1,7 +1,7 @@
 package scenario;
 
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.game.Game;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -24,13 +24,13 @@ public class TestUC_End_Turn {
 
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
-    private GameState state;
+    private Game state;
 
     @Before
     public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
         Grid grid = GridFactory.gridWithoutWalls(dimension, new Position(0, 9), new Position(9, 0));
-        state = new GameState("jos", "piet", dimension, grid);
+        state = new Game("jos", "piet", dimension, grid);
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);
     }

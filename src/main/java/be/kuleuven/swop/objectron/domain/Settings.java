@@ -8,7 +8,6 @@ package be.kuleuven.swop.objectron.domain;
  * To change this template use File | Settings | File Templates.
  */
 public class Settings {
-
     // Grid settings
     public static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
     public static final int MIN_WALL_LENGTH = 2;
@@ -17,7 +16,7 @@ public class Settings {
     public static final int MIN_GRID_WIDTH = 10;
     public static final int MIN_GRID_HEIGHT = 10;
 
-    //Lightmine settings
+    //Light mine settings
     public static final int LIGHTMINE_NB_ACTIONS_BLINDED = 3;
 
     //Square settings
@@ -28,7 +27,7 @@ public class Settings {
     //Inventory settings
     public static final int INVENTORY_LIMIT = 6;
 
-    //Lighttrail settings
+    //Light trail settings
     public static int MAX_LIGHT_TRAIL_COVERAGE = 3;
     public static int LIGHT_TRAIL_LIFETIME = 3;
 

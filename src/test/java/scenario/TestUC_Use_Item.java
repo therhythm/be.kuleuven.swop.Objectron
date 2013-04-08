@@ -1,6 +1,6 @@
 package scenario;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.game.Game;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import be.kuleuven.swop.objectron.domain.Player;
@@ -28,7 +28,7 @@ public class TestUC_Use_Item {
     private UseItemHandler useItemHandler;
     private Player player;
     private Item item;
-    private GameState stateMock;
+    private Game stateMock;
 
 
     @Before
@@ -38,7 +38,7 @@ public class TestUC_Use_Item {
         square.addItem(item);
         player = new Player("p1", square);
 
-        stateMock = mock(GameState.class);
+        stateMock = mock(Game.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
 
 

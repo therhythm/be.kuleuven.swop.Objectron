@@ -28,7 +28,7 @@ public class UnpoweredSquareState implements SquareState {
         if(player.getCurrentSquare().hasActiveItem()){
             player.reduceRemainingActions(Settings.SQUARE_ACTIONS_TO_REDUCE);
         }else{
-            //player.endTurn(); //TODO ending turn should also change gamestate
+            //player.endTurn(); //TODO ending turn should also change game
         }
     }
 

@@ -5,7 +5,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.game.Game;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.logging.Level;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class MovePlayerHandler extends Handler {
     private static Logger logger = Logger.getLogger(MovePlayerHandler.class.getCanonicalName());
 
-    public MovePlayerHandler(GameState state) {
+    public MovePlayerHandler(Game state) {
         super(state);
     }
 
@@ -44,7 +44,7 @@ public class MovePlayerHandler extends Handler {
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
             current.move(newSquare);
 
-            if(checkWin())
+            if(state.checkWin())
                 throw new GameOverException(current.getName() + ", you win the game!");
 
             state.notifyObservers();
@@ -55,15 +55,5 @@ public class MovePlayerHandler extends Handler {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do a move when he had no actions remaining.");
             throw e;
         }
-    }
-
-    private boolean checkWin() {
-        Player currentPlayer = state.getCurrentPlayer();
-
-        state.nextPlayer();
-        Square startSquareOtherPlayer = state.getCurrentPlayer().getInitialSquare();
-        state.nextPlayer();
-
-        return currentPlayer.getCurrentSquare().equals(startSquareOtherPlayer);
     }
 }
