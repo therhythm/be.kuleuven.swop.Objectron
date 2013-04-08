@@ -1,6 +1,7 @@
 package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -29,8 +30,6 @@ public class TestGrid {
 
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
-    private Player player1;
-    private Player player2;
     private Grid grid;
     private GameState state;
 
@@ -47,39 +46,27 @@ public class TestGrid {
 
     @Test (expected = InvalidMoveException.class)
     public void test_invalid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
-        player1 = state.getCurrentPlayer();
-
-        try {
-            movePlayerHandler.move(Direction.RIGHT);
-            movePlayerHandler.move(Direction.UP_RIGHT);
-            endTurnHandler.endTurn();
-        } catch (GameOverException e) {
-            fail();
-        }
-        player2 = state.getCurrentPlayer();
+        movePlayerHandler.move(Direction.RIGHT);
+        movePlayerHandler.move(Direction.UP_RIGHT);
+        endTurnHandler.endTurn();
 
         movePlayerHandler.move(Direction.UP_LEFT);
     }
 
     @Test
     public void test_valid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
-        player1 = state.getCurrentPlayer();
-
-        try {
-            movePlayerHandler.move(Direction.RIGHT);
-            movePlayerHandler.move(Direction.UP_RIGHT);;
-            endTurnHandler.endTurn();
-        } catch (GameOverException e) {
-            fail();
-        }
-        player2 = state.getCurrentPlayer();
+        movePlayerHandler.move(Direction.RIGHT);
+        movePlayerHandler.move(Direction.UP_RIGHT);
+        endTurnHandler.endTurn();
 
         movePlayerHandler.move(Direction.DOWN_LEFT);
-        player2.newTurn();
         movePlayerHandler.move(Direction.LEFT);
-        player2.newTurn();
+        state.getCurrentTurn().setMoved(true);
+        endTurnHandler.endTurn();
+        state.getCurrentTurn().setMoved(true);
+
+        endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.UP_LEFT);
-        player2.newTurn();
     }
 
     /**
@@ -105,10 +92,8 @@ public class TestGrid {
 
     @Test (expected = InvalidMoveException.class)
     public void test_invalid_move_neighbor() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
-        player1 = state.getCurrentPlayer();
         movePlayerHandler.move(Direction.RIGHT);
         movePlayerHandler.move(Direction.RIGHT);
         endTurnHandler.endTurn();
-        player2 = state.getCurrentPlayer();
     }
 }

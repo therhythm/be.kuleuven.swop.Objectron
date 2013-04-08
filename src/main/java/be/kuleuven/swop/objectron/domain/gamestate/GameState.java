@@ -102,7 +102,6 @@ public class GameState implements GameObservable {
     public boolean checkWin(){
         Player currentPlayer = currentTurn.getCurrentPlayer();
 
-        //Checking for all other players in case there are more than two
         for(Player otherPlayer : players){
             if(!otherPlayer.equals(currentPlayer) &&
                 otherPlayer.getInitialSquare().equals(currentPlayer.getCurrentSquare())){

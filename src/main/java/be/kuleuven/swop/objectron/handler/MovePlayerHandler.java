@@ -47,9 +47,11 @@ public class MovePlayerHandler extends Handler {
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
             current.move(newSquare);
             newSquare.stepOn(state);
+            currentTurn.setMoved(true);
             if(state.checkWin())
-                throw new GameOverException(current.getName() + ", you win the gamestate!");
+                throw new GameOverException(current.getName() + ", you win the game!");
 
+            currentTurn.reduceRemainingActions(1);
             state.notifyObservers();
         } catch (InvalidMoveException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");

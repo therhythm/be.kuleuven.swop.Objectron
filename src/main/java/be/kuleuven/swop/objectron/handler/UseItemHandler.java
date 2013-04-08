@@ -78,6 +78,7 @@ public class UseItemHandler extends Handler {
             currentTurn.checkEnoughActions();
             currentTurn.getCurrentPlayer().useItem(state.getCurrentItem());
             state.setCurrentItem(null);
+            currentTurn.reduceRemainingActions(1);
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
             throw e;

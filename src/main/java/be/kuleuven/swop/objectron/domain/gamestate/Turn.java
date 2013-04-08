@@ -21,7 +21,7 @@ public class Turn {
 
     public Turn(Player player){
         this.currentPlayer = player;
-        this.actionsRemaining = Settings.PLAYER_ACTIONS_EACH_TURN; //TODO - player.getRemainingPenalties();
+        this.actionsRemaining = Settings.PLAYER_ACTIONS_EACH_TURN - player.getRemainingPenalties();
         this.hasMoved = false;
         this.currentItem = null;
     }
@@ -54,7 +54,7 @@ public class Turn {
         if(actionsRemaining > amount){
             actionsRemaining -= amount;
         }else{
-            //TODO currentPlayer.setRemainingPenalties(amount - actionsRemaining);
+            currentPlayer.setRemainingPenalties(amount - actionsRemaining);
             actionsRemaining = 0;
             hasMoved = true;
         }

@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.*;
 
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.when;
 public class TestUC_Move {
     private MovePlayerHandler movePlayerHandler;
     private Player player1;
+    private GameState stateMock;
 
     @Before
     public void setUp() throws GridTooSmallException {
@@ -39,9 +41,10 @@ public class TestUC_Move {
         Grid grid = GridFactory.gridWithoutWalls(dimension, p1Pos, p2Pos);
 
         player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
-
-        GameState stateMock = mock(GameState.class);
+        Turn turn = new Turn(player1);
+        stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player1);
+        when(stateMock.getCurrentTurn()).thenReturn(turn);
         when(stateMock.getGrid()).thenReturn(grid);
 
         movePlayerHandler = new MovePlayerHandler(stateMock);
@@ -66,7 +69,7 @@ public class TestUC_Move {
 
     @Test(expected = NotEnoughActionsException.class)
     public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
-        player1.reduceRemainingActions(3);
+        stateMock.getCurrentTurn().reduceRemainingActions(3);
         movePlayerHandler.move(Direction.UP);
     }
 }

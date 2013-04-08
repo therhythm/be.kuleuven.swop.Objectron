@@ -1,6 +1,7 @@
 package scenario;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import be.kuleuven.swop.objectron.domain.Player;
@@ -37,15 +38,14 @@ public class TestUC_Use_Item {
         item = new LightMine();
         square.addItem(item);
         player = new Player("p1", square);
+        Turn turn = new Turn(player);
 
         stateMock = mock(GameState.class);
         when(stateMock.getCurrentPlayer()).thenReturn(player);
+        when(stateMock.getCurrentTurn()).thenReturn(turn);
 
 
         useItemHandler = new UseItemHandler(stateMock);
-
-
-
     }
 
     @Test(expected = InventoryEmptyException.class)
@@ -77,13 +77,13 @@ public class TestUC_Use_Item {
         player.pickupItem(0);
         when(stateMock.getCurrentItem()).thenReturn(item);
 
-        int initialAvailableActions = player.getAvailableActions();
+        int initialAvailableActions = stateMock.getCurrentTurn().getActionsRemaining();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
 
-        assertEquals(initialAvailableActions - 1, player.getAvailableActions());
+        assertEquals(initialAvailableActions - 1, stateMock.getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
         assertTrue(player.getCurrentSquare().hasActiveItem());
     }
@@ -102,13 +102,13 @@ public class TestUC_Use_Item {
     public void cancelItemUsageTest() throws InventoryFullException, NotEnoughActionsException {
         player.pickupItem(0);
 
-        int initialAvailableActions = player.getAvailableActions();
+        int initialAvailableActions = stateMock.getCurrentTurn().getActionsRemaining();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.cancelItemUsage();
 
-        assertEquals(initialAvailableActions, player.getAvailableActions());
+        assertEquals(initialAvailableActions, stateMock.getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
         assertFalse(player.getCurrentSquare().hasActiveItem());
     }

@@ -20,9 +20,9 @@ public class Player {
     private String name;
     private Square currentSquare;
     private Square initialSquare;
-    private int remainingActionsSlowed = 0;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
+    private int remainingPenalties;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
@@ -86,5 +86,13 @@ public class Player {
                 currentSquare.getPosition(),
                 initialSquare.getPosition(),
                 lightTrail.getLightTrailViewModel());
+    }
+
+    public int getRemainingPenalties() {
+        return remainingPenalties;
+    }
+
+    public void setRemainingPenalties(int remainingPenalties) {
+        this.remainingPenalties = remainingPenalties;
     }
 }
