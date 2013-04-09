@@ -175,6 +175,7 @@ public class GridBuilder {
                 squares[vertical][horizontal] = new Square(pos);
                 if(pos.equals(p1Pos) || pos.equals(p2Pos)){
                     squares[vertical][horizontal].setObstructed(true);
+
                 }
             }
         }

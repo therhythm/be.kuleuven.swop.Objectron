@@ -23,4 +23,10 @@ public class Position {
     public int getVIndex(){
         return this.vIndex;
     }
+
+    public String toString(){
+        String result="";
+        result += "horizontal: " + hIndex + "\t" + "vertical: " + vIndex;
+        return result;
+    }
 }

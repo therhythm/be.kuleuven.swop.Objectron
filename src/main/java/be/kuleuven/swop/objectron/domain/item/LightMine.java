@@ -23,4 +23,9 @@ public class LightMine implements Item {
 
         player.reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);
     }
+
+    @Override
+    public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
+        useItemRequest.getSquare().setActiveItem(this);
+    }
 }
