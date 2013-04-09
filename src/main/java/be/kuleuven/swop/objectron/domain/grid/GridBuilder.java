@@ -38,8 +38,7 @@ public class GridBuilder {
         this.dimension = dimension;
         this.p1Pos = p1Pos;
         this.p2Pos = p2Pos;
-        initGrid();
-        setupNeighbours();
+        initGrid(Settings.POWER_FAILURE_CHANCE);
     }
 
     public void buildWalls(){
@@ -167,17 +166,18 @@ public class GridBuilder {
         return neighbourSquares;
     }
 
-    private void initGrid(){
+    public void initGrid(int powerFailureChance){
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Position pos = new Position(horizontal, vertical);
-                squares[vertical][horizontal] = new Square(pos);
+                squares[vertical][horizontal] = new Square(pos, powerFailureChance);
                 if(pos.equals(p1Pos) || pos.equals(p2Pos)){
                     squares[vertical][horizontal].setObstructed(true);
                 }
             }
         }
+        setupNeighbours();
     }
 
     private void setupNeighbours() {

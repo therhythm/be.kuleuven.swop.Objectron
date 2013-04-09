@@ -3,6 +3,7 @@ package scenario;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -115,11 +116,12 @@ public class TestUC_Use_Item {
 
     @Test(expected = NotEnoughActionsException.class)
     public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException, NoItemSelectedException {
-        player.pickupItem(0);
+        PickUpItemHandler pickUpItemHandler = new PickUpItemHandler(stateMock);
+        pickUpItemHandler.pickUpItem(0);
         player.getCurrentSquare().addItem(new LightMine());
-        player.pickupItem(0);
+        pickUpItemHandler.pickUpItem(0);
         player.getCurrentSquare().addItem(new LightMine());
-        player.pickupItem(0);
+        pickUpItemHandler.pickUpItem(0);
         when(stateMock.getCurrentItem()).thenReturn(item);
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();

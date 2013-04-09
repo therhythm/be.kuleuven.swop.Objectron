@@ -38,7 +38,7 @@ public class TestGrid {
         Position p1Pos = new Position(1, 8);
         Position p2Pos = new Position(3, 8);
         Dimension dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWalls(dimension, p1Pos, p2Pos);
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -61,11 +61,6 @@ public class TestGrid {
 
         movePlayerHandler.move(Direction.DOWN_LEFT);
         movePlayerHandler.move(Direction.LEFT);
-        state.getCurrentTurn().setMoved(true);
-        endTurnHandler.endTurn();
-        state.getCurrentTurn().setMoved(true);
-
-        endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.UP_LEFT);
     }
 

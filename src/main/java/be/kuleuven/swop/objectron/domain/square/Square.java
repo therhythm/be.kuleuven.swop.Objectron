@@ -26,10 +26,16 @@ public class Square implements Transitionable<SquareState> {
     private List<Item> items = new ArrayList<Item>();
     private boolean isObstructed = false;
     private Item activeItem;
+    private int powerFailureChance = Settings.POWER_FAILURE_CHANCE;
 
     public Square(final Position position) {
         this.position = position;
         this.state = new PoweredSquareState();
+    }
+
+    public Square(final Position position, int powerFailureChance){
+        this(position);
+        this.powerFailureChance = powerFailureChance;
     }
 
     public void addNeighbour(Direction direction, Square neighbour) {
@@ -89,7 +95,7 @@ public class Square implements Transitionable<SquareState> {
     }
 
     public boolean isValidPosition(Direction direction) {
-        if ( this.isObstructed())
+        if (this.isObstructed())
             return false;
 
         //diagonaal check
@@ -128,7 +134,7 @@ public class Square implements Transitionable<SquareState> {
 
     private boolean losingPower(){
         int r = (int) (Math.random() * 100);
-        return r <= Settings.POWER_FAILURE_CHANCE;
+        return r < powerFailureChance;
     }
 
     public void newTurn(Turn currentTurn){
