@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -59,13 +60,41 @@ public class GridBuilder {
     }
 
     public void buildItems(){
-        int numberOfItems = (int) Math.ceil(Settings.PERCENTAGE_OF_ITEMS * dimension.area());
+        int numberOfLightmines = (int) Math.ceil(Settings.PERCENTAGE_OF_LIGHTMINES * dimension.area());
+        int numberOfTeleporters = (int) Math.ceil(Settings.PERCENTAGE_OF_TELEPORTERS * dimension.area());
 
+        placeLightMines(numberOfLightmines);
+        placeTeleporters(numberOfTeleporters);
+    }
+
+    private void placeLightMines(int numberOfItems) {
         placeLightMineCloseToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()]);
         placeLightMineCloseToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()]);
-
         numberOfItems -= 2;
         placeOtherMines(numberOfItems);
+    }
+
+    private void placeTeleporters(int numberOfTeleporters) {
+        Teleporter[] teleporters = new Teleporter[numberOfTeleporters];
+        for (int i = 0; i < numberOfTeleporters; i++) {
+            Square randomSquare = getRandomSquare();
+            //TODO looks for empty squares, but teleporters can be placed alongside other items
+            while (randomSquare.getAvailableItems().size() != 0 ||
+                    randomSquare.isObstructed()) {
+                randomSquare = getRandomSquare();
+            }
+            Teleporter teleporter = new Teleporter(randomSquare);
+            randomSquare.addItem(teleporter);
+            teleporters[i] = teleporter;
+        }
+        //TODO destinations assigned in circle, maybe make more random?
+        for (int i = 0; i < numberOfTeleporters; i++) {
+            if (i == numberOfTeleporters - 1) {
+                teleporters[i].setDestination(teleporters[0].getLocation());
+            } else {
+                teleporters[i].setDestination(teleporters[i+1].getLocation());
+            }
+        }
     }
 
     private void buildWall(){
