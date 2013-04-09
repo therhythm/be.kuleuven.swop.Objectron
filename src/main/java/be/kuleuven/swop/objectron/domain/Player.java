@@ -65,6 +65,16 @@ public class Player {
         hasMoved = true;
     }
 
+    public void teleport(Square destination) throws SquareOccupiedException {
+        if (!destination.isObstructed()) {
+            lightTrail.expand(currentSquare);
+            currentSquare = destination;
+            currentSquare.stepOn(this);
+        } else {
+            throw new SquareOccupiedException("The destination square is occupied.");
+        }
+    }
+
     public void checkEnoughActions() throws NotEnoughActionsException {
         if (availableActions == 0) {
             throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");

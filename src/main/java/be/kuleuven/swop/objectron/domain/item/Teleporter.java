@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -11,7 +12,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 public class Teleporter implements Item {
     private static final String name = "Teleporter";
 
-    private Square destination;
+    private Teleporter destination;
     private Square location;
 
     public Teleporter(Square location) {
@@ -23,11 +24,11 @@ public class Teleporter implements Item {
         return name;
     }
 
-    public Square getDestination() {
+    public Teleporter getDestination() {
         return destination;
     }
 
-    public void setDestination(Square destination) {
+    public void setDestination(Teleporter destination) {
         this.destination = destination;
     }
 
@@ -36,6 +37,10 @@ public class Teleporter implements Item {
     }
 
     public void activate(Player player) {
-        //TODO implement
+        try {
+            player.teleport(destination.getLocation());
+        } catch (SquareOccupiedException e) {
+            e.printStackTrace();
+        }
     }
 }

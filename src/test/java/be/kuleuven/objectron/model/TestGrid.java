@@ -4,7 +4,6 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
@@ -92,7 +91,6 @@ public class TestGrid {
         boolean hasItems = false;
         int numberOfLightMines = 0;
         int numberOfTeleporters = 0;
-        Teleporter[] teleporters = new Teleporter[3];
 
         for(int i = 0;i<10;i++){
             for(int j = 0;j<10;j++){
@@ -103,7 +101,6 @@ public class TestGrid {
                             numberOfLightMines++;
                         }
                         if (item.getName() == "Teleporter") {
-                            teleporters[numberOfTeleporters] = (Teleporter) item;
                             numberOfTeleporters++;
                         }
                     }

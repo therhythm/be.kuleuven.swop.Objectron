@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -85,15 +86,20 @@ public class GridBuilder {
             }
             Teleporter teleporter = new Teleporter(randomSquare);
             randomSquare.addItem(teleporter);
+            try {
+                randomSquare.setActiveItem(teleporter);
+            } catch (SquareOccupiedException e) {
+                e.printStackTrace();
+            }
             teleporters[i] = teleporter;
         }
-        //TODO destinations assigned in circle, maybe make more random?
+        //TODO multiple teleporters can have the same destination, is this allowed?
         for (int i = 0; i < numberOfTeleporters; i++) {
-            if (i == numberOfTeleporters - 1) {
-                teleporters[i].setDestination(teleporters[0].getLocation());
-            } else {
-                teleporters[i].setDestination(teleporters[i+1].getLocation());
+            int random = (int) Math.floor(Math.random() * 3);
+            while (random == i) {
+                random = (int) Math.floor(Math.random() * 3);
             }
+            teleporters[i].setDestination(teleporters[random]);
         }
     }
 
