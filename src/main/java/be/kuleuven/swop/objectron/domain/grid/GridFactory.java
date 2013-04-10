@@ -30,9 +30,16 @@ public class GridFactory {
         return builder.getGrid();
     }
 
+
+
     public static Grid gridWithoutItems(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, p1, p2);
         builder.buildWalls();
+        return builder.getGrid();
+    }
+
+    public static Grid gridWithoutWallsWithoutItems(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+        GridBuilder builder = new GridBuilder(dimension, p1, p2);
         return builder.getGrid();
     }
 

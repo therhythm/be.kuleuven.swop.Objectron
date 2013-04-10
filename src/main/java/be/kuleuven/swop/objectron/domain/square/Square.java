@@ -25,25 +25,6 @@ public class Square implements Transitionable<SquareState> {
     private List<Item> items = new ArrayList<Item>();
     private boolean isObstructed = false;
     private Item activeItem;
-    private Player Player=null;
-
-    public Player getPlayer() {
-        return Player;
-    }
-
-    private void setPlayer(Player player) {
-        Player = player;
-    }
-
-    public void playerLeaves() {
-        this.setPlayer(null);
-    }
-
-    public boolean hasPlayer(){
-        if(this.getPlayer()==null)
-            return false;
-        return true;
-    }
 
     public Square(final Position position) {
         this.position = position;
@@ -74,7 +55,6 @@ public class Square implements Transitionable<SquareState> {
             activeItem.activate(player);
             activeItem = null;
         }
-        this.setPlayer(player);
     }
 
     public List<Item> getAvailableItems() {

@@ -23,7 +23,7 @@ public class Grid {
     private Dimension dimension;
     private List<Wall> walls;
 
-    public Grid(Square[][] squares,List<Wall> walls, Dimension dimension){
+    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension) {
         this.squares = squares;
         this.walls = walls;
         this.dimension = dimension;
@@ -32,7 +32,7 @@ public class Grid {
     public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException, NotEnoughActionsException {
         Square neighbour = currentSquare.getNeighbour(direction);
 
-        if(neighbour==null)
+        if (neighbour == null)
             throw new InvalidMoveException();
         if (!neighbour.isValidPosition(direction)) {
             throw new InvalidMoveException();
@@ -65,7 +65,7 @@ public class Grid {
         return wallViewModels;
     }
 
-    public Dimension getDimension(){
+    public Dimension getDimension() {
         return this.dimension;
     }
 
@@ -75,5 +75,17 @@ public class Grid {
                 sq.newTurn(player);
             }
         }
+    }
+
+    public boolean isWall(Square square) {
+        if (walls==null)
+            return false;
+        for (Wall wall : walls) {
+
+                if (wall.isWall(square))
+                    return true;
+        }
+
+        return false;
     }
 }

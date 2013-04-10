@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -61,7 +62,6 @@ public class Player {
         checkEnoughActions();
         reduceAvailableActions();
         lightTrail.expand(currentSquare);
-        currentSquare.playerLeaves();
         currentSquare = newPosition;
         currentSquare.stepOn(this);
         hasMoved = true;
@@ -89,23 +89,16 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item) throws SquareOccupiedException, NotEnoughActionsException {
+    public void useItem(Item item,UseItemRequest useItemRequest) throws SquareOccupiedException, NotEnoughActionsException {
         checkEnoughActions();
-        item.useItem(new UseItemRequest(currentSquare));
+        item.useItem(useItemRequest);
 
         inventory.removeItem(item);
 
         reduceAvailableActions();
     }
 
-    public void useItem(Item item, Direction direction) throws NotEnoughActionsException, SquareOccupiedException {
-        checkEnoughActions();
-        item.useItem(new UseItemRequest(currentSquare,direction));
 
-        inventory.removeItem(item);
-
-        reduceAvailableActions();
-    }
 
     public void newTurn() {
         int temp = Settings.PLAYER_ACTIONS_EACH_TURN - remainingActionsSlowed;

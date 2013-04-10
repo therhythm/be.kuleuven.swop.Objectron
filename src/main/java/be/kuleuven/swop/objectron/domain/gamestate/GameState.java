@@ -101,4 +101,8 @@ public class GameState implements GameObservable {
         currentItem = item;
         notifyObservers();
     }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
 }

@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -61,11 +62,15 @@ public class GridBuilder {
     public void buildItems(){
         int numberOfItems = (int) Math.ceil(Settings.PERCENTAGE_OF_ITEMS * dimension.area());
 
-        placeLightMineCloseToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()]);
-        placeLightMineCloseToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()]);
+        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], ItemType.LIGHTMINE);
+        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], ItemType.IDENTITYDISC);
+
+        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], ItemType.LIGHTMINE);
+        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], ItemType.IDENTITYDISC);
 
         numberOfItems -= 2;
-        placeOtherMines(numberOfItems);
+        placeOtherItems(numberOfItems,ItemType.LIGHTMINE);
+        placeOtherItems(numberOfItems,ItemType.IDENTITYDISC);
     }
 
     private void buildWall(){
@@ -121,28 +126,36 @@ public class GridBuilder {
         }
     }
 
-    private void placeLightMineCloseToPlayer(Square playerOneSquare) {
+    private void placeItemToPlayer(Square playerOneSquare,ItemType itemType) {
         for (Square square : getAllNeighboursFromSquare(playerOneSquare)) {
             //find the middle tile
             if (getAllNeighboursFromSquare(square).size() == 8) {
-                placeLightMineInArea(square);
+                placeItemArea(square,itemType);
                 break;
             }
         }
     }
 
-    private void placeOtherMines(int numberOfItems) {
+    private void placeOtherItems(int numberOfItems,ItemType itemType) {
         for (int i = 0; i < numberOfItems; i++) {
             Square randomSquare = getRandomSquare();
             while (randomSquare.getAvailableItems().size() != 0
                     || randomSquare.isObstructed()) {
                 randomSquare = getRandomSquare();
             }
-            randomSquare.addItem(new LightMine());
+            switch (itemType){
+                case LIGHTMINE:
+                    randomSquare.addItem(new LightMine());
+                    break;
+                case IDENTITYDISC:
+                    randomSquare.addItem(new IdentityDisc());
+                    break;
+            }
+
         }
     }
 
-    private void placeLightMineInArea(Square square) {
+    private void placeItemArea(Square square,ItemType itemType) {
         List<Square> possibleSquares = getAllNeighboursFromSquare(square);
         List<Square> goodSquares = new ArrayList<Square>();
         possibleSquares.add(square);
@@ -154,7 +167,16 @@ public class GridBuilder {
 
         Random generator = new Random();
         int randomIndex = generator.nextInt(goodSquares.size());
-        goodSquares.get(randomIndex).addItem(new LightMine());
+
+        switch(itemType){
+            case LIGHTMINE:
+                goodSquares.get(randomIndex).addItem(new LightMine());
+                break;
+            case IDENTITYDISC:
+                goodSquares.get(randomIndex).addItem(new IdentityDisc());
+
+        }
+
     }
 
     private List<Square> getAllNeighboursFromSquare(Square square) {
@@ -257,5 +279,9 @@ public class GridBuilder {
 
         return possible &&
                 wallCoverage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE;
+    }
+
+    private enum ItemType {
+        LIGHTMINE, IDENTITYDISC;
     }
 }

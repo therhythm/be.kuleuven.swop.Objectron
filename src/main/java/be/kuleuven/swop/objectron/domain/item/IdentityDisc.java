@@ -39,13 +39,12 @@ public class IdentityDisc implements Item {
             System.out.println(neighbor);
             if (neighbor == null)
                 break;
-            if(neighbor.hasPlayer()){
+            if(playerHit(useItemRequest,neighbor)){
                 currentSquare = neighbor;
-               this.activate(currentSquare.getPlayer());
                break;
 
             }
-            else if (!neighbor.isObstructed()){
+            else if (!useItemRequest.getGrid().isWall(neighbor)){
                 currentSquare = neighbor;
                 neighbor = neighbor.getNeighbour(useItemRequest.getDirection());
             } else
@@ -53,6 +52,16 @@ public class IdentityDisc implements Item {
         }
         System.out.println("currentSquare = " + currentSquare);
         currentSquare.addItem(this);
+    }
+
+    private boolean playerHit(UseItemRequest useItemRequest,Square squareItem){
+     for(Player player : useItemRequest.getPlayers() ){
+         if(player.getCurrentSquare().equals(squareItem))      {
+             this.activate(player);
+             return true;
+         }
+     }
+        return false;
     }
 
     private boolean validDirection(Direction direction){
