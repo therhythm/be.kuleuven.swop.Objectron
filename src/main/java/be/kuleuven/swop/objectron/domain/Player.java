@@ -25,6 +25,7 @@ public class Player {
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
     private boolean hasMoved;
+    private boolean isTeleporting;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
@@ -63,10 +64,12 @@ public class Player {
         currentSquare = newPosition;
         currentSquare.stepOn(this);
         hasMoved = true;
+        isTeleporting = false;
     }
 
     public void teleport(Square destination) throws SquareOccupiedException {
         if (!destination.isObstructed()) {
+            isTeleporting = true;
             lightTrail.expand(currentSquare);
             currentSquare = destination;
             currentSquare.stepOn(this);
@@ -142,5 +145,9 @@ public class Player {
                 initialSquare.getPosition(),
                 getAvailableActions(),
                 lightTrail.getLightTrailViewModel());
+    }
+
+    public boolean isTeleporting() {
+        return isTeleporting;
     }
 }
