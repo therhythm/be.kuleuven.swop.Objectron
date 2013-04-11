@@ -6,12 +6,15 @@ import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : Nik Torfs
@@ -23,7 +26,7 @@ public class Grid {
     private Dimension dimension;
     private List<Wall> walls;
 
-    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension) {
+    public Grid(Square[][] squares,List<Wall> walls, Dimension dimension){
         this.squares = squares;
         this.walls = walls;
         this.dimension = dimension;
@@ -87,5 +90,15 @@ public class Grid {
         }
 
         return false;
+    }
+
+    public Map<Position,List<Item>> getItems() {
+        Map<Position,List<Item>> items = new HashMap<>();
+        for(Square[] row : squares){
+            for(Square sq : row){
+                items.put(sq.getPosition(),sq.getAvailableItems());
+            }
+        }
+        return items;
     }
 }

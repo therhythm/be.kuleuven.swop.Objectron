@@ -5,8 +5,11 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,7 @@ import java.util.List;
  *         Date: 26/02/13
  *         Time: 21:02
  */
-public class GameState implements GameObservable {
+public class GameState implements Observable<GameObserver>, SquareObserver {
     private Grid gameGrid;
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
@@ -25,7 +28,7 @@ public class GameState implements GameObservable {
     public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException{
         Position p1Pos = new Position(0, dimension.getHeight() -1);
         Position p2Pos = new Position(dimension.getWidth()-1, 0);
-        this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos);
+        this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos, this);
 
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
@@ -78,8 +81,12 @@ public class GameState implements GameObservable {
     }
 
     public void notifyObservers(){
+        List<PlayerViewModel> playerVMs = new ArrayList<>();
+        for(Player p : players){
+            playerVMs.add(p.getPlayerViewModel());
+        }
         for(GameObserver observer : observers){
-            observer.playerUpdated(currentTurn.getCurrentPlayer().getPlayerViewModel());
+            observer.update(currentTurn.getViewModel(), playerVMs);
         }
     }
 
@@ -96,7 +103,7 @@ public class GameState implements GameObservable {
     }
 
     public Item getCurrentItem() {
-        return currentTurn.getCurrentItem(); //TODO delegate or return Turn object
+        return currentTurn.getCurrentItem(); //TODO delegate or return Turn object  ?
     }
 
     public void setCurrentItem(Item item) {
@@ -118,5 +125,19 @@ public class GameState implements GameObservable {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    @Override
+    public void lostPower(Position position) {
+        for(GameObserver observer : observers){
+            observer.noPower(position);
+        }
+    }
+
+    @Override
+    public void regainedPower(Position position) {
+        for(GameObserver observer : observers){
+            observer.regainedPower(position);
+        }
     }
 }

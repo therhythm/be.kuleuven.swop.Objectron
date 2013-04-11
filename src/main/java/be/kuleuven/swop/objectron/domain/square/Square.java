@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.ActivateRequest;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
 import java.util.*;
@@ -19,9 +20,10 @@ import java.util.*;
  *         Date: 22/02/13
  *         Time: 00:03
  */
-public class Square implements Transitionable<SquareState> {
+public class Square implements Observable<SquareObserver> {
     private final Position position;
 
+    private List<SquareObserver> observers = new ArrayList<>();
     private SquareState state;
     private Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
     private List<Item> items = new ArrayList<Item>();
@@ -124,13 +126,13 @@ public class Square implements Transitionable<SquareState> {
         return position.toString();
     }
 
-    @Override
     public void transitionState(SquareState newState) {
         this.state = newState;
     }
 
     public void receivePowerFailure(){
         state.powerFailure(this);
+        notifyPowerFailure();
     }
 
     private boolean losingPower(){
@@ -149,5 +151,24 @@ public class Square implements Transitionable<SquareState> {
         state.newTurn(currentTurn, currentSquare, this);
     }
 
+    @Override
+    public void attach(SquareObserver observer) {
+        observers.add(observer);
+    }
 
+    @Override
+    public void detach(SquareObserver observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyPowerFailure(){
+        for(SquareObserver observer: observers){
+            observer.lostPower(this.position);
+        }
+    }
+    public void notifyPowered(){
+        for(SquareObserver observer: observers){
+            observer.regainedPower(this.position);
+        }
+    }
 }

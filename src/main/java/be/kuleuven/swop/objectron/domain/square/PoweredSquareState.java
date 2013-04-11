@@ -11,7 +11,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 public class PoweredSquareState implements SquareState {
 
     @Override
-    public void newTurn(Turn currentTurn, boolean currentSquare, Transitionable<SquareState> context) {
+    public void newTurn(Turn currentTurn, boolean currentSquare, Square context) {
         // do nothing
     }
 
@@ -21,7 +21,7 @@ public class PoweredSquareState implements SquareState {
     }
 
     @Override
-    public void powerFailure(Transitionable<SquareState> context) {
+    public void powerFailure(Square context) {
         context.transitionState(new UnpoweredSquareState());
     }
 }

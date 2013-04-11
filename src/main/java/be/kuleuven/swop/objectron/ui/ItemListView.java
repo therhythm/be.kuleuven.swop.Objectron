@@ -22,7 +22,7 @@ public class ItemListView {
             }
         };
 
-        itemMap.put(LightMine.class, inv.loadImage("lightgrenade.png", 40, 40));
+        itemMap.put(LightMine.class, inv.loadImage("lightgrenade_big.png", 40, 40));
         int hcount = 0, vcount = 0;
         for (int i = 0; i < items.size(); i++) {
             final int index = i;

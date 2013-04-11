@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -12,10 +13,11 @@ import be.kuleuven.swop.objectron.domain.util.Position;
  * To change this template use File | Settings | File Templates.
  */
 public class GridFactory {
-    public static Grid normalGrid(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+    public static Grid normalGrid(Dimension dimension, Position p1, Position p2, SquareObserver observer) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, p1, p2);
         builder.buildWalls();
         builder.buildItems();
+        builder.addObserver(observer);
         return builder.getGrid();
     }
 
