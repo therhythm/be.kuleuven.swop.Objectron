@@ -72,8 +72,10 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item) throws SquareOccupiedException {
-        currentSquare.setActiveItem(item);
+    public void useItem(Item item,UseItemRequest useItemRequest) throws SquareOccupiedException, NotEnoughActionsException {
+       
+        item.useItem(useItemRequest);
+
         inventory.removeItem(item);
 
         actionPerformed();

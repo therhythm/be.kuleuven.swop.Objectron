@@ -1,6 +1,8 @@
 package be.kuleuven.swop.objectron.domain.item;
 
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Settings;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
 /**
@@ -20,6 +22,11 @@ public class LightMine implements Item {
     public void activate(Turn currentTurn){
 
         currentTurn.reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);
+    }
+
+    @Override
+    public void activate(Player player) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

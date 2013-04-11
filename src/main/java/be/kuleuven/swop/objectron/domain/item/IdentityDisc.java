@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -24,9 +25,14 @@ public class IdentityDisc implements Item {
     }
 
     @Override
+    public void activate(Turn currentTurn) {
+        currentTurn.reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);
+    }
+
+    @Override
     public void activate(Player player) {
         //TODO fix action to skipTurn
-        player.reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);
+
     }
 
     @Override
