@@ -23,4 +23,24 @@ public class Position {
     public int getVIndex(){
         return this.vIndex;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Position position = (Position) o;
+
+        if (hIndex != position.hIndex) return false;
+        if (vIndex != position.vIndex) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = hIndex;
+        result = 31 * result + vIndex;
+        return result;
+    }
 }
