@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.handler;
 
 
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 
@@ -21,19 +20,16 @@ public class EndTurnHandler extends Handler {
      * End the current player's turn.
      *
      * @throws be.kuleuven.swop.objectron.domain.exception.GameOverException
-     *          The player hasn't moved during this turn and loses the game.
+     *          The player hasn't moved during this turn and loses the gamestate.
      *          | !state.getCurrentPlayer().hasMoved()
      * @post The current player is switched to a new player.
      * | new.state.getCurrentPlayer() != state.getCurrentPlayer()
      */
     public void endTurn() throws GameOverException {
-        if (!state.getCurrentPlayer().hasMoved()) {
-            throw new GameOverException("You haven't moved the previous turn and therefore you have lost the game");
+        if (!state.getCurrentTurn().hasMoved()) {
+            throw new GameOverException("You haven't moved the previous turn and therefore you have lost the gamestate");
         }
 
-        state.nextPlayer();
-        Player current = state.getCurrentPlayer();
-        state.getGrid().newTurn(current);
-        current.newTurn();
+        state.endTurn();
     }
 }

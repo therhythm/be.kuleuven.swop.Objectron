@@ -1,7 +1,8 @@
 package be.kuleuven.swop.objectron.domain.square;
 
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Settings;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
 /**
  * @author : Nik Torfs
@@ -13,9 +14,9 @@ public class UnpoweredSquareState implements SquareState {
     private int remainingTurns = Settings.SQUARE_TURNS_WITHOUT_POWER;
 
     @Override
-    public void newTurn(Player player, boolean currentSquare, Transitionable<SquareState> context) {
+    public void newTurn(Turn currentTurn, boolean currentSquare, Transitionable<SquareState> context) {
         if(currentSquare){
-            player.reduceRemainingActions(Settings.SQUARE_ACTIONS_TO_REDUCE);
+            currentTurn.reduceRemainingActions(Settings.SQUARE_ACTIONS_TO_REDUCE);
         }
         remainingTurns--;
         if(remainingTurns == 0){
@@ -24,11 +25,11 @@ public class UnpoweredSquareState implements SquareState {
     }
 
     @Override
-    public void stepOn(Player player) {
-        if(player.getCurrentSquare().hasActiveItem()){
-            player.reduceRemainingActions(Settings.SQUARE_ACTIONS_TO_REDUCE);
+    public void stepOn(GameState gameState) {
+        if(gameState.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()){
+           gameState.getCurrentTurn().reduceRemainingActions(Settings.SQUARE_ACTIONS_TO_REDUCE);
         }else{
-            //player.endTurn(); //TODO ending turn should also change gamestate
+           gameState.endTurn();
         }
     }
 

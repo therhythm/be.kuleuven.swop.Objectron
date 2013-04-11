@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
 /**
  * @author : Nik Torfs
@@ -16,4 +17,5 @@ public interface Item{
     void activate(Player player);
 
     void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException;
+    void activate(Turn currentTurn);
 }

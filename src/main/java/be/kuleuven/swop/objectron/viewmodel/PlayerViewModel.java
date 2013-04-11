@@ -7,16 +7,14 @@ import java.util.List;
 
 public class PlayerViewModel {
     private final String name;
-    private final Position currentSquare;
-    private final Position initialSquare;
-    private final int availableActions;
+    private final Position currentPosition;
+    private final Position initialPosition;
     private final List<Position> lightTrail;
 
-    public PlayerViewModel(String name, Position currentSquare, Position initialSquare, int availableActions, List<Position> lightTrailViewModel) {
+    public PlayerViewModel(String name, Position currentPosition, Position initialPosition, List<Position> lightTrailViewModel) {
         this.name = name;
-        this.currentSquare = currentSquare;
-        this.initialSquare = initialSquare;
-        this.availableActions = availableActions;
+        this.currentPosition = currentPosition;
+        this.initialPosition = initialPosition;
         this.lightTrail = lightTrailViewModel;
     }
 
@@ -24,16 +22,12 @@ public class PlayerViewModel {
         return name;
     }
 
-    public int getHPosition() {
-        return currentSquare.getHIndex();
+    public Position getPosition() {
+        return currentPosition;
     }
 
-    public int getVPosition() {
-        return currentSquare.getVIndex();
-    }
-
-    public int getAvailableActions() {
-        return availableActions;
+    public Position getStartPosition(){
+        return initialPosition;
     }
 
     public List<Position> getLightTrail() {

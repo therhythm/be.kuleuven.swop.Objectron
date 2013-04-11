@@ -19,19 +19,22 @@ public class GridFactory {
         return builder.getGrid();
     }
 
-    public static Grid emptyGrid(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+    // Contstruct a grid without walls and powerfailures
+    public static Grid gridWithoutWallsPowerFailures(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, p1, p2);
+        builder.initGrid(0);
+        builder.buildItems();
         return builder.getGrid();
     }
 
+    //construct a grid without walls
     public static Grid gridWithoutWalls(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, p1, p2);
         builder.buildItems();
         return builder.getGrid();
     }
 
-
-
+    //construct a grid without items
     public static Grid gridWithoutItems(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, p1, p2);
         builder.buildWalls();
@@ -43,6 +46,7 @@ public class GridFactory {
         return builder.getGrid();
     }
 
+    // construct a grid without power
     public static Grid unpoweredGrid(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, p1, p2);
         builder.buildWalls();

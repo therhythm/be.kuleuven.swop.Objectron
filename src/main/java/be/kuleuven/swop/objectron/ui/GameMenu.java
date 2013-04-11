@@ -60,6 +60,6 @@ public class GameMenu {
                     }
                 }
             }
-        }).setText("Start game");
+        }).setText("Start gamestate");
     }
 }

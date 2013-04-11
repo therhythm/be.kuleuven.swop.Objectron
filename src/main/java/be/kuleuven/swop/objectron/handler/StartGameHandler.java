@@ -23,10 +23,9 @@ public class StartGameHandler {
         catalog.addHandler(new UseItemHandler(state));
 
         PlayerViewModel p1 = state.getCurrentPlayer().getPlayerViewModel();
-        state.nextPlayer();
+        state.endTurn();
         PlayerViewModel p2 = state.getCurrentPlayer().getPlayerViewModel();
-        state.nextPlayer();
-        //TODO clean this up maybe a sort of catalog for all the handlers!
-        return new GameStartViewModel(catalog, dimension, p1, p2, state.getGrid().getWalls(), state);
+        state.endTurn();
+        return new GameStartViewModel(catalog, dimension, p1, p2, state.getCurrentTurn().getViewModel(), state.getGrid().getWalls(), state);
     }
 }

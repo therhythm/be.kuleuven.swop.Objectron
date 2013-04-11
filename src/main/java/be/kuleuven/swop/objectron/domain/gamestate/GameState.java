@@ -18,13 +18,11 @@ import java.util.List;
  */
 public class GameState implements GameObservable {
     private Grid gameGrid;
-    private Player currentPlayer;
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
-    private Item currentItem = null;
+    private Turn currentTurn;
 
     public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException{
-
         Position p1Pos = new Position(0, dimension.getHeight() -1);
         Position p2Pos = new Position(dimension.getWidth()-1, 0);
         this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos);
@@ -32,23 +30,17 @@ public class GameState implements GameObservable {
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
 
-        currentPlayer = p1;
+        currentTurn = new Turn(p1);
         players.add(p1);
         players.add(p2);
     }
 
     public GameState(String player1Name, String player2Name, Dimension dimension, Grid gameGrid) throws GridTooSmallException{
-        Position p1Pos = new Position(0, dimension.getHeight() -1);
-        Position p2Pos = new Position(dimension.getWidth()-1, 0);
-
-        this.gameGrid = gameGrid;
-
-        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
-        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
-
-        currentPlayer = p1;
-        players.add(p1);
-        players.add(p2);
+        this(player1Name,
+                player2Name,
+                new Position(0, dimension.getHeight() -1),
+                new Position(dimension.getWidth()-1, 0),
+                gameGrid);
     }
 
     public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos, Grid gameGrid) throws GridTooSmallException{
@@ -57,31 +49,32 @@ public class GameState implements GameObservable {
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
 
-        currentPlayer = p1;
+        currentTurn = new Turn(p1);
         players.add(p1);
         players.add(p2);
     }
 
     public Player getCurrentPlayer() {
-        return currentPlayer;
+        return currentTurn.getCurrentPlayer(); //TODO delegate or return turn object?
     }
 
     public Grid getGrid() {
         return gameGrid;
     }
 
-    public void nextPlayer() {
-        int index = players.indexOf(currentPlayer);
+    public void endTurn(){
+        int index = players.indexOf(currentTurn.getCurrentPlayer());
         index = (index + 1) % players.size();
-        currentPlayer = players.get(index);
 
-        currentItem = null;
+        currentTurn = new Turn(players.get(index));
+        gameGrid.newTurn(currentTurn);
+
         notifyObservers();
     }
 
     public void notifyObservers(){
         for(GameObserver observer : observers){
-            observer.playerUpdated(currentPlayer.getPlayerViewModel());
+            observer.playerUpdated(currentTurn.getCurrentPlayer().getPlayerViewModel());
         }
     }
 
@@ -93,13 +86,29 @@ public class GameState implements GameObservable {
         observers.remove(observer);
     }
 
+    public Turn getCurrentTurn(){
+        return this.currentTurn;
+    }
+
     public Item getCurrentItem() {
-        return currentItem;
+        return currentTurn.getCurrentItem(); //TODO delegate or return Turn object
     }
 
     public void setCurrentItem(Item item) {
-        currentItem = item;
+        currentTurn.setCurrentItem(item);
         notifyObservers();
+    }
+
+    public boolean checkWin(){
+        Player currentPlayer = currentTurn.getCurrentPlayer();
+
+        for(Player otherPlayer : players){
+            if(!otherPlayer.equals(currentPlayer) &&
+                otherPlayer.getInitialSquare().equals(currentPlayer.getCurrentSquare())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<Player> getPlayers() {

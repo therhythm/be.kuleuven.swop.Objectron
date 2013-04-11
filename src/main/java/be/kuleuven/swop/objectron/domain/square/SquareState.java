@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.square;
 
-import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
 /**
  * @author : Nik Torfs
@@ -8,9 +9,9 @@ import be.kuleuven.swop.objectron.domain.Player;
  *         Time: 02:57
  */
 public interface SquareState {
-    void newTurn(Player player, boolean currentSquare, Transitionable<SquareState> context);
+    void newTurn(Turn currentTurn, boolean currentSquare, Transitionable<SquareState> context);
 
-    void stepOn(Player player);
+    void stepOn(GameState gameState);
 
     void powerFailure(Transitionable<SquareState> context);
 }

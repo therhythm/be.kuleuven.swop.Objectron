@@ -74,7 +74,8 @@ public class TestUC_pick_up_item {
         for (int i = 0; i < 6; i++) {
             player.pickupItem(0);
             currentSquare.addItem(new LightMine());
-            player.newTurn();//keeps remaining actions up
+            gameState.endTurn();
+            gameState.endTurn();
         }
 
         pickUpItemHandler.getAvailableItems();
