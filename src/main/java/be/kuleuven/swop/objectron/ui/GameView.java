@@ -80,14 +80,15 @@ public class GameView implements GameObserver {
         p2Finish = p1.getStartPosition();
     }
 
-    private SquareStates getItemSquareState(LightMine item) {
-        return SquareStates.LIGHT_MINE;
+    //TODO ugly: could be done with visitor but item is not accepting any visitors at the moment and making it for the GUI would be overkill
+    private SquareStates getItemSquareState(Item item) {
+        if(item instanceof LightMine){
+            return SquareStates.LIGHT_MINE;
+        }else{
+            //TODO other items
+            return SquareStates.EMPTY;
+        }
     }
-
-    //todo overloading for other type
-    /*private SquareStates getItemSquareState(Teleporter item) {
-        return SquareStates.TELEPORTER;
-    } */
 
     public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
