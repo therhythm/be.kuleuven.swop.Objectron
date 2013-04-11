@@ -2,9 +2,7 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -15,13 +13,26 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public class IdentityDisc implements Item {
-    private static final String name = "Identity Disc";
-    private int maxRange = 4;
     private IdentityDiscType identityDiscType;
+
+    public IdentityDisc(IdentityDiscTypeState identityDiscTypeEnum) {
+        switch (identityDiscTypeEnum) {
+            case CHARGED_IDENTITY_DISC:
+                setIdentityState(new ChargedIdentityDisc());
+                break;
+            case UNCHARGED_IDENTITY_DISC:
+                setIdentityState(new UnchargedIdentityDisc());
+                break;
+        }
+    }
+
+    private void setIdentityState(IdentityDiscType identityDiscType) {
+        this.identityDiscType = identityDiscType;
+    }
 
     @Override
     public String getName() {
-        return name;  //To change body of implemented methods use File | Settings | File Templates.
+      return  identityDiscType.getName();
     }
 
     @Override
@@ -37,27 +48,10 @@ public class IdentityDisc implements Item {
     public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
         if (!validDirection(useItemRequest.getDirection()))
             throw new IllegalArgumentException("the direction can't be diagonal");
-        Square currentSquare = useItemRequest.getSquare();
-        Square neighbor = currentSquare.getNeighbour(useItemRequest.getDirection());
-        for (int i = 0; i < maxRange; i++) {
-            System.out.println(neighbor);
-            if (neighbor == null)
-                break;
-            if (playerHit(useItemRequest, neighbor)) {
-                currentSquare = neighbor;
-                break;
-
-            } else if (!useItemRequest.getGrid().isWall(neighbor)) {
-                currentSquare = neighbor;
-                neighbor = neighbor.getNeighbour(useItemRequest.getDirection());
-            } else
-                break;
-        }
-        System.out.println("currentSquare = " + currentSquare);
-        currentSquare.addItem(this);
+        identityDiscType.useItem(useItemRequest, this);
     }
 
-    private boolean playerHit(UseItemRequest useItemRequest, Square squareItem) {
+    public boolean playerHit(UseItemRequest useItemRequest, Square squareItem) {
         for (Player player : useItemRequest.getPlayers()) {
             if (player.getCurrentSquare().equals(squareItem)) {
                 this.activate(new ActivateRequest(player, useItemRequest.getGameState()));
@@ -83,10 +77,14 @@ public class IdentityDisc implements Item {
         return true;
     }
 
-    public String toString(){
+    public String toString() {
         String result = "";
         result += "name: " + this.getName();
 
         return result;
+    }
+
+    public enum IdentityDiscTypeState {
+        CHARGED_IDENTITY_DISC, UNCHARGED_IDENTITY_DISC;
     }
 }

@@ -63,10 +63,10 @@ public class GridBuilder {
         int numberOfItems = (int) Math.ceil(Settings.PERCENTAGE_OF_ITEMS * dimension.area());
 
         placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new LightMine());
-        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc());
+        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(IdentityDisc.IdentityDiscTypeState.UNCHARGED_IDENTITY_DISC));
 
         placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new LightMine());
-        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc());
+        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(IdentityDisc.IdentityDiscTypeState.UNCHARGED_IDENTITY_DISC));
 
         numberOfItems -= 2;
         List<Item> lightMines = new ArrayList<Item>();
@@ -74,7 +74,7 @@ public class GridBuilder {
 
         for (int i = 0; i < numberOfItems; i++) {
             lightMines.add(new LightMine());
-            identityDiscs.add(new IdentityDisc());
+            identityDiscs.add(new IdentityDisc(IdentityDisc.IdentityDiscTypeState.UNCHARGED_IDENTITY_DISC));
         }
         placeOtherItems(lightMines);
         placeOtherItems( identityDiscs);
