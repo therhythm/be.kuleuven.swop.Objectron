@@ -14,8 +14,7 @@ public interface Item{
 
     String getName();
 
-    void activate(Turn currentTurn);
-    void activate(Player player);
+    void activate(ActivateRequest activateRequest);
 
     void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException;
 }

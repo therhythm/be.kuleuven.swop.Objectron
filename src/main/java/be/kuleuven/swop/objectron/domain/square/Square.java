@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.item.ActivateRequest;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -59,7 +60,7 @@ public class Square implements Transitionable<SquareState> {
 
         setObstructed(true);
         if(hasActiveItem()){
-            activeItem.activate(gameState.getCurrentTurn());
+            activeItem.activate(new ActivateRequest(gameState));
             activeItem = null;
         }
     }

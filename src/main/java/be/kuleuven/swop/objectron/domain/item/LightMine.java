@@ -19,18 +19,22 @@ public class LightMine implements Item {
         return name;
     }
 
-    public void activate(Turn currentTurn){
+    public void activate(ActivateRequest activateRequest){
 
-        currentTurn.reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);
+       activateRequest.getCurrentTurn().reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);
     }
 
-    @Override
-    public void activate(Player player) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+
 
     @Override
     public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
         useItemRequest.getSquare().setActiveItem(this);
+    }
+
+    public String toString(){
+        String result = "";
+        result += "name: " + this.getName();
+
+        return result;
     }
 }

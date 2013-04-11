@@ -99,4 +99,12 @@ public class Player {
     public void setRemainingPenalties(int remainingPenalties) {
         this.remainingPenalties = remainingPenalties;
     }
+
+    public String toString(){
+        String result = "";
+        result += "name: " + this.getName() + "\n";
+        result += "position: " + this.getCurrentSquare() + "\n";
+
+        return result;
+    }
 }

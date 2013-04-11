@@ -55,40 +55,43 @@ public class TestUC_Choose_IdentityDisc_Direction {
 
     @Test
     public void basic_flow() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
-       Item identityDisc = new IdentityDisc();
-       grid.getSquareAtPosition(new Position(0,9)).addItem(identityDisc);
-       pickUpItemHandler.pickUpItem(0);
+        Item identityDisc = new IdentityDisc();
+        grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
+        pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentIdentityDisc(Direction.UP);
-        for (int i = 9;i>5;i--)     {
-            Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0,i));
+        for (int i = 9; i > 5; i--) {
+            Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, i));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
         }
 
-        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0,5));
+        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 5));
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
     }
 
     @Test
     public void alternate_flow_player_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
         Item identityDisc = new IdentityDisc();
-        grid.getSquareAtPosition(new Position(0,9)).addItem(identityDisc);
+        grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
 
         movePlayerHandler.move(Direction.RIGHT);
-         endTurnHandler.endTurn();
+        endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.RIGHT);
-       // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
+        Player player2 = state.getCurrentPlayer();
+        // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
+        assertTrue(state.getCurrentTurn().getActionsRemaining()==3);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-
-        for (int i = 1;i<3;i++)     {
-            Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i,9));
+        assertTrue(state.getCurrentTurn().getActionsRemaining()==5);
+        for (int i = 1; i < 3; i++) {
+            Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
         }
-        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(3,9));
+        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(3, 9));
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+
     }
 
 

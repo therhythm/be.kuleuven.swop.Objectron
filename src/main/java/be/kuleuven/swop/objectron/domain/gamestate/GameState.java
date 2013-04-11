@@ -72,6 +72,11 @@ public class GameState implements GameObservable {
         notifyObservers();
     }
 
+    public void extraTurn(){
+        gameGrid.newTurn(currentTurn);
+        notifyObservers();
+    }
+
     public void notifyObservers(){
         for(GameObserver observer : observers){
             observer.playerUpdated(currentTurn.getCurrentPlayer().getPlayerViewModel());

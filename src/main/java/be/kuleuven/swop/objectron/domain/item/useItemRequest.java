@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -19,21 +20,18 @@ import com.sun.xml.internal.org.jvnet.fastinfoset.stax.LowLevelFastInfosetStream
 public class UseItemRequest {
     private Square square;
     private Direction direction;
-    private Grid grid;
-    private List<Player> players;
+    private GameState gameState;
 
     public UseItemRequest(Square square) {
         this.square = square;
         this.direction = null;
-        this.grid = null;
-        this.players = null;
+        this.gameState=null;
     }
 
-    public UseItemRequest(Square square, Direction direction, Grid grid, List<Player> players) {
+    public UseItemRequest(Square square, Direction direction, GameState gamestate) {
         this.square = square;
         this.direction = direction;
-        this.grid = grid;
-        this.players = players;
+        this.gameState = gamestate;
     }
 
     public Square getSquare() {
@@ -53,10 +51,14 @@ public class UseItemRequest {
     }
 
     public Grid getGrid() {
-        return grid;
+        return gameState.getGrid();
     }
 
     public List<Player> getPlayers() {
-        return players;
+        return gameState.getPlayers();
+    }
+
+    public GameState getGameState(){
+        return this.gameState;
     }
 }
