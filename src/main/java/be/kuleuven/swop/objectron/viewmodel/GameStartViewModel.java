@@ -1,11 +1,13 @@
 package be.kuleuven.swop.objectron.viewmodel;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameObservable;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : Nik Torfs
@@ -19,6 +21,7 @@ public class GameStartViewModel {
     private PlayerViewModel p2;
     private TurnViewModel currentTurn;
     private List<List<Position>> walls;
+    private Map<Position,List<Item>> items;
     private GameObservable observable;
 
     public GameStartViewModel(HandlerCatalog catalog,
@@ -27,6 +30,7 @@ public class GameStartViewModel {
                               PlayerViewModel p2,
                               TurnViewModel currentTurn,
                               List<List<Position>> walls,
+                              Map<Position,List<Item>> items,
                               GameObservable observable) {
         this.catalog = catalog;
         this.dimension = dimension;
@@ -34,6 +38,7 @@ public class GameStartViewModel {
         this.p2 = p2;
         this.currentTurn = currentTurn;
         this.walls = walls;
+        this.items = items;
         this.observable = observable;
     }
 
@@ -59,6 +64,10 @@ public class GameStartViewModel {
 
     public List<List<Position>> getWalls() {
         return walls;
+    }
+
+    public Map<Position,List<Item>> getItems(){
+        return items;
     }
 
     public GameObservable getObservable() {

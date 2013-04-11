@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
+import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
@@ -39,6 +40,7 @@ public class GameView implements GameObserver {
     private SimpleGUI gui;
     private Position p1Finish;
     private Position p2Finish;
+    private Map<Position,List<Item>> items;   //TODO itemviewmodels
 
 
     public GameView(GameStartViewModel vm) {
@@ -46,8 +48,8 @@ public class GameView implements GameObserver {
         vm.getObservable().attach(this);
         this.dimension = vm.getDimension();
         this.gameGrid = new SquareStates[dimension.getHeight()][dimension.getWidth()];
-        //this.currentPlayer = vm.getP1();
         this.currentTurn = vm.getCurrentTurn();
+        this.items = vm.getItems();
         for (int i = 0; i < dimension.getHeight(); i++) {
             for (int j = 0; j < dimension.getWidth(); j++) {
                 gameGrid[i][j] = SquareStates.EMPTY;
@@ -56,6 +58,14 @@ public class GameView implements GameObserver {
         for (List<Position> sqvm : vm.getWalls()) {
             for (Position sVm : sqvm) {
                 gameGrid[sVm.getVIndex()][sVm.getHIndex()] = SquareStates.WALL;
+            }
+        }
+        for (Position pos : items.keySet()){
+            for(Item item : items.get(pos)){
+                SquareStates state = getItemSquareState(item);
+                if(gameGrid[pos.getVIndex()][pos.getHIndex()].zIndex < state.zIndex){
+                    gameGrid[pos.getVIndex()][pos.getHIndex()] = state;
+                }
             }
         }
         PlayerViewModel p1 = vm.getP1();
@@ -69,6 +79,15 @@ public class GameView implements GameObserver {
         p1Finish = p2.getStartPosition();
         p2Finish = p1.getStartPosition();
     }
+
+    private SquareStates getItemSquareState(LightMine item) {
+        return SquareStates.LIGHT_MINE;
+    }
+
+    //todo overloading for other type
+    /*private SquareStates getItemSquareState(Teleporter item) {
+        return SquareStates.TELEPORTER;
+    } */
 
     public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -110,6 +129,7 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH,TILEHEIGHT));
 
 
                 Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
@@ -289,6 +309,16 @@ public class GameView implements GameObserver {
     }
 
     public enum SquareStates {
-        WALL, P1_LIGHT_WALL, P2_LIGHT_WALL, PLAYER1, PLAYER2, EMPTY, P1_FINISH, P2_FINISH
+        WALL(100), P1_LIGHT_WALL(100), P2_LIGHT_WALL(100), PLAYER1(100), PLAYER2(100), EMPTY(0), P1_FINISH(90), P2_FINISH(90), LIGHT_MINE(80), TELEPORTER(70), IDENTITY_DISK(70);
+
+        private int zIndex;
+
+        SquareStates(int zIndex){
+            this.zIndex = zIndex;
+        }
+
+        public int getZIndex(){
+            return zIndex;
+        }
     }
 }
