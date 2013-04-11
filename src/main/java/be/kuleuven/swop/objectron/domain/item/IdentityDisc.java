@@ -16,7 +16,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 public class IdentityDisc implements Item {
     private static final String name = "Identity Disc";
     private int maxRange = 4;
-
+    private IdentityDiscType identityDiscType;
 
     @Override
     public String getName() {
@@ -41,7 +41,7 @@ public class IdentityDisc implements Item {
                 break;
             if(playerHit(useItemRequest,neighbor)){
                 currentSquare = neighbor;
-               break;
+                break;
 
             }
             else if (!useItemRequest.getGrid().isWall(neighbor)){
