@@ -67,15 +67,11 @@ public class Player {
         isTeleporting = false;
     }
 
-    public void teleport(Square destination) throws SquareOccupiedException {
-        if (!destination.isObstructed()) {
-            isTeleporting = true;
-            lightTrail.expand(currentSquare);
-            currentSquare = destination;
-            currentSquare.stepOn(this);
-        } else {
-            throw new SquareOccupiedException("The destination square is occupied.");
-        }
+    public void teleport(Square destination) {
+        isTeleporting = true;
+        lightTrail.expand(currentSquare);
+        currentSquare = destination;
+        currentSquare.stepOn(this);
     }
 
     public void checkEnoughActions() throws NotEnoughActionsException {

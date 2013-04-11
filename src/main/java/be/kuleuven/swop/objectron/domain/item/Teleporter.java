@@ -37,12 +37,8 @@ public class Teleporter implements Item {
     }
 
     public void activate(Player player) {
-        try {
-            if (!player.isTeleporting()) {
+        if (!player.isTeleporting() && !destination.getLocation().isObstructed()) {
                 player.teleport(destination.getLocation());
-            }
-        } catch (SquareOccupiedException e) {
-            e.printStackTrace();
         }
     }
 }
