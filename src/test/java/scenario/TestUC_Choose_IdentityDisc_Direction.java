@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.UnchargedIdentityDisc;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -44,7 +45,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(2, 9);
 
-        grid = GridFactory.gridWithoutWallsWithoutItems(dimension, p1Pos, p2Pos);
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -55,7 +56,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
 
     @Test
     public void basic_flow() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
-        Item identityDisc = new IdentityDisc(IdentityDisc.IdentityDiscTypeState.UNCHARGED_IDENTITY_DISC);
+        Item identityDisc = new IdentityDisc(new UnchargedIdentityDisc());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
@@ -71,7 +72,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
 
     @Test
     public void alternate_flow_player_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
-        Item identityDisc = new IdentityDisc(IdentityDisc.IdentityDiscTypeState.UNCHARGED_IDENTITY_DISC);
+        Item identityDisc = new IdentityDisc(new UnchargedIdentityDisc());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
 
@@ -82,9 +83,9 @@ public class TestUC_Choose_IdentityDisc_Direction {
         // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
-        assertTrue(state.getCurrentTurn().getActionsRemaining()==3);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == 3);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-        assertTrue(state.getCurrentTurn().getActionsRemaining()==5);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == 5);
         for (int i = 1; i < 3; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));

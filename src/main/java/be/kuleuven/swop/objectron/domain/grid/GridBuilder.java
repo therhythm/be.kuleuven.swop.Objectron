@@ -5,9 +5,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -43,30 +41,64 @@ public class GridBuilder {
         initGrid(Settings.POWER_FAILURE_CHANCE);
     }
 
-    public void buildWalls(){
+    public void buildWalls() {
         walls = new ArrayList<Wall>();
 
         int maxNumberOfWalls = (int) Math.floor(Settings.MAX_WALL_COVERAGE_PERCENTAGE *
                 (dimension.area() / Settings.MIN_WALL_LENGTH));
         int numberOfWalls = getRandomWithMax(1, maxNumberOfWalls);
 
-        while(walls.size() < numberOfWalls && isAnotherWallPossible()){
+        while (walls.size() < numberOfWalls && isAnotherWallPossible()) {
             buildWall();
         }
     }
 
-    public Grid getGrid(){
+    public Grid getGrid() {
         return new Grid(squares, walls, dimension);
     }
 
-    public void buildItems(){
+    private Square calculateMiddleSquare() {
+        int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()) / 2);
+        int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()) / 2);
+        return squares[VIndex][HIndex];
+    }
+
+    private void placeChargedIdentityDisc() {
+        Square middle = calculateMiddleSquare();
+        ArrayList<Square> randomMiddleSquares = new ArrayList<Square>();
+        randomMiddleSquares.add(middle);
+        randomMiddleSquares.add(middle.getNeighbour(Direction.UP));
+        randomMiddleSquares.add(middle.getNeighbour(Direction.UP_LEFT));
+        randomMiddleSquares.add(middle.getNeighbour(Direction.LEFT));
+        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN_LEFT));
+        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN));
+        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN_RIGHT));
+        randomMiddleSquares.add(middle.getNeighbour(Direction.RIGHT));
+        randomMiddleSquares.add(middle.getNeighbour(Direction.UP_RIGHT));
+        Random random = new Random();
+        Square randomSquare;
+        while (randomMiddleSquares.size() > 0) {
+            int randomIndex = random.nextInt(randomMiddleSquares.size());
+            randomSquare = randomMiddleSquares.get(randomIndex);
+
+            if(!randomSquare.isObstructed()) {
+                randomSquare.addItem(new IdentityDisc(new ChargedIdentityDisc()));
+                break;
+            }else
+                randomMiddleSquares.remove(randomIndex);
+        }
+    }
+
+    public void buildItems() {
         int numberOfItems = (int) Math.ceil(Settings.PERCENTAGE_OF_ITEMS * dimension.area());
 
         placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new LightMine());
-        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(IdentityDisc.IdentityDiscTypeState.UNCHARGED_IDENTITY_DISC));
+        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new UnchargedIdentityDisc()));
 
         placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new LightMine());
-        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(IdentityDisc.IdentityDiscTypeState.UNCHARGED_IDENTITY_DISC));
+        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new UnchargedIdentityDisc()));
+
+        placeChargedIdentityDisc();
 
         numberOfItems -= 2;
         List<Item> lightMines = new ArrayList<Item>();
@@ -74,10 +106,10 @@ public class GridBuilder {
 
         for (int i = 0; i < numberOfItems; i++) {
             lightMines.add(new LightMine());
-            identityDiscs.add(new IdentityDisc(IdentityDisc.IdentityDiscTypeState.UNCHARGED_IDENTITY_DISC));
+            identityDiscs.add(new IdentityDisc(new UnchargedIdentityDisc()));
         }
         placeOtherItems(lightMines);
-        placeOtherItems( identityDiscs);
+        placeOtherItems(identityDiscs);
     }
 
     private void buildWall() {
@@ -88,8 +120,8 @@ public class GridBuilder {
 
         Direction direction;
         int maxLength;
-        int rand = getRandomWithMax(1,4);
-        switch(rand){
+        int rand = getRandomWithMax(1, 4);
+        switch (rand) {
             case 1:
                 direction = Direction.UP;
                 maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
@@ -117,17 +149,17 @@ public class GridBuilder {
     private void buildWall(Square currentSquare, Direction direction, int maxLength) {
         Wall wall = new Wall();
         double wallPercentage = calculateWallPercentage(0);
-        while(wall.getLength() <= maxLength
+        while (wall.getLength() <= maxLength
                 && wallPercentage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE
                 && currentSquare != null
-                && isValidWallPosition(currentSquare)){
+                && isValidWallPosition(currentSquare)) {
 
             wall.addSquare(currentSquare);
             wallPercentage = calculateWallPercentage(wall.getLength());
             currentSquare = currentSquare.getNeighbour(direction);
         }
 
-        if(wall.getLength() >= Settings.MIN_WALL_LENGTH){
+        if (wall.getLength() >= Settings.MIN_WALL_LENGTH) {
             wall.build();
             walls.add(wall);
         }
@@ -154,7 +186,6 @@ public class GridBuilder {
             randomSquare.addItem(item);
         }
     }
-
 
 
     private void placeItemArea(Square square, Item item) {
@@ -186,14 +217,14 @@ public class GridBuilder {
         return neighbourSquares;
     }
 
-   
-    public void initGrid(int powerFailureChance){
+
+    public void initGrid(int powerFailureChance) {
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Position pos = new Position(horizontal, vertical);
                 squares[vertical][horizontal] = new Square(pos, powerFailureChance);
-                if(pos.equals(p1Pos) || pos.equals(p2Pos)){
+                if (pos.equals(p1Pos) || pos.equals(p2Pos)) {
                     squares[vertical][horizontal].setObstructed(true);
                 }
             }
@@ -225,7 +256,7 @@ public class GridBuilder {
         for (Wall w : walls) {
             extraWalls += w.getLength();
         }
-        return (double)extraWalls / (double)dimension.area();
+        return (double) extraWalls / (double) dimension.area();
     }
 
     private int getRandomWithMax(double min, double max) {
@@ -233,7 +264,7 @@ public class GridBuilder {
         return (int) Math.floor(rand);
     }
 
-    private boolean isValidDimension(Dimension dimension){
+    private boolean isValidDimension(Dimension dimension) {
         return dimension.getWidth() >= Settings.MIN_GRID_WIDTH
                 && dimension.getHeight() >= Settings.MIN_GRID_HEIGHT;
     }
@@ -257,25 +288,27 @@ public class GridBuilder {
         return true;
     }
 
-    private boolean isAnotherWallPossible(){
+    private boolean isAnotherWallPossible() {
         boolean possible = false;
-        for(Square[] row : squares){
-            for(Square sq : row){
-                if(isValidWallPosition(sq)){
+        for (Square[] row : squares) {
+            for (Square sq : row) {
+                if (isValidWallPosition(sq)) {
                     for (Direction d : Direction.values()) {
                         if (sq.getNeighbour(d) != null && isValidWallPosition(sq.getNeighbour(d))) {
                             possible = true;
                             break;
                         }
                     }
-                    if(possible) break;
+                    if (possible) break;
                 }
             }
-            if(possible) break;
+            if (possible) break;
         }
         double wallCoverage = calculateWallPercentage(1);
 
         return possible &&
                 wallCoverage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE;
     }
+
+
 }

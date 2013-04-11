@@ -35,6 +35,6 @@ public class UnchargedIdentityDisc implements IdentityDiscType {
 
     @Override
     public String getName() {
-        return "uncharged identity disc";
+        return "Uncharged Identity Disc";
     }
 }

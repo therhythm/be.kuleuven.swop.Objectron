@@ -33,6 +33,6 @@ public class ChargedIdentityDisc implements IdentityDiscType {
 
     @Override
     public String getName() {
-        return "charged identity disc";
+        return "Charged Identity Disc";
     }
 }

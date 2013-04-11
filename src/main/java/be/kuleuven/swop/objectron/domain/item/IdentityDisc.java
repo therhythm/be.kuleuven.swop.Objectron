@@ -15,19 +15,9 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 public class IdentityDisc implements Item {
     private IdentityDiscType identityDiscType;
 
-    public IdentityDisc(IdentityDiscTypeState identityDiscTypeEnum) {
-        switch (identityDiscTypeEnum) {
-            case CHARGED_IDENTITY_DISC:
-                setIdentityState(new ChargedIdentityDisc());
-                break;
-            case UNCHARGED_IDENTITY_DISC:
-                setIdentityState(new UnchargedIdentityDisc());
-                break;
-        }
-    }
+    public IdentityDisc(IdentityDiscType identityDiscType) {
+       this.identityDiscType = identityDiscType;
 
-    private void setIdentityState(IdentityDiscType identityDiscType) {
-        this.identityDiscType = identityDiscType;
     }
 
     @Override
@@ -84,7 +74,4 @@ public class IdentityDisc implements Item {
         return result;
     }
 
-    public enum IdentityDiscTypeState {
-        CHARGED_IDENTITY_DISC, UNCHARGED_IDENTITY_DISC;
-    }
 }

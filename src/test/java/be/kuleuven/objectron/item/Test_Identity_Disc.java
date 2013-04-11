@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.item.ChargedIdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -44,7 +45,7 @@ public class Test_Identity_Disc {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(5, 9);
 
-        grid = GridFactory.gridWithoutWallsWithoutItems(dimension, p1Pos, p2Pos);
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -55,7 +56,7 @@ public class Test_Identity_Disc {
 
     @Test
     public void test_Charged_identity_disc_no_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
-        Item identityDisc = new IdentityDisc(IdentityDisc.IdentityDiscTypeState.CHARGED_IDENTITY_DISC);
+        Item identityDisc = new IdentityDisc(new ChargedIdentityDisc());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
@@ -71,7 +72,7 @@ public class Test_Identity_Disc {
 
     @Test
     public void test_Charged_identity_disc_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
-        Item identityDisc = new IdentityDisc(IdentityDisc.IdentityDiscTypeState.CHARGED_IDENTITY_DISC);
+        Item identityDisc = new IdentityDisc(new ChargedIdentityDisc());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
 

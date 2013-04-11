@@ -138,11 +138,11 @@ public class GameView implements GameObserver {
                                 new DialogView("Sorry that is not a valid move");
                             } catch (NotEnoughActionsException e) {
                                 new DialogView("You have no actions remaining, end the turn.");
-                            }  catch(GameOverException e){
+                            } catch (GameOverException e) {
 
                                 new DialogView(e.getMessage());
 
-                               gui.dispose();
+                                gui.dispose();
                             }
                             gui.repaint();
                         }
@@ -213,18 +213,27 @@ public class GameView implements GameObserver {
                 });
                 inventoryButton.setText("Open inventory");
 
-                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth,dimension.getHeight() * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
+                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
-                            useItemHandler.useCurrentItem();
+
+                            if (selectedItem.contains("Identity Disc")) {
+
+                                //TODO create input for direction
+                                useItemHandler.useCurrentIdentityDisc(Direction.UP);
+                            } else {
+                                useItemHandler.useCurrentItem();
+                            }
+
+
                             selectedItem = "No item";
                             gui.repaint();
                         } catch (SquareOccupiedException e) {
                             new DialogView("The square is already occupied.");
                         } catch (NotEnoughActionsException e) {
                             new DialogView("You have no actions remaining, end the turn.");
-                        } catch (NoItemSelectedException e){
+                        } catch (NoItemSelectedException e) {
                             new DialogView("You don't have an item selected");
                         }
 
@@ -233,7 +242,7 @@ public class GameView implements GameObserver {
                 });
                 useItemButton.setText("Use Item");
 
-                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth,dimension.getHeight() * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
+                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
                     public void run() {
                         final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
                         useItemHandler.cancelItemUsage();
