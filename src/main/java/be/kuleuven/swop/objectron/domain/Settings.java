@@ -13,7 +13,7 @@ public class Settings {
     public static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
     public static final int MIN_WALL_LENGTH = 2;
     public static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
-    public static final double PERCENTAGE_OF_ITEMS = 0.05;
+    public static final double PERCENTAGE_OF_ITEMS = 0.02;
     public static final int MIN_GRID_WIDTH = 10;
     public static final int MIN_GRID_HEIGHT = 10;
 

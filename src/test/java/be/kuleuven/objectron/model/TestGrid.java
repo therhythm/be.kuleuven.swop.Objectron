@@ -3,6 +3,9 @@ package be.kuleuven.objectron.model;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
@@ -88,14 +91,23 @@ public class TestGrid {
     @Test
     public void test_items_grid(){
         boolean hasItems=false;
-
+                    int lightmines = 0;
+        int identitydiscs  = 0;
         for(int i = 0;i<10;i++){
             for(int j = 0;j<10;j++){
-                if(grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() !=0)
-                    hasItems=true;
+                for(Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()){
+                      if(item instanceof LightMine)
+                          lightmines++;
+
+                    if(item instanceof IdentityDisc)
+                        identitydiscs++;
+
+                }
             }
         }
-        assertTrue(hasItems);
+        assertTrue(lightmines==2);
+        assertTrue(identitydiscs==2);
+
     }
 
     @Test(expected = IllegalArgumentException.class)
