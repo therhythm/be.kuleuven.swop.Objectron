@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
+import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -87,6 +88,9 @@ public class GameView implements GameObserver {
         if(item instanceof LightMine){
             return SquareStates.LIGHT_MINE;
         }else{
+            if(item instanceof IdentityDisc){
+                return SquareStates.IDENTITY_DISK;
+            }
             //TODO other items
             return SquareStates.EMPTY;
         }
@@ -127,6 +131,8 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
 
                 gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH,TILEHEIGHT));
+                gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("lightgrenade.png", TILEWIDTH,TILEHEIGHT));
+
 
                 gridImageMap.put(SquareStates.POWERFAILURE, gui.loadImage("cell_unpowered.png", TILEWIDTH, TILEHEIGHT));
 
@@ -239,6 +245,17 @@ public class GameView implements GameObserver {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
 
                             if (selectedItem.contains("Identity Disc")) {
+
+                                ItemSelectionAction action = new ItemSelectionAction() {
+
+                                    @Override
+                                    public void doAction(int index) {
+                                        new DialogView("TEST action = " + index);
+                                        selectedItem = useItemHandler.selectItemFromInventory(index);
+                                        gui.repaint();
+                                    }
+                                };
+                                new DirectionListView( action);
 
                                 //TODO create input for direction
                                 useItemHandler.useCurrentIdentityDisc(Direction.UP);

@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.ChargedIdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.UnchargedIdentityDisc;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -95,5 +96,14 @@ public class Test_Identity_Disc {
         Square squareIdentityDisc = grid.getSquareAtPosition(new Position(6, 9));
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
 
+    }
+
+    @Test
+    public void test_string_contains(){
+        Item item = new IdentityDisc(new UnchargedIdentityDisc());
+        assertTrue(item.getName().contains("Identity Disc"));
+
+        Item item2 = new IdentityDisc(new ChargedIdentityDisc());
+        assertTrue(item2.getName().contains("Identity Disc"));
     }
 }
