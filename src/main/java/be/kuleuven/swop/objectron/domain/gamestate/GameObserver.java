@@ -1,6 +1,10 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
+import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
+import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
+
+import java.util.List;
 
 /**
  * @author : Nik Torfs
@@ -9,5 +13,9 @@ import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
  */
 public interface GameObserver {
 
-    void playerUpdated(PlayerViewModel vm);
+    void update(TurnViewModel vm, List<PlayerViewModel> players);
+
+    void noPower(Position position);
+
+    void regainedPower(Position position);
 }

@@ -14,9 +14,8 @@ import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
 
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author : Nik Torfs
@@ -32,52 +31,55 @@ public class GameView implements GameObserver {
 
     private TurnViewModel currentTurn;
     private String selectedItem = "no item";
-    private SquareStates gameGrid[][];
+    private Map<Integer, SquareStates> gameGrid[][];
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
     private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
     private HandlerCatalog catalog;
     private Dimension dimension;
     private SimpleGUI gui;
-    private Position p1Finish;
-    private Position p2Finish;
     private Map<Position,List<Item>> items;   //TODO itemviewmodels
+    private List<PlayerViewModel> players;
+
 
 
     public GameView(GameStartViewModel vm) {
         this.catalog = vm.getCatalog();
         vm.getObservable().attach(this);
         this.dimension = vm.getDimension();
-        this.gameGrid = new SquareStates[dimension.getHeight()][dimension.getWidth()];
+        this.gameGrid = new HashMap[dimension.getHeight()][dimension.getWidth()];
         this.currentTurn = vm.getCurrentTurn();
         this.items = vm.getItems();
         for (int i = 0; i < dimension.getHeight(); i++) {
             for (int j = 0; j < dimension.getWidth(); j++) {
-                gameGrid[i][j] = SquareStates.EMPTY;
+                gameGrid[i][j] = new HashMap<Integer,SquareStates>();
+                gameGrid[i][j].put(SquareStates.EMPTY.zIndex, SquareStates.EMPTY);
             }
         }
         for (List<Position> sqvm : vm.getWalls()) {
             for (Position sVm : sqvm) {
-                gameGrid[sVm.getVIndex()][sVm.getHIndex()] = SquareStates.WALL;
+                gameGrid[sVm.getVIndex()][sVm.getHIndex()].put(SquareStates.WALL.zIndex, SquareStates.WALL);
             }
         }
         for (Position pos : items.keySet()){
             for(Item item : items.get(pos)){
                 SquareStates state = getItemSquareState(item);
-                if(gameGrid[pos.getVIndex()][pos.getHIndex()].zIndex < state.zIndex){
-                    gameGrid[pos.getVIndex()][pos.getHIndex()] = state;
-                }
+                gameGrid[pos.getVIndex()][pos.getHIndex()].put(state.zIndex,state);
             }
         }
         PlayerViewModel p1 = vm.getP1();
         PlayerViewModel p2 = vm.getP2();
+        players = new ArrayList<>();
+        players.add(p1);
+        players.add(p2);
         playerColorMap.put(p1.getName(), new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL, SquareStates.P1_FINISH});
         playerColorMap.put(p2.getName(), new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL, SquareStates.P2_FINISH});
         Position p1Pos = p1.getPosition();
-        gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()] = SquareStates.PLAYER1;
+        gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()].put(SquareStates.PLAYER1.zIndex, SquareStates.PLAYER1);
         Position p2Pos = p2.getPosition();
-        gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()] = SquareStates.PLAYER2;
-        p1Finish = p2.getStartPosition();
-        p2Finish = p1.getStartPosition();
+        gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()].put(SquareStates.PLAYER2.zIndex, SquareStates.PLAYER2);
+        gameGrid[p1.getStartPosition().getVIndex()][p1.getStartPosition().getHIndex()].put(SquareStates.P2_FINISH.zIndex, SquareStates.P2_FINISH);
+        gameGrid[p2.getStartPosition().getVIndex()][p2.getStartPosition().getHIndex()].put(SquareStates.P1_FINISH.zIndex, SquareStates.P1_FINISH);
+
     }
 
     //TODO ugly: could be done with visitor but item is not accepting any visitors at the moment and making it for the GUI would be overkill
@@ -101,17 +103,10 @@ public class GameView implements GameObserver {
                     public void paint(Graphics2D graphics) {
                         for (int i = 0; i < dimension.getWidth(); i++) {
                             for (int j = 0; j < dimension.getHeight(); j++) {
-                                if (gameGrid[j][i] == SquareStates.EMPTY) {
-                                    if (p1Finish.getHIndex() == i && p1Finish.getVIndex() == j) {
-                                        graphics.drawImage(gridImageMap.get(SquareStates.P1_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
-
-                                    } else if (p2Finish.getHIndex() == i && p2Finish.getVIndex() == j) {
-                                        graphics.drawImage(gridImageMap.get(SquareStates.P2_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
-                                    } else {
-                                        graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
-                                    }
-                                } else {
-                                    graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+                                List<Integer> keys = new ArrayList<Integer>(gameGrid[j][i].keySet());
+                                Collections.sort(keys);
+                                for(Integer key : keys){
+                                    graphics.drawImage(gridImageMap.get(gameGrid[j][i].get(key)), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                                 }
                             }
                         }
@@ -130,7 +125,11 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
+
                 gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH,TILEHEIGHT));
+
+                gridImageMap.put(SquareStates.POWERFAILURE, gui.loadImage("cell_unpowered.png", TILEWIDTH, TILEHEIGHT));
+
 
 
                 Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
@@ -285,41 +284,45 @@ public class GameView implements GameObserver {
     }
 
 
-    //TODO cleanup or not GUI stuff...
     private void updatePlayer(PlayerViewModel playerViewModel) {
-        PlayerViewModel currentPlayer = currentTurn.getPlayerViewModel();
-        if (currentPlayer.getName().equals(playerViewModel.getName())) {
-            Position currentPos = currentPlayer.getPosition();
-            gameGrid[currentPos.getVIndex()][currentPos.getHIndex()] = SquareStates.EMPTY;
-            for (Position svm : currentPlayer.getLightTrail()) {
-                gameGrid[svm.getVIndex()][svm.getHIndex()] = SquareStates.EMPTY;
-            }
-        }
-        currentPlayer = playerViewModel;
-        Position currentPos = currentPlayer.getPosition();
-        gameGrid[currentPos.getVIndex()][currentPos.getHIndex()] = playerColorMap.get(currentPlayer.getName())[0];
-        for (Position svm : currentPlayer.getLightTrail()) {
-            gameGrid[svm.getVIndex()][svm.getHIndex()] = playerColorMap.get(currentPlayer.getName())[1];
+        Position currentPos = playerViewModel.getPosition();
+        SquareStates state = playerColorMap.get(playerViewModel.getName())[0];
+        gameGrid[currentPos.getVIndex()][currentPos.getHIndex()].put(state.zIndex, state);
+        for (Position svm : playerViewModel.getLightTrail()) {
+            SquareStates lightTrailState = playerColorMap.get(playerViewModel.getName())[1];
+            gameGrid[svm.getVIndex()][svm.getHIndex()].put(lightTrailState.zIndex, lightTrailState);
         }
         gui.repaint();
     }
 
     @Override
-    public void playerUpdated(PlayerViewModel vm) {
-        updatePlayer(vm);
+    public void update(TurnViewModel vm, List<PlayerViewModel> players) {
+        currentTurn = vm;
+        for(PlayerViewModel p : players){
+            updatePlayer(p);
+        }
+
+        gui.repaint();
+    }
+
+
+    @Override
+    public void noPower(Position position) {
+        gameGrid[position.getVIndex()][position.getHIndex()].put(SquareStates.POWERFAILURE.zIndex, SquareStates.POWERFAILURE);
+    }
+
+    @Override
+    public void regainedPower(Position position) {
+        gameGrid[position.getVIndex()][position.getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
     }
 
     public enum SquareStates {
-        WALL(100), P1_LIGHT_WALL(100), P2_LIGHT_WALL(100), PLAYER1(100), PLAYER2(100), EMPTY(0), P1_FINISH(90), P2_FINISH(90), LIGHT_MINE(80), TELEPORTER(70), IDENTITY_DISK(70);
+        WALL(100), P1_LIGHT_WALL(99), P2_LIGHT_WALL(98), PLAYER1(97), PLAYER2(96), EMPTY(0),POWERFAILURE(1), P1_FINISH(90), P2_FINISH(91), LIGHT_MINE(50), TELEPORTER(49), IDENTITY_DISK(48);
 
         private int zIndex;
 
         SquareStates(int zIndex){
             this.zIndex = zIndex;
-        }
-
-        public int getZIndex(){
-            return zIndex;
         }
     }
 }

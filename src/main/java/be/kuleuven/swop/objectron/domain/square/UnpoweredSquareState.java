@@ -14,13 +14,14 @@ public class UnpoweredSquareState implements SquareState {
     private int remainingTurns = Settings.SQUARE_TURNS_WITHOUT_POWER;
 
     @Override
-    public void newTurn(Turn currentTurn, boolean currentSquare, Transitionable<SquareState> context) {
+    public void newTurn(Turn currentTurn, boolean currentSquare, Square context) {
         if(currentSquare){
             currentTurn.reduceRemainingActions(Settings.SQUARE_ACTIONS_TO_REDUCE);
         }
         remainingTurns--;
         if(remainingTurns == 0){
             context.transitionState(new PoweredSquareState());
+            context.notifyPowered();
         }
     }
 
@@ -34,7 +35,7 @@ public class UnpoweredSquareState implements SquareState {
     }
 
     @Override
-    public void powerFailure(Transitionable<SquareState> context) {
+    public void powerFailure(Square context) {
         remainingTurns = Settings.SQUARE_TURNS_WITHOUT_POWER;
     }
 }
