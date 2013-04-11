@@ -2,10 +2,11 @@ package be.kuleuven.swop.objectron.domain.square;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Player;
 
 import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -25,10 +26,16 @@ public class Square implements Transitionable<SquareState> {
     private List<Item> items = new ArrayList<Item>();
     private boolean isObstructed = false;
     private Item activeItem;
+    private int powerFailureChance = Settings.POWER_FAILURE_CHANCE;
 
     public Square(final Position position) {
         this.position = position;
         this.state = new PoweredSquareState();
+    }
+
+    public Square(final Position position, int powerFailureChance){
+        this(position);
+        this.powerFailureChance = powerFailureChance;
     }
 
     public void addNeighbour(Direction direction, Square neighbour) {
@@ -47,12 +54,12 @@ public class Square implements Transitionable<SquareState> {
         isObstructed = value;
     }
 
-    public void stepOn(Player player) {
-        state.stepOn(player);
+    public void stepOn(GameState gameState) {
+        state.stepOn(gameState);
 
         setObstructed(true);
         if(hasActiveItem()){
-            activeItem.activate(player);
+            activeItem.activate(gameState.getCurrentTurn());
             activeItem = null;
         }
     }
@@ -88,7 +95,7 @@ public class Square implements Transitionable<SquareState> {
     }
 
     public boolean isValidPosition(Direction direction) {
-        if ( this.isObstructed())
+        if (this.isObstructed())
             return false;
 
         //diagonaal check
@@ -127,18 +134,18 @@ public class Square implements Transitionable<SquareState> {
 
     private boolean losingPower(){
         int r = (int) (Math.random() * 100);
-        return r <= Settings.POWER_FAILURE_CHANCE;
+        return r < powerFailureChance;
     }
 
-    public void newTurn(Player player){
+    public void newTurn(Turn currentTurn){
         if(losingPower()){
             receivePowerFailure();
             for(Square neighbour : neighbours.values()){
                 neighbour.receivePowerFailure();
             }
         }
-        boolean currentSquare = player.getCurrentSquare().equals(this);
-        state.newTurn(player, currentSquare, this);
+        boolean currentSquare = currentTurn.getCurrentPlayer().getCurrentSquare().equals(this);
+        state.newTurn(currentTurn, currentSquare, this);
     }
 
 

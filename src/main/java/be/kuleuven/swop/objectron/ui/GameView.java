@@ -9,7 +9,7 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
-import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
+import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
 
 
 import java.awt.*;
@@ -24,11 +24,12 @@ import java.util.Map;
  */
 public class GameView implements GameObserver {
 
-    private static int HPADDING = 10;
-    private static int VPADDING = 50;
-    private static int TILEWIDTH = 40;
-    private static int TILEHEIGHT = 40;
-    private PlayerViewModel currentPlayer;
+    private static final int HPADDING = 10;
+    private static final int VPADDING = 50;
+    private static final int TILEWIDTH = 40;
+    private static final int TILEHEIGHT = 40;
+
+    private TurnViewModel currentTurn;
     private String selectedItem = "no item";
     private SquareStates gameGrid[][];
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
@@ -36,8 +37,8 @@ public class GameView implements GameObserver {
     private HandlerCatalog catalog;
     private Dimension dimension;
     private SimpleGUI gui;
-    private SquareViewModel p1_finish;
-    private SquareViewModel p2_finish;
+    private Position p1Finish;
+    private Position p2Finish;
 
 
     public GameView(GameStartViewModel vm) {
@@ -45,7 +46,8 @@ public class GameView implements GameObserver {
         vm.getObservable().attach(this);
         this.dimension = vm.getDimension();
         this.gameGrid = new SquareStates[dimension.getHeight()][dimension.getWidth()];
-        this.currentPlayer = vm.getP1();
+        //this.currentPlayer = vm.getP1();
+        this.currentTurn = vm.getCurrentTurn();
         for (int i = 0; i < dimension.getHeight(); i++) {
             for (int j = 0; j < dimension.getWidth(); j++) {
                 gameGrid[i][j] = SquareStates.EMPTY;
@@ -60,10 +62,12 @@ public class GameView implements GameObserver {
         PlayerViewModel p2 = vm.getP2();
         playerColorMap.put(p1.getName(), new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL, SquareStates.P1_FINISH});
         playerColorMap.put(p2.getName(), new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL, SquareStates.P2_FINISH});
-        gameGrid[p1.getVPosition()][p1.getHPosition()] = SquareStates.PLAYER1;
-        gameGrid[p2.getVPosition()][p2.getHPosition()] = SquareStates.PLAYER2;
-        p1_finish = new SquareViewModel(p1.getHPosition(), p1.getVPosition());
-        p2_finish = new SquareViewModel(p2.getHPosition(), p2.getVPosition());
+        Position p1Pos = p1.getPosition();
+        gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()] = SquareStates.PLAYER1;
+        Position p2Pos = p2.getPosition();
+        gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()] = SquareStates.PLAYER2;
+        p1Finish = p2.getStartPosition();
+        p2Finish = p1.getStartPosition();
     }
 
     public void run() {
@@ -78,10 +82,10 @@ public class GameView implements GameObserver {
                         for (int i = 0; i < dimension.getWidth(); i++) {
                             for (int j = 0; j < dimension.getHeight(); j++) {
                                 if (gameGrid[j][i] == SquareStates.EMPTY) {
-                                    if (p1_finish.getHIndex() == i && p1_finish.getVIndex() == j) {
+                                    if (p1Finish.getHIndex() == i && p1Finish.getVIndex() == j) {
                                         graphics.drawImage(gridImageMap.get(SquareStates.P1_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
 
-                                    } else if (p2_finish.getHIndex() == i && p2_finish.getVIndex() == j) {
+                                    } else if (p2Finish.getHIndex() == i && p2Finish.getVIndex() == j) {
                                         graphics.drawImage(gridImageMap.get(SquareStates.P2_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                                     } else {
                                         graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
@@ -91,8 +95,8 @@ public class GameView implements GameObserver {
                                 }
                             }
                         }
-                        graphics.drawString(currentPlayer.getName(), 20, 20);
-                        graphics.drawString("moves remaining: " + currentPlayer.getAvailableActions(), 20, 40);
+                        graphics.drawString(currentTurn.getPlayerViewModel().getName(), 20, 20);
+                        graphics.drawString("moves remaining: " + currentTurn.getRemainingActions(), 20, 40);
                         graphics.drawString("selected item: " + selectedItem, 200, 20);
                     }
                 };
@@ -262,14 +266,17 @@ public class GameView implements GameObserver {
 
     //TODO cleanup or not GUI stuff...
     private void updatePlayer(PlayerViewModel playerViewModel) {
+        PlayerViewModel currentPlayer = currentTurn.getPlayerViewModel();
         if (currentPlayer.getName().equals(playerViewModel.getName())) {
-            gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = SquareStates.EMPTY;
+            Position currentPos = currentPlayer.getPosition();
+            gameGrid[currentPos.getVIndex()][currentPos.getHIndex()] = SquareStates.EMPTY;
             for (Position svm : currentPlayer.getLightTrail()) {
                 gameGrid[svm.getVIndex()][svm.getHIndex()] = SquareStates.EMPTY;
             }
         }
         currentPlayer = playerViewModel;
-        gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = playerColorMap.get(currentPlayer.getName())[0];
+        Position currentPos = currentPlayer.getPosition();
+        gameGrid[currentPos.getVIndex()][currentPos.getHIndex()] = playerColorMap.get(currentPlayer.getName())[0];
         for (Position svm : currentPlayer.getLightTrail()) {
             gameGrid[svm.getVIndex()][svm.getHIndex()] = playerColorMap.get(currentPlayer.getName())[1];
         }
