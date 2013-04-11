@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
+
 /**
  * @author : Nik Torfs
  *         Date: 21/02/13

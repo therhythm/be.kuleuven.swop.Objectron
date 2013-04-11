@@ -43,23 +43,23 @@ public class GridBuilder {
         initGrid(Settings.POWER_FAILURE_CHANCE);
     }
 
-    public void buildWalls(){
+    public void buildWalls() {
         walls = new ArrayList<Wall>();
 
         int maxNumberOfWalls = (int) Math.floor(Settings.MAX_WALL_COVERAGE_PERCENTAGE *
                 (dimension.area() / Settings.MIN_WALL_LENGTH));
         int numberOfWalls = getRandomWithMax(1, maxNumberOfWalls);
 
-        while(walls.size() < numberOfWalls && isAnotherWallPossible()){
+        while (walls.size() < numberOfWalls && isAnotherWallPossible()) {
             buildWall();
         }
     }
 
-    public Grid getGrid(){
+    public Grid getGrid() {
         return new Grid(squares, walls, dimension);
     }
 
-    public void buildItems(){
+    public void buildItems() {
         int numberOfItems = (int) Math.ceil(Settings.PERCENTAGE_OF_ITEMS * dimension.area());
 
         placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new LightMine());
@@ -88,8 +88,8 @@ public class GridBuilder {
 
         Direction direction;
         int maxLength;
-        int rand = getRandomWithMax(1,4);
-        switch(rand){
+        int rand = getRandomWithMax(1, 4);
+        switch (rand) {
             case 1:
                 direction = Direction.UP;
                 maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
@@ -117,17 +117,17 @@ public class GridBuilder {
     private void buildWall(Square currentSquare, Direction direction, int maxLength) {
         Wall wall = new Wall();
         double wallPercentage = calculateWallPercentage(0);
-        while(wall.getLength() <= maxLength
+        while (wall.getLength() <= maxLength
                 && wallPercentage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE
                 && currentSquare != null
-                && isValidWallPosition(currentSquare)){
+                && isValidWallPosition(currentSquare)) {
 
             wall.addSquare(currentSquare);
             wallPercentage = calculateWallPercentage(wall.getLength());
             currentSquare = currentSquare.getNeighbour(direction);
         }
 
-        if(wall.getLength() >= Settings.MIN_WALL_LENGTH){
+        if (wall.getLength() >= Settings.MIN_WALL_LENGTH) {
             wall.build();
             walls.add(wall);
         }
@@ -186,18 +186,21 @@ public class GridBuilder {
         return neighbourSquares;
     }
 
-   
+
     public void initGrid(int powerFailureChance){
-        this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
+       this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Position pos = new Position(horizontal, vertical);
                 squares[vertical][horizontal] = new Square(pos, powerFailureChance);
                 if(pos.equals(p1Pos) || pos.equals(p2Pos)){
+                squares[vertical][horizontal] = new Square(pos);
+                if (pos.equals(p1Pos) || pos.equals(p2Pos)) {
                     squares[vertical][horizontal].setObstructed(true);
+
                 }
             }
-        }
+        }   }
         setupNeighbours();
     }
 
@@ -225,7 +228,7 @@ public class GridBuilder {
         for (Wall w : walls) {
             extraWalls += w.getLength();
         }
-        return (double)extraWalls / (double)dimension.area();
+        return (double) extraWalls / (double) dimension.area();
     }
 
     private int getRandomWithMax(double min, double max) {
@@ -233,7 +236,7 @@ public class GridBuilder {
         return (int) Math.floor(rand);
     }
 
-    private boolean isValidDimension(Dimension dimension){
+    private boolean isValidDimension(Dimension dimension) {
         return dimension.getWidth() >= Settings.MIN_GRID_WIDTH
                 && dimension.getHeight() >= Settings.MIN_GRID_HEIGHT;
     }
@@ -257,25 +260,27 @@ public class GridBuilder {
         return true;
     }
 
-    private boolean isAnotherWallPossible(){
+    private boolean isAnotherWallPossible() {
         boolean possible = false;
-        for(Square[] row : squares){
-            for(Square sq : row){
-                if(isValidWallPosition(sq)){
+        for (Square[] row : squares) {
+            for (Square sq : row) {
+                if (isValidWallPosition(sq)) {
                     for (Direction d : Direction.values()) {
                         if (sq.getNeighbour(d) != null && isValidWallPosition(sq.getNeighbour(d))) {
                             possible = true;
                             break;
                         }
                     }
-                    if(possible) break;
+                    if (possible) break;
                 }
             }
-            if(possible) break;
+            if (possible) break;
         }
         double wallCoverage = calculateWallPercentage(1);
 
         return possible &&
                 wallCoverage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE;
     }
+
+
 }

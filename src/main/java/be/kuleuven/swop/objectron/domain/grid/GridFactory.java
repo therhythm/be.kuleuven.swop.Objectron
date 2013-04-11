@@ -34,8 +34,6 @@ public class GridFactory {
         return builder.getGrid();
     }
 
-
-
     //construct a grid without items
     public static Grid gridWithoutItems(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, p1, p2);

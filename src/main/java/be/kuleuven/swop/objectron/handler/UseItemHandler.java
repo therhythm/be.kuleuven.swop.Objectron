@@ -52,7 +52,7 @@ public class UseItemHandler extends Handler {
      * |  == currentPlayer.getInventory().retrieveItem(identifier)
      */
     public String selectItemFromInventory(int identifier) {
-        Item currentlySelectedItem =  state.getCurrentPlayer().getInventoryItem(identifier);
+        Item currentlySelectedItem = state.getCurrentPlayer().getInventoryItem(identifier);
         state.setCurrentItem(currentlySelectedItem);
         return currentlySelectedItem.getName();
     }
