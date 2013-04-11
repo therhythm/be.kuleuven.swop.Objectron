@@ -46,15 +46,16 @@ public class Player {
     public void pickupItem(int identifier) throws InventoryFullException, NotEnoughActionsException {
         checkEnoughActions();
         Item item = currentSquare.pickUpItem(identifier);
+        if (item.pickupAble()) {
+            try{
+                this.inventory.addItem(item);
+            }catch(InventoryFullException ex){
+                currentSquare.addItem(item);
+                throw ex;
+            }
 
-        try{
-            this.inventory.addItem(item);
-        }catch(InventoryFullException ex){
-            currentSquare.addItem(item);
-            throw ex;
+            reduceAvailableActions();
         }
-
-        reduceAvailableActions();
     }
 
     public void move(Square newPosition) throws NotEnoughActionsException {

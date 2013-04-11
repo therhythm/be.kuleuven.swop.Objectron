@@ -19,6 +19,11 @@ public class LightMine implements Item {
         return name;
     }
 
+    @Override
+    public boolean pickupAble() {
+        return true;
+    }
+
     public void activate(Player player){
 
         player.reduceRemainingActions(Settings.LIGHTMINE_NB_ACTIONS_BLINDED);

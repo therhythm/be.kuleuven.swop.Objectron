@@ -10,6 +10,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 public interface Item{
 
     String getName();
+    boolean pickupAble();
 
     void activate(Player player);
 }

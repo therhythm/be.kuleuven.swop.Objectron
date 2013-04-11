@@ -24,6 +24,11 @@ public class Teleporter implements Item {
         return name;
     }
 
+    @Override
+    public boolean pickupAble() {
+        return false;
+    }
+
     public Teleporter getDestination() {
         return destination;
     }
