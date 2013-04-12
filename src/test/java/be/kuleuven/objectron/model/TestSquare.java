@@ -10,6 +10,7 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
@@ -24,20 +25,23 @@ import static org.junit.Assert.*;
  * Time: 21:26
  * To change this template use File | Settings | File Templates.
  */
-public class TestSquare {
+public class TestSquare implements SquareObserver {
     private Square currentSquare;
     private Player player;
     private GameState state;
     private MovePlayerHandler movePlayerHandler;
+    private Grid grid;
+    private boolean regainedPower;
 
     @Before
     public void setUp()throws GridTooSmallException, SquareOccupiedException {
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutWalls(dimension, new Position(0, 9), new Position(9, 0));
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
         state = new GameState("p1", "p2", dimension, grid);
         player = state.getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
         movePlayerHandler = new MovePlayerHandler(state);
+        regainedPower = false;
     }
 
     @Test
@@ -57,7 +61,7 @@ public class TestSquare {
     }
 
     @Test
-    public void testStepOnActiveUnpowered() throws SquareOccupiedException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException{
+    public void testStepOnActiveUnpowered() throws NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException{
         currentSquare.getNeighbour(Direction.UP).setActiveItem(new LightMine());
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure();
         int remainingActionsAfterMove = state.getCurrentTurn().getActionsRemaining() - 1;
@@ -66,5 +70,30 @@ public class TestSquare {
         assertEquals(4 - remainingActionsAfterMove, player.getRemainingPenalties());
     }
 
+    /*@Test
+    public void checkReceivingPowerFailure(){
+        Square midSquare = grid.getSquareAtPosition(new Position(5,5));
 
+    } */
+
+    @Test
+    public void testRegainPower(){
+        currentSquare.receivePowerFailure();
+        currentSquare.attach(this);
+        for(int i = 0; i < Settings.SQUARE_TURNS_WITHOUT_POWER; i++){
+             state.endTurn();
+        }
+        assertEquals(true, regainedPower);
+    }
+
+
+    @Override
+    public void lostPower(Position position) {
+
+    }
+
+    @Override
+    public void regainedPower(Position position) {
+       regainedPower = true;
+    }
 }
