@@ -1,15 +1,12 @@
 package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.Player;
-
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.

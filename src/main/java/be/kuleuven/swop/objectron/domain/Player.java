@@ -3,13 +3,11 @@ package be.kuleuven.swop.objectron.domain;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +23,8 @@ public class Player {
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
     private int remainingPenalties;
+    private boolean hasMoved;
+    private boolean isTeleporting;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
@@ -43,14 +43,14 @@ public class Player {
 
     public void pickupItem(int identifier) throws InventoryFullException {
         Item item = currentSquare.pickUpItem(identifier);
-
-        try{
-            this.inventory.addItem(item);
-        }catch(InventoryFullException ex){
-            currentSquare.addItem(item);
-            throw ex;
+        if (item.pickupAble()) {
+            try{
+                this.inventory.addItem(item);
+            }catch(InventoryFullException ex){
+                currentSquare.addItem(item);
+                throw ex;
+            }
         }
-
         actionPerformed();
     }
 
@@ -58,6 +58,13 @@ public class Player {
         actionPerformed();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
+        isTeleporting = false;
+    }
+
+    public void teleport(Square destination) {
+        isTeleporting = true;
+        lightTrail.expand(currentSquare);
+        currentSquare = destination;
     }
 
     public String getName() {
@@ -106,5 +113,9 @@ public class Player {
         result += "position: " + this.getCurrentSquare() + "\n";
 
         return result;
+    }
+
+    public boolean isTeleporting() {
+        return isTeleporting;
     }
 }

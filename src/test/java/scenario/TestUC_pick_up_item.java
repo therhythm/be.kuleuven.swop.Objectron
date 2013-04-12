@@ -1,23 +1,25 @@
 package scenario;
 
+import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
+import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
-import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.LightMine;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 /**
  * Created with IntelliJ IDEA.

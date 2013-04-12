@@ -1,24 +1,22 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.LightMine;
-import be.kuleuven.swop.objectron.domain.util.Dimension;
-import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.handler.EndTurnHandler;
-import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
-import be.kuleuven.swop.objectron.domain.*;
+import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.handler.EndTurnHandler;
+import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -74,23 +72,32 @@ public class TestGrid {
      */
     @Test
     public void test_items_grid() {
-        int lightmines = 0;
-        int identitydiscs = 0;
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
-                    if (item instanceof LightMine)
-                        lightmines++;
+        boolean hasItems = false;
+        int numberOfLightMines = 0;
+        int numberOfTeleporters = 0;
+        int numberOfIdentitydiscs = 0;
 
-                    if (item.getName() == "Uncharged Identity Disc")
-                        identitydiscs++;
-
+        for(int i = 0;i<10;i++){
+            for(int j = 0;j<10;j++){
+                if(grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() !=0) {
+                    hasItems=true;
+                    for (Item item:grid.getSquareAtPosition(new Position(i,j)).getAvailableItems()) {
+                        if (item.getName() == "Light Mine") {
+                            numberOfLightMines++;
+                        }
+                        if (item.getName() == "Teleporter") {
+                            numberOfTeleporters++;
+                        }
+                        if (item.getName() == "Uncharged Identity Disc")
+                            numberOfIdentitydiscs++;
+                    }
                 }
             }
         }
-        assertTrue(lightmines == 2);
-        assertTrue(identitydiscs == 2);
-
+        assertTrue(numberOfLightMines <= 2);
+        assertTrue(numberOfTeleporters <= 3);
+        assertTrue(numberOfIdentitydiscs <= 2);
+        assertTrue(hasItems);
     }
 
     private int calculatedistance(Position position1, Position position2) {

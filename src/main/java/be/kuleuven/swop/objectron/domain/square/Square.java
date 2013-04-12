@@ -2,7 +2,6 @@ package be.kuleuven.swop.objectron.domain.square;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
-
 import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
