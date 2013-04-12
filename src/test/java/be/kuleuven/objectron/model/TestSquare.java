@@ -4,8 +4,10 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 
 import be.kuleuven.swop.objectron.domain.Settings;
+import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
@@ -16,6 +18,9 @@ import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 /**
@@ -32,6 +37,8 @@ public class TestSquare implements SquareObserver {
     private MovePlayerHandler movePlayerHandler;
     private Grid grid;
     private boolean regainedPower;
+    private boolean powerLoss;
+    private int powerLossCounter;
 
     @Before
     public void setUp()throws GridTooSmallException, SquareOccupiedException {
@@ -42,6 +49,8 @@ public class TestSquare implements SquareObserver {
         currentSquare = player.getCurrentSquare();
         movePlayerHandler = new MovePlayerHandler(state);
         regainedPower = false;
+        powerLoss = false;
+        powerLossCounter = 0;
     }
 
     @Test
@@ -70,11 +79,21 @@ public class TestSquare implements SquareObserver {
         assertEquals(4 - remainingActionsAfterMove, player.getRemainingPenalties());
     }
 
-    /*@Test
-    public void checkReceivingPowerFailure(){
-        Square midSquare = grid.getSquareAtPosition(new Position(5,5));
+    @Test
+    public void checkReceivingPowerFailure() throws GridTooSmallException{
+        grid = GridFactory.gridWithoutWalls(new Dimension(10,10), new Position(0,0), new Position(2,2));
+        Square currentSquare = grid.getSquareAtPosition(new Position(5,5));
+        currentSquare.attach(this);
+        for(Direction d: Direction.values()){
+            currentSquare.getNeighbour(d).attach(this);
+        }
 
-    } */
+        while (!powerLoss){
+            currentSquare.newTurn(new Turn(player));
+        }
+
+        assertEquals(powerLossCounter, 9);
+    }
 
     @Test
     public void testRegainPower(){
@@ -89,6 +108,11 @@ public class TestSquare implements SquareObserver {
 
     @Override
     public void lostPower(Position position) {
+        powerLossCounter ++;
+        if(position.getHIndex() == 5 && position.getVIndex() == 5){
+            powerLoss = true;
+        }
+
 
     }
 
