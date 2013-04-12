@@ -38,7 +38,7 @@ public class TestUC_Move {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(0, 5);
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutWalls(dimension, p1Pos, p2Pos);
+        Grid grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
 
         player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
         Turn turn = new Turn(player1);

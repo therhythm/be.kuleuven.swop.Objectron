@@ -81,12 +81,13 @@ public class GridBuilder {
         while (randomMiddleSquares.size() > 0) {
             int randomIndex = random.nextInt(randomMiddleSquares.size());
             randomSquare = randomMiddleSquares.get(randomIndex);
-
-            if(!randomSquare.isObstructed()) {
-                randomSquare.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
-                break;
-            }else
-                randomMiddleSquares.remove(randomIndex);
+            if (randomSquare != null) {
+                if (!randomSquare.isObstructed()) {
+                    randomSquare.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
+                    break;
+                }
+            }
+            randomMiddleSquares.remove(randomIndex);
         }
     }
 
@@ -312,8 +313,8 @@ public class GridBuilder {
     }
 
     public void addObserver(SquareObserver observer) {
-        for(Square[] row : squares){
-            for(Square s : row){
+        for (Square[] row : squares) {
+            for (Square s : row) {
                 s.attach(observer);
             }
         }
