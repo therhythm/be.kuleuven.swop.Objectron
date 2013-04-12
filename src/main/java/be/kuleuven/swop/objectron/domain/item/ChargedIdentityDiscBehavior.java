@@ -16,14 +16,14 @@ public class ChargedIdentityDiscBehavior implements IdentityDiscBehavior {
     @Override
     public void useItem(UseItemRequest useItemRequest, IdentityDisc identityDisc) throws SquareOccupiedException {
         Square currentSquare = useItemRequest.getSquare();
-        Square neighbor = currentSquare.getNeighbour(useItemRequest.getDirection());
+        Square neighbor = identityDisc.getNextSquare(currentSquare,useItemRequest.getDirection());
         while (neighbor != null && (!useItemRequest.getGrid().isWall(neighbor))) {
             currentSquare = neighbor;
             System.out.println(neighbor);
             if (identityDisc.playerHit(useItemRequest, neighbor))
                 break;
 
-            neighbor = neighbor.getNeighbour(useItemRequest.getDirection());
+            neighbor = identityDisc.getNextSquare(neighbor,useItemRequest.getDirection());
 
 
         }

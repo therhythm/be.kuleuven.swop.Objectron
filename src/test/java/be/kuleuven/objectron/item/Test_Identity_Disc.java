@@ -6,10 +6,7 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
-import be.kuleuven.swop.objectron.domain.item.ChargedIdentityDiscBehavior;
-import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.NormalIdentityDiscBehavior;
+import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -154,7 +151,7 @@ public class Test_Identity_Disc {
 
         Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
         grid.getSquareAtPosition(p1Pos).addItem(identityDisc);
-        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size()>0);
+        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size() > 0);
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentIdentityDisc(Direction.UP);
@@ -165,6 +162,74 @@ public class Test_Identity_Disc {
 
         Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 4));
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+    }
+
+
+    @Test
+    public void test_UnCharged_identity_disc_no_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+        Square currentSquare = grid.getSquareAtPosition(new Position(0, 9));
+
+
+        Square upNeighbor =grid.getSquareAtPosition(new Position(0, 7));
+        Square rightNeighbor = grid.getSquareAtPosition(new Position(1, 7));
+        Teleporter teleporter1 = new Teleporter(upNeighbor);
+        Teleporter teleporter2 = new Teleporter(rightNeighbor);
+        teleporter1.setDestination(teleporter2);
+        teleporter2.setDestination(teleporter1);
+        upNeighbor.addItem(teleporter1);
+        upNeighbor.setActiveItem(teleporter1);
+        rightNeighbor.addItem(teleporter2);
+        rightNeighbor.setActiveItem(teleporter2);
+
+        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        currentSquare.addItem(identityDisc);
+        pickUpItemHandler.pickUpItem(0);
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentIdentityDisc(Direction.UP);
+
+        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(1, 5));
+        System.out.println(squareIdentityDisc);
+        assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+    }
+
+    @Test
+    public void test_UnCharged_identity_disc_self_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
+        dimension = new Dimension(10, 10);
+
+        p1Pos = new Position(0, 7);
+        p2Pos = new Position(5, 9);
+
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        pickUpItemHandler = new PickUpItemHandler(state);
+        useItemHandler = new UseItemHandler(state);
+        Player current_player = state.getCurrentPlayer();
+
+        Square currentSquare = grid.getSquareAtPosition(p1Pos);
+
+        Square upNeighbor =grid.getSquareAtPosition(new Position(0, 6));
+        Square rightNeighbor = grid.getSquareAtPosition(new Position(0, 8));
+        Teleporter teleporter1 = new Teleporter(upNeighbor);
+        Teleporter teleporter2 = new Teleporter(rightNeighbor);
+        teleporter1.setDestination(teleporter2);
+        teleporter2.setDestination(teleporter1);
+        upNeighbor.addItem(teleporter1);
+        upNeighbor.setActiveItem(teleporter1);
+        rightNeighbor.addItem(teleporter2);
+        rightNeighbor.setActiveItem(teleporter2);
+
+        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        currentSquare.addItem(identityDisc);
+
+        pickUpItemHandler.pickUpItem(0);
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentIdentityDisc(Direction.UP);
+
+        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 7));
+
+        assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+        assertFalse(state.getCurrentPlayer().equals(current_player));
+        assertTrue(state.getCurrentTurn().getActionsRemaining()==6);
     }
 
     @Test

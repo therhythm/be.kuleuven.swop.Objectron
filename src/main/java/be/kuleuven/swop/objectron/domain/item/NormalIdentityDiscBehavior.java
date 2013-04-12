@@ -15,7 +15,9 @@ public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
     @Override
         public void useItem(UseItemRequest useItemRequest,IdentityDisc identityDisc) throws SquareOccupiedException {
             Square currentSquare = useItemRequest.getSquare();
-            Square neighbor = currentSquare.getNeighbour(useItemRequest.getDirection());
+
+        Square neighbor = identityDisc.getNextSquare(currentSquare,useItemRequest.getDirection());
+
             for (int i = 0; i < maxRange; i++) {
                 System.out.println(neighbor);
                 if (neighbor == null)
@@ -26,12 +28,14 @@ public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
 
                 } else if (!useItemRequest.getGrid().isWall(neighbor)) {
                     currentSquare = neighbor;
-                    neighbor = neighbor.getNeighbour(useItemRequest.getDirection());
+                    neighbor = identityDisc.getNextSquare(currentSquare,useItemRequest.getDirection());
                 } else
                     break;
             }
             currentSquare.addItem(identityDisc);
     }
+
+
 
     @Override
     public String getName() {

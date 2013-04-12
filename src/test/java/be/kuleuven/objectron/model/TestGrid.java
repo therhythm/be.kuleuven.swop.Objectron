@@ -46,7 +46,7 @@ public class TestGrid {
         p1Pos = new Position(1, 8);
         p2Pos = new Position(3, 8);
         dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -76,7 +76,8 @@ public class TestGrid {
      * Deze test gaat controleren of er wel degelijk items in de grid geplaatst worden.
      */
     @Test
-    public void test_items_grid() {
+    public void test_items_grid() throws GridTooSmallException {
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
         boolean hasItems = false;
         int numberOfLightMines = 0;
         int numberOfTeleporters = 0;

@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,14 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 public class ActivateRequest {
     private GameState gamestate;
     private Player playerHit;
+    private Square destinationSquare;
+    private IdentityDisc identityDisc;
+
+    public ActivateRequest(IdentityDisc identityDisc, Square destinationSquare){
+       this.identityDisc = identityDisc;
+        this.destinationSquare = destinationSquare;
+    }
+
 
     public ActivateRequest(Player playerHit,GameState gamestate) {
         this.gamestate = gamestate;
@@ -41,5 +50,15 @@ public class ActivateRequest {
         return gamestate.getCurrentPlayer();
     }
 
+    public Square getDestinationSquare() {
+        return destinationSquare;
+    }
 
+    public void setDestinationSquare(Square destinationSquare) {
+        this.destinationSquare = destinationSquare;
+    }
+
+    public IdentityDisc getIdentityDisc() {
+        return identityDisc;
+    }
 }

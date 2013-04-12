@@ -31,14 +31,29 @@ public class Teleporter implements Item {
 
     @Override
     public void activate(ActivateRequest activateRequest) {
-        if (!activateRequest.getCurrentPlayer().isTeleporting() && !destination.getLocation().isObstructed()) {
-            activateRequest.getCurrentPlayer().teleport(destination.getLocation());
+        if (activateRequest.getCurrentPlayer() != null) {
+            if (!activateRequest.getCurrentPlayer().isTeleporting() && !destination.getLocation().isObstructed()) {
+                activateRequest.getCurrentPlayer().teleport(destination.getLocation());
+            }
+        /*}else{
+            if(activateRequest.getIdentityDisc()!=null){
+                if (!activateRequest.getIdentityDisc().isTeleporting() && !destination.getLocation().isObstructed()) {
+                    activateRequest.setDestinationSquare(destination.getLocation());
+                }
+            }*/
         }
+
+
     }
 
     @Override
     public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
         //Teleporters can not be used, only activated.
+    }
+
+    @Override
+    public boolean isTeleporting() {
+        return false;
     }
 
     public Teleporter getDestination() {

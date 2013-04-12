@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.ActivateRequest;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -170,5 +171,13 @@ public class Square implements Observable<SquareObserver> {
         for(SquareObserver observer: observers){
             observer.regainedPower(this.position);
         }
+    }
+
+    public Teleporter getTeleportItem(){
+        for(Item item : this.getAvailableItems()){
+            if(item instanceof Teleporter)
+                return (Teleporter) item;
+        }
+        return null;
     }
 }

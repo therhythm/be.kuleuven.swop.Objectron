@@ -32,7 +32,7 @@ public class TestGameState {
     public void setUp() throws GridTooSmallException {
         Position p1Pos = new Position(0,0);
         Position p2Pos = new Position(1,0);
-        Grid grid = GridFactory.gridWithoutWallsPowerFailures(new Dimension(10, 10), p1Pos, p2Pos);
+        Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
 
     }

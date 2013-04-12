@@ -37,4 +37,8 @@ public class LightMine implements Item {
 
         return result;
     }
+    @Override
+    public boolean isTeleporting() {
+        return false;
+    }
 }

@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
  * @author : Nik Torfs
@@ -15,4 +16,6 @@ public interface Item{
     void activate(ActivateRequest activateRequest);
 
     void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException;
+
+    boolean isTeleporting();
 }

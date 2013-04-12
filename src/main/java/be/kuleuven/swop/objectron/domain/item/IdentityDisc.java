@@ -14,15 +14,16 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  */
 public class IdentityDisc implements Item {
     private IdentityDiscBehavior identityDiscBehavior;
+    private boolean isTeleporting = false;
 
     public IdentityDisc(IdentityDiscBehavior identityDiscBehavior) {
-       this.identityDiscBehavior = identityDiscBehavior;
+        this.identityDiscBehavior = identityDiscBehavior;
 
     }
 
     @Override
     public String getName() {
-      return  identityDiscBehavior.getName();
+        return identityDiscBehavior.getName();
     }
 
     @Override
@@ -44,6 +45,11 @@ public class IdentityDisc implements Item {
         if (!validDirection(useItemRequest.getDirection()))
             throw new IllegalArgumentException("the direction can't be diagonal");
         identityDiscBehavior.useItem(useItemRequest, this);
+    }
+
+    @Override
+    public boolean isTeleporting() {
+        return this.isTeleporting;
     }
 
     public boolean playerHit(UseItemRequest useItemRequest, Square squareItem) {
@@ -71,6 +77,28 @@ public class IdentityDisc implements Item {
 
         return true;
     }
+
+    public Square getNextSquare(Square currentSquare,Direction direction){
+        Square neighbor = currentSquare.getNeighbour(direction);
+        if(neighbor==null)
+            return null;
+        Teleporter teleportItem = neighbor.getTeleportItem();
+        if(teleportItem!=null){
+            neighbor = this.teleport(teleportItem);
+        }
+        return neighbor;
+    }
+
+    public Square teleport(Teleporter teleporter) {
+        isTeleporting = true;
+        Square destination = teleporter.getDestination().getLocation();
+        // if(destination.getTeleportItem()!=null)
+        //    return teleport(destination.getTeleportItem());
+
+        isTeleporting = false;
+        return destination;
+    }
+
 
     public String toString() {
         String result = "";
