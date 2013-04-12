@@ -29,6 +29,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         Position p1Pos = new Position(0, dimension.getHeight() -1);
         Position p2Pos = new Position(dimension.getWidth()-1, 0);
         this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos, this);
+       // this.gameGrid = GridFactory.gridWithoutPowerFailures(dimension, p1Pos, p2Pos);
 
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));

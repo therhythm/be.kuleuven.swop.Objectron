@@ -20,6 +20,9 @@ import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -39,12 +42,16 @@ public class Test_Identity_Disc {
     private Player player1;
     private Grid grid;
 
+    private Dimension dimension;
+    private Position p1Pos;
+    private Position p2Pos;
+
     @Before
     public void setUp() throws GridTooSmallException {
-        Dimension dimension = new Dimension(10, 10);
+        dimension = new Dimension(10, 10);
 
-        Position p1Pos = new Position(0, 9);
-        Position p2Pos = new Position(5, 9);
+        p1Pos = new Position(0, 9);
+        p2Pos = new Position(5, 9);
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
@@ -72,6 +79,18 @@ public class Test_Identity_Disc {
     }
 
     @Test
+    public void test_UnCharged_identity_disc_hit_boundary() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
+        pickUpItemHandler.pickUpItem(0);
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentIdentityDisc(Direction.DOWN);
+
+        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 9));
+        assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+    }
+
+    @Test
     public void test_Charged_identity_disc_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
         Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
@@ -85,10 +104,10 @@ public class Test_Identity_Disc {
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
         //System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(state.getCurrentTurn().getActionsRemaining()==3);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == 3);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-       // System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(state.getCurrentTurn().getActionsRemaining()==5);
+        // System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == 5);
         for (int i = 1; i < 5; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
@@ -99,7 +118,57 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_string_contains(){
+    public void test_Uncharged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
+        List<Position> wallPositions = new ArrayList<Position>();
+        wallPositions.add(new Position(0, 6));
+
+        grid = GridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, p1Pos, p2Pos, wallPositions);
+        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        pickUpItemHandler = new PickUpItemHandler(state);
+        useItemHandler = new UseItemHandler(state);
+
+        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        grid.getSquareAtPosition(p1Pos).addItem(identityDisc);
+        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size() > 0);
+        pickUpItemHandler.pickUpItem(0);
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentIdentityDisc(Direction.UP);
+        for (int i = 9; i > 7; i--) {
+            Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, i));
+            assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+        }
+
+        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 7));
+        assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+    }
+
+    @Test
+    public void test_Charged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
+        List<Position> wallPositions = new ArrayList<Position>();
+        wallPositions.add(new Position(0, 3));
+
+        grid = GridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, p1Pos, p2Pos, wallPositions);
+        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        pickUpItemHandler = new PickUpItemHandler(state);
+        useItemHandler = new UseItemHandler(state);
+
+        Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
+        grid.getSquareAtPosition(p1Pos).addItem(identityDisc);
+        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size()>0);
+        pickUpItemHandler.pickUpItem(0);
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentIdentityDisc(Direction.UP);
+        for (int i = 9; i > 4; i--) {
+            Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, i));
+            assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+        }
+
+        Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 4));
+        assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+    }
+
+    @Test
+    public void test_string_contains() {
         Item item = new IdentityDisc(new NormalIdentityDiscBehavior());
         assertTrue(item.getName().contains("Identity Disc"));
 

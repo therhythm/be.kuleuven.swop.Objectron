@@ -239,7 +239,7 @@ public class GameView implements GameObserver {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
 
                             if (selectedItem.contains("Identity Disc")) {
-
+                                gui.repaint();
                                 ItemSelectionAction action = new ItemSelectionAction() {
 
                                     @Override

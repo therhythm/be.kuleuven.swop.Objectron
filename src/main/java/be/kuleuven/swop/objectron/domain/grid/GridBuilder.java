@@ -54,6 +54,11 @@ public class GridBuilder {
         }
     }
 
+    public void buildWalls(List<Wall> walls) {
+        this.walls = walls;
+
+    }
+
     public Grid getGrid() {
         return new Grid(squares, walls, dimension);
     }
