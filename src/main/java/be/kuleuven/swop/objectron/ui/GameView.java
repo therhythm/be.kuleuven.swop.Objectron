@@ -40,6 +40,7 @@ public class GameView implements GameObserver {
     private SimpleGUI gui;
     private Map<Position, List<Item>> items;   //TODO itemviewmodels
     private List<PlayerViewModel> players;
+    private Map<String, Position[]> lastPositions = new HashMap<String, Position[]>();
 
 
     public GameView(GameStartViewModel vm) {
@@ -76,6 +77,8 @@ public class GameView implements GameObserver {
         Position p1Pos = p1.getPosition();
         gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()].put(SquareStates.PLAYER1.zIndex, SquareStates.PLAYER1);
         Position p2Pos = p2.getPosition();
+        lastPositions.put(p1.getName(), new Position[0]);
+        lastPositions.put(p2.getName(), new Position[0]);
         gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()].put(SquareStates.PLAYER2.zIndex, SquareStates.PLAYER2);
         gameGrid[p1.getStartPosition().getVIndex()][p1.getStartPosition().getHIndex()].put(SquareStates.P2_FINISH.zIndex, SquareStates.P2_FINISH);
         gameGrid[p2.getStartPosition().getVIndex()][p2.getStartPosition().getHIndex()].put(SquareStates.P1_FINISH.zIndex, SquareStates.P1_FINISH);
@@ -312,11 +315,23 @@ public class GameView implements GameObserver {
         Position currentPos = playerViewModel.getPosition();
         SquareStates state = playerColorMap.get(playerViewModel.getName())[0];
         gameGrid[currentPos.getVIndex()][currentPos.getHIndex()].put(state.zIndex, state);
+        clearLastPositions(playerViewModel.getName());
+        Position[] positions = new Position[playerViewModel.getLightTrail().size()];
+        int index = 0;
         for (Position svm : playerViewModel.getLightTrail()) {
             SquareStates lightTrailState = playerColorMap.get(playerViewModel.getName())[1];
             gameGrid[svm.getVIndex()][svm.getHIndex()].put(lightTrailState.zIndex, lightTrailState);
+            positions[index++] = svm;
         }
+        lastPositions.put(playerViewModel.getName(), positions);
         gui.repaint();
+    }
+
+    private void clearLastPositions(String name){
+       for(Position p: lastPositions.get(name)){
+           gameGrid[p.getVIndex()][p.getHIndex()].remove(playerColorMap.get(name)[0].zIndex);
+           gameGrid[p.getVIndex()][p.getHIndex()].remove(playerColorMap.get(name)[1].zIndex);
+       }
     }
 
     @Override
