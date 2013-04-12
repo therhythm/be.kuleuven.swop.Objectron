@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
@@ -89,8 +90,9 @@ public class GameView implements GameObserver {
             return SquareStates.LIGHT_MINE;
         } else if (item instanceof IdentityDisc) {
             return SquareStates.IDENTITY_DISK;
+        } else if(item instanceof Teleporter) {
+            return SquareStates.TELEPORTER;
         } else {
-            //TODO other items
             return SquareStates.EMPTY;
         }
     }
@@ -132,6 +134,7 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("identity_disk.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.CHARGED_IDENTITY_DISK, gui.loadImage("identity_disk_charged.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.POWERFAILURE, gui.loadImage("cell_unpowered.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.TELEPORTER, gui.loadImage("teleporter.png", TILEWIDTH, TILEHEIGHT));
 
 
                 Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
