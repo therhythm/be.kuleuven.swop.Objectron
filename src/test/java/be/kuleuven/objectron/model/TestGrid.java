@@ -17,6 +17,9 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -118,6 +121,36 @@ public class TestGrid {
                 }
             }
         }
+    }
+
+    @Test
+    public void test_no_charged_identity_disc() throws GridTooSmallException {
+        List<Position> wallPositions = new ArrayList<Position>();
+        wallPositions.add(new Position(4,5));
+        wallPositions.add(new Position(5,5));
+        wallPositions.add(new Position(5,4));
+        wallPositions.add(new Position(4,4));
+        wallPositions.add(new Position(4,3));
+                   int aantal = 0;
+        grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0,9), new Position(9,0),wallPositions);
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
+                    if (item.getName() == "Charged Identity Disc") {
+                        int distanceFromPlayer1 = calculatedistance(p1Pos, new Position(i, j));
+                        int distanceFromPlayer2 = calculatedistance(p2Pos, new Position(i, j));
+                        System.out.println("squaere:");
+                        System.out.println(grid.getSquareAtPosition(new Position(i, j)));
+                        System.out.println("distance from player1: " + distanceFromPlayer1);
+                        System.out.println("distance from player2: " + distanceFromPlayer2);
+                        assertTrue(Math.abs(distanceFromPlayer1 - distanceFromPlayer2) < 2);
+                                                                             aantal++;
+                    }
+
+                }
+            }
+        }
+        assertTrue(aantal==1);
     }
 
     @Test(expected = IllegalArgumentException.class)

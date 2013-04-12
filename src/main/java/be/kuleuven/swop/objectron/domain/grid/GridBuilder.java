@@ -64,8 +64,8 @@ public class GridBuilder {
     }
 
     private Square calculateMiddleSquare() {
-        int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()) / 2);
-        int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()) / 2);
+        int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()+1) / 2);
+        int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()+1) / 2);
         return squares[VIndex][HIndex];
     }
 

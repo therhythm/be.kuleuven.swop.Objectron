@@ -123,7 +123,8 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public String toString(){
-        return position.toString();
+
+        return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
 
     public void transitionState(SquareState newState) {
