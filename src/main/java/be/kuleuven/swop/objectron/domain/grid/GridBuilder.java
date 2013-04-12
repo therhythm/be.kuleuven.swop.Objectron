@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
@@ -97,16 +98,23 @@ public class GridBuilder {
     }
 
     public void buildItems() {
-        int numberOfItems = (int) Math.ceil(Settings.PERCENTAGE_OF_ITEMS * dimension.area());
+        int numberOfLightmines = (int) Math.ceil(Settings.PERCENTAGE_OF_LIGHTMINES * dimension.area());
+        int numberOfTeleporters = (int) Math.ceil(Settings.PERCENTAGE_OF_TELEPORTERS * dimension.area());
 
-        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new LightMine());
+        placeLightMines(numberOfLightmines);
+        placeTeleporters(numberOfTeleporters);
+        placeIdentityDiscs();
+    }
+
+    private void placeIdentityDiscs() {
         placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
-
-        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new LightMine());
         placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
-
         placeChargedIdentityDisc();
+    }
 
+    private void placeLightMines(int numberOfItems) {
+        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new LightMine());
+        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new LightMine());
         numberOfItems -= 2;
         List<Item> lightMines = new ArrayList<Item>();
         List<Item> identityDiscs = new ArrayList<Item>();
@@ -119,7 +127,35 @@ public class GridBuilder {
         placeOtherItems(identityDiscs);
     }
 
-    private void buildWall() {
+    private void placeTeleporters(int numberOfTeleporters) {
+        Teleporter[] teleporters = new Teleporter[numberOfTeleporters];
+        for (int i = 0; i < numberOfTeleporters; i++) {
+            Square randomSquare = getRandomSquare();
+            //TODO looks for empty squares, but teleporters can be placed alongside other items
+            while (randomSquare.getAvailableItems().size() != 0 ||
+                    randomSquare.isObstructed()) {
+                randomSquare = getRandomSquare();
+            }
+            Teleporter teleporter = new Teleporter(randomSquare);
+            randomSquare.addItem(teleporter);
+            try {
+                randomSquare.setActiveItem(teleporter);
+            } catch (SquareOccupiedException e) {
+                e.printStackTrace();
+            }
+            teleporters[i] = teleporter;
+        }
+        //TODO multiple teleporters can have the same destination, is this allowed?
+        for (int i = 0; i < numberOfTeleporters; i++) {
+            int random = (int) Math.floor(Math.random() * 3);
+            while (random == i) {
+                random = (int) Math.floor(Math.random() * 3);
+            }
+            teleporters[i].setDestination(teleporters[random]);
+        }
+    }
+
+    private void buildWall(){
         Square randomSquare = getRandomSquare();
         while (!isValidWallPosition(randomSquare)) {
             randomSquare = getRandomSquare();

@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron;
 
-import be.kuleuven.swop.objectron.ui.GameMenu;
 import be.kuleuven.swop.objectron.handler.StartGameHandler;
+import be.kuleuven.swop.objectron.ui.GameMenu;
 
 /**
  * @author : Nik Torfs

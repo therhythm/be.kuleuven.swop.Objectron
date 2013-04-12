@@ -26,6 +26,11 @@ public class IdentityDisc implements Item {
     }
 
     @Override
+    public boolean pickupAble() {
+        return true;
+    }
+
+    @Override
     public void activate(ActivateRequest activateRequest) {
         if (activateRequest.getPlayerHit().equals(activateRequest.getCurrentPlayer()))
             activateRequest.getGamestate().endTurn();

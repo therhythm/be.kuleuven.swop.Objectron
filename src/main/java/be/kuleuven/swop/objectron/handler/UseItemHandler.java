@@ -2,8 +2,8 @@ package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
+import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
@@ -101,7 +101,7 @@ public class UseItemHandler extends Handler {
             Player currentPlayer = state.getCurrentPlayer();
             currentTurn.checkEnoughActions();
             UseItemRequest useItemRequest = new UseItemRequest(currentPlayer.getCurrentSquare(), direction, state);
-            currentPlayer.useItem(state.getCurrentItem(),useItemRequest);
+            currentPlayer.useItem(state.getCurrentItem(), useItemRequest);
             state.setCurrentItem(null);
             currentTurn.reduceRemainingActions(1);
         } catch (SquareOccupiedException e) {
