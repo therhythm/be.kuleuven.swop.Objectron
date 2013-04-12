@@ -38,4 +38,8 @@ public class Wall {
         }
         return squaresVm;
     }
+
+    public boolean isWall(Square square){
+        return squares.contains(square);
+    }
 }

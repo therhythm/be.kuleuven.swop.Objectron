@@ -24,6 +24,12 @@ public class Position {
         return this.vIndex;
     }
 
+    public String toString(){
+        String result="";
+        result += "horizontal: " + hIndex + "\t" + "vertical: " + vIndex;
+        return result;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

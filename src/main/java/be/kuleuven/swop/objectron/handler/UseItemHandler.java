@@ -1,12 +1,15 @@
 package be.kuleuven.swop.objectron.handler;
 
-import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
+import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
+import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -70,13 +73,35 @@ public class UseItemHandler extends Handler {
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
     public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
-        if(state.getCurrentItem() == null){
-            throw new NoItemSelectedException("You don't have an item selected.") ;
+        if (state.getCurrentItem() == null) {
+            throw new NoItemSelectedException("You don't have an item selected.");
         }
         try {
             Turn currentTurn = state.getCurrentTurn();
             currentTurn.checkEnoughActions();
-            currentTurn.getCurrentPlayer().useItem(state.getCurrentItem());
+            UseItemRequest useItemRequest = new UseItemRequest(state.getCurrentPlayer().getCurrentSquare());
+            currentTurn.getCurrentPlayer().useItem(state.getCurrentItem(),useItemRequest);
+            state.setCurrentItem(null);
+            currentTurn.reduceRemainingActions(1);
+        } catch (SquareOccupiedException e) {
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
+            throw e;
+        } catch (NotEnoughActionsException e) {
+            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do use an item when he had no actions remaining.");
+            throw e;
+        }
+    }
+
+    public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
+        if (state.getCurrentItem() == null) {
+            throw new NoItemSelectedException("You don't have an item selected.");
+        }
+        try {
+            Turn currentTurn = state.getCurrentTurn();
+            Player currentPlayer = state.getCurrentPlayer();
+            currentTurn.checkEnoughActions();
+            UseItemRequest useItemRequest = new UseItemRequest(currentPlayer.getCurrentSquare(), direction, state);
+            currentPlayer.useItem(state.getCurrentItem(), useItemRequest);
             state.setCurrentItem(null);
             currentTurn.reduceRemainingActions(1);
         } catch (SquareOccupiedException e) {

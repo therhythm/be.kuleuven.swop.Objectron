@@ -27,6 +27,10 @@ public class Turn {
         this.currentItem = null;
     }
 
+    public void extraTurn(){
+        this.actionsRemaining += (Settings.PLAYER_ACTIONS_EACH_TURN - currentPlayer.getRemainingPenalties());
+    }
+
     public int getActionsRemaining(){
         return actionsRemaining;
     }
@@ -69,5 +73,16 @@ public class Turn {
 
     public TurnViewModel getViewModel(){
         return new TurnViewModel(actionsRemaining, currentPlayer.getPlayerViewModel());
+    }
+
+    public String toString(){
+        String result="";
+        result += currentPlayer + "\n";
+        result += currentItem + "\n";
+        result += "remaining actions: " + getActionsRemaining() + "\n";
+        result += "has moved: " + hasMoved;
+
+        return result;
+
     }
 }

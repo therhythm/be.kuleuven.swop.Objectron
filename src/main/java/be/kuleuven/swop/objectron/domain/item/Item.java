@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item;
 
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 
 /**
  * @author : Nik Torfs
@@ -10,6 +10,9 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 public interface Item{
 
     String getName();
+    boolean pickupAble();
 
-    void activate(Turn currentTurn);
+    void activate(ActivateRequest activateRequest);
+
+    void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException;
 }

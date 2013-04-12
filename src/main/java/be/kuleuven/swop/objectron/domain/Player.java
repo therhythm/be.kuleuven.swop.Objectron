@@ -4,10 +4,10 @@ import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +23,8 @@ public class Player {
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
     private int remainingPenalties;
+    private boolean hasMoved;
+    private boolean isTeleporting;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
@@ -41,14 +43,14 @@ public class Player {
 
     public void pickupItem(int identifier) throws InventoryFullException {
         Item item = currentSquare.pickUpItem(identifier);
-
-        try{
-            this.inventory.addItem(item);
-        }catch(InventoryFullException ex){
-            currentSquare.addItem(item);
-            throw ex;
+        if (item.pickupAble()) {
+            try{
+                this.inventory.addItem(item);
+            }catch(InventoryFullException ex){
+                currentSquare.addItem(item);
+                throw ex;
+            }
         }
-
         actionPerformed();
     }
 
@@ -56,6 +58,13 @@ public class Player {
         actionPerformed();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
+        isTeleporting = false;
+    }
+
+    public void teleport(Square destination) {
+        isTeleporting = true;
+        lightTrail.expand(currentSquare);
+        currentSquare = destination;
     }
 
     public String getName() {
@@ -70,8 +79,10 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item) throws SquareOccupiedException {
-        currentSquare.setActiveItem(item);
+    public void useItem(Item item,UseItemRequest useItemRequest) throws SquareOccupiedException, NotEnoughActionsException {
+       
+        item.useItem(useItemRequest);
+
         inventory.removeItem(item);
 
         actionPerformed();
@@ -101,5 +112,17 @@ public class Player {
         if(this.remainingPenalties < 0){
             this.remainingPenalties = 0;
         }
+    }
+
+    public String toString(){
+        String result = "";
+        result += "name: " + this.getName() + "\n";
+        result += "position: " + this.getCurrentSquare() + "\n";
+
+        return result;
+    }
+
+    public boolean isTeleporting() {
+        return isTeleporting;
     }
 }
