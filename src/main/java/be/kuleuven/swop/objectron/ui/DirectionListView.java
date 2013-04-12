@@ -15,7 +15,7 @@ import java.awt.*;
 public class DirectionListView {
 
     public DirectionListView(final ItemSelectionAction action) {
-        SimpleGUI gui = new SimpleGUI("Choose direction", 140, 140) {
+        final SimpleGUI gui = new SimpleGUI("Choose direction", 140, 140) {
             @Override
             public void paint(Graphics2D graphics) {
 
@@ -27,6 +27,7 @@ public class DirectionListView {
             @Override
             public void run() {
                 action.doAction(Direction.UP.ordinal());
+                gui.dispose();
             }
         }).setImage(gui.loadImage("arrow_N.png", 20, 20));
 
@@ -34,6 +35,7 @@ public class DirectionListView {
             @Override
             public void run() {
                 action.doAction(Direction.RIGHT.ordinal());
+                gui.dispose();
             }
         }).setImage(gui.loadImage("arrow_E.png", 20, 20));
 
@@ -41,6 +43,7 @@ public class DirectionListView {
             @Override
             public void run() {
                 action.doAction(Direction.DOWN.ordinal());
+                gui.dispose();
             }
         }).setImage(gui.loadImage("arrow_S.png", 20, 20));
 
@@ -48,6 +51,7 @@ public class DirectionListView {
             @Override
             public void run() {
                 action.doAction(Direction.LEFT.ordinal());
+                gui.dispose();
             }
         }).setImage(gui.loadImage("arrow_W.png", 20, 20));
     }

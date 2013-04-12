@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
@@ -89,8 +90,9 @@ public class GameView implements GameObserver {
             return SquareStates.LIGHT_MINE;
         } else if (item instanceof IdentityDisc) {
             return SquareStates.IDENTITY_DISK;
+        } else if(item instanceof Teleporter) {
+            return SquareStates.TELEPORTER;
         } else {
-            //TODO other items
             return SquareStates.EMPTY;
         }
     }
@@ -132,6 +134,7 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("identity_disk.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.CHARGED_IDENTITY_DISK, gui.loadImage("identity_disk_charged.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.POWERFAILURE, gui.loadImage("cell_unpowered.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.TELEPORTER, gui.loadImage("teleporter.png", TILEWIDTH, TILEHEIGHT));
 
 
                 Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
@@ -192,7 +195,10 @@ public class GameView implements GameObserver {
                                 @Override
                                 public void doAction(int index) {
                                     try {
+                                        Position currentPosition = currentTurn.getPlayerViewModel().getPosition();
+                                        gameGrid[currentPosition.getVIndex()][currentPosition.getHIndex()].remove(getItemSquareState(items.get(index)).zIndex);
                                         pickUpItemHandler.pickUpItem(index);
+
                                         gui.repaint();
 
                                     } catch (InventoryFullException e) {
@@ -217,7 +223,7 @@ public class GameView implements GameObserver {
                     public void run() {
                         try {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
-                            final List<Item> items = useItemHandler.showInventory();
+                            final List<Item> currentItems = useItemHandler.showInventory();
                             ItemSelectionAction action = new ItemSelectionAction() {
 
                                 @Override
@@ -226,7 +232,7 @@ public class GameView implements GameObserver {
                                     gui.repaint();
                                 }
                             };
-                            new ItemListView(items, action);
+                            new ItemListView(currentItems, action);
                         } catch (InventoryEmptyException e) {
                             new DialogView("Your inventory is empty");
                         }
@@ -239,6 +245,7 @@ public class GameView implements GameObserver {
                     public void run() {
                         try {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
+
 
                             if (selectedItem.contains("Identity Disc")) {
                                 gui.repaint();
@@ -260,10 +267,12 @@ public class GameView implements GameObserver {
                                 };
                                 new DirectionListView(action);
                             } else {
+                                Position currentPosition = currentTurn.getPlayerViewModel().getPosition();
+                                if(selectedItem == "Light Mine" ){
+                                    gameGrid[currentPosition.getVIndex()][currentPosition.getHIndex()].put(SquareStates.LIGHT_MINE.zIndex, SquareStates.LIGHT_MINE);
+                                }
                                 useItemHandler.useCurrentItem();
                             }
-
-
                             selectedItem = "No item";
                             gui.repaint();
                         } catch (SquareOccupiedException e) {
@@ -294,6 +303,7 @@ public class GameView implements GameObserver {
                     public void run() {
                         try {
                             final EndTurnHandler endTurnHandler = (EndTurnHandler) catalog.getHandler(EndTurnHandler.class);
+                            selectedItem = "no item";
                             endTurnHandler.endTurn();
 
                         } catch (GameOverException e) {
@@ -347,11 +357,13 @@ public class GameView implements GameObserver {
     @Override
     public void noPower(Position position) {
         gameGrid[position.getVIndex()][position.getHIndex()].put(SquareStates.POWERFAILURE.zIndex, SquareStates.POWERFAILURE);
+        gui.repaint();
     }
 
     @Override
     public void regainedPower(Position position) {
         gameGrid[position.getVIndex()][position.getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
+        gui.repaint();
     }
 
     public enum SquareStates {
