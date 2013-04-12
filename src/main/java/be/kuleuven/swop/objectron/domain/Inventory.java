@@ -13,7 +13,6 @@ import java.util.List;
  *         Time: 23:51
  */
 public class Inventory {
-    private static final int LIMIT = 6;
 
     private List<Item> items = new ArrayList<Item>();
 
@@ -35,7 +34,7 @@ public class Inventory {
     }
 
     private boolean isLimitReached() {
-        return this.items.size() >= LIMIT;
+        return this.items.size() >= Settings.INVENTORY_LIMIT;
     }
 
     /**

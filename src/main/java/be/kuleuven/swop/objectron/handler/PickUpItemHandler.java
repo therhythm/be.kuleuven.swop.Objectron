@@ -1,12 +1,13 @@
 package be.kuleuven.swop.objectron.handler;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -41,10 +42,12 @@ public class PickUpItemHandler extends Handler {
      * | state.getCurrentPlayer().getInventoryItems().get(selectionId)
      */
     public void pickUpItem(int selectionId) throws InventoryFullException, NotEnoughActionsException {
-        Player currentPlayer = state.getCurrentPlayer();
-
         try {
+            Turn currentTurn = state.getCurrentTurn();
+            currentTurn.checkEnoughActions();
+            Player currentPlayer = currentTurn.getCurrentPlayer();
             currentPlayer.pickupItem(selectionId);
+            currentTurn.reduceRemainingActions(1);
             state.notifyObservers();
         } catch (InventoryFullException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has a full inventory!");
@@ -65,13 +68,13 @@ public class PickUpItemHandler extends Handler {
      *                               | currentSquare.availableItems().size() == 0
      */
     public List<Item> getAvailableItems() throws SquareEmptyException, NotEnoughActionsException {
-        Player currentPlayer = this.state.getCurrentPlayer();
+        Turn currentTurn = state.getCurrentTurn();
+        currentTurn.checkEnoughActions();
+        Player currentPlayer = currentTurn.getCurrentPlayer();
         Square currentSquare = currentPlayer.getCurrentSquare();
 
         List<Item> availableItems = currentSquare.getAvailableItems();
-        if (currentPlayer.getAvailableActions() == 0) {
-            throw new NotEnoughActionsException("You don't have the actions to do this");
-        } else if (availableItems.size() == 0) {
+        if (availableItems.size() == 0) {
             throw new SquareEmptyException("no items in current square");
         }
 

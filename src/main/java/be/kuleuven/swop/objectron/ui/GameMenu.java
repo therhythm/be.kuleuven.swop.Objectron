@@ -1,7 +1,8 @@
 package be.kuleuven.swop.objectron.ui;
 
-import be.kuleuven.swop.objectron.handler.StartGameHandler;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.handler.StartGameHandler;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 
 import javax.swing.*;
@@ -48,7 +49,7 @@ public class GameMenu {
                         if(nbHorizontalTiles < 0 || nbVerticalTiles < 1){
                             new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!");
                         }
-                        GameStartViewModel vm = handler.startNewGame(p1NameField.getText(), p2NameField.getText(), nbHorizontalTiles, nbVerticalTiles);
+                        GameStartViewModel vm = handler.startNewGame(p1NameField.getText(), p2NameField.getText(), new Dimension(nbHorizontalTiles,nbVerticalTiles));
                         new GameView(vm).run();
                         gui.dispose();
                     }catch(NumberFormatException ex){

@@ -1,15 +1,18 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.handler.EndTurnHandler;
-import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
-import be.kuleuven.swop.objectron.domain.*;
+import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.handler.EndTurnHandler;
+import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,193 +34,147 @@ public class TestGrid {
 
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
-    private Player player1;
-    private Player player2;
     private Grid grid;
     private GameState state;
+    private Position p1Pos;
+    private Position p2Pos;
+    private Dimension dimension;
 
     @Before
+    public void setUp() throws GridTooSmallException {
 
-    public void setUp()throws GridTooSmallException{
-         //square 1
-        //vert pos = 1
-        //hor pos = 8
-
-        //square 2
-        //vert pos = 3
-        //hor pos = 8
-        state = new GameStateStub("p1", "p2",10, 10,1,8,3,8);
-
-
-        grid = state.getGrid();
+        p1Pos = new Position(1, 8);
+        p2Pos = new Position(3, 8);
+        dimension = new Dimension(10, 10);
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
-
     }
-    @Test (expected = InvalidMoveException.class)
+
+    @Test(expected = InvalidMoveException.class)
     public void test_invalid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
-        player1 = state.getCurrentPlayer();
+        movePlayerHandler.move(Direction.RIGHT);
+        movePlayerHandler.move(Direction.UP_RIGHT);
+        endTurnHandler.endTurn();
 
-        try {
-            //System.out.println("player1");
-            //System.out.println(player1.getCurrentSquare());
-            movePlayerHandler.move(Direction.RIGHT);
-            //System.out.println(player1.getCurrentSquare());
-            movePlayerHandler.move(Direction.UP_RIGHT);
-            //System.out.println(player1.getCurrentSquare());
-
-
-            endTurnHandler.endTurn();
-        } catch (GameOverException e) {
-            fail();
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        //System.out.println("player2");
-        player2 = state.getCurrentPlayer();
-
-        //System.out.println(player2.getCurrentSquare());
         movePlayerHandler.move(Direction.UP_LEFT);
-        //System.out.println(player2.getCurrentSquare());
-
     }
 
     @Test
     public void test_valid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+        movePlayerHandler.move(Direction.RIGHT);
+        movePlayerHandler.move(Direction.UP_RIGHT);
+        endTurnHandler.endTurn();
 
-        player1 = state.getCurrentPlayer();
-
-        try {
-            //System.out.println("player1");
-            //System.out.println(player1.getCurrentSquare());
-            movePlayerHandler.move(Direction.RIGHT);
-            //System.out.println(player1.getCurrentSquare());
-            movePlayerHandler.move(Direction.UP_RIGHT);
-            //System.out.println(player1.getCurrentSquare());
-
-
-            endTurnHandler.endTurn();
-        } catch (GameOverException e) {
-            fail();
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        //System.out.println("player2");
-        player2 = state.getCurrentPlayer();
-
-        //System.out.println(player2.getCurrentSquare());
         movePlayerHandler.move(Direction.DOWN_LEFT);
-        player2.newTurn();
-        //System.out.println(player2.getCurrentSquare());
         movePlayerHandler.move(Direction.LEFT);
-        player2.newTurn();
-        //System.out.println(player2.getCurrentSquare());
         movePlayerHandler.move(Direction.UP_LEFT);
-        player2.newTurn();
-        //System.out.println(player2.getCurrentSquare());
     }
 
     /**
      * Deze test gaat controleren of er wel degelijk items in de grid geplaatst worden.
      */
     @Test
-    public void test_items_grid(){
-        boolean hasItems=false;
+    public void test_items_grid() throws GridTooSmallException {
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
+        boolean hasItems = false;
+        int numberOfLightMines = 0;
+        int numberOfTeleporters = 0;
+        int numberOfIdentitydiscs = 0;
 
-    for(int i = 0;i<10;i++){
-        for(int j = 0;j<10;j++){
-            if(grid.getSquareAtPosition(i,j).getAvailableItems().size() !=0)
-                hasItems=true;
+        for(int i = 0;i<10;i++){
+            for(int j = 0;j<10;j++){
+                if(grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() !=0) {
+                    hasItems=true;
+                    for (Item item:grid.getSquareAtPosition(new Position(i,j)).getAvailableItems()) {
+                        if (item.getName() == "Light Mine") {
+                            numberOfLightMines++;
+                        }
+                        if (item.getName() == "Teleporter") {
+                            numberOfTeleporters++;
+                        }
+                        if (item.getName() == "Uncharged Identity Disc")
+                            numberOfIdentitydiscs++;
+                    }
+                }
+            }
         }
-    }
+        assertTrue(numberOfLightMines <= 2);
+        assertTrue(numberOfTeleporters <= 3);
+        assertTrue(numberOfIdentitydiscs <= 2);
         assertTrue(hasItems);
     }
 
+    private int calculatedistance(Position position1, Position position2) {
+        int x = Math.abs(position1.getHIndex() - position2.getHIndex());
+        int y = Math.abs(position1.getVIndex() - position2.getVIndex());
+        return Math.round((x + y) / 2);
+
+    }
+
+    @Test
+    public void test_charged_identity_disc() throws GridTooSmallException {
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0,9), new Position(9,0));
+      int aantal = 0;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
+                    if (item.getName() == "Charged Identity Disc") {
+                        int distanceFromPlayer1 = calculatedistance(p1Pos, new Position(i, j));
+                        int distanceFromPlayer2 = calculatedistance(p2Pos, new Position(i, j));
+                        System.out.println("distance from player1: " + distanceFromPlayer1);
+                        System.out.println("distance from player2: " + distanceFromPlayer2);
+                        assertTrue(Math.abs(distanceFromPlayer1 - distanceFromPlayer2) < 2);
+                        aantal++;
+
+                    }
+
+                }
+            }
+        }
+        assertTrue(aantal==1);
+    }
+
+    @Test
+    public void test_no_charged_identity_disc() throws GridTooSmallException {
+        List<Position> wallPositions = new ArrayList<Position>();
+        wallPositions.add(new Position(4,5));
+        wallPositions.add(new Position(5,5));
+        wallPositions.add(new Position(5,4));
+        wallPositions.add(new Position(4,4));
+        wallPositions.add(new Position(4,3));
+                   int aantal = 0;
+        grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0,9), new Position(9,0),wallPositions);
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
+                    if (item.getName() == "Charged Identity Disc") {
+                        int distanceFromPlayer1 = calculatedistance(p1Pos, new Position(i, j));
+                        int distanceFromPlayer2 = calculatedistance(p2Pos, new Position(i, j));
+                        System.out.println("squaere:");
+                        System.out.println(grid.getSquareAtPosition(new Position(i, j)));
+                        System.out.println("distance from player1: " + distanceFromPlayer1);
+                        System.out.println("distance from player2: " + distanceFromPlayer2);
+                        assertTrue(Math.abs(distanceFromPlayer1 - distanceFromPlayer2) < 2);
+                                                                             aantal++;
+                    }
+
+                }
+            }
+        }
+        assertTrue(aantal==1);
+    }
+
     @Test(expected = IllegalArgumentException.class)
-    public void test_getInvalidSquare(){
-        grid.getSquareAtPosition(11,11);
+    public void test_getInvalidSquare() {
+        grid.getSquareAtPosition(new Position(11, 11));
     }
 
-    @Test (expected = InvalidMoveException.class)
+    @Test(expected = InvalidMoveException.class)
     public void test_invalid_move_neighbor() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
-        player1 = state.getCurrentPlayer();
-
-
-            movePlayerHandler.move(Direction.RIGHT);
-            movePlayerHandler.move(Direction.RIGHT);
-
-
-
+        movePlayerHandler.move(Direction.RIGHT);
+        movePlayerHandler.move(Direction.RIGHT);
+        endTurnHandler.endTurn();
     }
-
-    public class GameStateStub implements GameState{
-        private Grid gameGrid;
-        private GridFactory gridFactory;
-        private Player currentPlayer;
-        private List<Player> players = new ArrayList<Player>();
-
-        public GameStateStub(String player1Name, String player2Name, int horizontalTiles, int verticalTiles,int square1HorizontalPosition,int square1VerticalPosition,int square2HorizontalPosition,int square2VerticalPosition) throws GridTooSmallException{
-
-            gridFactory = new GridFactory(horizontalTiles, verticalTiles,square1HorizontalPosition,square1VerticalPosition,square2HorizontalPosition,square2VerticalPosition);
-            gameGrid = gridFactory.getGameGrid();
-            Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(square1VerticalPosition, square1HorizontalPosition));
-            Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(square2VerticalPosition, square2HorizontalPosition));
-
-
-            gameGrid = gridFactory.getGameGrid();
-            currentPlayer = p1;
-            players.add(p1);
-            players.add(p2);
-
-        }
-
-        public Player getPlayer1(){
-            return this.players.get(0);
-        }
-
-        public Player getPlayer2(){
-            return this.players.get(1);
-        }
-
-
-
-        public Player getCurrentPlayer() {
-            return currentPlayer;
-        }
-
-        public Grid getGrid() {
-            return gameGrid;
-        }
-
-        public void nextPlayer() {
-            int index = players.indexOf(currentPlayer);
-            index = (index + 1) % players.size();
-            currentPlayer = players.get(index);
-        }
-
-        @Override
-        public Item getCurrentItem() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public void setCurrentItem(Item item) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-
-        @Override
-        public void attach(GameObserver observer) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public void detach(GameObserver observer) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public void notifyObservers() {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-    }
-
 }

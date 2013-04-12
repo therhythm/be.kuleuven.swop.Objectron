@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.domain;
 
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
+import be.kuleuven.swop.objectron.domain.util.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +31,15 @@ public class Wall {
         }
     }
 
-    public List<SquareViewModel> getWallViewModel() {
-        List<SquareViewModel> squaresVm = new ArrayList<SquareViewModel>();
+    public List<Position> getWallViewModel() {
+        List<Position> squaresVm = new ArrayList<Position>();
         for (Square s : this.squares) {
-            squaresVm.add(s.getSquareViewModel());
+            squaresVm.add(s.getPosition());
         }
         return squaresVm;
+    }
+
+    public boolean isWall(Square square){
+        return squares.contains(square);
     }
 }

@@ -1,11 +1,12 @@
 package be.kuleuven.swop.objectron.handler;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.logging.Level;
@@ -40,13 +41,17 @@ public class MovePlayerHandler extends Handler {
      */
     public void move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException {
         try {
-            Player current = state.getCurrentPlayer();
+            Turn currentTurn = state.getCurrentTurn();
+            currentTurn.checkEnoughActions();
+            Player current = currentTurn.getCurrentPlayer();
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
             current.move(newSquare);
-
-            if(checkWin())
+            newSquare.stepOn(state);
+            currentTurn.setMoved(true);
+            if(state.checkWin())
                 throw new GameOverException(current.getName() + ", you win the game!");
 
+            currentTurn.reduceRemainingActions(1);
             state.notifyObservers();
         } catch (InvalidMoveException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");
@@ -55,15 +60,5 @@ public class MovePlayerHandler extends Handler {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do a move when he had no actions remaining.");
             throw e;
         }
-    }
-
-    private boolean checkWin() {
-        Player currentPlayer = state.getCurrentPlayer();
-
-        state.nextPlayer();
-        Square startSquareOtherPlayer = state.getCurrentPlayer().getInitialSquare();
-        state.nextPlayer();
-
-        return currentPlayer.getCurrentSquare().equals(startSquareOtherPlayer);
     }
 }

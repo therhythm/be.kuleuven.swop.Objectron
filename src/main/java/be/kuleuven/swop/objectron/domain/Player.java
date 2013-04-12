@@ -4,10 +4,10 @@ import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,16 +16,14 @@ import java.util.List;
  *         Time: 00:06
  */
 public class Player {
-    private static final int NB_ACTIONS_EACH_TURN = 3;
 
     private String name;
     private Square currentSquare;
     private Square initialSquare;
-    private int availableActions = NB_ACTIONS_EACH_TURN;
-    private int remainingActionsSlowed = 0;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
-    private boolean hasMoved;
+    private int remainingPenalties;
+    private boolean isTeleporting;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
@@ -42,42 +40,34 @@ public class Player {
         return initialSquare;
     }
 
-
-    public void pickupItem(int identifier) throws InventoryFullException, NotEnoughActionsException {
-        checkEnoughActions();
+    public void pickupItem(int identifier) throws InventoryFullException {
         Item item = currentSquare.pickUpItem(identifier);
-
-        try{
-            this.inventory.addItem(item);
-        }catch(InventoryFullException ex){
-            currentSquare.addItem(item);
-            throw ex;
+        if (item.pickupAble()) {
+            try{
+                this.inventory.addItem(item);
+            }catch(InventoryFullException ex){
+                currentSquare.addItem(item);
+                throw ex;
+            }
         }
-
-        reduceAvailableActions();
+        actionPerformed();
     }
 
-    public void move(Square newPosition) throws NotEnoughActionsException {
-        checkEnoughActions();
-        reduceAvailableActions();
+    public void move(Square newPosition) {
+        actionPerformed();
         lightTrail.expand(currentSquare);
         currentSquare = newPosition;
-        currentSquare.stepOn(this);
-        hasMoved = true;
+        isTeleporting = false;
     }
 
-    public void checkEnoughActions() throws NotEnoughActionsException {
-        if (availableActions == 0) {
-            throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
-        }
+    public void teleport(Square destination) {
+        isTeleporting = true;
+        lightTrail.expand(currentSquare);
+        currentSquare = destination;
     }
 
     public String getName() {
         return this.name;
-    }
-
-    public int getAvailableActions() {
-        return availableActions;
     }
 
     public List<Item> getInventoryItems() {
@@ -88,49 +78,50 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item) throws SquareOccupiedException, NotEnoughActionsException {
-        checkEnoughActions();
-        currentSquare.setActiveItem(item);
+    public void useItem(Item item,UseItemRequest useItemRequest) throws SquareOccupiedException, NotEnoughActionsException {
+       
+        item.useItem(useItemRequest);
+
         inventory.removeItem(item);
 
-        reduceAvailableActions();
+        actionPerformed();
     }
 
-    public void newTurn() {
-        int temp = NB_ACTIONS_EACH_TURN - remainingActionsSlowed;
-        if(temp >= 0){
-            availableActions = NB_ACTIONS_EACH_TURN - remainingActionsSlowed;
-            remainingActionsSlowed = 0;
-            hasMoved = false;
-        }else{
-            remainingActionsSlowed = Math.abs(temp);
-            availableActions = 0;
-            hasMoved = true;
-        }
-    }
-
-    public boolean hasMoved() {
-        return hasMoved;
-    }
-
-    public void reduceRemainingActions(int amount) {
-        if (amount > getAvailableActions()){
-            remainingActionsSlowed = amount - availableActions;
-            availableActions = 0;
-        }else{
-            availableActions = availableActions - amount;
-        }
-    }
-
-    private void reduceAvailableActions() {
-        reduceRemainingActions(1);
+    private void actionPerformed() {
         lightTrail.reduce();
     }
 
     public PlayerViewModel getPlayerViewModel() {
         return new PlayerViewModel(getName(),
-                currentSquare.getSquareViewModel(),initialSquare.getSquareViewModel(),
-                getAvailableActions(),
+                currentSquare.getPosition(),
+                initialSquare.getPosition(),
                 lightTrail.getLightTrailViewModel());
+    }
+
+    public int getRemainingPenalties() {
+        return remainingPenalties;
+    }
+
+    public void addRemainingPenalties(int remainingPenalties) {
+        this.remainingPenalties += remainingPenalties;
+    }
+
+    public void reduceRemainingPenalties(int playerActionsEachTurn) {
+        this.remainingPenalties -= playerActionsEachTurn;
+        if(this.remainingPenalties < 0){
+            this.remainingPenalties = 0;
+        }
+    }
+
+    public String toString(){
+        String result = "";
+        result += "name: " + this.getName() + "\n";
+        result += "position: " + this.getCurrentSquare() + "\n";
+
+        return result;
+    }
+
+    public boolean isTeleporting() {
+        return isTeleporting;
     }
 }

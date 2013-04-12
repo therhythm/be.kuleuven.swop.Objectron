@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.domain;
 
+import be.kuleuven.swop.objectron.domain.util.Position;
+
 /**
  * @author : Nik Torfs
  *         Date: 27/02/13
@@ -16,11 +18,8 @@ public enum Direction {
         this.vOperation = vOperation;
     }
 
-    public int applyHorizontalOperation(int horizontalIndex) {
-        return horizontalIndex + hOperation;
-    }
-
-    public int applyVerticalOperation(int verticalIndex) {
-        return verticalIndex + vOperation;
+    public Position applyPositionChange(Position position){
+        return new Position(position.getHIndex() + hOperation,
+                position.getVIndex() + vOperation);
     }
 }

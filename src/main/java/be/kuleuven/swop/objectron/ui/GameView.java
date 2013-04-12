@@ -1,18 +1,22 @@
 package be.kuleuven.swop.objectron.ui;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
-import be.kuleuven.swop.objectron.handler.*;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
+import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.handler.*;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
-import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
+import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author : Nik Torfs
@@ -21,77 +25,98 @@ import java.util.Map;
  */
 public class GameView implements GameObserver {
 
-    private static int HPADDING = 10;
-    private static int VPADDING = 50;
-    private static int TILEWIDTH = 40;
-    private static int TILEHEIGHT = 40;
-    private PlayerViewModel currentPlayer;
+    private static final int HPADDING = 10;
+    private static final int VPADDING = 50;
+    private static final int TILEWIDTH = 40;
+    private static final int TILEHEIGHT = 40;
+
+    private TurnViewModel currentTurn;
     private String selectedItem = "no item";
-    private SquareStates gameGrid[][];
+    private Map<Integer, SquareStates> gameGrid[][];
     private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
     private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
     private HandlerCatalog catalog;
-    private int horizontalTiles;
+    private Dimension dimension;
     private SimpleGUI gui;
-    private int verticalTiles;
-    private SquareViewModel p1_finish;
-    private SquareViewModel p2_finish;
+    private Map<Position, List<Item>> items;   //TODO itemviewmodels
+    private List<PlayerViewModel> players;
+    private Map<String, Position[]> lastPositions = new HashMap<String, Position[]>();
 
 
     public GameView(GameStartViewModel vm) {
         this.catalog = vm.getCatalog();
         vm.getObservable().attach(this);
-        this.horizontalTiles = vm.getNbHorizontalTiles();
-        this.verticalTiles = vm.getNbVerticalTiles();
-        this.gameGrid = new SquareStates[verticalTiles][horizontalTiles];
-        this.currentPlayer = vm.getP1();
-        for (int i = 0; i < gameGrid.length; i++) {
-            for (int j = 0; j < gameGrid[0].length; j++) {
-                gameGrid[i][j] = SquareStates.EMPTY;
+        this.dimension = vm.getDimension();
+        this.gameGrid = new HashMap[dimension.getHeight()][dimension.getWidth()];
+        this.currentTurn = vm.getCurrentTurn();
+        this.items = vm.getItems();
+        for (int i = 0; i < dimension.getHeight(); i++) {
+            for (int j = 0; j < dimension.getWidth(); j++) {
+                gameGrid[i][j] = new HashMap<Integer, SquareStates>();
+                gameGrid[i][j].put(SquareStates.EMPTY.zIndex, SquareStates.EMPTY);
             }
         }
-        for (List<SquareViewModel> sqvm : vm.getWalls()) {
-            for (SquareViewModel sVm : sqvm) {
-                gameGrid[sVm.getVIndex()][sVm.getHIndex()] = SquareStates.WALL;
+        for (List<Position> sqvm : vm.getWalls()) {
+            for (Position sVm : sqvm) {
+                gameGrid[sVm.getVIndex()][sVm.getHIndex()].put(SquareStates.WALL.zIndex, SquareStates.WALL);
+            }
+        }
+        for (Position pos : items.keySet()) {
+            for (Item item : items.get(pos)) {
+                SquareStates state = getItemSquareState(item);
+                gameGrid[pos.getVIndex()][pos.getHIndex()].put(state.zIndex, state);
             }
         }
         PlayerViewModel p1 = vm.getP1();
         PlayerViewModel p2 = vm.getP2();
+        players = new ArrayList<>();
+        players.add(p1);
+        players.add(p2);
         playerColorMap.put(p1.getName(), new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL, SquareStates.P1_FINISH});
         playerColorMap.put(p2.getName(), new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL, SquareStates.P2_FINISH});
-        gameGrid[p1.getVPosition()][p1.getHPosition()] = SquareStates.PLAYER1;
-        gameGrid[p2.getVPosition()][p2.getHPosition()] = SquareStates.PLAYER2;
-        p1_finish = new SquareViewModel(p1.getHPosition(), p1.getVPosition());
-        p2_finish = new SquareViewModel(p2.getHPosition(), p2.getVPosition());
+        Position p1Pos = p1.getPosition();
+        gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()].put(SquareStates.PLAYER1.zIndex, SquareStates.PLAYER1);
+        Position p2Pos = p2.getPosition();
+        lastPositions.put(p1.getName(), new Position[0]);
+        lastPositions.put(p2.getName(), new Position[0]);
+        gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()].put(SquareStates.PLAYER2.zIndex, SquareStates.PLAYER2);
+        gameGrid[p1.getStartPosition().getVIndex()][p1.getStartPosition().getHIndex()].put(SquareStates.P2_FINISH.zIndex, SquareStates.P2_FINISH);
+        gameGrid[p2.getStartPosition().getVIndex()][p2.getStartPosition().getHIndex()].put(SquareStates.P1_FINISH.zIndex, SquareStates.P1_FINISH);
+
+    }
+
+    private SquareStates getItemSquareState(Item item) {
+        if (item instanceof LightMine) {
+            return SquareStates.LIGHT_MINE;
+        } else if (item instanceof IdentityDisc) {
+            return SquareStates.IDENTITY_DISK;
+        } else if(item instanceof Teleporter) {
+            return SquareStates.TELEPORTER;
+        } else {
+            return SquareStates.EMPTY;
+        }
     }
 
     public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
-            int buttonWidth = horizontalTiles * TILEWIDTH / 4;
+            int buttonWidth = dimension.getWidth() * TILEWIDTH / 4;
 
             public void run() {
-                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * horizontalTiles, TILEHEIGHT * verticalTiles + 3 * VPADDING) {
+                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * dimension.getWidth(), TILEHEIGHT * dimension.getHeight() + 3 * VPADDING) {
 
                     @Override
                     public void paint(Graphics2D graphics) {
-                        for (int i = 0; i < horizontalTiles; i++) {
-                            for (int j = 0; j < verticalTiles; j++) {
-                                if (gameGrid[j][i] == SquareStates.EMPTY) {
-                                    if (p1_finish.getHIndex() == i && p1_finish.getVIndex() == j) {
-                                        graphics.drawImage(gridImageMap.get(SquareStates.P1_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
-
-                                    } else if (p2_finish.getHIndex() == i && p2_finish.getVIndex() == j) {
-                                        graphics.drawImage(gridImageMap.get(SquareStates.P2_FINISH), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
-                                    } else {
-                                        graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
-                                    }
-                                } else {
-                                    graphics.drawImage(gridImageMap.get(gameGrid[j][i]), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+                        for (int i = 0; i < dimension.getWidth(); i++) {
+                            for (int j = 0; j < dimension.getHeight(); j++) {
+                                List<Integer> keys = new ArrayList<Integer>(gameGrid[j][i].keySet());
+                                Collections.sort(keys);
+                                for (Integer key : keys) {
+                                    graphics.drawImage(gridImageMap.get(gameGrid[j][i].get(key)), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                                 }
                             }
                         }
-                        graphics.drawString(currentPlayer.getName(), 20, 20);
-                        graphics.drawString("moves remaining: " + currentPlayer.getAvailableActions(), 20, 40);
+                        graphics.drawString(currentTurn.getPlayerViewModel().getName(), 20, 20);
+                        graphics.drawString("moves remaining: " + currentTurn.getRemainingActions(), 20, 40);
                         graphics.drawString("selected item: " + selectedItem, 200, 20);
                     }
                 };
@@ -105,6 +130,11 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("identity_disk.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.CHARGED_IDENTITY_DISK, gui.loadImage("identity_disk_charged.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.POWERFAILURE, gui.loadImage("cell_unpowered.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.TELEPORTER, gui.loadImage("teleporter.png", TILEWIDTH, TILEHEIGHT));
 
 
                 Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
@@ -123,7 +153,7 @@ public class GameView implements GameObserver {
                 // generate direction buttons
                 for (final Direction direction : Direction.values()) {
 
-                    gui.createButton(HPADDING + hMultiplier * 20, verticalTiles * TILEHEIGHT + VPADDING + 20 + vMultiplier * 20, 20, 20, new Runnable() {
+                    gui.createButton(HPADDING + hMultiplier * 20, dimension.getHeight() * TILEHEIGHT + VPADDING + 20 + vMultiplier * 20, 20, 20, new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -133,11 +163,11 @@ public class GameView implements GameObserver {
                                 new DialogView("Sorry that is not a valid move");
                             } catch (NotEnoughActionsException e) {
                                 new DialogView("You have no actions remaining, end the turn.");
-                            }  catch(GameOverException e){
+                            } catch (GameOverException e) {
 
                                 new DialogView(e.getMessage());
 
-                               gui.dispose();
+                                gui.dispose();
                             }
                             gui.repaint();
                         }
@@ -154,7 +184,7 @@ public class GameView implements GameObserver {
                     }
                 }
 
-                final Button pickupButton = gui.createButton(HPADDING + buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button pickupButton = gui.createButton(HPADDING + buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
 
 
@@ -165,7 +195,10 @@ public class GameView implements GameObserver {
                                 @Override
                                 public void doAction(int index) {
                                     try {
+                                        Position currentPosition = currentTurn.getPlayerViewModel().getPosition();
+                                        gameGrid[currentPosition.getVIndex()][currentPosition.getHIndex()].remove(getItemSquareState(items.get(index)).zIndex);
                                         pickUpItemHandler.pickUpItem(index);
+
                                         gui.repaint();
 
                                     } catch (InventoryFullException e) {
@@ -186,11 +219,11 @@ public class GameView implements GameObserver {
                 });
                 pickupButton.setText("Pickup item");
 
-                final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
-                            final List<Item> items = useItemHandler.showInventory();
+                            final List<Item> currentItems = useItemHandler.showInventory();
                             ItemSelectionAction action = new ItemSelectionAction() {
 
                                 @Override
@@ -199,7 +232,7 @@ public class GameView implements GameObserver {
                                     gui.repaint();
                                 }
                             };
-                            new ItemListView(items, action);
+                            new ItemListView(currentItems, action);
                         } catch (InventoryEmptyException e) {
                             new DialogView("Your inventory is empty");
                         }
@@ -208,18 +241,41 @@ public class GameView implements GameObserver {
                 });
                 inventoryButton.setText("Open inventory");
 
-                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth,verticalTiles * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
+                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
                             final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
-                            useItemHandler.useCurrentItem();
+
+
+                            if (selectedItem.contains("Identity Disc")) {
+                                gui.repaint();
+                                ItemSelectionAction action = new ItemSelectionAction() {
+
+                                    @Override
+                                    public void doAction(int index) {
+                                        Direction direction = Direction.values()[index];
+                                        try {
+                                            useItemHandler.useCurrentIdentityDisc(direction);
+                                        } catch (SquareOccupiedException e) {
+                                            new DialogView("The square is already occupied.");
+                                        } catch (NotEnoughActionsException e) {
+                                            new DialogView("You have no actions remaining, end the turn.");
+                                        } catch (NoItemSelectedException e) {
+                                            new DialogView("You don't have an item selected");
+                                        }
+                                    }
+                                };
+                                new DirectionListView(action);
+                            } else {
+                                useItemHandler.useCurrentItem();
+                            }
                             selectedItem = "No item";
                             gui.repaint();
                         } catch (SquareOccupiedException e) {
                             new DialogView("The square is already occupied.");
                         } catch (NotEnoughActionsException e) {
                             new DialogView("You have no actions remaining, end the turn.");
-                        } catch (NoItemSelectedException e){
+                        } catch (NoItemSelectedException e) {
                             new DialogView("You don't have an item selected");
                         }
 
@@ -228,7 +284,7 @@ public class GameView implements GameObserver {
                 });
                 useItemButton.setText("Use Item");
 
-                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth,verticalTiles * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
+                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
                     public void run() {
                         final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
                         useItemHandler.cancelItemUsage();
@@ -239,10 +295,11 @@ public class GameView implements GameObserver {
                 });
                 cancelItemButton.setText("Unselect item");
 
-                final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, verticalTiles * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
                             final EndTurnHandler endTurnHandler = (EndTurnHandler) catalog.getHandler(EndTurnHandler.class);
+                            selectedItem = "no item";
                             endTurnHandler.endTurn();
 
                         } catch (GameOverException e) {
@@ -259,28 +316,65 @@ public class GameView implements GameObserver {
     }
 
 
-    //TODO cleanup or not GUI stuff...
     private void updatePlayer(PlayerViewModel playerViewModel) {
-        if (currentPlayer.getName().equals(playerViewModel.getName())) {
-            gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = SquareStates.EMPTY;
-            for (SquareViewModel svm : currentPlayer.getLightTrail()) {
-                gameGrid[svm.getVIndex()][svm.getHIndex()] = SquareStates.EMPTY;
-            }
+        Position currentPos = playerViewModel.getPosition();
+        SquareStates state = playerColorMap.get(playerViewModel.getName())[0];
+        gameGrid[currentPos.getVIndex()][currentPos.getHIndex()].put(state.zIndex, state);
+        clearLastPositions(playerViewModel.getName());
+        Position[] positions = new Position[playerViewModel.getLightTrail().size()];
+        int index = 0;
+        for (Position svm : playerViewModel.getLightTrail()) {
+            SquareStates lightTrailState = playerColorMap.get(playerViewModel.getName())[1];
+            gameGrid[svm.getVIndex()][svm.getHIndex()].put(lightTrailState.zIndex, lightTrailState);
+            positions[index++] = svm;
         }
-        currentPlayer = playerViewModel;
-        gameGrid[currentPlayer.getVPosition()][currentPlayer.getHPosition()] = playerColorMap.get(currentPlayer.getName())[0];
-        for (SquareViewModel svm : currentPlayer.getLightTrail()) {
-            gameGrid[svm.getVIndex()][svm.getHIndex()] = playerColorMap.get(currentPlayer.getName())[1];
+        lastPositions.put(playerViewModel.getName(), positions);
+        gui.repaint();
+    }
+
+    private void clearLastPositions(String name){
+       for(Position p: lastPositions.get(name)){
+           gameGrid[p.getVIndex()][p.getHIndex()].remove(playerColorMap.get(name)[0].zIndex);
+           gameGrid[p.getVIndex()][p.getHIndex()].remove(playerColorMap.get(name)[1].zIndex);
+       }
+    }
+
+    @Override
+    public void update(TurnViewModel vm, List<PlayerViewModel> players) {
+        currentTurn = vm;
+        for (PlayerViewModel p : players) {
+            updatePlayer(p);
         }
+
+        gui.repaint();
+    }
+
+
+    @Override
+    public void noPower(Position position) {
+        gameGrid[position.getVIndex()][position.getHIndex()].put(SquareStates.POWERFAILURE.zIndex, SquareStates.POWERFAILURE);
         gui.repaint();
     }
 
     @Override
-    public void playerUpdated(PlayerViewModel vm) {
-        updatePlayer(vm);
+    public void regainedPower(Position position) {
+        gameGrid[position.getVIndex()][position.getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
+        gui.repaint();
+    }
+
+    @Override
+    public void itemPlaced(Item item, Position position) {
+        SquareStates state = getItemSquareState(item);
+        gameGrid[position.getVIndex()][position.getHIndex()].put(state.zIndex, state);
     }
 
     public enum SquareStates {
-        WALL, P1_LIGHT_WALL, P2_LIGHT_WALL, PLAYER1, PLAYER2, EMPTY, P1_FINISH, P2_FINISH
+        WALL(100), P1_LIGHT_WALL(99), P2_LIGHT_WALL(98), PLAYER1(97), PLAYER2(96), EMPTY(0), POWERFAILURE(1), P1_FINISH(90), P2_FINISH(91), LIGHT_MINE(50), TELEPORTER(49), IDENTITY_DISK(48), CHARGED_IDENTITY_DISK(47);
+
+        private int zIndex;
+
+        SquareStates(int zIndex) {
+            this.zIndex = zIndex;
+        }
     }
 }
