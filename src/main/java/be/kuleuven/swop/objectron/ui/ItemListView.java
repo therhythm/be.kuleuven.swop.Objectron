@@ -26,6 +26,8 @@ public class ItemListView {
         int hcount = 0, vcount = 0;
         for (int i = 0; i < items.size(); i++) {
             final int index = i;
+            hcount = i % 3;
+            vcount = (int)Math.floor((double)i/3.0);
             inv.createButton(10 + hcount * 40, 10 + vcount * 40, 40, 40, new Runnable() {
                 @Override
                 public void run() {
@@ -33,6 +35,8 @@ public class ItemListView {
                     inv.dispose();
                 }
             }).setImage(itemMap.get(items.get(index).getClass()));
+
+
         }
     }
 
