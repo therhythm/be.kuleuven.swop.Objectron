@@ -6,10 +6,10 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
-import be.kuleuven.swop.objectron.domain.item.ChargedIdentityDisc;
+import be.kuleuven.swop.objectron.domain.item.ChargedIdentityDiscBehavior;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.UnchargedIdentityDisc;
+import be.kuleuven.swop.objectron.domain.item.NormalIdentityDiscBehavior;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -57,7 +57,7 @@ public class Test_Identity_Disc {
 
     @Test
     public void test_Charged_identity_disc_no_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
-        Item identityDisc = new IdentityDisc(new ChargedIdentityDisc());
+        Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
@@ -73,7 +73,7 @@ public class Test_Identity_Disc {
 
     @Test
     public void test_Charged_identity_disc_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
-        Item identityDisc = new IdentityDisc(new ChargedIdentityDisc());
+        Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
 
@@ -100,10 +100,10 @@ public class Test_Identity_Disc {
 
     @Test
     public void test_string_contains(){
-        Item item = new IdentityDisc(new UnchargedIdentityDisc());
+        Item item = new IdentityDisc(new NormalIdentityDiscBehavior());
         assertTrue(item.getName().contains("Identity Disc"));
 
-        Item item2 = new IdentityDisc(new ChargedIdentityDisc());
+        Item item2 = new IdentityDisc(new ChargedIdentityDiscBehavior());
         assertTrue(item2.getName().contains("Identity Disc"));
     }
 }

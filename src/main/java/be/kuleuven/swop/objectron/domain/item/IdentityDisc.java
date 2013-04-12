@@ -13,16 +13,16 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public class IdentityDisc implements Item {
-    private IdentityDiscType identityDiscType;
+    private IdentityDiscBehavior identityDiscBehavior;
 
-    public IdentityDisc(IdentityDiscType identityDiscType) {
-       this.identityDiscType = identityDiscType;
+    public IdentityDisc(IdentityDiscBehavior identityDiscBehavior) {
+       this.identityDiscBehavior = identityDiscBehavior;
 
     }
 
     @Override
     public String getName() {
-      return  identityDiscType.getName();
+      return  identityDiscBehavior.getName();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class IdentityDisc implements Item {
     public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
         if (!validDirection(useItemRequest.getDirection()))
             throw new IllegalArgumentException("the direction can't be diagonal");
-        identityDiscType.useItem(useItemRequest, this);
+        identityDiscBehavior.useItem(useItemRequest, this);
     }
 
     public boolean playerHit(UseItemRequest useItemRequest, Square squareItem) {

@@ -10,7 +10,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 14:37
  * To change this template use File | Settings | File Templates.
  */
-public class UnchargedIdentityDisc implements IdentityDiscType {
+public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
     private final int maxRange = 4;
     @Override
         public void useItem(UseItemRequest useItemRequest,IdentityDisc identityDisc) throws SquareOccupiedException {

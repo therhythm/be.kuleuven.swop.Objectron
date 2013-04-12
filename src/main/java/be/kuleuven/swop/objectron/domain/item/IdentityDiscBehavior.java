@@ -9,7 +9,7 @@ import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
  * Time: 14:49
  * To change this template use File | Settings | File Templates.
  */
-public interface IdentityDiscType {
+public interface IdentityDiscBehavior {
     public void useItem(UseItemRequest useItemRequest,IdentityDisc identityDisc) throws SquareOccupiedException;
     public String getName();
 }

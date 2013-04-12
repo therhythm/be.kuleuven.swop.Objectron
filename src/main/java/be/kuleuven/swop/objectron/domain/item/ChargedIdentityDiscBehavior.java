@@ -10,7 +10,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 14:37
  * To change this template use File | Settings | File Templates.
  */
-public class ChargedIdentityDisc implements IdentityDiscType {
+public class ChargedIdentityDiscBehavior implements IdentityDiscBehavior {
 
 
     @Override

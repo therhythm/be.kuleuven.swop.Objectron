@@ -83,7 +83,7 @@ public class GridBuilder {
             randomSquare = randomMiddleSquares.get(randomIndex);
 
             if(!randomSquare.isObstructed()) {
-                randomSquare.addItem(new IdentityDisc(new ChargedIdentityDisc()));
+                randomSquare.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
                 break;
             }else
                 randomMiddleSquares.remove(randomIndex);
@@ -94,10 +94,10 @@ public class GridBuilder {
         int numberOfItems = (int) Math.ceil(Settings.PERCENTAGE_OF_ITEMS * dimension.area());
 
         placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new LightMine());
-        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new UnchargedIdentityDisc()));
+        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
 
         placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new LightMine());
-        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new UnchargedIdentityDisc()));
+        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
 
         placeChargedIdentityDisc();
 
@@ -107,7 +107,7 @@ public class GridBuilder {
 
         for (int i = 0; i < numberOfItems; i++) {
             lightMines.add(new LightMine());
-            identityDiscs.add(new IdentityDisc(new UnchargedIdentityDisc()));
+            identityDiscs.add(new IdentityDisc(new NormalIdentityDiscBehavior()));
         }
         placeOtherItems(lightMines);
         placeOtherItems(identityDiscs);
