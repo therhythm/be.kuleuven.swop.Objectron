@@ -23,7 +23,6 @@ public class Player {
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
     private int remainingPenalties;
-    private boolean hasMoved;
     private boolean isTeleporting;
 
     public Player(String name, Square currentSquare) {
