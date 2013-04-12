@@ -267,10 +267,6 @@ public class GameView implements GameObserver {
                                 };
                                 new DirectionListView(action);
                             } else {
-                                Position currentPosition = currentTurn.getPlayerViewModel().getPosition();
-                                if(selectedItem == "Light Mine" ){
-                                    gameGrid[currentPosition.getVIndex()][currentPosition.getHIndex()].put(SquareStates.LIGHT_MINE.zIndex, SquareStates.LIGHT_MINE);
-                                }
                                 useItemHandler.useCurrentItem();
                             }
                             selectedItem = "No item";
@@ -364,6 +360,12 @@ public class GameView implements GameObserver {
     public void regainedPower(Position position) {
         gameGrid[position.getVIndex()][position.getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
         gui.repaint();
+    }
+
+    @Override
+    public void itemPlaced(Item item, Position position) {
+        SquareStates state = getItemSquareState(item);
+        gameGrid[position.getVIndex()][position.getHIndex()].put(state.zIndex, state);
     }
 
     public enum SquareStates {

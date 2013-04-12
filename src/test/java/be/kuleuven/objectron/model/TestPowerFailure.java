@@ -10,6 +10,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
@@ -117,5 +118,10 @@ public class TestPowerFailure implements SquareObserver {
     @Override
     public void regainedPower(Position position) {
        regainedPower = true;
+    }
+
+    @Override
+    public void itemPlaced(Item item, Position position) {
+        //irrelevant
     }
 }

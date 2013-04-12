@@ -72,6 +72,7 @@ public class Square implements Observable<SquareObserver> {
 
     public void addItem(Item item) {
         this.items.add(item);
+        notifyItemPlaced(item);
     }
 
     public Position getPosition(){
@@ -168,6 +169,12 @@ public class Square implements Observable<SquareObserver> {
     public void notifyPowered(){
         for(SquareObserver observer: observers){
             observer.regainedPower(this.position);
+        }
+    }
+
+    public void notifyItemPlaced(Item item){
+        for(SquareObserver observer: observers){
+            observer.itemPlaced(item,  this.position);
         }
     }
 }
