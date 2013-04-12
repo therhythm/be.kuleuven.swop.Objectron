@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  * Time: 21:26
  * To change this template use File | Settings | File Templates.
  */
-public class TestSquare implements SquareObserver {
+public class TestPowerFailure implements SquareObserver {
     private Square currentSquare;
     private Player player;
     private GameState state;
@@ -112,8 +112,6 @@ public class TestSquare implements SquareObserver {
         if(position.getHIndex() == 5 && position.getVIndex() == 5){
             powerLoss = true;
         }
-
-
     }
 
     @Override
