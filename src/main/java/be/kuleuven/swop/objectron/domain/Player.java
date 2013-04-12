@@ -96,8 +96,15 @@ public class Player {
         return remainingPenalties;
     }
 
-    public void setRemainingPenalties(int remainingPenalties) {
-        this.remainingPenalties = remainingPenalties;
+    public void addRemainingPenalties(int remainingPenalties) {
+        this.remainingPenalties += remainingPenalties;
+    }
+
+    public void reduceRemainingPenalties(int playerActionsEachTurn) {
+        this.remainingPenalties -= playerActionsEachTurn;
+        if(this.remainingPenalties < 0){
+            this.remainingPenalties = 0;
+        }
     }
 
     public String toString(){
