@@ -47,8 +47,8 @@ public class PickUpItemHandler extends Handler {
             currentTurn.checkEnoughActions();
             Player currentPlayer = currentTurn.getCurrentPlayer();
             currentPlayer.pickupItem(selectionId);
-            state.notifyObservers();
             currentTurn.reduceRemainingActions(1);
+            state.notifyObservers();
         } catch (InventoryFullException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has a full inventory!");
             throw e;
