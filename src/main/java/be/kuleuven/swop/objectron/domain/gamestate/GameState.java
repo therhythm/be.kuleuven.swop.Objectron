@@ -141,4 +141,11 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
             observer.regainedPower(position);
         }
     }
+
+    @Override
+    public void itemPlaced(Item item, Position position) {
+        for(GameObserver observer : observers){
+            observer.itemPlaced(item,  position);
+        }
+    }
 }

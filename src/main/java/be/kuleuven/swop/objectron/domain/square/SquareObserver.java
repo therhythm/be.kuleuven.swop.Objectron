@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.domain.square;
 
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
 /**
@@ -12,4 +13,5 @@ import be.kuleuven.swop.objectron.domain.util.Position;
 public interface SquareObserver {
     public void lostPower(Position position);
     public void regainedPower(Position position);
+    public void itemPlaced(Item item, Position position);
 }

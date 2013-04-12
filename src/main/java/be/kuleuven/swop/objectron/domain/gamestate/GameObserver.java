@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
@@ -18,4 +19,6 @@ public interface GameObserver {
     void noPower(Position position);
 
     void regainedPower(Position position);
+
+    void itemPlaced(Item item, Position position);
 }
