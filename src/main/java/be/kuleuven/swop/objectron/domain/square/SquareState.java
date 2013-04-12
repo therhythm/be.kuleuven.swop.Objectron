@@ -9,9 +9,9 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
  *         Time: 02:57
  */
 public interface SquareState {
-    void newTurn(Turn currentTurn, boolean currentSquare, Transitionable<SquareState> context);
+    void newTurn(Turn currentTurn, boolean currentSquare, Square context);
 
     void stepOn(GameState gameState);
 
-    void powerFailure(Transitionable<SquareState> context);
+    void powerFailure(Square context);
 }
