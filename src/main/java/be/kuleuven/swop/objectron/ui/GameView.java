@@ -38,9 +38,8 @@ public class GameView implements GameObserver {
     private HandlerCatalog catalog;
     private Dimension dimension;
     private SimpleGUI gui;
-    private Map<Position,List<Item>> items;   //TODO itemviewmodels
+    private Map<Position, List<Item>> items;   //TODO itemviewmodels
     private List<PlayerViewModel> players;
-
 
 
     public GameView(GameStartViewModel vm) {
@@ -52,7 +51,7 @@ public class GameView implements GameObserver {
         this.items = vm.getItems();
         for (int i = 0; i < dimension.getHeight(); i++) {
             for (int j = 0; j < dimension.getWidth(); j++) {
-                gameGrid[i][j] = new HashMap<Integer,SquareStates>();
+                gameGrid[i][j] = new HashMap<Integer, SquareStates>();
                 gameGrid[i][j].put(SquareStates.EMPTY.zIndex, SquareStates.EMPTY);
             }
         }
@@ -61,10 +60,10 @@ public class GameView implements GameObserver {
                 gameGrid[sVm.getVIndex()][sVm.getHIndex()].put(SquareStates.WALL.zIndex, SquareStates.WALL);
             }
         }
-        for (Position pos : items.keySet()){
-            for(Item item : items.get(pos)){
+        for (Position pos : items.keySet()) {
+            for (Item item : items.get(pos)) {
                 SquareStates state = getItemSquareState(item);
-                gameGrid[pos.getVIndex()][pos.getHIndex()].put(state.zIndex,state);
+                gameGrid[pos.getVIndex()][pos.getHIndex()].put(state.zIndex, state);
             }
         }
         PlayerViewModel p1 = vm.getP1();
@@ -83,14 +82,12 @@ public class GameView implements GameObserver {
 
     }
 
-    //TODO ugly: could be done with visitor but item is not accepting any visitors at the moment and making it for the GUI would be overkill
     private SquareStates getItemSquareState(Item item) {
-        if(item instanceof LightMine){
+        if (item instanceof LightMine) {
             return SquareStates.LIGHT_MINE;
-        }else{
-            if(item instanceof IdentityDisc){
-                return SquareStates.IDENTITY_DISK;
-            }
+        } else if (item instanceof IdentityDisc) {
+            return SquareStates.IDENTITY_DISK;
+        } else {
             //TODO other items
             return SquareStates.EMPTY;
         }
@@ -109,7 +106,7 @@ public class GameView implements GameObserver {
                             for (int j = 0; j < dimension.getHeight(); j++) {
                                 List<Integer> keys = new ArrayList<Integer>(gameGrid[j][i].keySet());
                                 Collections.sort(keys);
-                                for(Integer key : keys){
+                                for (Integer key : keys) {
                                     graphics.drawImage(gridImageMap.get(gameGrid[j][i].get(key)), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
                                 }
                             }
@@ -129,13 +126,10 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
-
-                gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH,TILEHEIGHT));
-                gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("lightgrenade.png", TILEWIDTH,TILEHEIGHT));
-
-
+                gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("identity_disk.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.CHARGED_IDENTITY_DISK, gui.loadImage("identity_disk_charged.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.POWERFAILURE, gui.loadImage("cell_unpowered.png", TILEWIDTH, TILEHEIGHT));
-
 
 
                 Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
@@ -250,15 +244,19 @@ public class GameView implements GameObserver {
 
                                     @Override
                                     public void doAction(int index) {
-                                        new DialogView("TEST action = " + index);
-                                        selectedItem = useItemHandler.selectItemFromInventory(index);
-                                        gui.repaint();
+                                        Direction direction = Direction.values()[index];
+                                        try {
+                                            useItemHandler.useCurrentIdentityDisc(direction);
+                                        } catch (SquareOccupiedException e) {
+                                            new DialogView("The square is already occupied.");
+                                        } catch (NotEnoughActionsException e) {
+                                            new DialogView("You have no actions remaining, end the turn.");
+                                        } catch (NoItemSelectedException e) {
+                                            new DialogView("You don't have an item selected");
+                                        }
                                     }
                                 };
-                                new DirectionListView( action);
-
-                                //TODO create input for direction
-                                useItemHandler.useCurrentIdentityDisc(Direction.UP);
+                                new DirectionListView(action);
                             } else {
                                 useItemHandler.useCurrentItem();
                             }
@@ -324,7 +322,7 @@ public class GameView implements GameObserver {
     @Override
     public void update(TurnViewModel vm, List<PlayerViewModel> players) {
         currentTurn = vm;
-        for(PlayerViewModel p : players){
+        for (PlayerViewModel p : players) {
             updatePlayer(p);
         }
 
@@ -343,11 +341,11 @@ public class GameView implements GameObserver {
     }
 
     public enum SquareStates {
-        WALL(100), P1_LIGHT_WALL(99), P2_LIGHT_WALL(98), PLAYER1(97), PLAYER2(96), EMPTY(0),POWERFAILURE(1), P1_FINISH(90), P2_FINISH(91), LIGHT_MINE(50), TELEPORTER(49), IDENTITY_DISK(48);
+        WALL(100), P1_LIGHT_WALL(99), P2_LIGHT_WALL(98), PLAYER1(97), PLAYER2(96), EMPTY(0), POWERFAILURE(1), P1_FINISH(90), P2_FINISH(91), LIGHT_MINE(50), TELEPORTER(49), IDENTITY_DISK(48), CHARGED_IDENTITY_DISK(47);
 
         private int zIndex;
 
-        SquareStates(int zIndex){
+        SquareStates(int zIndex) {
             this.zIndex = zIndex;
         }
     }

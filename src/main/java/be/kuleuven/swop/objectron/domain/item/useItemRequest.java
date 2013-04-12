@@ -8,8 +8,6 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.List;
 
-import com.sun.xml.internal.org.jvnet.fastinfoset.stax.LowLevelFastInfosetStreamWriter;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Piet
