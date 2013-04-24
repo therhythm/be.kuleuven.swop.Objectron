@@ -25,11 +25,11 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
     private List<GameObserver> observers = new ArrayList<>();
     private Turn currentTurn;
 
-    public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException{
-        Position p1Pos = new Position(0, dimension.getHeight() -1);
-        Position p2Pos = new Position(dimension.getWidth()-1, 0);
+    public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException {
+        Position p1Pos = new Position(0, dimension.getHeight() - 1);
+        Position p2Pos = new Position(dimension.getWidth() - 1, 0);
         this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos, this);
-       // this.gameGrid = GridFactory.gridWithoutPowerFailures(dimension, p1Pos, p2Pos);
+        // this.gameGrid = GridFactory.gridWithoutPowerFailures(dimension, p1Pos, p2Pos);
 
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
@@ -39,15 +39,15 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         players.add(p2);
     }
 
-    public GameState(String player1Name, String player2Name, Dimension dimension, Grid gameGrid) throws GridTooSmallException{
+    public GameState(String player1Name, String player2Name, Dimension dimension, Grid gameGrid) throws GridTooSmallException {
         this(player1Name,
                 player2Name,
-                new Position(0, dimension.getHeight() -1),
-                new Position(dimension.getWidth()-1, 0),
+                new Position(0, dimension.getHeight() - 1),
+                new Position(dimension.getWidth() - 1, 0),
                 gameGrid);
     }
 
-    public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos, Grid gameGrid) throws GridTooSmallException{
+    public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos, Grid gameGrid) throws GridTooSmallException {
         this.gameGrid = gameGrid;
 
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
@@ -66,7 +66,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         return gameGrid;
     }
 
-    public void endTurn(){
+    public void endTurn() {
         int index = players.indexOf(currentTurn.getCurrentPlayer());
         index = (index + 1) % players.size();
 
@@ -76,17 +76,17 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         notifyObservers();
     }
 
-    public void extraTurn(){
+    public void extraTurn() {
         gameGrid.newTurn(currentTurn);
         notifyObservers();
     }
 
-    public void notifyObservers(){
+    public void notifyObservers() {
         List<PlayerViewModel> playerVMs = new ArrayList<>();
-        for(Player p : players){
+        for (Player p : players) {
             playerVMs.add(p.getPlayerViewModel());
         }
-        for(GameObserver observer : observers){
+        for (GameObserver observer : observers) {
             observer.update(currentTurn.getViewModel(), playerVMs);
         }
     }
@@ -99,7 +99,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         observers.remove(observer);
     }
 
-    public Turn getCurrentTurn(){
+    public Turn getCurrentTurn() {
         return this.currentTurn;
     }
 
@@ -112,12 +112,12 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         notifyObservers();
     }
 
-    public boolean checkWin(){
+    public boolean checkWin() {
         Player currentPlayer = currentTurn.getCurrentPlayer();
 
-        for(Player otherPlayer : players){
-            if(!otherPlayer.equals(currentPlayer) &&
-                otherPlayer.getInitialSquare().equals(currentPlayer.getCurrentSquare())){
+        for (Player otherPlayer : players) {
+            if (!otherPlayer.equals(currentPlayer) &&
+                    otherPlayer.getInitialSquare().equals(currentPlayer.getCurrentSquare())) {
                 return true;
             }
         }
@@ -130,22 +130,22 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
 
     @Override
     public void lostPower(Position position) {
-        for(GameObserver observer : observers){
+        for (GameObserver observer : observers) {
             observer.noPower(position);
         }
     }
 
     @Override
     public void regainedPower(Position position) {
-        for(GameObserver observer : observers){
+        for (GameObserver observer : observers) {
             observer.regainedPower(position);
         }
     }
 
     @Override
     public void itemPlaced(Item item, Position position) {
-        for(GameObserver observer : observers){
-            observer.itemPlaced(item,  position);
+        for (GameObserver observer : observers) {
+            observer.itemPlaced(item, position);
         }
     }
 }

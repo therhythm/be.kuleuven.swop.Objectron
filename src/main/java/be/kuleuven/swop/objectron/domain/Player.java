@@ -5,7 +5,6 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.ItemDeployer;
-import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
@@ -43,9 +42,9 @@ public class Player {
     public void pickupItem(int identifier) throws InventoryFullException {
         Item item = currentSquare.pickUpItem(identifier);
         if (item.pickupAble()) {
-            try{
+            try {
                 this.inventory.addItem(item);
-            }catch(InventoryFullException ex){
+            } catch (InventoryFullException ex) {
                 currentSquare.addItem(item);
                 throw ex;
             }
@@ -78,8 +77,8 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item,ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException {
-       
+    public void useItem(Item item, ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException {
+
         deployer.deploy(item);
 
         inventory.removeItem(item);
@@ -108,12 +107,12 @@ public class Player {
 
     public void reduceRemainingPenalties(int playerActionsEachTurn) {
         this.remainingPenalties -= playerActionsEachTurn;
-        if(this.remainingPenalties < 0){
+        if (this.remainingPenalties < 0) {
             this.remainingPenalties = 0;
         }
     }
 
-    public String toString(){
+    public String toString() {
         String result = "";
         result += "name: " + this.getName() + "\n";
         result += "position: " + this.getCurrentSquare() + "\n";

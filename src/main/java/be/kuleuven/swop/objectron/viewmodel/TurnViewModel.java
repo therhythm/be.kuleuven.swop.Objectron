@@ -11,16 +11,16 @@ public class TurnViewModel {
     private int remainingActions;
     private PlayerViewModel playerViewModel;
 
-    public TurnViewModel(int remainingActions, PlayerViewModel playerViewModel){
+    public TurnViewModel(int remainingActions, PlayerViewModel playerViewModel) {
         this.remainingActions = remainingActions;
         this.playerViewModel = playerViewModel;
     }
 
-    public int getRemainingActions(){
+    public int getRemainingActions() {
         return this.remainingActions;
     }
 
-    public PlayerViewModel getPlayerViewModel(){
+    public PlayerViewModel getPlayerViewModel() {
         return this.playerViewModel;
     }
 }

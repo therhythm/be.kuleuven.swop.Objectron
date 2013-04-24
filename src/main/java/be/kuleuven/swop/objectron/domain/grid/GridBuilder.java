@@ -3,7 +3,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
-import be.kuleuven.swop.objectron.domain.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.*;
@@ -74,7 +74,7 @@ public class GridBuilder {
     }
 
     private Square calculateMiddleSquare() {
-        int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()+1) / 2);
+        int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
         int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
         return squares[VIndex][HIndex];
     }
@@ -164,7 +164,7 @@ public class GridBuilder {
         }
     }
 
-    private void buildWall(){
+    private void buildWall() {
         Square randomSquare = getRandomSquare();
         while (!isValidWallPosition(randomSquare)) {
             randomSquare = getRandomSquare();
@@ -270,7 +270,6 @@ public class GridBuilder {
     }
 
 
-
     public void initGrid(int powerFailureChance) {
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
@@ -284,6 +283,7 @@ public class GridBuilder {
         }
         setupNeighbours();
     }
+
     private void setupNeighbours() {
         for (int vertical = 0; vertical < dimension.getHeight(); vertical++) {
             for (int horizontal = 0; horizontal < dimension.getWidth(); horizontal++) {

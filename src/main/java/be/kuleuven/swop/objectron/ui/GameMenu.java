@@ -17,7 +17,7 @@ public class GameMenu {
 
     private SimpleGUI gui;
 
-    public GameMenu(final StartGameHandler handler){
+    public GameMenu(final StartGameHandler handler) {
         gui = new SimpleGUI("Objectron", 300, 300) {
             @Override
             public void paint(Graphics2D graphics) {
@@ -34,25 +34,25 @@ public class GameMenu {
         final JTextField nbVerticalTilesField = gui.createTextField(20, 210, 260, 20);
         gui.repaint();
 
-        gui.createButton(20,260,260,20,new Runnable() {
+        gui.createButton(20, 260, 260, 20, new Runnable() {
             @Override
             public void run() {
-                if(nbHorizontalTilesField.getText().isEmpty()
-                        || nbVerticalTilesField .getText().isEmpty()
+                if (nbHorizontalTilesField.getText().isEmpty()
+                        || nbVerticalTilesField.getText().isEmpty()
                         || p1NameField.getText().isEmpty()
-                        || p2NameField.getText().isEmpty()){
+                        || p2NameField.getText().isEmpty()) {
                     new DialogView("Please fill in all textfields");
-                }else{
-                    try{
+                } else {
+                    try {
                         int nbHorizontalTiles = Integer.parseInt(nbHorizontalTilesField.getText());
                         int nbVerticalTiles = Integer.parseInt(nbVerticalTilesField.getText());
-                        if(nbHorizontalTiles < 0 || nbVerticalTiles < 1){
+                        if (nbHorizontalTiles < 0 || nbVerticalTiles < 1) {
                             new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!");
                         }
-                        GameStartViewModel vm = handler.startNewGame(p1NameField.getText(), p2NameField.getText(), new Dimension(nbHorizontalTiles,nbVerticalTiles));
+                        GameStartViewModel vm = handler.startNewGame(p1NameField.getText(), p2NameField.getText(), new Dimension(nbHorizontalTiles, nbVerticalTiles));
                         new GameView(vm).run();
                         gui.dispose();
-                    }catch(NumberFormatException ex){
+                    } catch (NumberFormatException ex) {
                         new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!");
                     } catch (GridTooSmallException e) {
                         new DialogView("The given grid dimensions are too small (min 10x10)");

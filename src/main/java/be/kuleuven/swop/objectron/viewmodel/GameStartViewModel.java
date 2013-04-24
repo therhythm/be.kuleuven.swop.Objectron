@@ -24,7 +24,7 @@ public class GameStartViewModel {
     private TurnViewModel currentTurn;
     private List<List<Position>> walls;
 
-    private Map<Position,List<Item>> items;
+    private Map<Position, List<Item>> items;
 
     private Observable<GameObserver> observable;
 
@@ -36,7 +36,7 @@ public class GameStartViewModel {
                               TurnViewModel currentTurn,
                               List<List<Position>> walls,
 
-                              Map<Position,List<Item>> items,
+                              Map<Position, List<Item>> items,
 
 
                               Observable<GameObserver> observable) {
@@ -55,7 +55,7 @@ public class GameStartViewModel {
         return catalog;
     }
 
-    public Dimension getDimension(){
+    public Dimension getDimension() {
         return this.dimension;
     }
 
@@ -67,7 +67,7 @@ public class GameStartViewModel {
         return p2;
     }
 
-    public TurnViewModel getCurrentTurn(){
+    public TurnViewModel getCurrentTurn() {
         return this.currentTurn;
     }
 
@@ -76,7 +76,7 @@ public class GameStartViewModel {
     }
 
 
-    public Map<Position,List<Item>> getItems(){
+    public Map<Position, List<Item>> getItems() {
         return items;
     }
 

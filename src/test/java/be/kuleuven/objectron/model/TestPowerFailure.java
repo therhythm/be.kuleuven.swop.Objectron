@@ -2,7 +2,6 @@ package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
@@ -19,7 +18,8 @@ import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,7 +39,7 @@ public class TestPowerFailure implements SquareObserver {
     private int powerLossCounter;
 
     @Before
-    public void setUp()throws GridTooSmallException, SquareOccupiedException {
+    public void setUp() throws GridTooSmallException, SquareOccupiedException {
         Dimension dimension = new Dimension(10, 10);
         grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
         state = new GameState("p1", "p2", dimension, grid);
@@ -52,7 +52,7 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void testStartUnpowered(){
+    public void testStartUnpowered() {
         state.endTurn();
         currentSquare.receivePowerFailure();
         state.endTurn();
@@ -60,7 +60,7 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void testStepOnUnpoweredSquare() throws GameOverException, InvalidMoveException, NotEnoughActionsException{
+    public void testStepOnUnpoweredSquare() throws GameOverException, InvalidMoveException, NotEnoughActionsException {
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure();
         assertEquals(player, state.getCurrentPlayer());
         movePlayerHandler.move(Direction.UP);
@@ -68,7 +68,7 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void testStepOnActiveUnpowered() throws NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException{
+    public void testStepOnActiveUnpowered() throws NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException {
         currentSquare.getNeighbour(Direction.UP).setActiveItem(new LightMine());
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure();
         int remainingActionsAfterMove = state.getCurrentTurn().getActionsRemaining() - 1;
@@ -78,15 +78,15 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void checkReceivingPowerFailure() throws GridTooSmallException{
-        grid = GridFactory.gridWithoutWalls(new Dimension(10,10), new Position(0,0), new Position(2,2));
-        Square currentSquare = grid.getSquareAtPosition(new Position(5,5));
+    public void checkReceivingPowerFailure() throws GridTooSmallException {
+        grid = GridFactory.gridWithoutWalls(new Dimension(10, 10), new Position(0, 0), new Position(2, 2));
+        Square currentSquare = grid.getSquareAtPosition(new Position(5, 5));
         currentSquare.attach(this);
-        for(Direction d: Direction.values()){
+        for (Direction d : Direction.values()) {
             currentSquare.getNeighbour(d).attach(this);
         }
 
-        while (!powerLoss){
+        while (!powerLoss) {
             currentSquare.newTurn(new Turn(player));
         }
 
@@ -94,11 +94,11 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void testRegainPower(){
+    public void testRegainPower() {
         currentSquare.receivePowerFailure();
         currentSquare.attach(this);
-        for(int i = 0; i < UnpoweredSquareState.TURNS_WITHOUT_POWER; i++){
-             state.endTurn();
+        for (int i = 0; i < UnpoweredSquareState.TURNS_WITHOUT_POWER; i++) {
+            state.endTurn();
         }
         assertEquals(true, regainedPower);
     }
@@ -106,15 +106,15 @@ public class TestPowerFailure implements SquareObserver {
 
     @Override
     public void lostPower(Position position) {
-        powerLossCounter ++;
-        if(position.getHIndex() == 5 && position.getVIndex() == 5){
+        powerLossCounter++;
+        if (position.getHIndex() == 5 && position.getVIndex() == 5) {
             powerLoss = true;
         }
     }
 
     @Override
     public void regainedPower(Position position) {
-       regainedPower = true;
+        regainedPower = true;
     }
 
     @Override

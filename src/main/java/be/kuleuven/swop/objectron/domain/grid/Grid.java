@@ -26,7 +26,7 @@ public class Grid {
     private Dimension dimension;
     private List<Wall> walls;
 
-    public Grid(Square[][] squares,List<Wall> walls, Dimension dimension){
+    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension) {
         this.squares = squares;
         this.walls = walls;
         this.dimension = dimension;
@@ -81,22 +81,22 @@ public class Grid {
     }
 
     public boolean isWall(Square square) {
-        if (walls==null)
+        if (walls == null)
             return false;
         for (Wall wall : walls) {
 
-                if (wall.isWall(square))
-                    return true;
+            if (wall.isWall(square))
+                return true;
         }
 
         return false;
     }
 
-    public Map<Position,List<Item>> getItems() {
-        Map<Position,List<Item>> items = new HashMap<>();
-        for(Square[] row : squares){
-            for(Square sq : row){
-                items.put(sq.getPosition(),sq.getAvailableItems());
+    public Map<Position, List<Item>> getItems() {
+        Map<Position, List<Item>> items = new HashMap<>();
+        for (Square[] row : squares) {
+            for (Square sq : row) {
+                items.put(sq.getPosition(), sq.getAvailableItems());
             }
         }
         return items;

@@ -19,13 +19,13 @@ public class ActivateRequest {
     private Square destinationSquare;
     private IdentityDisc identityDisc;
 
-    public ActivateRequest(IdentityDisc identityDisc, Square destinationSquare){
-       this.identityDisc = identityDisc;
+    public ActivateRequest(IdentityDisc identityDisc, Square destinationSquare) {
+        this.identityDisc = identityDisc;
         this.destinationSquare = destinationSquare;
     }
 
 
-    public ActivateRequest(Player playerHit,GameState gamestate) {
+    public ActivateRequest(Player playerHit, GameState gamestate) {
         this.gamestate = gamestate;
         this.playerHit = playerHit;
     }
@@ -43,11 +43,11 @@ public class ActivateRequest {
         return playerHit;
     }
 
-    public Turn getCurrentTurn(){
+    public Turn getCurrentTurn() {
         return gamestate.getCurrentTurn();
     }
 
-    public Player getCurrentPlayer(){
+    public Player getCurrentPlayer() {
         return gamestate.getCurrentPlayer();
     }
 

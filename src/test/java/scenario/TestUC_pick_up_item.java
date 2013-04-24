@@ -35,7 +35,7 @@ public class TestUC_pick_up_item {
     private GameState gameState;
 
     @Before
-    public void setUp() throws GridTooSmallException{
+    public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
         Grid grid = GridFactory.gridWithoutItems(dimension, new Position(0, 9), new Position(9, 0));
         gameState = new GameState("p1", "p2", dimension, grid);
@@ -92,14 +92,14 @@ public class TestUC_pick_up_item {
         }
     }
 
-    @Test (expected = NotEnoughActionsException.class)
+    @Test(expected = NotEnoughActionsException.class)
     public void test_getAvailableItems_notEnoughActions() throws InventoryFullException, NotEnoughActionsException, SquareEmptyException {
 
         for (int i = 0; i < 4; i++) {
             currentSquare.addItem(new LightMine());
         }
 
-        for(int i = 0;i<3;i++){
+        for (int i = 0; i < 3; i++) {
             pickUpItemHandler.pickUpItem(0);
         }
 

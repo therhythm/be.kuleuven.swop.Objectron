@@ -48,7 +48,7 @@ public class MovePlayerHandler extends Handler {
             current.move(newSquare);
             newSquare.stepOn(state);
             currentTurn.setMoved(true);
-            if(state.checkWin())
+            if (state.checkWin())
                 throw new GameOverException(current.getName() + ", you win the game!");
 
             currentTurn.reduceRemainingActions(1);

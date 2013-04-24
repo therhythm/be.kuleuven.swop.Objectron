@@ -17,11 +17,11 @@ public class UnpoweredSquareState implements SquareState {
 
     @Override
     public void newTurn(Turn currentTurn, boolean currentSquare, Square context) {
-        if(currentSquare){
+        if (currentSquare) {
             currentTurn.reduceRemainingActions(ACTIONS_TO_REDUCE);
         }
         remainingTurns--;
-        if(remainingTurns == 0){
+        if (remainingTurns == 0) {
             context.transitionState(new PoweredSquareState());
             context.notifyPowered();
         }
@@ -29,10 +29,10 @@ public class UnpoweredSquareState implements SquareState {
 
     @Override
     public void stepOn(GameState gameState) {
-        if(gameState.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()){
-           gameState.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
-        }else{
-           gameState.endTurn();
+        if (gameState.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()) {
+            gameState.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
+        } else {
+            gameState.endTurn();
         }
     }
 

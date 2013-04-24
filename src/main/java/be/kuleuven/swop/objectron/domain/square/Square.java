@@ -2,12 +2,12 @@ package be.kuleuven.swop.objectron.domain.square;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -37,7 +37,7 @@ public class Square implements Observable<SquareObserver> {
         this.state = new PoweredSquareState();
     }
 
-    public Square(final Position position, int powerFailureChance){
+    public Square(final Position position, int powerFailureChance) {
         this(position);
         this.powerFailureChance = powerFailureChance;
     }
@@ -62,7 +62,7 @@ public class Square implements Observable<SquareObserver> {
         state.stepOn(gameState);
 
         setObstructed(true);
-        if(hasActiveItem()){
+        if (hasActiveItem()) {
             activeItem.activate(new ActivateRequest(gameState));
             activeItem = null;
         }
@@ -77,7 +77,7 @@ public class Square implements Observable<SquareObserver> {
         notifyItemPlaced(item);
     }
 
-    public Position getPosition(){
+    public Position getPosition() {
         return this.position;
     }
 
@@ -93,7 +93,7 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public void setActiveItem(Item activeItem) throws SquareOccupiedException {
-        if(hasActiveItem()){
+        if (hasActiveItem()) {
             throw new SquareOccupiedException("The square already has an active item");
         }
         this.activeItem = activeItem;
@@ -104,27 +104,27 @@ public class Square implements Observable<SquareObserver> {
             return false;
 
         //diagonaal check
-        if(direction == Direction.UP_LEFT)
-            if(this.getNeighbour(Direction.RIGHT).isObstructed() && this.getNeighbour(Direction.DOWN).isObstructed())
+        if (direction == Direction.UP_LEFT)
+            if (this.getNeighbour(Direction.RIGHT).isObstructed() && this.getNeighbour(Direction.DOWN).isObstructed())
                 return false;
 
-        if(direction == Direction.DOWN_LEFT)
-            if(this.getNeighbour(Direction.RIGHT).isObstructed() && this.getNeighbour(Direction.UP).isObstructed())
+        if (direction == Direction.DOWN_LEFT)
+            if (this.getNeighbour(Direction.RIGHT).isObstructed() && this.getNeighbour(Direction.UP).isObstructed())
                 return false;
 
-        if(direction == Direction.UP_RIGHT)
-            if(this.getNeighbour(Direction.LEFT).isObstructed() && this.getNeighbour(Direction.DOWN).isObstructed())
+        if (direction == Direction.UP_RIGHT)
+            if (this.getNeighbour(Direction.LEFT).isObstructed() && this.getNeighbour(Direction.DOWN).isObstructed())
                 return false;
 
-        if(direction == Direction.DOWN_RIGHT)
-            if(this.getNeighbour(Direction.LEFT).isObstructed() && this.getNeighbour(Direction.UP).isObstructed())
+        if (direction == Direction.DOWN_RIGHT)
+            if (this.getNeighbour(Direction.LEFT).isObstructed() && this.getNeighbour(Direction.UP).isObstructed())
                 return false;
 
         return true;
 
     }
 
-    public String toString(){
+    public String toString() {
 
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
@@ -133,20 +133,20 @@ public class Square implements Observable<SquareObserver> {
         this.state = newState;
     }
 
-    public void receivePowerFailure(){
+    public void receivePowerFailure() {
         state.powerFailure(this);
         notifyPowerFailure();
     }
 
-    private boolean losingPower(){
+    private boolean losingPower() {
         int r = (int) (Math.random() * 100);
         return r < powerFailureChance;
     }
 
-    public void newTurn(Turn currentTurn){
-        if(losingPower()){
+    public void newTurn(Turn currentTurn) {
+        if (losingPower()) {
             receivePowerFailure();
-            for(Square neighbour : neighbours.values()){
+            for (Square neighbour : neighbours.values()) {
                 neighbour.receivePowerFailure();
             }
         }
@@ -164,26 +164,27 @@ public class Square implements Observable<SquareObserver> {
         observers.remove(observer);
     }
 
-    public void notifyPowerFailure(){
-        for(SquareObserver observer: observers){
+    public void notifyPowerFailure() {
+        for (SquareObserver observer : observers) {
             observer.lostPower(this.position);
         }
     }
-    public void notifyPowered(){
-        for(SquareObserver observer: observers){
+
+    public void notifyPowered() {
+        for (SquareObserver observer : observers) {
             observer.regainedPower(this.position);
         }
     }
 
-    public void notifyItemPlaced(Item item){
-        for(SquareObserver observer: observers){
-            observer.itemPlaced(item,  this.position);
+    public void notifyItemPlaced(Item item) {
+        for (SquareObserver observer : observers) {
+            observer.itemPlaced(item, this.position);
         }
     }
 
-    public Teleporter getTeleportItem(){
-        for(Item item : this.getAvailableItems()){
-            if(item instanceof Teleporter)
+    public Teleporter getTeleportItem() {
+        for (Item item : this.getAvailableItems()) {
+            if (item instanceof Teleporter)
                 return (Teleporter) item;
         }
         return null;

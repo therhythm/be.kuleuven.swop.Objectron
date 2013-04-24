@@ -20,10 +20,10 @@ public class TestSquare {
     private Player player;
 
     @Before
-    public void setUp()throws GridTooSmallException, SquareOccupiedException {
+    public void setUp() throws GridTooSmallException, SquareOccupiedException {
         square = new Square(new Position(5, 5));
         square.setActiveItem(new LightMine());
-        player = new Player("test",new Square(new Position(5, 4)));
+        player = new Player("test", new Square(new Position(5, 4)));
     }
    /* TODO
     @Test

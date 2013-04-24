@@ -24,7 +24,7 @@ public class UseItemRequest {
     public UseItemRequest(Square square) {
         this.square = square;
         this.direction = null;
-        this.gameState=null;
+        this.gameState = null;
     }
 
     public UseItemRequest(Square square, Direction direction, GameState gamestate) {
@@ -57,7 +57,7 @@ public class UseItemRequest {
         return gameState.getPlayers();
     }
 
-    public GameState getGameState(){
+    public GameState getGameState() {
         return this.gameState;
     }
 }

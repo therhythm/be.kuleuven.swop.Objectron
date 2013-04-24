@@ -12,20 +12,20 @@ public class Dimension {
     private final int width;
     private final int height;
 
-    public Dimension(int width, int height){
+    public Dimension(int width, int height) {
         this.width = width;
         this.height = height;
     }
 
-    public int getWidth(){
+    public int getWidth() {
         return this.width;
     }
 
-    public int getHeight(){
+    public int getHeight() {
         return this.height;
     }
 
-    public int area(){
+    public int area() {
         return this.width * this.height;
     }
 

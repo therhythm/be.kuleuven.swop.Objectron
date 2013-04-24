@@ -28,13 +28,13 @@ public class TestUC_Start_New_Game {
 
     @Test
     public void test_basic_flow() throws InventoryEmptyException, GridTooSmallException {
-         Dimension dimension = new Dimension(10, 10);
-         startGameHandler.startNewGame(player1, player2, dimension);
+        Dimension dimension = new Dimension(10, 10);
+        startGameHandler.startNewGame(player1, player2, dimension);
     }
 
-    @Test (expected = GridTooSmallException.class)
+    @Test(expected = GridTooSmallException.class)
     public void test_invalid_size() throws InventoryEmptyException, GridTooSmallException {
         Dimension dimension = new Dimension(9, 10);
-        startGameHandler.startNewGame(player1,player2,dimension);
+        startGameHandler.startNewGame(player1, player2, dimension);
     }
 }

@@ -1,15 +1,10 @@
-package be.kuleuven.swop.objectron.domain.effect;
+package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
 import be.kuleuven.swop.objectron.domain.square.Square;
-
-import java.util.List;
 
 /**
  * @author : Kasper Vervaecke
@@ -42,11 +37,6 @@ public class Teleporter implements Item {
                 activateRequest.getCurrentPlayer().teleport(destination.getLocation());
             }
         }
-    }
-
-    @Override
-    public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

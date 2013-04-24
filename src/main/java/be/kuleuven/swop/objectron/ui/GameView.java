@@ -1,12 +1,12 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
-import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
@@ -90,7 +90,7 @@ public class GameView implements GameObserver {
             return SquareStates.LIGHT_MINE;
         } else if (item instanceof IdentityDisc) {
             return SquareStates.IDENTITY_DISK;
-        } else if(item instanceof Teleporter) {
+        } else if (item instanceof Teleporter) {
             return SquareStates.TELEPORTER;
         } else {
             return SquareStates.EMPTY;
@@ -332,11 +332,11 @@ public class GameView implements GameObserver {
         gui.repaint();
     }
 
-    private void clearLastPositions(String name){
-       for(Position p: lastPositions.get(name)){
-           gameGrid[p.getVIndex()][p.getHIndex()].remove(playerColorMap.get(name)[0].zIndex);
-           gameGrid[p.getVIndex()][p.getHIndex()].remove(playerColorMap.get(name)[1].zIndex);
-       }
+    private void clearLastPositions(String name) {
+        for (Position p : lastPositions.get(name)) {
+            gameGrid[p.getVIndex()][p.getHIndex()].remove(playerColorMap.get(name)[0].zIndex);
+            gameGrid[p.getVIndex()][p.getHIndex()].remove(playerColorMap.get(name)[1].zIndex);
+        }
     }
 
     @Override

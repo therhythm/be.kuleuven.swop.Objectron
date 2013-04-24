@@ -20,7 +20,7 @@ public class Turn {
     private int actionsRemaining;
     private boolean hasMoved;
 
-    public Turn(Player player){
+    public Turn(Player player) {
         this.currentPlayer = player;
         this.actionsRemaining = ACTIONS_EACH_TURN - player.getRemainingPenalties();
         player.reduceRemainingPenalties(ACTIONS_EACH_TURN);
@@ -28,38 +28,38 @@ public class Turn {
         this.currentItem = null;
     }
 
-    public void extraTurn(){
+    public void extraTurn() {
         this.actionsRemaining += (ACTIONS_EACH_TURN - currentPlayer.getRemainingPenalties());
     }
 
-    public int getActionsRemaining(){
+    public int getActionsRemaining() {
         return actionsRemaining;
     }
 
-    public void setCurrentItem(Item item){
+    public void setCurrentItem(Item item) {
         this.currentItem = item;
     }
 
-    public Item getCurrentItem(){
+    public Item getCurrentItem() {
         return currentItem;
     }
 
-    public Player getCurrentPlayer(){
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public void setMoved(boolean hasMoved){
+    public void setMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
 
-    public boolean hasMoved(){
+    public boolean hasMoved() {
         return hasMoved;
     }
 
-    public void reduceRemainingActions(int amount){
-        if(actionsRemaining > amount){
+    public void reduceRemainingActions(int amount) {
+        if (actionsRemaining > amount) {
             actionsRemaining -= amount;
-        }else{
+        } else {
             currentPlayer.addRemainingPenalties(amount - actionsRemaining);
             actionsRemaining = 0;
             hasMoved = true;
@@ -72,12 +72,12 @@ public class Turn {
         }
     }
 
-    public TurnViewModel getViewModel(){
+    public TurnViewModel getViewModel() {
         return new TurnViewModel(actionsRemaining, currentPlayer.getPlayerViewModel());
     }
 
-    public String toString(){
-        String result="";
+    public String toString() {
+        String result = "";
         result += currentPlayer + "\n";
         result += currentItem + "\n";
         result += "remaining actions: " + getActionsRemaining() + "\n";

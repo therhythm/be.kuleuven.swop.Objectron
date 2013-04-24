@@ -9,5 +9,6 @@ package be.kuleuven.swop.objectron.domain.util;
  */
 public interface Observable<T> {
     public void attach(T observer);
+
     public void detach(T observer);
 }

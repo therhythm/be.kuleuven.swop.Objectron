@@ -18,7 +18,7 @@ public enum Direction {
         this.vOperation = vOperation;
     }
 
-    public Position applyPositionChange(Position position){
+    public Position applyPositionChange(Position position) {
         return new Position(position.getHIndex() + hOperation,
                 position.getVIndex() + vOperation);
     }

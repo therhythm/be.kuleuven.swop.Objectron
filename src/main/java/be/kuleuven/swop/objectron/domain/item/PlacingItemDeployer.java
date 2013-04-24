@@ -3,8 +3,6 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
-import java.security.PrivateKey;
-
 /**
  * @author : Nik Torfs
  *         Date: 24/04/13
@@ -13,7 +11,7 @@ import java.security.PrivateKey;
 public class PlacingItemDeployer implements ItemDeployer {
     private final Square targetSquare;
 
-    public PlacingItemDeployer(Square targetSquare){
+    public PlacingItemDeployer(Square targetSquare) {
         this.targetSquare = targetSquare;
     }
 

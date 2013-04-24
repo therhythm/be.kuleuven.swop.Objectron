@@ -15,7 +15,7 @@ import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,8 +30,8 @@ public class TestGameState {
 
     @Before
     public void setUp() throws GridTooSmallException {
-        Position p1Pos = new Position(0,0);
-        Position p2Pos = new Position(1,0);
+        Position p1Pos = new Position(0, 0);
+        Position p2Pos = new Position(1, 0);
         Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
 
@@ -47,7 +47,7 @@ public class TestGameState {
         state.endTurn();
         handler.move(Direction.DOWN);
         state.endTurn();
-        Square sq = state.getGrid().getSquareAtPosition(new Position(0,0));
+        Square sq = state.getGrid().getSquareAtPosition(new Position(0, 0));
         state.getCurrentPlayer().move(sq);
 
         assertTrue(state.checkWin());

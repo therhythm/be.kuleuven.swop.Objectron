@@ -2,12 +2,15 @@ package be.kuleuven.objectron.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.item.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
-import be.kuleuven.swop.objectron.domain.item.*;
+import be.kuleuven.swop.objectron.domain.item.ChargedIdentityDiscBehavior;
+import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.NormalIdentityDiscBehavior;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -171,7 +174,7 @@ public class Test_Identity_Disc {
         Square currentSquare = grid.getSquareAtPosition(new Position(0, 9));
 
 
-        Square upNeighbor =grid.getSquareAtPosition(new Position(0, 7));
+        Square upNeighbor = grid.getSquareAtPosition(new Position(0, 7));
         Square rightNeighbor = grid.getSquareAtPosition(new Position(1, 7));
         Teleporter teleporter1 = new Teleporter(upNeighbor);
         Teleporter teleporter2 = new Teleporter(rightNeighbor);
@@ -208,7 +211,7 @@ public class Test_Identity_Disc {
 
         Square currentSquare = grid.getSquareAtPosition(p1Pos);
 
-        Square upNeighbor =grid.getSquareAtPosition(new Position(0, 6));
+        Square upNeighbor = grid.getSquareAtPosition(new Position(0, 6));
         Square rightNeighbor = grid.getSquareAtPosition(new Position(0, 8));
         Teleporter teleporter1 = new Teleporter(upNeighbor);
         Teleporter teleporter2 = new Teleporter(rightNeighbor);
@@ -230,7 +233,7 @@ public class Test_Identity_Disc {
 
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
         assertFalse(state.getCurrentPlayer().equals(current_player));
-        assertTrue(state.getCurrentTurn().getActionsRemaining()==6);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == 6);
     }
 
     @Test

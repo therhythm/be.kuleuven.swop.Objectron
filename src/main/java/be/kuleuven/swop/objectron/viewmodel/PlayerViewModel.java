@@ -26,7 +26,7 @@ public class PlayerViewModel {
         return currentPosition;
     }
 
-    public Position getStartPosition(){
+    public Position getStartPosition() {
         return initialPosition;
     }
 

@@ -1,14 +1,10 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
-
-import java.util.List;
 
 /**
  * @author : Peter Bosmans
@@ -25,18 +21,13 @@ public class LightMine implements Item {
         return name;
     }
 
-    public void activate(ActivateRequest activateRequest){
-       activateRequest.getCurrentTurn().reduceRemainingActions(NB_ACTIONS_BLINDED);
+    public void activate(ActivateRequest activateRequest) {
+        activateRequest.getCurrentTurn().reduceRemainingActions(NB_ACTIONS_BLINDED);
     }
 
     @Override
     public boolean pickupAble() {
         return true;
-    }
-
-    @Override
-    public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
-        useItemRequest.getSquare().setActiveItem(this);
     }
 
     @Override
@@ -49,7 +40,7 @@ public class LightMine implements Item {
         throw new UnsupportedOperationException();
     }
 
-    public String toString(){
+    public String toString() {
         String result = "";
         result += "name: " + this.getName();
 

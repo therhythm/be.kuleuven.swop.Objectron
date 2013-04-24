@@ -8,7 +8,10 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.item.*;
+import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.ItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.PlacingItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.ThrowingItemDeployer;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -52,7 +55,7 @@ public class UseItemHandler extends Handler {
      * |  == currentPlayer.getInventory().retrieveItem(identifier)
      */
     public String selectItemFromInventory(int identifier) {
-        Item currentlySelectedItem =  state.getCurrentPlayer().getInventoryItem(identifier);
+        Item currentlySelectedItem = state.getCurrentPlayer().getInventoryItem(identifier);
         state.setCurrentItem(currentlySelectedItem);
         return currentlySelectedItem.getName();
     }

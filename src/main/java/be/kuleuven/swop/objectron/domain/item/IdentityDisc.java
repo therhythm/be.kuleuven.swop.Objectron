@@ -3,13 +3,8 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
-import be.kuleuven.swop.objectron.domain.effect.Teleporter;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,14 +39,6 @@ public class IdentityDisc implements Item {
         activateRequest.getCurrentTurn().extraTurn();
     }
 
-
-    @Override
-    public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
-        if (!validDirection(useItemRequest.getDirection()))
-            throw new IllegalArgumentException("the direction can't be diagonal");
-        identityDiscBehavior.useItem(useItemRequest, this);
-    }
-
     @Override
     public void place(Square targetSquare) {
         throw new UnsupportedOperationException();
@@ -59,7 +46,7 @@ public class IdentityDisc implements Item {
 
     @Override
     public void throwMe(Square sourceSquare, Direction targetDirection, GameState state) {
-        if(!validDirection(targetDirection)){
+        if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
 
@@ -92,12 +79,12 @@ public class IdentityDisc implements Item {
         return true;
     }
 
-    public Square getNextSquare(Square currentSquare,Direction direction){
+    public Square getNextSquare(Square currentSquare, Direction direction) {
         Square neighbor = currentSquare.getNeighbour(direction);
-        if(neighbor==null)
+        if (neighbor == null)
             return null;
         Teleporter teleportItem = neighbor.getTeleportItem();
-        if(teleportItem!=null){
+        if (teleportItem != null) {
             neighbor = this.teleport(teleportItem);
         }
         return neighbor;

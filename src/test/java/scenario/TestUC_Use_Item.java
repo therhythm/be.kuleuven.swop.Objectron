@@ -128,7 +128,7 @@ public class TestUC_Use_Item {
     }
 
     @Test(expected = NoItemSelectedException.class)
-    public void test_no_item_selected() throws NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException{
+    public void test_no_item_selected() throws NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
         useItemHandler.useCurrentItem();
     }
 }

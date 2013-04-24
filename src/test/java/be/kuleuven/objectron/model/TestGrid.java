@@ -19,8 +19,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -83,11 +81,11 @@ public class TestGrid {
         int numberOfTeleporters = 0;
         int numberOfIdentitydiscs = 0;
 
-        for(int i = 0;i<10;i++){
-            for(int j = 0;j<10;j++){
-                if(grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() !=0) {
-                    hasItems=true;
-                    for (Item item:grid.getSquareAtPosition(new Position(i,j)).getAvailableItems()) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() != 0) {
+                    hasItems = true;
+                    for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
                         if (item.getName() == "Light Mine") {
                             numberOfLightMines++;
                         }
@@ -115,8 +113,8 @@ public class TestGrid {
 
     @Test
     public void test_charged_identity_disc() throws GridTooSmallException {
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0,9), new Position(9,0));
-      int aantal = 0;
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
+        int aantal = 0;
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
@@ -133,19 +131,19 @@ public class TestGrid {
                 }
             }
         }
-        assertTrue(aantal==1);
+        assertTrue(aantal == 1);
     }
 
     @Test
     public void test_no_charged_identity_disc() throws GridTooSmallException {
         List<Position> wallPositions = new ArrayList<Position>();
-        wallPositions.add(new Position(4,5));
-        wallPositions.add(new Position(5,5));
-        wallPositions.add(new Position(5,4));
-        wallPositions.add(new Position(4,4));
-        wallPositions.add(new Position(4,3));
-                   int aantal = 0;
-        grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0,9), new Position(9,0),wallPositions);
+        wallPositions.add(new Position(4, 5));
+        wallPositions.add(new Position(5, 5));
+        wallPositions.add(new Position(5, 4));
+        wallPositions.add(new Position(4, 4));
+        wallPositions.add(new Position(4, 3));
+        int aantal = 0;
+        grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0), wallPositions);
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
@@ -157,13 +155,13 @@ public class TestGrid {
                         System.out.println("distance from player1: " + distanceFromPlayer1);
                         System.out.println("distance from player2: " + distanceFromPlayer2);
                         assertTrue(Math.abs(distanceFromPlayer1 - distanceFromPlayer2) < 2);
-                                                                             aantal++;
+                        aantal++;
                     }
 
                 }
             }
         }
-        assertTrue(aantal==1);
+        assertTrue(aantal == 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
