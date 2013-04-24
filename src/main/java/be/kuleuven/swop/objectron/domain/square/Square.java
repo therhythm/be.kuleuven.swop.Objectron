@@ -5,9 +5,9 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.item.ActivateRequest;
+import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.Teleporter;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 

@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.ItemDeployer;
 import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
@@ -77,9 +78,9 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item,UseItemRequest useItemRequest) throws SquareOccupiedException, NotEnoughActionsException {
+    public void useItem(Item item,ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException {
        
-        item.useItem(useItemRequest);
+        deployer.deploy(item);
 
         inventory.removeItem(item);
 

@@ -6,7 +6,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
-import be.kuleuven.swop.objectron.domain.item.Teleporter;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;

@@ -1,8 +1,9 @@
-package be.kuleuven.swop.objectron.domain.item;
+package be.kuleuven.swop.objectron.domain.effect;
 
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**

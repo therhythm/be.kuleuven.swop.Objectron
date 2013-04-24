@@ -2,8 +2,14 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +20,6 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  */
 public class IdentityDisc implements Item {
     private IdentityDiscBehavior identityDiscBehavior;
-    private boolean isTeleporting = false;
 
     public IdentityDisc(IdentityDiscBehavior identityDiscBehavior) {
         this.identityDiscBehavior = identityDiscBehavior;
@@ -48,14 +53,23 @@ public class IdentityDisc implements Item {
     }
 
     @Override
-    public boolean isTeleporting() {
-        return this.isTeleporting;
+    public void place(Square targetSquare) {
+        throw new UnsupportedOperationException();
     }
 
-    public boolean playerHit(UseItemRequest useItemRequest, Square squareItem) {
-        for (Player player : useItemRequest.getPlayers()) {
-            if (player.getCurrentSquare().equals(squareItem)) {
-                this.activate(new ActivateRequest(player, useItemRequest.getGameState()));
+    @Override
+    public void throwMe(Square sourceSquare, Direction targetDirection, GameState state) {
+        if(!validDirection(targetDirection)){
+            throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
+        }
+
+        identityDiscBehavior.throwMe(sourceSquare, targetDirection, this, state);
+    }
+
+    public boolean playerHit(Square square, GameState state) {
+        for (Player player : state.getPlayers()) {
+            if (player.getCurrentSquare().equals(square)) {
+                this.activate(new ActivateRequest(player, state));
                 return true;
             }
         }
@@ -89,14 +103,9 @@ public class IdentityDisc implements Item {
         return neighbor;
     }
 
+    //todo is teleporting removed.. didn't do anything useful here
     public Square teleport(Teleporter teleporter) {
-        isTeleporting = true;
-        Square destination = teleporter.getDestination().getLocation();
-        // if(destination.getTeleportItem()!=null)
-        //    return teleport(destination.getTeleportItem());
-
-        isTeleporting = false;
-        return destination;
+        return teleporter.getDestination().getLocation();
     }
 
 

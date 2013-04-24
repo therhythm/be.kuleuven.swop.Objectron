@@ -8,8 +8,7 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
+import be.kuleuven.swop.objectron.domain.item.*;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -79,8 +78,8 @@ public class UseItemHandler extends Handler {
         try {
             Turn currentTurn = state.getCurrentTurn();
             currentTurn.checkEnoughActions();
-            UseItemRequest useItemRequest = new UseItemRequest(state.getCurrentPlayer().getCurrentSquare());
-            currentTurn.getCurrentPlayer().useItem(state.getCurrentItem(),useItemRequest);
+            ItemDeployer deployer = new PlacingItemDeployer(state.getCurrentPlayer().getCurrentSquare());
+            currentTurn.getCurrentPlayer().useItem(state.getCurrentItem(), deployer);
             state.setCurrentItem(null);
             currentTurn.reduceRemainingActions(1);
         } catch (SquareOccupiedException e) {
@@ -100,8 +99,9 @@ public class UseItemHandler extends Handler {
             Turn currentTurn = state.getCurrentTurn();
             Player currentPlayer = state.getCurrentPlayer();
             currentTurn.checkEnoughActions();
-            UseItemRequest useItemRequest = new UseItemRequest(currentPlayer.getCurrentSquare(), direction, state);
-            currentPlayer.useItem(state.getCurrentItem(), useItemRequest);
+
+            ItemDeployer deployer = new ThrowingItemDeployer(currentPlayer.getCurrentSquare(), direction, state);
+            currentPlayer.useItem(state.getCurrentItem(), deployer);
             state.setCurrentItem(null);
             currentTurn.reduceRemainingActions(1);
         } catch (SquareOccupiedException e) {

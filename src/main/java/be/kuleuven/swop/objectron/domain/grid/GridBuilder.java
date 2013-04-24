@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.*;
@@ -74,7 +75,7 @@ public class GridBuilder {
 
     private Square calculateMiddleSquare() {
         int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()+1) / 2);
-        int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()+1) / 2);
+        int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
         return squares[VIndex][HIndex];
     }
 
