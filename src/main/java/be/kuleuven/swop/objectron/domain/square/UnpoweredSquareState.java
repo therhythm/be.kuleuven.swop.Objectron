@@ -1,6 +1,5 @@
 package be.kuleuven.swop.objectron.domain.square;
 
-import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
@@ -10,13 +9,16 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
  *         Time: 03:01
  */
 public class UnpoweredSquareState implements SquareState {
+    public static final int TURNS_WITHOUT_POWER = 3;
+    private static final int ACTIONS_TO_REDUCE = 1;
 
-    private int remainingTurns = Settings.SQUARE_TURNS_WITHOUT_POWER;
+
+    private int remainingTurns = TURNS_WITHOUT_POWER;
 
     @Override
     public void newTurn(Turn currentTurn, boolean currentSquare, Square context) {
         if(currentSquare){
-            currentTurn.reduceRemainingActions(Settings.SQUARE_ACTIONS_TO_REDUCE);
+            currentTurn.reduceRemainingActions(ACTIONS_TO_REDUCE);
         }
         remainingTurns--;
         if(remainingTurns == 0){
@@ -28,7 +30,7 @@ public class UnpoweredSquareState implements SquareState {
     @Override
     public void stepOn(GameState gameState) {
         if(gameState.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()){
-           gameState.getCurrentTurn().reduceRemainingActions(Settings.SQUARE_ACTIONS_TO_REDUCE);
+           gameState.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
         }else{
            gameState.endTurn();
         }
@@ -36,6 +38,6 @@ public class UnpoweredSquareState implements SquareState {
 
     @Override
     public void powerFailure(Square context) {
-        remainingTurns = Settings.SQUARE_TURNS_WITHOUT_POWER;
+        remainingTurns = TURNS_WITHOUT_POWER;
     }
 }

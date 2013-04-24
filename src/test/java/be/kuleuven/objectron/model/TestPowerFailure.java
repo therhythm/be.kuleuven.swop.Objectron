@@ -3,8 +3,6 @@ package be.kuleuven.objectron.model;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 
-import be.kuleuven.swop.objectron.domain.Settings;
-import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
@@ -14,13 +12,12 @@ import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
+import be.kuleuven.swop.objectron.domain.square.UnpoweredSquareState;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -59,7 +56,7 @@ public class TestPowerFailure implements SquareObserver {
         state.endTurn();
         currentSquare.receivePowerFailure();
         state.endTurn();
-        assertEquals(Settings.PLAYER_ACTIONS_EACH_TURN - 1, state.getCurrentTurn().getActionsRemaining());
+        assertEquals(Turn.ACTIONS_EACH_TURN - 1, state.getCurrentTurn().getActionsRemaining());
     }
 
     @Test
@@ -100,7 +97,7 @@ public class TestPowerFailure implements SquareObserver {
     public void testRegainPower(){
         currentSquare.receivePowerFailure();
         currentSquare.attach(this);
-        for(int i = 0; i < Settings.SQUARE_TURNS_WITHOUT_POWER; i++){
+        for(int i = 0; i < UnpoweredSquareState.TURNS_WITHOUT_POWER; i++){
              state.endTurn();
         }
         assertEquals(true, regainedPower);

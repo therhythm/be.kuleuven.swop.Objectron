@@ -2,7 +2,6 @@ package be.kuleuven.swop.objectron.domain.square;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
@@ -21,6 +20,8 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Observable<SquareObserver> {
+    public static final int POWER_FAILURE_CHANCE = 5; //TODO public
+
     private final Position position;
 
     private List<SquareObserver> observers = new ArrayList<>();
@@ -29,7 +30,7 @@ public class Square implements Observable<SquareObserver> {
     private List<Item> items = new ArrayList<Item>();
     private boolean isObstructed = false;
     private Item activeItem;
-    private int powerFailureChance = Settings.POWER_FAILURE_CHANCE;
+    private int powerFailureChance = POWER_FAILURE_CHANCE;
 
     public Square(final Position position) {
         this.position = position;

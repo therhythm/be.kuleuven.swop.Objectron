@@ -2,7 +2,6 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
@@ -24,6 +23,15 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class GridBuilder {
+    private static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
+    private static final int MIN_WALL_LENGTH = 2;
+    private static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
+    private static final int MIN_GRID_WIDTH = 10;
+    private static final int MIN_GRID_HEIGHT = 10;
+    private static final double PERCENTAGE_OF_TELEPORTERS = 0.03;
+    private static final double PERCENTAGE_OF_LIGHTMINES = 0.02;
+
+
     private Dimension dimension;
     private Position p1Pos;
     private Position p2Pos;
@@ -34,20 +42,20 @@ public class GridBuilder {
     public GridBuilder(Dimension dimension, Position p1Pos, Position p2Pos) throws GridTooSmallException {
         if (!isValidDimension(dimension)) {
             throw new GridTooSmallException("The grid needs to be at least " +
-                    Settings.MIN_GRID_HEIGHT + " rows by " +
-                    Settings.MIN_GRID_HEIGHT + " columns");
+                    MIN_GRID_HEIGHT + " rows by " +
+                    MIN_GRID_HEIGHT + " columns");
         }
         this.dimension = dimension;
         this.p1Pos = p1Pos;
         this.p2Pos = p2Pos;
-        initGrid(Settings.POWER_FAILURE_CHANCE);
+        initGrid(Square.POWER_FAILURE_CHANCE);
     }
 
     public void buildWalls() {
         walls = new ArrayList<Wall>();
 
-        int maxNumberOfWalls = (int) Math.floor(Settings.MAX_WALL_COVERAGE_PERCENTAGE *
-                (dimension.area() / Settings.MIN_WALL_LENGTH));
+        int maxNumberOfWalls = (int) Math.floor(MAX_WALL_COVERAGE_PERCENTAGE *
+                (dimension.area() / MIN_WALL_LENGTH));
         int numberOfWalls = getRandomWithMax(1, maxNumberOfWalls);
 
         while (walls.size() < numberOfWalls && isAnotherWallPossible()) {
@@ -98,8 +106,8 @@ public class GridBuilder {
     }
 
     public void buildItems() {
-        int numberOfLightmines = (int) Math.ceil(Settings.PERCENTAGE_OF_LIGHTMINES * dimension.area());
-        int numberOfTeleporters = (int) Math.ceil(Settings.PERCENTAGE_OF_TELEPORTERS * dimension.area());
+        int numberOfLightmines = (int) Math.ceil(PERCENTAGE_OF_LIGHTMINES * dimension.area());
+        int numberOfTeleporters = (int) Math.ceil(PERCENTAGE_OF_TELEPORTERS * dimension.area());
 
         placeLightMines(numberOfLightmines);
         placeTeleporters(numberOfTeleporters);
@@ -167,23 +175,23 @@ public class GridBuilder {
         switch (rand) {
             case 1:
                 direction = Direction.UP;
-                maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
-                        dimension.getHeight() * Settings.MAX_WALL_LENGTH_PERCENTAGE);
+                maxLength = getRandomWithMax(MIN_WALL_LENGTH,
+                        dimension.getHeight() * MAX_WALL_LENGTH_PERCENTAGE);
                 break;
             case 2:
                 direction = Direction.LEFT;
-                maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
-                        dimension.getWidth() * Settings.MAX_WALL_LENGTH_PERCENTAGE);
+                maxLength = getRandomWithMax(MIN_WALL_LENGTH,
+                        dimension.getWidth() * MAX_WALL_LENGTH_PERCENTAGE);
                 break;
             case 3:
                 direction = Direction.DOWN;
-                maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
-                        dimension.getHeight() * Settings.MAX_WALL_LENGTH_PERCENTAGE);
+                maxLength = getRandomWithMax(MIN_WALL_LENGTH,
+                        dimension.getHeight() * MAX_WALL_LENGTH_PERCENTAGE);
                 break;
             default:
                 direction = Direction.RIGHT;
-                maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
-                        dimension.getWidth() * Settings.MAX_WALL_LENGTH_PERCENTAGE);
+                maxLength = getRandomWithMax(MIN_WALL_LENGTH,
+                        dimension.getWidth() * MAX_WALL_LENGTH_PERCENTAGE);
         }
 
         buildWall(randomSquare, direction, maxLength);
@@ -193,7 +201,7 @@ public class GridBuilder {
         Wall wall = new Wall();
         double wallPercentage = calculateWallPercentage(0);
         while (wall.getLength() <= maxLength
-                && wallPercentage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE
+                && wallPercentage <= MAX_WALL_COVERAGE_PERCENTAGE
                 && currentSquare != null
                 && isValidWallPosition(currentSquare)) {
 
@@ -202,7 +210,7 @@ public class GridBuilder {
             currentSquare = currentSquare.getNeighbour(direction);
         }
 
-        if (wall.getLength() >= Settings.MIN_WALL_LENGTH) {
+        if (wall.getLength() >= MIN_WALL_LENGTH) {
             wall.build();
             walls.add(wall);
         }
@@ -261,6 +269,7 @@ public class GridBuilder {
     }
 
 
+
     public void initGrid(int powerFailureChance) {
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
@@ -274,7 +283,6 @@ public class GridBuilder {
         }
         setupNeighbours();
     }
-
     private void setupNeighbours() {
         for (int vertical = 0; vertical < dimension.getHeight(); vertical++) {
             for (int horizontal = 0; horizontal < dimension.getWidth(); horizontal++) {
@@ -308,8 +316,8 @@ public class GridBuilder {
     }
 
     private boolean isValidDimension(Dimension dimension) {
-        return dimension.getWidth() >= Settings.MIN_GRID_WIDTH
-                && dimension.getHeight() >= Settings.MIN_GRID_HEIGHT;
+        return dimension.getWidth() >= MIN_GRID_WIDTH
+                && dimension.getHeight() >= MIN_GRID_HEIGHT;
     }
 
     private boolean isValidPosition(Position pos) {
@@ -350,7 +358,7 @@ public class GridBuilder {
         double wallCoverage = calculateWallPercentage(1);
 
         return possible &&
-                wallCoverage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE;
+                wallCoverage <= MAX_WALL_COVERAGE_PERCENTAGE;
     }
 
     public void addObserver(SquareObserver observer) {

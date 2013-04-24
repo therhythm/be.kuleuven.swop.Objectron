@@ -16,7 +16,6 @@ import java.util.List;
  *         Time: 00:06
  */
 public class Player {
-
     private String name;
     private Square currentSquare;
     private Square initialSquare;

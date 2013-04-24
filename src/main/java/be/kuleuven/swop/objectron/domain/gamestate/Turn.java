@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
@@ -14,6 +13,8 @@ import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
  * To change this template use File | Settings | File Templates.
  */
 public class Turn {
+    public static final int ACTIONS_EACH_TURN = 3;
+
     private Player currentPlayer;
     private Item currentItem;
     private int actionsRemaining;
@@ -21,14 +22,14 @@ public class Turn {
 
     public Turn(Player player){
         this.currentPlayer = player;
-        this.actionsRemaining = Settings.PLAYER_ACTIONS_EACH_TURN - player.getRemainingPenalties();
-        player.reduceRemainingPenalties(Settings.PLAYER_ACTIONS_EACH_TURN);
+        this.actionsRemaining = ACTIONS_EACH_TURN - player.getRemainingPenalties();
+        player.reduceRemainingPenalties(ACTIONS_EACH_TURN);
         this.hasMoved = false;
         this.currentItem = null;
     }
 
     public void extraTurn(){
-        this.actionsRemaining += (Settings.PLAYER_ACTIONS_EACH_TURN - currentPlayer.getRemainingPenalties());
+        this.actionsRemaining += (ACTIONS_EACH_TURN - currentPlayer.getRemainingPenalties());
     }
 
     public int getActionsRemaining(){
