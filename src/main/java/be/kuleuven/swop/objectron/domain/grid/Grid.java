@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -100,5 +101,15 @@ public class Grid {
             }
         }
         return items;
+    }
+
+    public Map<Position, List<Effect>> getEffects() {
+        Map<Position,List<Effect>>effects = new HashMap<>();
+        for (Square[] row : squares) {
+            for (Square sq : row) {
+                effects.put(sq.getPosition(), sq.getEffects());
+            }
+        }
+        return effects;
     }
 }

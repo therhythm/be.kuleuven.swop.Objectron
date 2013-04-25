@@ -199,4 +199,8 @@ public class Square implements Observable<SquareObserver> {
         }
         return null;
     }
+
+    public List<Effect> getEffects() {
+        return Collections.unmodifiableList(effects);
+    }
 }

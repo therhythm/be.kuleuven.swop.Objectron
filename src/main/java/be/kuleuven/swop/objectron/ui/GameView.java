@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
@@ -39,6 +40,7 @@ public class GameView implements GameObserver {
     private Dimension dimension;
     private SimpleGUI gui;
     private Map<Position, List<Item>> items;   //TODO itemviewmodels
+    private Map<Position, List<Effect>> effects; //TODO viewmodel??
     private List<PlayerViewModel> players;
     private Map<String, Position[]> lastPositions = new HashMap<String, Position[]>();
 
@@ -50,6 +52,7 @@ public class GameView implements GameObserver {
         this.gameGrid = new HashMap[dimension.getHeight()][dimension.getWidth()];
         this.currentTurn = vm.getCurrentTurn();
         this.items = vm.getItems();
+        this.effects = vm.getEffects();
         for (int i = 0; i < dimension.getHeight(); i++) {
             for (int j = 0; j < dimension.getWidth(); j++) {
                 gameGrid[i][j] = new HashMap<Integer, SquareStates>();
@@ -64,6 +67,12 @@ public class GameView implements GameObserver {
         for (Position pos : items.keySet()) {
             for (Item item : items.get(pos)) {
                 SquareStates state = getItemSquareState(item);
+                gameGrid[pos.getVIndex()][pos.getHIndex()].put(state.zIndex, state);
+            }
+        }
+        for (Position pos : effects.keySet()) {
+            for (Effect effect : effects.get(pos)) {
+                SquareStates state = getEffectSquareState(effect);
                 gameGrid[pos.getVIndex()][pos.getHIndex()].put(state.zIndex, state);
             }
         }
@@ -91,6 +100,14 @@ public class GameView implements GameObserver {
         } else if (item instanceof IdentityDisc) {
             return SquareStates.IDENTITY_DISK;
         } else if (item instanceof Teleporter) {
+            return SquareStates.TELEPORTER;
+        } else {
+            return SquareStates.EMPTY;
+        }
+    }
+    private SquareStates getEffectSquareState(Effect effect) {
+        // no need for lightmine, the effects are invisible
+        if (effect instanceof Teleporter) {
             return SquareStates.TELEPORTER;
         } else {
             return SquareStates.EMPTY;
