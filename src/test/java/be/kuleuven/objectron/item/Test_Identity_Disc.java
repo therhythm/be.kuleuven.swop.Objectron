@@ -2,7 +2,7 @@ package be.kuleuven.objectron.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.item.Teleporter;
+import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -173,17 +173,14 @@ public class Test_Identity_Disc {
     public void test_UnCharged_identity_disc_no_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
         Square currentSquare = grid.getSquareAtPosition(new Position(0, 9));
 
-
         Square upNeighbor = grid.getSquareAtPosition(new Position(0, 7));
         Square rightNeighbor = grid.getSquareAtPosition(new Position(1, 7));
         Teleporter teleporter1 = new Teleporter(upNeighbor);
         Teleporter teleporter2 = new Teleporter(rightNeighbor);
         teleporter1.setDestination(teleporter2);
         teleporter2.setDestination(teleporter1);
-        upNeighbor.addItem(teleporter1);
-        upNeighbor.setActiveItem(teleporter1);
-        rightNeighbor.addItem(teleporter2);
-        rightNeighbor.setActiveItem(teleporter2);
+        upNeighbor.addEffect(teleporter1);
+        rightNeighbor.addEffect(teleporter2);
 
         Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
         currentSquare.addItem(identityDisc);
@@ -217,10 +214,10 @@ public class Test_Identity_Disc {
         Teleporter teleporter2 = new Teleporter(rightNeighbor);
         teleporter1.setDestination(teleporter2);
         teleporter2.setDestination(teleporter1);
-        upNeighbor.addItem(teleporter1);
-        upNeighbor.setActiveItem(teleporter1);
-        rightNeighbor.addItem(teleporter2);
-        rightNeighbor.setActiveItem(teleporter2);
+        upNeighbor.addEffect(teleporter1);
+
+        rightNeighbor.addEffect(teleporter2);
+
 
         Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
         currentSquare.addItem(identityDisc);

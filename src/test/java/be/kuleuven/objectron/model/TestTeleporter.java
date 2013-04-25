@@ -2,7 +2,7 @@ package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.item.Teleporter;
+import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -45,10 +45,10 @@ public class TestTeleporter {
         Teleporter teleporter2 = new Teleporter(rightNeighbor);
         teleporter1.setDestination(teleporter2);
         teleporter2.setDestination(teleporter1);
-        upNeighbor.addItem(teleporter1);
-        upNeighbor.setActiveItem(teleporter1);
-        rightNeighbor.addItem(teleporter2);
-        rightNeighbor.setActiveItem(teleporter2);
+        upNeighbor.addEffect(teleporter1);
+
+        rightNeighbor.addEffect(teleporter2);
+
 
         movePlayerHandler.move(Direction.UP);
 

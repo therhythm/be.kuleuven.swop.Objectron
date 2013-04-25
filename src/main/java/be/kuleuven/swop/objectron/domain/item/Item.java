@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -14,10 +13,6 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 public interface Item {
 
     String getName();
-
-    boolean pickupAble();
-
-    void activate(ActivateRequest activateRequest);
 
     void place(Square targetSquare) throws SquareOccupiedException;  //TODO remove exception when effects are in place
 

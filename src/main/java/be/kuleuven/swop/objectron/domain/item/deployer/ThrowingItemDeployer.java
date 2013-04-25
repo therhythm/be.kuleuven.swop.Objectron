@@ -1,7 +1,8 @@
-package be.kuleuven.swop.objectron.domain.item;
+package be.kuleuven.swop.objectron.domain.item.deployer;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**

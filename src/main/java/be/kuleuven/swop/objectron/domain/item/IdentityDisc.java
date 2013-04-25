@@ -2,7 +2,7 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
+import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -26,17 +26,12 @@ public class IdentityDisc implements Item {
         return identityDiscBehavior.getName();
     }
 
-    @Override
-    public boolean pickupAble() {
-        return true;
-    }
+    private void activate(Player player, GameState state) {
+        if(player.equals(state.getCurrentPlayer())){
+            state.endTurn();
+        }
 
-    @Override
-    public void activate(ActivateRequest activateRequest) {
-        if (activateRequest.getPlayerHit().equals(activateRequest.getCurrentPlayer()))
-            activateRequest.getGamestate().endTurn();
-
-        activateRequest.getCurrentTurn().extraTurn();
+        state.getCurrentTurn().extraTurn();
     }
 
     @Override
@@ -56,7 +51,7 @@ public class IdentityDisc implements Item {
     public boolean playerHit(Square square, GameState state) {
         for (Player player : state.getPlayers()) {
             if (player.getCurrentSquare().equals(square)) {
-                this.activate(new ActivateRequest(player, state));
+                this.activate(player, state);
                 return true;
             }
         }

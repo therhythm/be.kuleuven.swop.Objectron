@@ -3,9 +3,8 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
-import be.kuleuven.swop.objectron.domain.item.Teleporter;
+import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
@@ -146,12 +145,14 @@ public class GridBuilder {
                 randomSquare = getRandomSquare();
             }
             Teleporter teleporter = new Teleporter(randomSquare);
-            randomSquare.addItem(teleporter);
-            try {
+            randomSquare.addEffect(teleporter);
+
+            //TODO no need to set effect as active... all effects are active
+            /*try {
                 randomSquare.setActiveItem(teleporter);
             } catch (SquareOccupiedException e) {
                 e.printStackTrace();
-            }
+            } */
             teleporters[i] = teleporter;
         }
         //TODO multiple teleporters can have the same destination, is this allowed?

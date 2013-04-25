@@ -9,9 +9,9 @@ import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.ItemDeployer;
-import be.kuleuven.swop.objectron.domain.item.PlacingItemDeployer;
-import be.kuleuven.swop.objectron.domain.item.ThrowingItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.PlacingItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.ThrowingItemDeployer;
 
 import java.util.List;
 import java.util.logging.Level;

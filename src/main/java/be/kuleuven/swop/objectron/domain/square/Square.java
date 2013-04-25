@@ -2,8 +2,8 @@ package be.kuleuven.swop.objectron.domain.square;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
-import be.kuleuven.swop.objectron.domain.item.Teleporter;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
+import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
@@ -21,13 +21,13 @@ import java.util.*;
  */
 public class Square implements Observable<SquareObserver> {
     public static final int POWER_FAILURE_CHANCE = 5; //TODO public
-
     private final Position position;
 
     private List<SquareObserver> observers = new ArrayList<>();
     private SquareState state;
     private Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
     private List<Item> items = new ArrayList<Item>();
+    private List<Effect> effects = new ArrayList<>();
     private boolean isObstructed = false;
     private Item activeItem;
     private int powerFailureChance = POWER_FAILURE_CHANCE;
@@ -63,8 +63,12 @@ public class Square implements Observable<SquareObserver> {
 
         setObstructed(true);
         if (hasActiveItem()) {
-            activeItem.activate(new ActivateRequest(gameState));
+            ((Effect)(activeItem)).activate(gameState.getCurrentTurn()); //TODO no casting
             activeItem = null;
+        }
+
+        for(Effect effect : effects){
+            effect.activate(gameState.getCurrentTurn());
         }
     }
 
@@ -75,6 +79,11 @@ public class Square implements Observable<SquareObserver> {
     public void addItem(Item item) {
         this.items.add(item);
         notifyItemPlaced(item);
+    }
+
+    public void addEffect(Effect effect){
+        this.effects.add(effect);
+        //TODO notify?
     }
 
     public Position getPosition() {
@@ -182,10 +191,11 @@ public class Square implements Observable<SquareObserver> {
         }
     }
 
+    // TODO what is instanceof doing here, after instroduction of effects this needs to be refactored
     public Teleporter getTeleportItem() {
-        for (Item item : this.getAvailableItems()) {
-            if (item instanceof Teleporter)
-                return (Teleporter) item;
+        for (Effect effect : effects) {
+            if (effect instanceof Teleporter)
+                return (Teleporter) effect;
         }
         return null;
     }

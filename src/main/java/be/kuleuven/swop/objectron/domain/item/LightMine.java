@@ -1,9 +1,10 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.effect.ActivateRequest;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -11,7 +12,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  *         Date: 27/02/13
  *         Time: 20:56
  */
-public class LightMine implements Item {
+public class LightMine implements Item, Effect {
     private static final int NB_ACTIONS_BLINDED = 3;
 
     private static final String name = "Light Mine";
@@ -21,13 +22,9 @@ public class LightMine implements Item {
         return name;
     }
 
-    public void activate(ActivateRequest activateRequest) {
-        activateRequest.getCurrentTurn().reduceRemainingActions(NB_ACTIONS_BLINDED);
-    }
-
     @Override
-    public boolean pickupAble() {
-        return true;
+    public void activate(Turn currentTurn) {
+        currentTurn.reduceRemainingActions(NB_ACTIONS_BLINDED);
     }
 
     @Override
