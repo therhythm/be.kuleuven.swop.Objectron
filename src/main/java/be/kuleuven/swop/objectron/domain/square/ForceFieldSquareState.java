@@ -12,7 +12,11 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 public class ForceFieldSquareState implements SquareState {
     private SquareStatePower squareStatePower;
 
-    public ForceFieldSquareState(SquareState squareStatePower) {
+    public ForceFieldSquareState() {
+
+    }
+
+    public ForceFieldSquareState(SquareStatePower squareStatePower) {
         this.squareStatePower = squareStatePower;
     }
 
@@ -33,7 +37,7 @@ public class ForceFieldSquareState implements SquareState {
 
     @Override
     public void setSquareStatePower(SquareStatePower squareStatePower) {
-        this.setSquareStatePower(squareStatePower);
+        this.squareStatePower = squareStatePower;
     }
 
     @Override

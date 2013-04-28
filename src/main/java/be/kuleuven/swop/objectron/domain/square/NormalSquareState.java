@@ -14,9 +14,13 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 public class NormalSquareState implements SquareState {
     private SquareStatePower squareStatePower;
 
-    public NormalSquareState(SquareStatePower powerSquareState){
-        this.squareStatePower = powerSquareState;
+    public NormalSquareState() {
     }
+
+    public NormalSquareState(SquareStatePower squareStatePower) {
+        this.squareStatePower = squareStatePower;
+    }
+
     @Override
     public void newTurn(Turn currentTurn, boolean currentSquare, Square context) {
         squareStatePower.newTurn(currentTurn, currentSquare, context);

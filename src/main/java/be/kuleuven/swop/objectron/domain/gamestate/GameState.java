@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -24,12 +25,14 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
     private Turn currentTurn;
+    private ForceFieldArea forceFieldArea;
 
     public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException {
         Position p1Pos = new Position(0, dimension.getHeight() - 1);
         Position p2Pos = new Position(dimension.getWidth() - 1, 0);
         this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos, this);
         // this.gameGrid = GridFactory.gridWithoutPowerFailures(dimension, p1Pos, p2Pos);
+
 
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));

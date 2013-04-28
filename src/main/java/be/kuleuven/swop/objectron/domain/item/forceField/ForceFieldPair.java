@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
 import be.kuleuven.swop.objectron.domain.square.ForceFieldSquareState;
+import be.kuleuven.swop.objectron.domain.square.NormalSquareState;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.List;
@@ -18,24 +19,29 @@ public class ForceFieldPair {
     private final int turnSwitch = 2;
     private int currentTurnSwitch;
     private List<Square> affectedSquares;
-    private State state = State.ACTIVE;
+    private State state;
 
     public ForceFieldPair(ForceField forceField1, ForceField forceField2, List<Square> squaresBetween) {
 
         this.forceField1 = forceField1;
         this.forceField2 = forceField2;
         this.affectedSquares = squaresBetween;
+
+        activate();
     }
 
     private void activate() {
         state = State.ACTIVE;
         for(Square square : affectedSquares){
-           // square.transitionPowerState(new ForceFieldSquareState());
+            square.transitionState(new ForceFieldSquareState());
         }
     }
 
     private void disactivate() {
           state = State.DISACTIVE;
+        for(Square square : affectedSquares){
+            square.transitionState(new NormalSquareState());
+        }
     }
 
     private void switchActivation(){

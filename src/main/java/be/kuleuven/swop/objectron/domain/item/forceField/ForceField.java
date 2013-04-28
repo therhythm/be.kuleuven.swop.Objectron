@@ -35,7 +35,7 @@ public class ForceField implements Item, Effect {
 
     @Override
     public void place(Square targetSquare) throws SquareOccupiedException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        forcefieldArea.placeForceField(this,targetSquare);
     }
 
     @Override

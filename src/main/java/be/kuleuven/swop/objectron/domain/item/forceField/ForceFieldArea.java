@@ -3,12 +3,11 @@ package be.kuleuven.swop.objectron.domain.item.forceField;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +22,10 @@ public class ForceFieldArea implements ForceFieldObserver {
     private List<ForceFieldPair> listForceFieldPairs;
     private Grid grid;
 
+    public ForceFieldArea(){
+        listForceFields = new HashMap<ForceField, Square>();
+        listForceFieldPairs = new ArrayList<ForceFieldPair>();
+    }
     @Override
     public void update() {
         for (ForceFieldPair forcefieldPair : listForceFieldPairs) {
@@ -30,8 +33,8 @@ public class ForceFieldArea implements ForceFieldObserver {
         }
     }
 
-    public void addForceField(Square square, ForceField forceField) {
-        listForceFields.put(forceField, square);
+    public void addForceField(Square square, Item forceField) {
+        listForceFields.put((ForceField)forceField, square);
 
     }
 
@@ -39,6 +42,7 @@ public class ForceFieldArea implements ForceFieldObserver {
         updateForceField(changedForceField,currentSquare);
         for (ForceField forceField : listForceFields.keySet()) {
             if (!changedForceField.equals(forceField)) {
+
                 checkForceField(changedForceField, forceField);
             }
         }
@@ -54,6 +58,7 @@ public class ForceFieldArea implements ForceFieldObserver {
             if (withinRange(listForceFields.get(forceField1), listForceFields.get(forceField2),direction)){
                 List<Square> squaresBetween = getSquaresBetween(listForceFields.get(forceField1), listForceFields.get(forceField2),direction);
                 ForceFieldPair forceFieldPair = new ForceFieldPair(forceField1,forceField2,squaresBetween);
+                listForceFieldPairs.add(forceFieldPair);
             }
         }
     }
@@ -72,13 +77,19 @@ public class ForceFieldArea implements ForceFieldObserver {
     }
 
     private boolean withinRange(Square currentSquare, Square square, Direction direction) {
+        Square neighbor = currentSquare;
         for (int i = 0; i < maxRange; i++) {
-            Square neighbor = currentSquare.getNeighbour(direction);
+             neighbor = neighbor.getNeighbour(direction);
             if (neighbor == null)
                 return false;
             if(neighbor.equals(square))
                 return true;
         }
         return false;
+    }
+
+    //mag weg
+    public int sizeListForceFieldPairs(){
+        return listForceFieldPairs.size();
     }
 }
