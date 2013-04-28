@@ -3,7 +3,13 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldObserver;
+import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +25,7 @@ public class Turn {
     private Item currentItem;
     private int actionsRemaining;
     private boolean hasMoved;
+    private List<ForceFieldObserver> observers = new ArrayList<ForceFieldObserver>();
 
     public Turn(Player player) {
         this.currentPlayer = player;
@@ -57,6 +64,7 @@ public class Turn {
     }
 
     public void reduceRemainingActions(int amount) {
+        notifyObservers();
         if (actionsRemaining > amount) {
             actionsRemaining -= amount;
         } else {
@@ -74,6 +82,20 @@ public class Turn {
 
     public TurnViewModel getViewModel() {
         return new TurnViewModel(actionsRemaining, currentPlayer.getPlayerViewModel());
+    }
+
+    public void attach(ForceFieldObserver observer){
+        this.observers.add(observer);
+    }
+
+    public void detach(GameObserver observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyObservers() {
+        for (ForceFieldObserver observer : observers) {
+            observer.update();
+        }
     }
 
     public String toString() {

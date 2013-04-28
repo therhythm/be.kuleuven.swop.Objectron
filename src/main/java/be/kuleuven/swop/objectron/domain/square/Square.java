@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.square;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
@@ -34,7 +35,7 @@ public class Square implements Observable<SquareObserver> {
 
     public Square(final Position position) {
         this.position = position;
-        this.state = new PoweredSquareState();
+        this.state = new NormalSquareState(new PoweredSquareState());
     }
 
     public Square(final Position position, int powerFailureChance) {
@@ -58,7 +59,7 @@ public class Square implements Observable<SquareObserver> {
         isObstructed = value;
     }
 
-    public void stepOn(GameState gameState) {
+    public void stepOn(GameState gameState) throws InvalidMoveException {
         state.stepOn(gameState);
 
         setObstructed(true);
@@ -138,9 +139,17 @@ public class Square implements Observable<SquareObserver> {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
 
-    public void transitionState(SquareState newState) {
-        this.state = newState;
+    public void transitionPowerState(SquareStatePower newPowerState) {
+        this.state.setSquareStatePower(newPowerState);
     }
+
+    public void transitionState(SquareState newState) {
+        SquareStatePower squareStatePower= state.getSquareStatePower();
+        newState.setSquareStatePower(squareStatePower);
+        this.state.setSquareStatePower(newState);
+    }
+
+
 
     public void receivePowerFailure() {
         state.powerFailure(this);
