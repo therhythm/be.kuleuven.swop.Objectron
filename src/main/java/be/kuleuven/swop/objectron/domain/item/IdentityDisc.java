@@ -49,7 +49,7 @@ public class IdentityDisc implements Item {
     }
 
     public boolean playerHit(Square square, GameState state) {
-        for (Player player : state.getPlayers()) {
+        for (Player player : state.getPlayers()) {  //todo state.getplayers could probably removed with the right abstraction..
             if (player.getCurrentSquare().equals(square)) {
                 this.activate(player, state);
                 return true;
