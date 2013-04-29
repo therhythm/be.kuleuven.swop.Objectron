@@ -50,8 +50,8 @@ public class Test_Force_Field {
     public void setUp() throws GridTooSmallException {
         dimension = new Dimension(10, 10);
 
-        p1Pos = new Position(0, 9);
-        p2Pos = new Position(5, 9);
+        p1Pos = new Position(0, 7);
+        p2Pos = new Position(4, 8);
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
@@ -62,10 +62,10 @@ public class Test_Force_Field {
         player1 = state.getCurrentPlayer();
     }
 
-     @Test(expected = InvalidMoveException.class)
-    public void test_Force_Field() throws InventoryFullException, NotEnoughActionsException, NoItemSelectedException, SquareOccupiedException, InvalidMoveException, GameOverException {
-        Square squareFF1 = grid.getSquareAtPosition(new Position(0, 9));
-        Square squareFF2 = grid.getSquareAtPosition(new Position(2, 9));
+    @Test(expected = InvalidMoveException.class)
+    public void test_Force_Field_move_in_force_field() throws InventoryFullException, NotEnoughActionsException, NoItemSelectedException, SquareOccupiedException, InvalidMoveException, GameOverException {
+        Square squareFF1 = grid.getSquareAtPosition(new Position(0, 8));
+        Square squareFF2 = grid.getSquareAtPosition(new Position(3, 8));
         ForceFieldArea forceFieldArea = new ForceFieldArea();
 
         Item forceField1 = new ForceField(forceFieldArea);
@@ -74,17 +74,21 @@ public class Test_Force_Field {
         squareFF1.addItem(forceField1);
         squareFF2.addItem(forceField2);
 
-        forceFieldArea.addForceField(squareFF1,forceField1);
-        forceFieldArea.addForceField(squareFF2,forceField2);
-         Turn currentTurn = state.getCurrentTurn();
-          currentTurn.attach(forceFieldArea);
-
+        forceFieldArea.addForceField(squareFF1, forceField1);
+        forceFieldArea.addForceField(squareFF2, forceField2);
+        Turn currentTurn = state.getCurrentTurn();
+        currentTurn.attach(forceFieldArea);
+        System.out.println("voor");
+        System.out.println(state.getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.DOWN);
+        System.out.println("na");
+        System.out.println(state.getCurrentPlayer().getCurrentSquare().getPosition());
+        assertTrue(state.getCurrentPlayer().getCurrentSquare().getPosition().equals(squareFF1.getPosition()));
         pickUpItemHandler.pickUpItem(0);
-          useItemHandler.selectItemFromInventory(0);
-          useItemHandler.useCurrentItem();
-         movePlayerHandler.move(Direction.RIGHT);
-        System.out.println(forceFieldArea.sizeListForceFieldPairs() );
-
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentItem();
+        endTurnHandler.endTurn();
+        movePlayerHandler.move(Direction.LEFT);
 
     }
 }
