@@ -3,7 +3,11 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,13 +16,14 @@ import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
  * Time: 1:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Turn {
+public class Turn implements Observable<TurnObserver> {
     public static final int ACTIONS_EACH_TURN = 3;
 
     private Player currentPlayer;
     private Item currentItem;
     private int actionsRemaining;
     private boolean hasMoved;
+    private Set<TurnObserver> observers = new HashSet<>();
 
     public Turn(Player player) {
         this.currentPlayer = player;
@@ -64,6 +69,13 @@ public class Turn {
             actionsRemaining = 0;
             hasMoved = true;
         }
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        for(TurnObserver observer : observers){
+            observer.update(this);
+        }
     }
 
     public void checkEnoughActions() throws NotEnoughActionsException {
@@ -85,5 +97,15 @@ public class Turn {
 
         return result;
 
+    }
+
+    @Override
+    public void attach(TurnObserver observer) {
+        this.observers.add(observer);
+    }
+
+    @Override
+    public void detach(TurnObserver observer) {
+        this.observers.remove(observer);
     }
 }
