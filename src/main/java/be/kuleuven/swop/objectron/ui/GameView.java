@@ -134,7 +134,7 @@ public class GameView implements GameObserver {
                         }
                         graphics.drawString(currentTurn.getPlayerViewModel().getName(), 20, 20);
                         graphics.drawString("moves remaining: " + currentTurn.getRemainingActions(), 20, 40);
-                        graphics.drawString("selected item: " + selectedItem, 200, 20);
+                        graphics.drawString("selected item: " + currentTurn.getCurrentItem(), 200, 20);
                     }
                 };
 

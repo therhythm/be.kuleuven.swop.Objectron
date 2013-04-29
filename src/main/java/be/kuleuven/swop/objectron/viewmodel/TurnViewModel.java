@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.viewmodel;
 
+import be.kuleuven.swop.objectron.domain.item.Item;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Nik
@@ -10,10 +12,12 @@ package be.kuleuven.swop.objectron.viewmodel;
 public class TurnViewModel {
     private int remainingActions;
     private PlayerViewModel playerViewModel;
+    private String selectedItem;
 
-    public TurnViewModel(int remainingActions, PlayerViewModel playerViewModel) {
+    public TurnViewModel(int remainingActions, PlayerViewModel playerViewModel, Item selectedItem) {//TODO item viewmodel instead of strings
         this.remainingActions = remainingActions;
         this.playerViewModel = playerViewModel;
+        this.selectedItem = selectedItem == null ? "no item" : selectedItem.getName();
     }
 
     public int getRemainingActions() {
@@ -22,5 +26,9 @@ public class TurnViewModel {
 
     public PlayerViewModel getPlayerViewModel() {
         return this.playerViewModel;
+    }
+
+    public String getCurrentItem() {
+        return selectedItem;
     }
 }

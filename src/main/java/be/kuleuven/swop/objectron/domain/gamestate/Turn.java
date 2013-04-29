@@ -73,7 +73,7 @@ public class Turn {
     }
 
     public TurnViewModel getViewModel() {
-        return new TurnViewModel(actionsRemaining, currentPlayer.getPlayerViewModel());
+        return new TurnViewModel(actionsRemaining, currentPlayer.getPlayerViewModel(), currentItem);
     }
 
     public String toString() {
