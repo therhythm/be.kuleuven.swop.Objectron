@@ -3,11 +3,9 @@ package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -22,21 +20,20 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Observable<SquareObserver> {
-    public static final int POWER_FAILURE_CHANCE = 5; //TODO public
+    public static final int POWER_FAILURE_CHANCE = 5;
     private final Position position;
 
     private List<SquareObserver> observers = new ArrayList<>();
-    private SquareState state;
-    private Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
-    private List<Item> items = new ArrayList<Item>();
+    private PowerState state;
+    private Map<Direction, Square> neighbours = new HashMap<>();
+    private List<Item> items = new ArrayList<>();
     private List<Effect> effects = new ArrayList<>();
     private boolean isObstructed = false;
-    private Item activeItem;
     private int powerFailureChance = POWER_FAILURE_CHANCE;
 
     public Square(final Position position) {
         this.position = position;
-        this.state = new PoweredSquareState();
+        this.state = new PoweredState(this);
     }
 
     public Square(final Position position, int powerFailureChance) {
@@ -64,10 +61,7 @@ public class Square implements Observable<SquareObserver> {
         state.stepOn(turnManager);
 
         setObstructed(true);
-        if (hasActiveItem()) {
-            ((Effect)(activeItem)).activate(turnManager.getCurrentTurn()); //TODO no casting
-            activeItem = null;
-        }
+        //todo add turnmanager .getplayer to obstruction
 
         for(Effect effect : effects){
             effect.activate(turnManager.getCurrentTurn());
@@ -85,7 +79,7 @@ public class Square implements Observable<SquareObserver> {
 
     public void addEffect(Effect effect){
         this.effects.add(effect);
-        //TODO notify?
+        //TODO notify
     }
 
     public Position getPosition() {
@@ -99,16 +93,16 @@ public class Square implements Observable<SquareObserver> {
         return selectedItem;
     }
 
-    public boolean hasActiveItem() {
+    /*public boolean hasActiveItem() {
         return activeItem != null;
     }
 
-    public void setActiveItem(Item activeItem) throws SquareOccupiedException {
+    /*public void setActiveItem(Item activeItem) throws SquareOccupiedException {
         if (hasActiveItem()) {
             throw new SquareOccupiedException("The square already has an active item");
         }
         this.activeItem = activeItem;
-    }
+    } */
 
     public boolean isValidPosition(Direction direction) {
         if (this.isObstructed())
@@ -140,12 +134,12 @@ public class Square implements Observable<SquareObserver> {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
 
-    public void transitionState(SquareState newState) {
+    public void transitionState(PowerState newState) {
         this.state = newState;
     }
 
     public void receivePowerFailure() {
-        state.powerFailure(this);
+        state.powerFailure();
         notifyPowerFailure();
     }
 
@@ -162,7 +156,7 @@ public class Square implements Observable<SquareObserver> {
             }
         }
         boolean currentSquare = currentTurn.getCurrentPlayer().getCurrentSquare().equals(this);
-        state.newTurn(currentTurn, currentSquare, this);
+        state.newTurn(currentTurn, currentSquare);
     }
 
     @Override

@@ -9,10 +9,10 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
  *         Date: 13/03/13
  *         Time: 02:57
  */
-public interface SquareState {
-    void newTurn(Turn currentTurn, boolean currentSquare, Square context);
+public interface PowerState {
+    void newTurn(Turn currentTurn, boolean currentSquare);
 
     void stepOn(TurnManager turnManager);
 
-    void powerFailure(Square context);
+    void powerFailure();
 }

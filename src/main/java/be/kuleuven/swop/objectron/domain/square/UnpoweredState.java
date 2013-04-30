@@ -1,6 +1,5 @@
 package be.kuleuven.swop.objectron.domain.square;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 
@@ -9,28 +8,34 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
  *         Date: 13/03/13
  *         Time: 03:01
  */
-public class UnpoweredSquareState implements SquareState {
+public class UnpoweredState implements PowerState {
     public static final int TURNS_WITHOUT_POWER = 3;
     private static final int ACTIONS_TO_REDUCE = 1;
 
 
-    private int remainingTurns = TURNS_WITHOUT_POWER;
+    private Square context;
+    private int remainingTurns;
+
+    public UnpoweredState(Square context) {
+        this.context = context;
+        this.remainingTurns = TURNS_WITHOUT_POWER;
+    }
 
     @Override
-    public void newTurn(Turn currentTurn, boolean currentSquare, Square context) {
-        if (currentSquare) {
+    public void newTurn(Turn currentTurn, boolean sameSquare) {
+        if (sameSquare) {
             currentTurn.reduceRemainingActions(ACTIONS_TO_REDUCE);
         }
         remainingTurns--;
         if (remainingTurns == 0) {
-            context.transitionState(new PoweredSquareState());
+            context.transitionState(new PoweredState(context));
             context.notifyPowered();
         }
     }
 
     @Override
     public void stepOn(TurnManager turnManager) {
-        if (turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()) {  //todo this should be done another way
+        if (false/*context.hasActiveItem()*/) {  //todo this should be done another way
             turnManager.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
         } else {
             turnManager.endTurn();
@@ -38,7 +43,7 @@ public class UnpoweredSquareState implements SquareState {
     }
 
     @Override
-    public void powerFailure(Square context) {
+    public void powerFailure() {
         remainingTurns = TURNS_WITHOUT_POWER;
     }
 }

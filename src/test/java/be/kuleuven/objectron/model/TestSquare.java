@@ -22,7 +22,7 @@ public class TestSquare {
     @Before
     public void setUp() throws GridTooSmallException, SquareOccupiedException {
         square = new Square(new Position(5, 5));
-        square.setActiveItem(new LightMine());
+        square.addEffect(new LightMine());
         player = new Player("test", new Square(new Position(5, 4)));
     }
    /* TODO

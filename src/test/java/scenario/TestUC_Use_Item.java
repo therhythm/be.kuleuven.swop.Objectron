@@ -88,7 +88,7 @@ public class TestUC_Use_Item {
 
         assertEquals(initialAvailableActions - 1, stateMock.getTurnManager().getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
-        assertTrue(player.getCurrentSquare().hasActiveItem()); //todo active items don't exist anymore
+        //assertTrue(player.getCurrentSquare().hasActiveItem()); //todo active items don't exist anymore
     }
 
     //todo this can probably be removed because squares can have multiple active items (effects)
@@ -114,7 +114,7 @@ public class TestUC_Use_Item {
 
         assertEquals(initialAvailableActions, stateMock.getTurnManager().getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
-        assertFalse(player.getCurrentSquare().hasActiveItem());
+        //assertFalse(player.getCurrentSquare().hasActiveItem());//todo review test
     }
 
     @Test(expected = NotEnoughActionsException.class)

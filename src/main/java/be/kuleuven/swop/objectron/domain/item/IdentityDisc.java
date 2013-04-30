@@ -93,10 +93,13 @@ public class IdentityDisc implements Item {
         return true;
     }
 
+
     public Square getNextSquare(Square currentSquare, Direction direction) {
         Square neighbor = currentSquare.getNeighbour(direction);
         if (neighbor == null)
             return null;
+
+        //todo this should be handled by the effect abstraction
         Teleporter teleportItem = neighbor.getTeleportItem();
         if (teleportItem != null) {
             neighbor = this.teleport(teleportItem);

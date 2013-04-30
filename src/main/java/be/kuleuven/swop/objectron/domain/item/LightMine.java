@@ -17,6 +17,7 @@ public class LightMine implements Item, Effect {
     private static final int NB_ACTIONS_BLINDED = 3;
 
     private static final String name = "Light Mine";
+    private boolean isActive = false;
 
     @Override
     public String getName() {
@@ -25,13 +26,17 @@ public class LightMine implements Item, Effect {
 
     @Override
     public void activate(Turn currentTurn) {
-        currentTurn.reduceRemainingActions(NB_ACTIONS_BLINDED);
+        if(isActive){
+            currentTurn.reduceRemainingActions(NB_ACTIONS_BLINDED);
+            isActive = false;
+            //todo notify observers
+        }
     }
 
     @Override
     public void place(Square targetSquare){
-        // targetSquare.setActiveItem(this);
         targetSquare.addEffect(this);
+        isActive = true;
     }
 
     @Override

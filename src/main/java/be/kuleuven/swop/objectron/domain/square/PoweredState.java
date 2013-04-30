@@ -1,6 +1,5 @@
 package be.kuleuven.swop.objectron.domain.square;
 
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 
@@ -9,10 +8,16 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
  *         Date: 13/03/13
  *         Time: 03:00
  */
-public class PoweredSquareState implements SquareState {
+public class PoweredState implements PowerState {
+
+    private Square context;
+
+    public PoweredState(Square context) {
+        this.context = context;
+    }
 
     @Override
-    public void newTurn(Turn currentTurn, boolean currentSquare, Square context) {
+    public void newTurn(Turn currentTurn, boolean currentSquare) {
         // do nothing
     }
 
@@ -22,7 +27,7 @@ public class PoweredSquareState implements SquareState {
     }
 
     @Override
-    public void powerFailure(Square context) {
-        context.transitionState(new UnpoweredSquareState());
+    public void powerFailure() {
+        context.transitionState(new UnpoweredState(context));
     }
 }
