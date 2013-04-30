@@ -8,7 +8,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
  *         Date: 13/03/13
  *         Time: 03:01
  */
-public class UnpoweredSquareState implements SquareStatePower {
+public class UnpoweredSquareState implements SquareState {
     public static final int TURNS_WITHOUT_POWER = 3;
     private static final int ACTIONS_TO_REDUCE = 1;
 

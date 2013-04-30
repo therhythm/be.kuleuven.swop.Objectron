@@ -25,7 +25,7 @@ public class Square implements Observable<SquareObserver> {
     private final Position position;
 
     private List<SquareObserver> observers = new ArrayList<>();
-    private SquareStatePower state;
+    private SquareState state;
     private Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
     private List<Item> items = new ArrayList<Item>();
     private List<Effect> effects = new ArrayList<>();
@@ -141,7 +141,7 @@ public class Square implements Observable<SquareObserver> {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
 
-    public void transitionPowerState(SquareStatePower newPowerState) {
+    public void transitionPowerState(SquareState newPowerState) {
         this.state = newPowerState;
     }
 

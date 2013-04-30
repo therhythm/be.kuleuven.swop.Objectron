@@ -8,7 +8,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
  *         Date: 13/03/13
  *         Time: 03:00
  */
-public class PoweredSquareState implements SquareStatePower {
+public class PoweredSquareState implements SquareState {
 
     @Override
     public void newTurn(Turn currentTurn, boolean currentSquare, Square context) {

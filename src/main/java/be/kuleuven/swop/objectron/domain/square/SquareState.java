@@ -11,7 +11,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
  * Time: 15:22
  * To change this template use File | Settings | File Templates.
  */
-public interface SquareStatePower {
+public interface SquareState {
     void newTurn(Turn currentTurn, boolean currentSquare, Square context);
 
     void stepOn(GameState gameState) throws InvalidMoveException;

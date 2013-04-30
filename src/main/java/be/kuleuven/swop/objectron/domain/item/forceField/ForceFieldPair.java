@@ -16,7 +16,7 @@ public class ForceFieldPair {
 
     private ForceField forceField1;
     private ForceField forceField2;
-    private int currentTurnSwitch = TURNSWITCH;
+    private int currentTurnSwitch = TURNSWITCH + 1;
     private List<Square> affectedSquares;
     private boolean active;
 
@@ -32,7 +32,6 @@ public class ForceFieldPair {
     private void activate() {
         active = true;
         for (Square square : affectedSquares) {
-            System.out.println(square);
             square.setObstructed(true);
         }
     }

@@ -231,7 +231,7 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forceField1, squareFF1);
         forceFieldArea.placeForceField(forceField2, squareFF2);
-        Turn currentTurn = state.getCurrentTurn();
+        // Turn currentTurn = state.getCurrentTurn();
         //currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);
@@ -247,12 +247,23 @@ public class Test_Force_Field {
 
         assertTrue(squareFF2.isObstructed());
         endTurnHandler.endTurn();
-        state.getCurrentTurn().attach(forceFieldArea);
         movePlayerHandler.move(Direction.DOWN);
         movePlayerHandler.move(Direction.DOWN);
         assertFalse(squareFF2.isObstructed());
         assertFalse(grid.getSquareAtPosition(new Position(6, 5)).isObstructed());
         assertFalse(grid.getSquareAtPosition(new Position(7, 5)).isObstructed());
+        endTurnHandler.endTurn();
+
+        System.out.println(state.getCurrentPlayer().getCurrentSquare().getPosition());
+
+        movePlayerHandler.move(Direction.UP);
+        movePlayerHandler.move(Direction.UP);
+      //  assertTrue(squareFF1.isObstructed());
+        assertTrue(squareFF2.isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(5, 5)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6, 5)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(7, 5)).isObstructed());
+
     }
 
     @Test
