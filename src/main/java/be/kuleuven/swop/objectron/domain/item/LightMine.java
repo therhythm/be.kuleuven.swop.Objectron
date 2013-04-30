@@ -29,8 +29,9 @@ public class LightMine implements Item, Effect {
     }
 
     @Override
-    public void place(Square targetSquare) throws SquareOccupiedException {
-        targetSquare.setActiveItem(this);
+    public void place(Square targetSquare){
+        // targetSquare.setActiveItem(this);
+        targetSquare.addEffect(this);
     }
 
     @Override

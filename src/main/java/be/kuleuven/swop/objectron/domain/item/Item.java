@@ -15,7 +15,7 @@ public interface Item {
 
     String getName();
 
-    void place(Square targetSquare) throws SquareOccupiedException;  //TODO remove exception when effects are in place
+    void place(Square targetSquare);
 
     void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager);
 }

@@ -14,7 +14,9 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public interface IdentityDiscBehavior {
-    public void throwMe(Square sourceSquare, Direction targetDirection, IdentityDisc context, TurnManager turnManager);
+    int getRemainingRange();
 
-    public String getName();
+    void moved();
+
+    String getName();
 }

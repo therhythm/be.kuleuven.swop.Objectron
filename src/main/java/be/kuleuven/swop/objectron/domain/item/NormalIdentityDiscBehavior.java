@@ -15,25 +15,20 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  */
 public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
     private static final int MAX_RANGE = 4;
+    private int remainingRange;
+
+    public NormalIdentityDiscBehavior() {
+        this.remainingRange = MAX_RANGE;
+    }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, IdentityDisc context, TurnManager turnManager) {
-        Square currentSquare = sourceSquare;
-        Square neighbor = context.getNextSquare(currentSquare, targetDirection);
+    public int getRemainingRange() {
+        return remainingRange;
+    }
 
-        for (int i = 0; i < MAX_RANGE; i++) {
-            if (neighbor == null)
-                break;
-            if (context.playerHit(neighbor, turnManager)) {//todo find a way to hit players .. maybe make player an obstruction?? REMOVE player
-                currentSquare = neighbor;
-                break;
-
-            } else /*!state.getGrid().isWall(neighbor)*/ { //todo let obstruction handle obstructions remove grid
-                currentSquare = neighbor;
-                neighbor = context.getNextSquare(currentSquare, targetDirection);
-            }
-        }
-        currentSquare.addItem(context);
+    @Override
+    public void moved() {
+        remainingRange--;
     }
 
     @Override

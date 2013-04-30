@@ -88,10 +88,11 @@ public class TestUC_Use_Item {
 
         assertEquals(initialAvailableActions - 1, stateMock.getTurnManager().getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
-        assertTrue(player.getCurrentSquare().hasActiveItem());
+        assertTrue(player.getCurrentSquare().hasActiveItem()); //todo active items don't exist anymore
     }
 
-    @Test(expected = SquareOccupiedException.class)
+    //todo this can probably be removed because squares can have multiple active items (effects)
+    /*@Test(expected = SquareOccupiedException.class)
     public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException, NotEnoughActionsException, NoItemSelectedException {
         player.getCurrentSquare().setActiveItem(item);
         player.pickupItem(0);
@@ -99,7 +100,7 @@ public class TestUC_Use_Item {
 
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
-    }
+    } */
 
     @Test
     public void cancelItemUsageTest() throws InventoryFullException, NotEnoughActionsException {

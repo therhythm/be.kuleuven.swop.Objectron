@@ -46,7 +46,25 @@ public class IdentityDisc implements Item {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
 
-        identityDiscBehavior.throwMe(sourceSquare, targetDirection, this, turnManager);
+        Square currentSquare = sourceSquare;
+        Square neighbor = getNextSquare(currentSquare, targetDirection);
+
+        //todo clean>>?
+        while(identityDiscBehavior.getRemainingRange() > 0) {
+            if (neighbor == null)
+                break;
+            if (playerHit(neighbor, turnManager)) {//todo find a way to hit players .. maybe make player an obstruction?? REMOVE player
+                currentSquare = neighbor;
+                break;
+            } else /*!state.getGrid().isWall(neighbor)*/ { //todo let obstruction handle obstructions remove grid
+                currentSquare = neighbor;
+                neighbor = getNextSquare(currentSquare, targetDirection);
+                identityDiscBehavior.moved();
+            }
+        }
+        currentSquare.addItem(this);
+
+        //identityDiscBehavior.throwMe(sourceSquare, targetDirection, this, turnManager);
     }
 
     public boolean playerHit(Square square, TurnManager turnManager) {

@@ -30,7 +30,7 @@ public class UnpoweredSquareState implements SquareState {
 
     @Override
     public void stepOn(TurnManager turnManager) {
-        if (turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()) {
+        if (turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()) {  //todo this should be done another way
             turnManager.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
         } else {
             turnManager.endTurn();
