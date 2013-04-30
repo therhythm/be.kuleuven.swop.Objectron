@@ -37,6 +37,11 @@ public class LightMine implements Item, Effect {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void addToSquare(Square targetSquare) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public String toString() {
         String result = "";
         result += "name: " + this.getName();

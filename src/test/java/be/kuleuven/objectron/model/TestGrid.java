@@ -80,6 +80,7 @@ public class TestGrid {
         int numberOfLightMines = 0;
         int numberOfTeleporters = 0;
         int numberOfIdentitydiscs = 0;
+        int numberOfForceFields = 0;
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -94,6 +95,8 @@ public class TestGrid {
                         }
                         if (item.getName() == "Uncharged Identity Disc")
                             numberOfIdentitydiscs++;
+                        if (item.getName() == "Force Field")
+                            numberOfForceFields++;
                     }
                 }
             }
@@ -101,6 +104,7 @@ public class TestGrid {
         assertTrue(numberOfLightMines <= 2);
         assertTrue(numberOfTeleporters <= 3);
         assertTrue(numberOfIdentitydiscs <= 2);
+        assertTrue(numberOfForceFields<=7);
         assertTrue(hasItems);
     }
 

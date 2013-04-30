@@ -48,6 +48,10 @@ public class IdentityDisc implements Item {
         identityDiscBehavior.throwMe(sourceSquare, targetDirection, this, state);
     }
 
+    @Override
+    public void addToSquare(Square targetSquare) {
+    }
+
     public boolean playerHit(Square square, GameState state) {
         for (Player player : state.getPlayers()) {
             if (player.getCurrentSquare().equals(square)) {

@@ -25,7 +25,7 @@ public class Square implements Observable<SquareObserver> {
     private final Position position;
 
     private List<SquareObserver> observers = new ArrayList<>();
-    private SquareState state;
+    private SquareStatePower state;
     private Map<Direction, Square> neighbours = new HashMap<Direction, Square>();
     private List<Item> items = new ArrayList<Item>();
     private List<Effect> effects = new ArrayList<>();
@@ -35,7 +35,7 @@ public class Square implements Observable<SquareObserver> {
 
     public Square(final Position position) {
         this.position = position;
-        this.state = new NormalSquareState(new PoweredSquareState());
+        this.state = new PoweredSquareState();
     }
 
     public Square(final Position position, int powerFailureChance) {
@@ -78,6 +78,7 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public void addItem(Item item) {
+        item.addToSquare(this);
         this.items.add(item);
         notifyItemPlaced(item);
     }
@@ -95,6 +96,7 @@ public class Square implements Observable<SquareObserver> {
         Item selectedItem = items.get(selectionId);
 
         items.remove(selectedItem);
+        selectedItem.addToSquare(null);
         return selectedItem;
     }
 
@@ -140,16 +142,8 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public void transitionPowerState(SquareStatePower newPowerState) {
-        this.state.setSquareStatePower(newPowerState);
+        this.state = newPowerState;
     }
-
-    public void transitionState(SquareState newState) {
-        SquareStatePower squareStatePower= state.getSquareStatePower();
-        newState.setSquareStatePower(squareStatePower);
-        this.state.setSquareStatePower(newState);
-    }
-
-
 
     public void receivePowerFailure() {
         state.powerFailure(this);

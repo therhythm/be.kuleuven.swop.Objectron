@@ -6,6 +6,8 @@ import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.*;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -30,6 +32,9 @@ public class GridBuilder {
     private static final int MIN_GRID_HEIGHT = 10;
     private static final double PERCENTAGE_OF_TELEPORTERS = 0.03;
     private static final double PERCENTAGE_OF_LIGHTMINES = 0.02;
+    private static final double PERCENTAGE_OF_IDENTITYDISCS = 0.02;
+    private static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
+
 
 
     private Dimension dimension;
@@ -38,6 +43,7 @@ public class GridBuilder {
 
     private Square[][] squares;
     private List<Wall> walls;
+    private ForceFieldArea forceFieldArea;
 
     public GridBuilder(Dimension dimension, Position p1Pos, Position p2Pos) throws GridTooSmallException {
         if (!isValidDimension(dimension)) {
@@ -49,6 +55,7 @@ public class GridBuilder {
         this.p1Pos = p1Pos;
         this.p2Pos = p2Pos;
         initGrid(Square.POWER_FAILURE_CHANCE);
+        forceFieldArea = new ForceFieldArea();
     }
 
     public void buildWalls() {
@@ -69,7 +76,7 @@ public class GridBuilder {
     }
 
     public Grid getGrid() {
-        return new Grid(squares, walls, dimension);
+        return new Grid(squares, walls, dimension,forceFieldArea);
     }
 
     private Square calculateMiddleSquare() {
@@ -108,15 +115,36 @@ public class GridBuilder {
     public void buildItems() {
         int numberOfLightmines = (int) Math.ceil(PERCENTAGE_OF_LIGHTMINES * dimension.area());
         int numberOfTeleporters = (int) Math.ceil(PERCENTAGE_OF_TELEPORTERS * dimension.area());
+        int numberOfIdentityDiscs = (int) Math.ceil(PERCENTAGE_OF_IDENTITYDISCS * dimension.area());
+        int numberOfForceFields = (int) Math.floor(PERCENTAGE_OF_FORCEFIELDS * dimension.area());
+
 
         placeLightMines(numberOfLightmines);
         placeTeleporters(numberOfTeleporters);
-        placeIdentityDiscs();
+        placeIdentityDiscs(numberOfIdentityDiscs);
+        placeForceFields(numberOfForceFields);
     }
 
-    private void placeIdentityDiscs() {
+    private void placeForceFields(int numberOfItems) {
+        List<Item> forceFields = new ArrayList<Item>();
+        for(int i = 0;i<numberOfItems;i++){
+            ForceField forcefield = new ForceField(forceFieldArea);
+            forceFields.add(forcefield);
+        }
+        placeOtherItems(forceFields);
+    }
+
+    private void placeIdentityDiscs(int numberOfItems) {
         placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
         placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
+        numberOfItems-=2;
+        List<Item> identityDiscs = new ArrayList<Item>();
+
+        for (int i = 0; i < numberOfItems; i++) {
+            identityDiscs.add(new IdentityDisc(new NormalIdentityDiscBehavior()));
+        }
+        placeOtherItems(identityDiscs);
+
         placeChargedIdentityDisc();
     }
 
@@ -129,10 +157,8 @@ public class GridBuilder {
 
         for (int i = 0; i < numberOfItems; i++) {
             lightMines.add(new LightMine());
-            identityDiscs.add(new IdentityDisc(new NormalIdentityDiscBehavior()));
         }
         placeOtherItems(lightMines);
-        placeOtherItems(identityDiscs);
     }
 
     private void placeTeleporters(int numberOfTeleporters) {

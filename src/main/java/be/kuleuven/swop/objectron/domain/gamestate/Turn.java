@@ -3,9 +3,7 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
-import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldObserver;
-import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
+import be.kuleuven.swop.objectron.domain.item.forceField.TurnObserver;
 import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ public class Turn {
     private Item currentItem;
     private int actionsRemaining;
     private boolean hasMoved;
-    private List<ForceFieldObserver> observers = new ArrayList<ForceFieldObserver>();
+    private List<TurnObserver> observers = new ArrayList<TurnObserver>();
 
     public Turn(Player player) {
         this.currentPlayer = player;
@@ -84,7 +82,7 @@ public class Turn {
         return new TurnViewModel(actionsRemaining, currentPlayer.getPlayerViewModel());
     }
 
-    public void attach(ForceFieldObserver observer){
+    public void attach(TurnObserver observer){
         this.observers.add(observer);
     }
 
@@ -93,7 +91,7 @@ public class Turn {
     }
 
     public void notifyObservers() {
-        for (ForceFieldObserver observer : observers) {
+        for (TurnObserver observer : observers) {
             observer.update();
         }
     }

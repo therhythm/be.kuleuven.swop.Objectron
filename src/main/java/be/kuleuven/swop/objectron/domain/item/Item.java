@@ -17,4 +17,6 @@ public interface Item {
     void place(Square targetSquare) throws SquareOccupiedException;  //TODO remove exception when effects are in place
 
     void throwMe(Square sourceSquare, Direction targetDirection, GameState state);//TODO remove  gamestate ASAP
+
+    void addToSquare(Square targetSquare);
 }

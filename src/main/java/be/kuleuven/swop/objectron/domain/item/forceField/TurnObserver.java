@@ -7,7 +7,7 @@ package be.kuleuven.swop.objectron.domain.item.forceField;
  * Time: 9:48
  * To change this template use File | Settings | File Templates.
  */
-public interface ForceFieldObserver {
+public interface TurnObserver {
     public void update();
 }
 

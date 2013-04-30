@@ -19,13 +19,13 @@ public class ForceField implements Item, Effect {
     private final String name = "Force Field";
     private ForceFieldArea forcefieldArea;
 
-    public ForceField(ForceFieldArea forcefieldArea){
+    public ForceField(ForceFieldArea forcefieldArea) {
         this.forcefieldArea = forcefieldArea;
     }
 
     @Override
     public void activate(Turn currentTurn) {
-       // forcefieldArea.placeForceField(this,currentTurn);
+        // forcefieldArea.placeForceField(this,currentTurn);
     }
 
     @Override
@@ -35,11 +35,19 @@ public class ForceField implements Item, Effect {
 
     @Override
     public void place(Square targetSquare) throws SquareOccupiedException {
-        forcefieldArea.placeForceField(this,targetSquare);
+        forcefieldArea.placeForceField(this, targetSquare);
     }
 
     @Override
     public void throwMe(Square sourceSquare, Direction targetDirection, GameState state) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void addToSquare(Square targetSquare) {
+        if (targetSquare == null)
+            forcefieldArea.pickUpForceField(this, targetSquare);
+        else
+            forcefieldArea.placeForceField(this, targetSquare);
     }
 }

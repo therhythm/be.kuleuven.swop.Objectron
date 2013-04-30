@@ -25,7 +25,6 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
     private Turn currentTurn;
-    private ForceFieldArea forceFieldArea;
 
     public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException {
         Position p1Pos = new Position(0, dimension.getHeight() - 1);
@@ -33,11 +32,11 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos, this);
         // this.gameGrid = GridFactory.gridWithoutPowerFailures(dimension, p1Pos, p2Pos);
 
-
         Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
 
         currentTurn = new Turn(p1);
+        currentTurn.attach(gameGrid.getForceFieldArea());
         players.add(p1);
         players.add(p2);
     }
@@ -57,6 +56,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
 
         currentTurn = new Turn(p1);
+        currentTurn.attach(gameGrid.getForceFieldArea());
         players.add(p1);
         players.add(p2);
     }
@@ -74,6 +74,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         index = (index + 1) % players.size();
 
         currentTurn = new Turn(players.get(index));
+        currentTurn.attach(gameGrid.getForceFieldArea());
         gameGrid.newTurn(currentTurn);
 
         notifyObservers();

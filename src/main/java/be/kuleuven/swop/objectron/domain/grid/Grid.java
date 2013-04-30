@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -26,11 +27,20 @@ public class Grid {
     private Square[][] squares;
     private Dimension dimension;
     private List<Wall> walls;
+    private ForceFieldArea forceFieldArea;
 
     public Grid(Square[][] squares, List<Wall> walls, Dimension dimension) {
         this.squares = squares;
         this.walls = walls;
         this.dimension = dimension;
+        this.forceFieldArea = new ForceFieldArea();
+    }
+
+    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension,ForceFieldArea forceFieldArea) {
+        this.squares = squares;
+        this.walls = walls;
+        this.dimension = dimension;
+        this.forceFieldArea = forceFieldArea;
     }
 
     public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException, NotEnoughActionsException {
@@ -111,5 +121,9 @@ public class Grid {
             }
         }
         return effects;
+    }
+
+    public ForceFieldArea getForceFieldArea() {
+        return forceFieldArea;
     }
 }
