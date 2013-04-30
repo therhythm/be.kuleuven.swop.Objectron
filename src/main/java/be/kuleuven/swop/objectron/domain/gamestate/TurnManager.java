@@ -23,6 +23,14 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
         this.currentTurn.attach(this);
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public Turn getCurrentTurn(){
+        return currentTurn;
+    }
+
     public void endTurn(){
         int index = players.indexOf(currentTurn.getCurrentPlayer());
         index = (index + 1) % players.size();
@@ -33,15 +41,7 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
         notifyObservers();
     }
 
-    public Turn getCurrentTurn(){
-        return currentTurn;
-    }
 
-    private void notifyObservers(){
-        for(TurnSwitchObserver observer : observers){
-            observer.turnEnded(currentTurn);
-        }
-    }
 
     @Override
     public void attach(TurnSwitchObserver observer) {
@@ -53,14 +53,16 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
         observers.remove(observer);
     }
 
-    public List<Player> getPlayers() {
-        return players;
-    }
-
     @Override
     public void update(Turn turn) {
         for(TurnSwitchObserver observer : observers){
             observer.update(turn);
+        }
+    }
+
+    private void notifyObservers(){
+        for(TurnSwitchObserver observer : observers){
+            observer.turnEnded(currentTurn);
         }
     }
 }

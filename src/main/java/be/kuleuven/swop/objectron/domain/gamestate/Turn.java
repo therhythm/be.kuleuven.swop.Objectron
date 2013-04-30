@@ -33,7 +33,7 @@ public class Turn implements Observable<TurnObserver> {
         this.currentItem = null;
     }
 
-    public void extraTurn() {
+    public void extraTurn() { //todo could be replaced by adding penalties to the player instead
         this.actionsRemaining += (ACTIONS_EACH_TURN - currentPlayer.getRemainingPenalties());
     }
 
@@ -74,11 +74,6 @@ public class Turn implements Observable<TurnObserver> {
         notifyObservers();
     }
 
-    private void notifyObservers() {
-        for(TurnObserver observer : observers){
-            observer.update(this);
-        }
-    }
 
     public void checkEnoughActions() throws NotEnoughActionsException {
         if (actionsRemaining == 0) {
@@ -109,5 +104,11 @@ public class Turn implements Observable<TurnObserver> {
     @Override
     public void detach(TurnObserver observer) {
         this.observers.remove(observer);
+    }
+
+    private void notifyObservers() {
+        for(TurnObserver observer : observers){
+            observer.update(this);
+        }
     }
 }
