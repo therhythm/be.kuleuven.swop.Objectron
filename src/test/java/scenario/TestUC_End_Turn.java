@@ -42,10 +42,10 @@ public class TestUC_End_Turn {
 
     @Test
     public void test_end_turn_with_move() throws InvalidMoveException, GameOverException, NotEnoughActionsException {
-        Player oldPlayer = state.getCurrentPlayer();
+        Player oldPlayer = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         movePlayerHandler.move(Direction.UP);
         endTurnHandler.endTurn();
-        assertFalse(state.getCurrentPlayer().equals(oldPlayer));
+        assertFalse(state.getTurnManager().getCurrentTurn().getCurrentPlayer().equals(oldPlayer));
 
     }
 }

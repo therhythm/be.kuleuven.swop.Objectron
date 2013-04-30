@@ -19,23 +19,23 @@ import java.util.List;
  *         Date: 26/02/13
  *         Time: 21:02
  */
-public class GameState implements Observable<GameObserver>, SquareObserver, TurnObserver {
+public class GameState implements Observable<GameObserver>, SquareObserver, TurnSwitchObserver {
     private Grid gameGrid;
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
-    private Turn currentTurn;
+    private TurnManager turnManager;
 
     public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException {
         Position p1Pos = new Position(0, dimension.getHeight() - 1);
         Position p2Pos = new Position(dimension.getWidth() - 1, 0);
         this.gameGrid = GridFactory.normalGrid(dimension, p1Pos, p2Pos, this);
 
-        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
-        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
+        players.add(new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos)));
+        players.add(new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos)));
 
-        currentTurn = new Turn(p1);
-        players.add(p1);
-        players.add(p2);
+        turnManager = new TurnManager(players);
+        turnManager.attach(this);
+        turnManager.attach(gameGrid);
     }
 
     public GameState(String player1Name, String player2Name, Dimension dimension, Grid gameGrid) throws GridTooSmallException {
@@ -49,37 +49,32 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
     public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos, Grid gameGrid) throws GridTooSmallException {
         this.gameGrid = gameGrid;
 
-        Player p1 = new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos));
-        Player p2 = new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos));
+        players.add(new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos)));
+        players.add(new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos)));
 
-        currentTurn = new Turn(p1);
-        players.add(p1);
-        players.add(p2);
+        turnManager = new TurnManager(players);
+        turnManager.attach(this);
+        turnManager.attach(gameGrid);
     }
 
-    public Player getCurrentPlayer() {
+    /*public Player getCurrentPlayer() {
         return currentTurn.getCurrentPlayer(); //TODO delegate or return turn object?
-    }
+    } */
 
     public Grid getGrid() {
         return gameGrid;
     }
 
-    public void endTurn() {
+  /*  public void endTurn() {
         int index = players.indexOf(currentTurn.getCurrentPlayer());
         index = (index + 1) % players.size();
 
         currentTurn = new Turn(players.get(index));
         currentTurn.attach(this);
-        gameGrid.newTurn(currentTurn);
+        gameGrid.newTurn(turnManager.getCurrentTurn());
 
         notifyObservers();
-    }
-
-    public void extraTurn() {
-        gameGrid.newTurn(currentTurn);
-        notifyObservers();
-    }
+    }*/
 
     public void notifyObservers() {
         List<PlayerViewModel> playerVMs = new ArrayList<>();
@@ -87,33 +82,31 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
             playerVMs.add(p.getPlayerViewModel());
         }
         for (GameObserver observer : observers) {
-            observer.update(currentTurn.getViewModel(), playerVMs);
+            observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs);
         }
     }
 
+    @Override
     public void attach(GameObserver observer) {
         observers.add(observer);
     }
 
+    @Override
     public void detach(GameObserver observer) {
         observers.remove(observer);
     }
 
-    public Turn getCurrentTurn() {
-        return this.currentTurn;
-    }
-
     public Item getCurrentItem() {
-        return currentTurn.getCurrentItem(); //TODO delegate or return Turn object  ?
+        return turnManager.getCurrentTurn().getCurrentItem(); //TODO delegate or return Turn object  ?
     }
 
     public void setCurrentItem(Item item) {
-        currentTurn.setCurrentItem(item);
+        turnManager.getCurrentTurn().setCurrentItem(item);
         notifyObservers();
     }
 
     public boolean checkWin() {
-        Player currentPlayer = currentTurn.getCurrentPlayer();
+        Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
 
         for (Player otherPlayer : players) {
             if (!otherPlayer.equals(currentPlayer) &&
@@ -149,9 +142,17 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         }
     }
 
-    @Override //todo this could probably be better..
-    public void update(Turn turn) {
+    @Override
+    public void turnEnded(Turn newTurn) {
+        //todo UI message?
+    }
 
+    @Override
+    public void update(Turn turn) {
         notifyObservers();
+    }
+
+    public TurnManager getTurnManager() {
+        return turnManager;
     }
 }

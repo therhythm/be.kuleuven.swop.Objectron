@@ -51,7 +51,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getCurrentPlayer();
+        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
     }
 
     @Test
@@ -79,13 +79,13 @@ public class TestUC_Choose_IdentityDisc_Direction {
         movePlayerHandler.move(Direction.RIGHT);
         endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.RIGHT);
-        Player player2 = state.getCurrentPlayer();
+        Player player2 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 3);
+        assertTrue(state.getTurnManager().getCurrentTurn().getActionsRemaining() == 3);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 5);
+        assertTrue(state.getTurnManager().getCurrentTurn().getActionsRemaining() == 5);
         for (int i = 1; i < 3; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));

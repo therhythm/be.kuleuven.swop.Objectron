@@ -42,18 +42,18 @@ public class PickUpItemHandler extends Handler {
      * | state.getCurrentPlayer().getInventoryItems().get(selectionId)
      */
     public void pickUpItem(int selectionId) throws InventoryFullException, NotEnoughActionsException {
+        Turn currentTurn = state.getTurnManager().getCurrentTurn();
         try {
-            Turn currentTurn = state.getCurrentTurn();
             currentTurn.checkEnoughActions();
             Player currentPlayer = currentTurn.getCurrentPlayer();
             currentPlayer.pickupItem(selectionId);
             currentTurn.reduceRemainingActions(1);
             state.notifyObservers();
         } catch (InventoryFullException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " has a full inventory!");
+            logger.log(Level.INFO, currentTurn.getCurrentPlayer().getName() + " has a full inventory!");
             throw e;
         } catch (NotEnoughActionsException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to add an item to the inventory when he had no actions remaining.");
+            logger.log(Level.INFO, currentTurn.getCurrentPlayer().getName() + " tried to add an item to the inventory when he had no actions remaining.");
             throw e;
         }
     }
@@ -68,7 +68,7 @@ public class PickUpItemHandler extends Handler {
      *                               | currentSquare.availableItems().size() == 0
      */
     public List<Item> getAvailableItems() throws SquareEmptyException, NotEnoughActionsException {
-        Turn currentTurn = state.getCurrentTurn();
+        Turn currentTurn = state.getTurnManager().getCurrentTurn();
         currentTurn.checkEnoughActions();
         Player currentPlayer = currentTurn.getCurrentPlayer();
         Square currentSquare = currentPlayer.getCurrentSquare();

@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -26,12 +27,12 @@ public class IdentityDisc implements Item {
         return identityDiscBehavior.getName();
     }
 
-    private void activate(Player player, GameState state) {
-        if(player.equals(state.getCurrentPlayer())){
-            state.endTurn();
+    private void activate(Player player, TurnManager turnManager) {
+        if(player.equals(turnManager.getCurrentTurn().getCurrentPlayer())){
+            turnManager.endTurn();
         }
 
-        state.getCurrentTurn().extraTurn();
+        turnManager.getCurrentTurn().extraTurn();
     }
 
     @Override
@@ -40,18 +41,18 @@ public class IdentityDisc implements Item {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, GameState state) {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) {
         if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
 
-        identityDiscBehavior.throwMe(sourceSquare, targetDirection, this, state);
+        identityDiscBehavior.throwMe(sourceSquare, targetDirection, this, turnManager);
     }
 
-    public boolean playerHit(Square square, GameState state) {
-        for (Player player : state.getPlayers()) {  //todo state.getplayers could probably removed with the right abstraction..
+    public boolean playerHit(Square square, TurnManager turnManager) {
+        for (Player player : turnManager.getPlayers()) {  //todo getplayers could probably removed with the right abstraction..
             if (player.getCurrentSquare().equals(square)) {
-                this.activate(player, state);
+                this.activate(player, turnManager);
                 return true;
             }
         }

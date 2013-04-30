@@ -42,8 +42,8 @@ public class TestUC_Use_Item {
         Turn turn = new Turn(player);
 
         stateMock = mock(GameState.class);
-        when(stateMock.getCurrentPlayer()).thenReturn(player);
-        when(stateMock.getCurrentTurn()).thenReturn(turn);
+        when(stateMock.getTurnManager().getCurrentTurn().getCurrentPlayer()).thenReturn(player);
+        when(stateMock.getTurnManager().getCurrentTurn()).thenReturn(turn);
 
 
         useItemHandler = new UseItemHandler(stateMock);
@@ -78,13 +78,13 @@ public class TestUC_Use_Item {
         player.pickupItem(0);
         when(stateMock.getCurrentItem()).thenReturn(item);
 
-        int initialAvailableActions = stateMock.getCurrentTurn().getActionsRemaining();
+        int initialAvailableActions = stateMock.getTurnManager().getCurrentTurn().getActionsRemaining();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
 
-        assertEquals(initialAvailableActions - 1, stateMock.getCurrentTurn().getActionsRemaining());
+        assertEquals(initialAvailableActions - 1, stateMock.getTurnManager().getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
         assertTrue(player.getCurrentSquare().hasActiveItem());
     }
@@ -103,13 +103,13 @@ public class TestUC_Use_Item {
     public void cancelItemUsageTest() throws InventoryFullException, NotEnoughActionsException {
         player.pickupItem(0);
 
-        int initialAvailableActions = stateMock.getCurrentTurn().getActionsRemaining();
+        int initialAvailableActions = stateMock.getTurnManager().getCurrentTurn().getActionsRemaining();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
 
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.cancelItemUsage();
 
-        assertEquals(initialAvailableActions, stateMock.getCurrentTurn().getActionsRemaining());
+        assertEquals(initialAvailableActions, stateMock.getTurnManager().getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
         assertFalse(player.getCurrentSquare().hasActiveItem());
     }

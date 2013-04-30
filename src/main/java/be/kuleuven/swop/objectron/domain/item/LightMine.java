@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
@@ -33,7 +34,7 @@ public class LightMine implements Item, Effect {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, GameState state) {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) {
         throw new UnsupportedOperationException();
     }
 

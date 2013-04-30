@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -16,5 +17,5 @@ public interface Item {
 
     void place(Square targetSquare) throws SquareOccupiedException;  //TODO remove exception when effects are in place
 
-    void throwMe(Square sourceSquare, Direction targetDirection, GameState state);//TODO remove  gamestate ASAP
+    void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager);
 }

@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -15,12 +16,12 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 public class ChargedIdentityDiscBehavior implements IdentityDiscBehavior {
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, IdentityDisc context, GameState state) {
+    public void throwMe(Square sourceSquare, Direction targetDirection, IdentityDisc context, TurnManager turnManager) {
         Square currentSquare = sourceSquare;
         Square neighbour = context.getNextSquare(sourceSquare, targetDirection);//todo check if needed
-        while (neighbour != null && (!state.getGrid().isWall(neighbour))) {//todo no isWall check. obstruction should handle this
+        while (neighbour != null /*&& (!state.getGrid().isWall(neighbour))*/) {//todo no isWall check. obstruction should handle this
             currentSquare = neighbour;
-            if (context.playerHit(neighbour, state)) {//todo other way of checking player hits
+            if (context.playerHit(neighbour, turnManager)) {//todo other way of checking player hits
                 break;
             }
 

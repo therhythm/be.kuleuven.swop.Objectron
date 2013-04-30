@@ -2,6 +2,8 @@ package be.kuleuven.swop.objectron.domain.square;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
@@ -58,17 +60,17 @@ public class Square implements Observable<SquareObserver> {
         isObstructed = value;
     }
 
-    public void stepOn(GameState gameState) {
-        state.stepOn(gameState);
+    public void stepOn(TurnManager turnManager) {
+        state.stepOn(turnManager);
 
         setObstructed(true);
         if (hasActiveItem()) {
-            ((Effect)(activeItem)).activate(gameState.getCurrentTurn()); //TODO no casting
+            ((Effect)(activeItem)).activate(turnManager.getCurrentTurn()); //TODO no casting
             activeItem = null;
         }
 
         for(Effect effect : effects){
-            effect.activate(gameState.getCurrentTurn());
+            effect.activate(turnManager.getCurrentTurn());
         }
     }
 

@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.item.deployer;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -13,16 +14,16 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 public class ThrowingItemDeployer implements ItemDeployer {
     private final Square sourceSquare;
     private final Direction throwingDirection;
-    private final GameState state; //TODO remove asap
+    private final TurnManager turnManager;
 
-    public ThrowingItemDeployer(Square sourceSquare, Direction throwingDirection, GameState state) {
+    public ThrowingItemDeployer(Square sourceSquare, Direction throwingDirection, TurnManager turnManager) {
         this.sourceSquare = sourceSquare;
         this.throwingDirection = throwingDirection;
-        this.state = state;
+        this.turnManager = turnManager;
     }
 
     @Override
     public void deploy(Item item) {
-        item.throwMe(sourceSquare, throwingDirection, state);
+        item.throwMe(sourceSquare, throwingDirection, turnManager);
     }
 }

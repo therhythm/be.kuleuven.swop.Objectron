@@ -6,10 +6,13 @@ import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ import java.util.Map;
  *         Date: 22/02/13
  *         Time: 07:04
  */
-public class Grid {
+public class Grid implements TurnSwitchObserver {
     private Square[][] squares;
     private Dimension dimension;
     private List<Wall> walls;
@@ -111,5 +114,19 @@ public class Grid {
             }
         }
         return effects;
+    }
+
+    @Override
+    public void turnEnded(Turn turn) {
+        for (Square[] square : squares) {
+            for (Square sq : square) {
+                sq.newTurn(turn);
+            }
+        }
+    }
+
+    @Override
+    public void update(Turn turn) {
+        //todo useful?
     }
 }

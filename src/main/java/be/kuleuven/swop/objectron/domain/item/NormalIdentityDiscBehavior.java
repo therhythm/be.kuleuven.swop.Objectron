@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -16,22 +17,21 @@ public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
     private static final int MAX_RANGE = 4;
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, IdentityDisc context, GameState state) {
+    public void throwMe(Square sourceSquare, Direction targetDirection, IdentityDisc context, TurnManager turnManager) {
         Square currentSquare = sourceSquare;
         Square neighbor = context.getNextSquare(currentSquare, targetDirection);
 
         for (int i = 0; i < MAX_RANGE; i++) {
             if (neighbor == null)
                 break;
-            if (context.playerHit(neighbor, state)) {//todo find a way to hit players .. maybe make player an obstruction?? REMOVE player
+            if (context.playerHit(neighbor, turnManager)) {//todo find a way to hit players .. maybe make player an obstruction?? REMOVE player
                 currentSquare = neighbor;
                 break;
 
-            } else if (!state.getGrid().isWall(neighbor)) { //todo let obstruction handle obstructions remove grid
+            } else /*!state.getGrid().isWall(neighbor)*/ { //todo let obstruction handle obstructions remove grid
                 currentSquare = neighbor;
                 neighbor = context.getNextSquare(currentSquare, targetDirection);
-            } else
-                break;
+            }
         }
         currentSquare.addItem(context);
     }

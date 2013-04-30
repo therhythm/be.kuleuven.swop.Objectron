@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -40,15 +41,16 @@ public class TestGameState {
     @Test
     public void test_win() throws GameOverException, NotEnoughActionsException, InvalidMoveException {
         MovePlayerHandler handler = new MovePlayerHandler(state);
+        TurnManager manager = state.getTurnManager();
         handler.move(Direction.DOWN);
         handler.move(Direction.DOWN);
         handler.move(Direction.DOWN);
-        state.endTurn();
-        state.endTurn();
+        manager.endTurn();
+        manager.endTurn();
         handler.move(Direction.DOWN);
-        state.endTurn();
+        manager.endTurn();
         Square sq = state.getGrid().getSquareAtPosition(new Position(0, 0));
-        state.getCurrentPlayer().move(sq);
+        manager.getCurrentTurn().getCurrentPlayer().move(sq);
 
         assertTrue(state.checkWin());
     }

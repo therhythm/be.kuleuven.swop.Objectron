@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 
 /**
  * @author : Nik Torfs
@@ -28,11 +29,11 @@ public class UnpoweredSquareState implements SquareState {
     }
 
     @Override
-    public void stepOn(GameState gameState) {
-        if (gameState.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()) {
-            gameState.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
+    public void stepOn(TurnManager turnManager) {
+        if (turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().hasActiveItem()) {
+            turnManager.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
         } else {
-            gameState.endTurn();
+            turnManager.endTurn();
         }
     }
 

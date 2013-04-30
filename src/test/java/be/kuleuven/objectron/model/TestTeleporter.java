@@ -32,7 +32,7 @@ public class TestTeleporter {
         Dimension dimension = new Dimension(10, 10);
         Grid grid = GridFactory.gridWithoutWalls(dimension, new Position(0, 9), new Position(9, 0));
         gameState = new GameState("p1", "p2", dimension, grid);
-        player = gameState.getCurrentPlayer();
+        player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
         movePlayerHandler = new MovePlayerHandler(gameState);
     }

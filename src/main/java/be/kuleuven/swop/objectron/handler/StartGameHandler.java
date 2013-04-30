@@ -25,6 +25,6 @@ public class StartGameHandler {
         PlayerViewModel p1 = state.getPlayers().get(0).getPlayerViewModel();
         PlayerViewModel p2 = state.getPlayers().get(1).getPlayerViewModel();
 
-        return new GameStartViewModel(catalog, dimension, p1, p2, state.getCurrentTurn().getViewModel(), state.getGrid().getWalls(), state.getGrid().getItems(),state.getGrid().getEffects(), state);
+        return new GameStartViewModel(catalog, dimension, p1, p2, state.getTurnManager().getCurrentTurn().getViewModel(), state.getGrid().getWalls(), state.getGrid().getItems(),state.getGrid().getEffects(), state);
     }
 }

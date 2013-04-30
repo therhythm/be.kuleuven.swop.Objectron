@@ -40,7 +40,7 @@ public class TestUC_pick_up_item {
         Grid grid = GridFactory.gridWithoutItems(dimension, new Position(0, 9), new Position(9, 0));
         gameState = new GameState("p1", "p2", dimension, grid);
         pickUpItemHandler = new PickUpItemHandler(gameState);
-        player = gameState.getCurrentPlayer();
+        player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
 
         pickUpItemHandler = new PickUpItemHandler(gameState);
@@ -76,8 +76,8 @@ public class TestUC_pick_up_item {
         for (int i = 0; i < 6; i++) {
             player.pickupItem(0);
             currentSquare.addItem(new LightMine());
-            gameState.endTurn();
-            gameState.endTurn();
+            gameState.getTurnManager().endTurn();
+            gameState.getTurnManager().endTurn();
         }
 
         pickUpItemHandler.getAvailableItems();

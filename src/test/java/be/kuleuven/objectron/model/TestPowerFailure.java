@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -43,7 +44,7 @@ public class TestPowerFailure implements SquareObserver {
         Dimension dimension = new Dimension(10, 10);
         grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
         state = new GameState("p1", "p2", dimension, grid);
-        player = state.getCurrentPlayer();
+        player = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
         movePlayerHandler = new MovePlayerHandler(state);
         regainedPower = false;
@@ -53,27 +54,28 @@ public class TestPowerFailure implements SquareObserver {
 
     @Test
     public void testStartUnpowered() {
-        state.endTurn();
+        TurnManager turnManager = state.getTurnManager();
+        turnManager.endTurn();
         currentSquare.receivePowerFailure();
-        state.endTurn();
-        assertEquals(Turn.ACTIONS_EACH_TURN - 1, state.getCurrentTurn().getActionsRemaining());
+        turnManager.endTurn();
+        assertEquals(Turn.ACTIONS_EACH_TURN - 1, turnManager.getCurrentTurn().getActionsRemaining());
     }
 
     @Test
     public void testStepOnUnpoweredSquare() throws GameOverException, InvalidMoveException, NotEnoughActionsException {
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure();
-        assertEquals(player, state.getCurrentPlayer());
+        assertEquals(player, state.getTurnManager().getCurrentTurn().getCurrentPlayer());
         movePlayerHandler.move(Direction.UP);
-        assertNotEquals(player, state.getCurrentPlayer());
+        assertNotEquals(player, state.getTurnManager().getCurrentTurn().getCurrentPlayer());
     }
 
     @Test
     public void testStepOnActiveUnpowered() throws NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException {
         currentSquare.getNeighbour(Direction.UP).setActiveItem(new LightMine());
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure();
-        int remainingActionsAfterMove = state.getCurrentTurn().getActionsRemaining() - 1;
+        int remainingActionsAfterMove = state.getTurnManager().getCurrentTurn().getActionsRemaining() - 1;
         movePlayerHandler.move(Direction.UP);
-        state.endTurn();
+        state.getTurnManager().endTurn();
         assertEquals(4 - remainingActionsAfterMove, player.getRemainingPenalties());
     }
 
@@ -98,7 +100,7 @@ public class TestPowerFailure implements SquareObserver {
         currentSquare.receivePowerFailure();
         currentSquare.attach(this);
         for (int i = 0; i < UnpoweredSquareState.TURNS_WITHOUT_POWER; i++) {
-            state.endTurn();
+            state.getTurnManager().endTurn();
         }
         assertEquals(true, regainedPower);
     }

@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -13,7 +14,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public interface IdentityDiscBehavior {
-    public void throwMe(Square sourceSquare, Direction targetDirection, IdentityDisc context, GameState state); //TODO remove Gamestate
+    public void throwMe(Square sourceSquare, Direction targetDirection, IdentityDisc context, TurnManager turnManager);
 
     public String getName();
 }

@@ -2,6 +2,7 @@ package be.kuleuven.objectron.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
@@ -60,7 +61,7 @@ public class Test_Identity_Disc {
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getCurrentPlayer();
+        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
     }
 
     @Test
@@ -94,21 +95,22 @@ public class Test_Identity_Disc {
     @Test
     public void test_Charged_identity_disc_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
         Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
+        TurnManager turnManager = state.getTurnManager();
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
 
         movePlayerHandler.move(Direction.RIGHT);
         endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.RIGHT);
-        Player player2 = state.getCurrentPlayer();
+        Player player2 = turnManager.getCurrentTurn().getCurrentPlayer();
         // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
         //System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 3);
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == 3);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
         // System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 5);
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == 5);
         for (int i = 1; i < 5; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
@@ -200,11 +202,12 @@ public class Test_Identity_Disc {
         p1Pos = new Position(0, 7);
         p2Pos = new Position(5, 9);
 
+        TurnManager turnManager = state.getTurnManager();
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        Player current_player = state.getCurrentPlayer();
+        Player current_player = turnManager.getCurrentTurn().getCurrentPlayer();
 
         Square currentSquare = grid.getSquareAtPosition(p1Pos);
 
@@ -229,8 +232,8 @@ public class Test_Identity_Disc {
         Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 7));
 
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
-        assertFalse(state.getCurrentPlayer().equals(current_player));
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 6);
+        assertFalse(turnManager.getCurrentTurn().getCurrentPlayer().equals(current_player));
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == 6);
     }
 
     @Test
