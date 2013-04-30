@@ -16,7 +16,7 @@ public class ForceFieldPair {
 
     private ForceField forceField1;
     private ForceField forceField2;
-    private int currentTurnSwitch = TURNSWITCH + 1;
+    private int currentTurnSwitch = TURNSWITCH;
     private List<Square> affectedSquares;
     private boolean active;
 
@@ -36,7 +36,7 @@ public class ForceFieldPair {
         }
     }
 
-    private void disactivate() {
+    private void deactivate() {
         active = false;
         for (Square square : affectedSquares) {
             square.setObstructed(false);
@@ -45,29 +45,24 @@ public class ForceFieldPair {
 
     private void switchActivation() {
         currentTurnSwitch = TURNSWITCH;
-        if (active == true)
-            disactivate();
+        if (active)
+            deactivate();
         else
             activate();
 
     }
 
     public void update() {
-        currentTurnSwitch--;
         if (currentTurnSwitch == 0)
             this.switchActivation();
+        currentTurnSwitch--;
     }
 
-    public void prepairToRemove() {
-        this.disactivate();
+    public void prepareToRemove() {
+        this.deactivate();
     }
 
     public boolean contains(ForceField forcefield) {
-        if (forcefield.equals(forceField1))
-            return true;
-        if (forcefield.equals(forceField2))
-            return true;
-
-        return false;
+        return forcefield.equals(forceField1) || forcefield.equals(forceField2);
     }
 }

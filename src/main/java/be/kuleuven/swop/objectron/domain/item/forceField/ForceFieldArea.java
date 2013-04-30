@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -48,7 +47,7 @@ public class ForceFieldArea implements TurnObserver {
         forcefieldPairsCopy.addAll(listForceFieldPairs);
         for (ForceFieldPair forceFieldPair : forcefieldPairsCopy) {
             if (forceFieldPair.contains((ForceField) changedForceField)) {
-                forceFieldPair.prepairToRemove();
+                forceFieldPair.prepareToRemove();
                 listForceFieldPairs.remove(forceFieldPair);
             }
         }
@@ -61,7 +60,7 @@ public class ForceFieldArea implements TurnObserver {
             if (forceFieldPair.contains(forceField1) && forceFieldPair.contains(forceField2))
                 contains = true;
         }
-        if (contains == false)
+        if (!contains)
             for (Direction direction : Direction.values()) {
                 if (withinRange(listForceFields.get(forceField1), listForceFields.get(forceField2), direction)) {
                     List<Square> squaresBetween = getSquaresBetween(listForceFields.get(forceField1), listForceFields.get(forceField2), direction);
@@ -97,15 +96,5 @@ public class ForceFieldArea implements TurnObserver {
                 return true;
         }
         return false;
-    }
-
-    //mag weg
-    public int sizeListForceFieldPairs() {
-        return listForceFieldPairs.size();
-    }
-
-    //mag weg
-    public int sizeListForceFields() {
-        return listForceFields.size();
     }
 }
