@@ -96,14 +96,14 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         observers.remove(observer);
     }
 
-    public Item getCurrentItem() {
+   /* public Item getCurrentItem() {
         return turnManager.getCurrentTurn().getCurrentItem(); //TODO delegate or return Turn object  ?
     }
 
     public void setCurrentItem(Item item) {
         turnManager.getCurrentTurn().setCurrentItem(item);
         notifyObservers();
-    }
+    }*/
 
     public boolean checkWin() {
         Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();

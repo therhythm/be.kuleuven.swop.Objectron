@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -31,6 +32,7 @@ public class TestUC_Use_Item {
     private Player player;
     private Item item;
     private GameState stateMock;
+    private TurnManager turnManager;
 
 
     @Before
@@ -40,11 +42,11 @@ public class TestUC_Use_Item {
         square.addItem(item);
         player = new Player("p1", square);
         Turn turn = new Turn(player);
+        turnManager = mock(TurnManager.class);
+        when(turnManager.getCurrentTurn()).thenReturn(turn);
 
         stateMock = mock(GameState.class);
-        when(stateMock.getTurnManager().getCurrentTurn().getCurrentPlayer()).thenReturn(player);
-        when(stateMock.getTurnManager().getCurrentTurn()).thenReturn(turn);
-
+        when(stateMock.getTurnManager()).thenReturn(turnManager);
 
         useItemHandler = new UseItemHandler(stateMock);
     }
@@ -76,7 +78,7 @@ public class TestUC_Use_Item {
     @Test
     public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
         player.pickupItem(0);
-        when(stateMock.getCurrentItem()).thenReturn(item);
+        turnManager.getCurrentTurn().setCurrentItem(item);
 
         int initialAvailableActions = stateMock.getTurnManager().getCurrentTurn().getActionsRemaining();
         int initialNumberOfItemsInInventory = player.getInventoryItems().size();
@@ -93,7 +95,7 @@ public class TestUC_Use_Item {
     public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException, NotEnoughActionsException, NoItemSelectedException {
         player.getCurrentSquare().setActiveItem(item);
         player.pickupItem(0);
-        when(stateMock.getCurrentItem()).thenReturn(item);
+        turnManager.getCurrentTurn().setCurrentItem(item);
 
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
@@ -122,7 +124,7 @@ public class TestUC_Use_Item {
         pickUpItemHandler.pickUpItem(0);
         player.getCurrentSquare().addItem(new LightMine());
         pickUpItemHandler.pickUpItem(0);
-        when(stateMock.getCurrentItem()).thenReturn(item);
+        turnManager.getCurrentTurn().setCurrentItem(item);
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentItem();
     }

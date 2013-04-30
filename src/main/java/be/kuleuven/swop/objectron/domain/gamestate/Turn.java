@@ -43,6 +43,7 @@ public class Turn implements Observable<TurnObserver> {
 
     public void setCurrentItem(Item item) {
         this.currentItem = item;
+        notifyObservers();
     }
 
     public Item getCurrentItem() {
@@ -55,6 +56,7 @@ public class Turn implements Observable<TurnObserver> {
 
     public void setMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
+        notifyObservers();
     }
 
     public boolean hasMoved() {

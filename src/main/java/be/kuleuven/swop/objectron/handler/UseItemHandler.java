@@ -57,7 +57,7 @@ public class UseItemHandler extends Handler {
      */
     public String selectItemFromInventory(int identifier) {
         Item currentlySelectedItem = state.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItem(identifier);
-        state.setCurrentItem(currentlySelectedItem);
+        state.getTurnManager().getCurrentTurn().setCurrentItem(currentlySelectedItem);
         return currentlySelectedItem.getName();
     }
 
@@ -85,8 +85,8 @@ public class UseItemHandler extends Handler {
         try {
             currentTurn.checkEnoughActions();
             ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare());
-            currentTurn.getCurrentPlayer().useItem(state.getCurrentItem(), deployer);
-            state.setCurrentItem(null);
+            currentTurn.getCurrentPlayer().useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
+            state.getTurnManager().getCurrentTurn().setCurrentItem(null);
             currentTurn.reduceRemainingActions(1);
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, turnManager.getCurrentTurn().getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
@@ -109,8 +109,8 @@ public class UseItemHandler extends Handler {
             currentTurn.checkEnoughActions();
 
             ItemDeployer deployer = new ThrowingItemDeployer(currentPlayer.getCurrentSquare(), direction, turnManager);
-            currentPlayer.useItem(state.getCurrentItem(), deployer);
-            state.setCurrentItem(null);
+            currentPlayer.useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
+            state.getTurnManager().getCurrentTurn().setCurrentItem(null);
             currentTurn.reduceRemainingActions(1);
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, turnManager.getCurrentTurn().getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
@@ -128,6 +128,6 @@ public class UseItemHandler extends Handler {
      * | new.state.getCurrentPlayer().getCurrentlySelectedItem() == null
      */
     public void cancelItemUsage() {
-        state.setCurrentItem(null);
+        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
     }
 }
