@@ -27,6 +27,11 @@ public class Teleporter implements Effect {
         }
     }
 
+    @Override
+    public void accept(EffectVisitor visitor) {
+        visitor.visitTeleporter();
+    }
+
     public Teleporter getDestination() {
         return destination;
     }

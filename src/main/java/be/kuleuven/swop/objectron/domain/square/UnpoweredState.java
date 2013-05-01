@@ -2,6 +2,8 @@ package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
+import be.kuleuven.swop.objectron.domain.item.effect.PowerFailureEffectVisitor;
 
 /**
  * @author : Nik Torfs
@@ -11,7 +13,6 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 public class UnpoweredState implements PowerState {
     public static final int TURNS_WITHOUT_POWER = 3;
     private static final int ACTIONS_TO_REDUCE = 1;
-
 
     private Square context;
     private int remainingTurns;
@@ -35,7 +36,12 @@ public class UnpoweredState implements PowerState {
 
     @Override
     public void stepOn(TurnManager turnManager) {
-        if (false/*context.hasActiveItem()*/) {  //todo this should be done another way
+        PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
+        for(Effect effect : context.getEffects()){
+            effect.accept(visitor);
+        }
+
+        if (visitor.hasLightMine()) {
             turnManager.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
         } else {
             turnManager.endTurn();

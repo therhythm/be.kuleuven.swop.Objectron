@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.item.effect.EffectVisitor;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -30,6 +31,11 @@ public class LightMine implements Item, Effect {
             currentTurn.reduceRemainingActions(NB_ACTIONS_BLINDED);
             isActive = false;
         }
+    }
+
+    @Override
+    public void accept(EffectVisitor visitor) {
+        visitor.visitLightMine();
     }
 
     @Override

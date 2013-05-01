@@ -10,4 +10,6 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 public interface Effect {
 
     void activate(Turn currentTurn);
+
+    void accept(EffectVisitor visitor);
 }

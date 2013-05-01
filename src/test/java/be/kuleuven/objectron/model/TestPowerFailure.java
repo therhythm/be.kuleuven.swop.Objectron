@@ -71,7 +71,7 @@ public class TestPowerFailure implements SquareObserver {
 
     @Test
     public void testStepOnActiveUnpowered() throws NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException {
-        currentSquare.getNeighbour(Direction.UP).addEffect(new LightMine());
+        new LightMine().place(currentSquare.getNeighbour(Direction.UP));
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure();
         int remainingActionsAfterMove = state.getTurnManager().getCurrentTurn().getActionsRemaining() - 1;
         movePlayerHandler.move(Direction.UP);
