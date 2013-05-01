@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.obstruction.Player;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
 import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;

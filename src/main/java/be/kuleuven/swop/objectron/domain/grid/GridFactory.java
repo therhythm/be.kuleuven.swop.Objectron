@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.domain.grid;
 
-import be.kuleuven.swop.objectron.domain.obstruction.Wall;
+import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;

@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
-import be.kuleuven.swop.objectron.domain.obstruction.Player;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 
 import java.util.HashSet;

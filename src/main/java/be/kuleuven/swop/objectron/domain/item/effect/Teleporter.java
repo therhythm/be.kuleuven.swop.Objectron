@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item.effect;
 
-import be.kuleuven.swop.objectron.domain.obstruction.Player;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 

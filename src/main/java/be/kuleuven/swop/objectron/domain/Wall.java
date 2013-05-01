@@ -1,8 +1,5 @@
-package be.kuleuven.swop.objectron.domain.obstruction;
+package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -16,7 +13,7 @@ import java.util.List;
  * Time: 21:45
  * To change this template use File | Settings | File Templates.
  */
-public class Wall implements Obstruction {
+public class Wall{
 
     private List<Square> squares = new ArrayList<Square>();
 
@@ -44,10 +41,5 @@ public class Wall implements Obstruction {
 
     public boolean isWall(Square square) {
         return squares.contains(square);
-    }
-
-    @Override
-    public void hit(Movable movable, TurnManager manager) throws InvalidMoveException {
-        movable.hitWall(this, manager);
     }
 }

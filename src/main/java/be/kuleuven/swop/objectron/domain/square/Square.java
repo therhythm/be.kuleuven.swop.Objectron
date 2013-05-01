@@ -5,10 +5,8 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.obstruction.Obstruction;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -29,7 +27,6 @@ public class Square implements Observable<SquareObserver> {
     private Map<Direction, Square> neighbours = new HashMap<>();
     private List<Item> items = new ArrayList<>();
     private List<Effect> effects = new ArrayList<>();
-    private Set<Obstruction> obstructions = new HashSet<>();
     private boolean isObstructed = false;
     private int powerFailureChance = POWER_FAILURE_CHANCE;
 

@@ -2,7 +2,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.obstruction.Wall;
+import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.*;

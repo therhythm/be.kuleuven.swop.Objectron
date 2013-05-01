@@ -1,9 +1,7 @@
-package be.kuleuven.swop.objectron.domain.obstruction;
+package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.domain.Inventory;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
@@ -19,7 +17,7 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public class Player implements Obstruction {
+public class Player{
     private String name;
     private Square currentSquare;
     private Square initialSquare;
@@ -126,10 +124,5 @@ public class Player implements Obstruction {
 
     public boolean isTeleporting() {
         return isTeleporting;
-    }
-
-    @Override
-    public void hit(Movable movable, TurnManager manager) throws InvalidMoveException {
-        movable.hitPlayer(this, manager);
     }
 }
