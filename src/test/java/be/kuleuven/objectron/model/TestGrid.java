@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
@@ -81,6 +82,7 @@ public class TestGrid {
         int numberOfTeleporters = 0;
         int numberOfIdentitydiscs = 0;
         int numberOfForceFields = 0;
+        int numberOfIdentityDiscsCharged = 0;
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -97,15 +99,21 @@ public class TestGrid {
                             numberOfIdentitydiscs++;
                         if (item.getName() == "Force Field")
                             numberOfForceFields++;
+
+                        if (item.getName() == "Charged Identity Disc")
+                            numberOfIdentityDiscsCharged++;
                     }
                 }
             }
         }
+        System.out.println(numberOfIdentityDiscsCharged);
         assertTrue(numberOfLightMines <= 2);
         assertTrue(numberOfTeleporters <= 3);
         assertTrue(numberOfIdentitydiscs <= 2);
-        assertTrue(numberOfForceFields<=7);
+        assertTrue(numberOfForceFields <= 7);
+        assertTrue(numberOfIdentityDiscsCharged == 1);
         assertTrue(hasItems);
+
     }
 
     private int calculatedistance(Position position1, Position position2) {
@@ -179,4 +187,27 @@ public class TestGrid {
         movePlayerHandler.move(Direction.RIGHT);
         endTurnHandler.endTurn();
     }
+
+    @Test
+    public void test_place_charged_identity_disc() throws GridTooSmallException {
+        p1Pos = new Position(0, 9);
+        p2Pos = new Position(9, 0);
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
+        int numberOfIdentityDiscsCharged = 0;
+         Square square_charged_ID = null;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() != 0) {
+                    for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
+                        if (item.getName() == "Charged Identity Disc")
+                            numberOfIdentityDiscsCharged++;
+                        square_charged_ID=             grid.getSquareAtPosition(new Position(i, j));
+                    }
+                }
+            }
+        }
+        System.out.println(square_charged_ID.getPosition());
+        assertTrue(numberOfIdentityDiscsCharged==1);
+    }
+
 }

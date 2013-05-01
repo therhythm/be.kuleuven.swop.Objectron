@@ -17,6 +17,8 @@ import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -41,33 +43,68 @@ public class TestDijkstra {
         p1Pos = new Position(1, 8);
         p2Pos = new Position(3, 8);
         dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        ArrayList<Position> wallPositions = new ArrayList<Position>();
+        wallPositions.add(new Position(6, 6));
+        wallPositions.add(new Position(5, 6));
+        wallPositions.add(new Position(4, 6));
+        grid = GridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension, p1Pos, p2Pos, wallPositions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
-        movePlayerHandler = new MovePlayerHandler(state);
-        endTurnHandler = new EndTurnHandler(state);
     }
 
     @Test
-         public void test_DijkstraShortestPath_straight_line()  {
-        Square startSquare = grid.getSquareAtPosition(new Position(0,0));
-        Square destinationSquare = grid.getSquareAtPosition(new Position(0,5));
-        Dijkstra dijkstra = new Dijkstra(startSquare,destinationSquare,grid.getSquaresNotObstructed()) ;
+    public void test_DijkstraShortestPath_straight_line() {
+        Square startSquare = grid.getSquareAtPosition(new Position(0, 0));
+        Square destinationSquare = grid.getSquareAtPosition(new Position(0, 5));
+        Dijkstra dijkstra = new Dijkstra( grid.getSquaresNotObstructed());
 
         //System.out.println(dijkstra.toStringEdges());
-        Double distance = dijkstra.getShortestDistance();
+        Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
         System.out.println("Distance: " + distance);
-        assertTrue(distance ==5);
+        assertTrue(distance == 5);
     }
 
     @Test
-    public void test_DijkstraShortestPath_not_straight()  {
-        Square startSquare = grid.getSquareAtPosition(new Position(0,0));
-        Square destinationSquare = grid.getSquareAtPosition(new Position(0,5));
-        Dijkstra dijkstra = new Dijkstra(startSquare,destinationSquare,grid.getSquaresNotObstructed()) ;
+    public void test_DijkstraShortestPath_not_straight_1() {
+        Square startSquare = grid.getSquareAtPosition(new Position(0, 0));
+        Square destinationSquare = grid.getSquareAtPosition(new Position(1, 5));
+        Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
-        //System.out.println(dijkstra.toStringEdges());
-        System.out.println("Distance: " + dijkstra.getShortestDistance());
-        assertTrue(dijkstra.getShortestDistance()==5);
+        Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
+        System.out.println("Distance: " + distance);
+        assertTrue(distance == 5);
+    }
+
+    @Test
+    public void test_DijkstraShortestPath_not_straight_2() {
+        Square startSquare = grid.getSquareAtPosition(new Position(0, 0));
+        Square destinationSquare = grid.getSquareAtPosition(new Position(2, 6));
+        Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
+
+        Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
+        System.out.println("Distance: " + distance);
+        assertTrue(distance == 6);
+    }
+
+    @Test
+    public void test_DijkstraShortestPath_not_straight_3() {
+        Square startSquare = grid.getSquareAtPosition(new Position(5, 5));
+        Square destinationSquare = grid.getSquareAtPosition(new Position(2, 3));
+        Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
+
+        Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
+        System.out.println("Distance: " + distance);
+        assertTrue(distance == 3);
+    }
+
+    @Test
+    public void test_DijkstraShortestPath_with_wall() {
+        Square startSquare = grid.getSquareAtPosition(new Position(5, 5));
+        Square destinationSquare = grid.getSquareAtPosition(new Position(5, 7));
+        Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
+
+        Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
+        System.out.println("Distance: " + distance);
+        assertTrue(dijkstra.getShortestDistance(startSquare, destinationSquare) == 4);
     }
 
 }

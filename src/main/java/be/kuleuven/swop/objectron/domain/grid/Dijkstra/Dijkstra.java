@@ -18,21 +18,13 @@ public class Dijkstra {
     private ArrayList<TableEntry> L;
     private ArrayList<Square> T;
     private ArrayList<DirectedEdge> edges;
+    private ArrayList<Square> nodes;
 
-    public Dijkstra(ArrayList<DirectedEdge> edges, Square start, Square destination, ArrayList<Square> T) {
-        this.edges = edges;
-        this.startSquare = start;
-        this.destinationSquare = destination;
 
-        this.T = T;
-    }
-
-    public Dijkstra(Square start, Square destination, ArrayList<Square> nodes) {
+    public Dijkstra(ArrayList<Square> nodes) {
         constructEdges(nodes);
-        this.startSquare = start;
-        this.destinationSquare = destination;
 
-        this.T = nodes;
+        this.nodes = nodes;
     }
 
 
@@ -68,7 +60,9 @@ public class Dijkstra {
         return result;
     }
 
-    public Double getShortestDistance() {
+    public Double getShortestDistance(Square start, Square destination) {
+        this.startSquare = start;
+        this.destinationSquare = destination;
 
         initialisation();
 
@@ -89,11 +83,13 @@ public class Dijkstra {
             if (tableEntry.getDistance() != Double.POSITIVE_INFINITY)
                 teller++;
         }
-       //
-       // System.out.println("L entries not pos_Inf: " + teller);
+        //
+        // System.out.println("L entries not pos_Inf: " + teller);
     }
 
     private void initialisation() {
+        this.T = new ArrayList<Square>();
+        this.T.addAll(nodes);
         L = new ArrayList<TableEntry>();
         L.add(new TableEntry(startSquare, 0.0));
         for (Square square : T) {
@@ -124,7 +120,7 @@ public class Dijkstra {
         TableEntry smallestEntry = new TableEntry(null, Double.POSITIVE_INFINITY);
         for (TableEntry tableEntry : L) {
             //System.out.println(tableEntry);
-            if ((tableEntry.distance < smallestEntry.getDistance())&&(T.contains(tableEntry.getSquare()))) {
+            if ((tableEntry.distance < smallestEntry.getDistance()) && (T.contains(tableEntry.getSquare()))) {
                 smallestEntry = tableEntry;
             }
 
@@ -140,16 +136,15 @@ public class Dijkstra {
         return Double.POSITIVE_INFINITY;
     }
 
-    public String toStringEdges(){
+    public String toStringEdges() {
         String result = "";
-        for(DirectedEdge directEdge : edges) {
+        for (DirectedEdge directEdge : edges) {
             result += directEdge.toString() + '\n' + '\n';
         }
 
         return result;
 
     }
-
 
 
     private class TableEntry {
