@@ -1,6 +1,6 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.obstruction.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.LightMine;

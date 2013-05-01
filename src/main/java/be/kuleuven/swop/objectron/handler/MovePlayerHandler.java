@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.obstruction.Player;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
@@ -50,7 +50,7 @@ public class MovePlayerHandler extends Handler {
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
             current.move(newSquare);
             newSquare.stepOn(turnManager);
-            currentTurn.setMoved(true);
+            currentTurn.setMoved();
             if (state.checkWin())
                 throw new GameOverException(current.getName() + ", you win the game!");
 

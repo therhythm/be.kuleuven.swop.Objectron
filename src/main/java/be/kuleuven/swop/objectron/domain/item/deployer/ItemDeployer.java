@@ -9,5 +9,6 @@ import be.kuleuven.swop.objectron.domain.item.Item;
  *         Time: 22:49
  */
 public interface ItemDeployer {
+
     void deploy(Item item) throws SquareOccupiedException; //TODO remove exception asap
 }

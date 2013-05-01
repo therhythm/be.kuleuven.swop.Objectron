@@ -16,7 +16,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 public class ChargedIdentityDiscBehavior implements IdentityDiscBehavior {
     @Override
     public int getRemainingRange() {
-        return 1; //always 1 ... infinity
+        return 1;
     }
 
     @Override

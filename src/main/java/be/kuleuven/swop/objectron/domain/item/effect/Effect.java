@@ -8,5 +8,6 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
  *         Time: 23:14
  */
 public interface Effect {
-    void activate(Turn currentTurn); //TODO temporary ... effects are for another branch
+
+    void activate(Turn currentTurn);
 }

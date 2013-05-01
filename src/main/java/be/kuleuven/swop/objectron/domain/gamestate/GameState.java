@@ -1,10 +1,10 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.obstruction.Player;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -38,7 +38,8 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         turnManager.attach(gameGrid);
     }
 
-    public GameState(String player1Name, String player2Name, Dimension dimension, Grid gameGrid) throws GridTooSmallException {
+    public GameState(String player1Name, String player2Name, Dimension dimension,
+                     Grid gameGrid) throws GridTooSmallException {
         this(player1Name,
                 player2Name,
                 new Position(0, dimension.getHeight() - 1),
@@ -46,7 +47,8 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
                 gameGrid);
     }
 
-    public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos, Grid gameGrid) throws GridTooSmallException {
+    public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos,
+                     Grid gameGrid) throws GridTooSmallException {
         this.gameGrid = gameGrid;
 
         players.add(new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos)));
@@ -57,24 +59,17 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         turnManager.attach(gameGrid);
     }
 
-    /*public Player getCurrentPlayer() {
-        return currentTurn.getCurrentPlayer(); //TODO delegate or return turn object?
-    } */
+    public TurnManager getTurnManager() {
+        return turnManager;
+    }
 
     public Grid getGrid() {
         return gameGrid;
     }
 
-  /*  public void endTurn() {
-        int index = players.indexOf(currentTurn.getCurrentPlayer());
-        index = (index + 1) % players.size();
-
-        currentTurn = new Turn(players.get(index));
-        currentTurn.attach(this);
-        gameGrid.newTurn(turnManager.getCurrentTurn());
-
-        notifyObservers();
-    }*/
+    public List<Player> getPlayers() {
+        return players;
+    }
 
     public void notifyObservers() {
         List<PlayerViewModel> playerVMs = new ArrayList<>();
@@ -85,25 +80,6 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
             observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs);
         }
     }
-
-    @Override
-    public void attach(GameObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void detach(GameObserver observer) {
-        observers.remove(observer);
-    }
-
-   /* public Item getCurrentItem() {
-        return turnManager.getCurrentTurn().getCurrentItem(); //TODO delegate or return Turn object  ?
-    }
-
-    public void setCurrentItem(Item item) {
-        turnManager.getCurrentTurn().setCurrentItem(item);
-        notifyObservers();
-    }*/
 
     public boolean checkWin() {
         Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
@@ -117,8 +93,14 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         return false;
     }
 
-    public List<Player> getPlayers() {
-        return players;
+    @Override
+    public void attach(GameObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(GameObserver observer) {
+        observers.remove(observer);
     }
 
     @Override
@@ -150,9 +132,5 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
     @Override
     public void update(Turn turn) {
         notifyObservers();
-    }
-
-    public TurnManager getTurnManager() {
-        return turnManager;
     }
 }

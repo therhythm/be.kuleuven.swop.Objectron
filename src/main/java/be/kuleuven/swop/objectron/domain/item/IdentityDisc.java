@@ -1,10 +1,9 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.obstruction.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -28,7 +27,7 @@ public class IdentityDisc implements Item {
     }
 
     private void activate(Player player, TurnManager turnManager) {
-        if(player.equals(turnManager.getCurrentTurn().getCurrentPlayer())){
+        if (player.equals(turnManager.getCurrentTurn().getCurrentPlayer())) {
             turnManager.endTurn();
         }
 
@@ -50,10 +49,11 @@ public class IdentityDisc implements Item {
         Square neighbor = getNextSquare(currentSquare, targetDirection);
 
         //todo clean>>?
-        while(identityDiscBehavior.getRemainingRange() > 0) {
+        while (identityDiscBehavior.getRemainingRange() > 0) {
             if (neighbor == null)
                 break;
-            if (playerHit(neighbor, turnManager)) {//todo find a way to hit players .. maybe make player an obstruction?? REMOVE player
+            if (playerHit(neighbor, turnManager)) {//todo find a way to hit players .. maybe make player an
+            // obstruction?? REMOVE player
                 currentSquare = neighbor;
                 break;
             } else /*!state.getGrid().isWall(neighbor)*/ { //todo let obstruction handle obstructions remove grid
@@ -68,7 +68,8 @@ public class IdentityDisc implements Item {
     }
 
     public boolean playerHit(Square square, TurnManager turnManager) {
-        for (Player player : turnManager.getPlayers()) {  //todo getplayers could probably removed with the right abstraction..
+        for (Player player : turnManager.getPlayers()) {  //todo getplayers could probably removed with the right
+        // abstraction..
             if (player.getCurrentSquare().equals(square)) {
                 this.activate(player, turnManager);
                 return true;
@@ -77,22 +78,15 @@ public class IdentityDisc implements Item {
         return false;
     }
 
-    private boolean validDirection(Direction direction) {
-        if (direction == Direction.UP_LEFT)
-            return false;
-
-        if (direction == Direction.UP_RIGHT)
-            return false;
-
-        if (direction == Direction.DOWN_LEFT)
-            return false;
-
-        if (direction == Direction.DOWN_RIGHT)
-            return false;
-
-        return true;
+    public void playerHit(Player player, TurnManager turnManager) {
+        this.activate(player, turnManager);
+        player.getCurrentSquare().addItem(this);
     }
 
+    private boolean validDirection(Direction direction) {
+        return direction != Direction.UP_LEFT && direction != Direction.UP_RIGHT && direction != Direction.DOWN_LEFT
+                && direction != Direction.DOWN_RIGHT;
+    }
 
     public Square getNextSquare(Square currentSquare, Direction direction) {
         Square neighbor = currentSquare.getNeighbour(direction);
@@ -111,7 +105,6 @@ public class IdentityDisc implements Item {
     public Square teleport(Teleporter teleporter) {
         return teleporter.getDestination().getLocation();
     }
-
 
     public String toString() {
         String result = "";

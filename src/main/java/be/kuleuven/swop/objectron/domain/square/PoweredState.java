@@ -17,7 +17,7 @@ public class PoweredState implements PowerState {
     }
 
     @Override
-    public void newTurn(Turn currentTurn, boolean currentSquare) {
+    public void newTurn(Turn currentTurn) {
         // do nothing
     }
 

@@ -1,5 +1,8 @@
-package be.kuleuven.swop.objectron.domain;
+package be.kuleuven.swop.objectron.domain.obstruction;
 
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -11,7 +14,7 @@ import java.util.List;
  *         Date: 27/02/13
  *         Time: 22:45
  */
-public class LightTrail {
+public class LightTrail implements Obstruction {
     private static int MAX_LIGHT_TRAIL_COVERAGE = 3;
     private static int LIGHT_TRAIL_LIFETIME = 3;
 
@@ -62,5 +65,10 @@ public class LightTrail {
             }
         }
         return list;
+    }
+
+    @Override
+    public void hit(Movable movable, TurnManager manager) throws InvalidMoveException {
+        movable.hitLightTrail(this, manager);
     }
 }

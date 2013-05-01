@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
-import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.obstruction.Player;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -54,8 +54,8 @@ public class Turn implements Observable<TurnObserver> {
         return currentPlayer;
     }
 
-    public void setMoved(boolean hasMoved) {
-        this.hasMoved = hasMoved;
+    public void setMoved() {
+        this.hasMoved = true;
         notifyObservers();
     }
 
@@ -74,7 +74,6 @@ public class Turn implements Observable<TurnObserver> {
         notifyObservers();
     }
 
-
     public void checkEnoughActions() throws NotEnoughActionsException {
         if (actionsRemaining == 0) {
             throw new NotEnoughActionsException("You can't do any actions anymore, end the turn!");
@@ -85,15 +84,10 @@ public class Turn implements Observable<TurnObserver> {
         return new TurnViewModel(actionsRemaining, currentPlayer.getPlayerViewModel(), currentItem);
     }
 
-    public String toString() {
-        String result = "";
-        result += currentPlayer + "\n";
-        result += currentItem + "\n";
-        result += "remaining actions: " + getActionsRemaining() + "\n";
-        result += "has moved: " + hasMoved;
-
-        return result;
-
+    private void notifyObservers() {
+        for(TurnObserver observer : observers){
+            observer.update(this);
+        }
     }
 
     @Override
@@ -106,9 +100,14 @@ public class Turn implements Observable<TurnObserver> {
         this.observers.remove(observer);
     }
 
-    private void notifyObservers() {
-        for(TurnObserver observer : observers){
-            observer.update(this);
-        }
+    @Override
+    public String toString() {
+        String result = "";
+        result += currentPlayer + "\n";
+        result += currentItem + "\n";
+        result += "remaining actions: " + getActionsRemaining() + "\n";
+        result += "has moved: " + hasMoved;
+
+        return result;
     }
 }

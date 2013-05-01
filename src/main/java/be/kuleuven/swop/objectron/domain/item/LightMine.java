@@ -29,7 +29,6 @@ public class LightMine implements Item, Effect {
         if(isActive){
             currentTurn.reduceRemainingActions(NB_ACTIONS_BLINDED);
             isActive = false;
-            //todo notify observers
         }
     }
 

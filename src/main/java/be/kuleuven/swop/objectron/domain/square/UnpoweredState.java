@@ -22,8 +22,8 @@ public class UnpoweredState implements PowerState {
     }
 
     @Override
-    public void newTurn(Turn currentTurn, boolean sameSquare) {
-        if (sameSquare) {
+    public void newTurn(Turn currentTurn) {
+        if (currentTurn.getCurrentPlayer().getCurrentSquare().equals(context)) {
             currentTurn.reduceRemainingActions(ACTIONS_TO_REDUCE);
         }
         remainingTurns--;

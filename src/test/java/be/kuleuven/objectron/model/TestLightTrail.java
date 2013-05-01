@@ -1,6 +1,6 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.domain.LightTrail;
+import be.kuleuven.swop.objectron.domain.obstruction.LightTrail;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;

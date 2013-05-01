@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item.effect;
 
-import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.obstruction.Player;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -9,7 +9,6 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  *         Date: 09/04/13
  *         Time: 16:32
  */
-//TODO make effect asap
 public class Teleporter implements Effect {
     private Teleporter destination;
     private Square location;

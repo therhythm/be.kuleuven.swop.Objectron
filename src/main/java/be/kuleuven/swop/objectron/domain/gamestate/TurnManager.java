@@ -1,6 +1,6 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
-import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.obstruction.Player;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     private List<Player> players;
     private Set<TurnSwitchObserver> observers = new HashSet<>();
 
-    public TurnManager(List<Player> players){
+    public TurnManager(List<Player> players) {
         this.currentTurn = new Turn(players.get(0));
         this.players = players;
         this.currentTurn.attach(this);
@@ -27,11 +27,11 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
         return players;
     }
 
-    public Turn getCurrentTurn(){
+    public Turn getCurrentTurn() {
         return currentTurn;
     }
 
-    public void endTurn(){
+    public void endTurn() {
         int index = players.indexOf(currentTurn.getCurrentPlayer());
         index = (index + 1) % players.size();
 
@@ -41,7 +41,11 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
         notifyObservers();
     }
 
-
+    private void notifyObservers() {
+        for (TurnSwitchObserver observer : observers) {
+            observer.turnEnded(currentTurn);
+        }
+    }
 
     @Override
     public void attach(TurnSwitchObserver observer) {
@@ -55,14 +59,8 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
 
     @Override
     public void update(Turn turn) {
-        for(TurnSwitchObserver observer : observers){
+        for (TurnSwitchObserver observer : observers) {
             observer.update(turn);
-        }
-    }
-
-    private void notifyObservers(){
-        for(TurnSwitchObserver observer : observers){
-            observer.turnEnded(currentTurn);
         }
     }
 }

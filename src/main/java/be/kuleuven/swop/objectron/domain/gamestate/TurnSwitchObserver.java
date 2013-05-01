@@ -6,6 +6,8 @@ package be.kuleuven.swop.objectron.domain.gamestate;
  *         Time: 00:21
  */
 public interface TurnSwitchObserver {
+
     void turnEnded(Turn newTurn);
+
     void update(Turn turn);
 }

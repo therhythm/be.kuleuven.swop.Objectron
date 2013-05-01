@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.obstruction.Obstruction;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -23,11 +24,12 @@ public class Square implements Observable<SquareObserver> {
     public static final int POWER_FAILURE_CHANCE = 5;
     private final Position position;
 
-    private List<SquareObserver> observers = new ArrayList<>();
+    private Set<SquareObserver> observers = new HashSet<>();
     private PowerState state;
     private Map<Direction, Square> neighbours = new HashMap<>();
     private List<Item> items = new ArrayList<>();
     private List<Effect> effects = new ArrayList<>();
+    private Set<Obstruction> obstructions = new HashSet<>();
     private boolean isObstructed = false;
     private int powerFailureChance = POWER_FAILURE_CHANCE;
 
@@ -93,17 +95,6 @@ public class Square implements Observable<SquareObserver> {
         return selectedItem;
     }
 
-    /*public boolean hasActiveItem() {
-        return activeItem != null;
-    }
-
-    /*public void setActiveItem(Item activeItem) throws SquareOccupiedException {
-        if (hasActiveItem()) {
-            throw new SquareOccupiedException("The square already has an active item");
-        }
-        this.activeItem = activeItem;
-    } */
-
     public boolean isValidPosition(Direction direction) {
         if (this.isObstructed())
             return false;
@@ -130,7 +121,6 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public String toString() {
-
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
 
@@ -148,15 +138,14 @@ public class Square implements Observable<SquareObserver> {
         return r < powerFailureChance;
     }
 
-    public void newTurn(Turn currentTurn) {
+    public void newTurn(Turn currentTurn) {   //todo observer
         if (losingPower()) {
             receivePowerFailure();
             for (Square neighbour : neighbours.values()) {
                 neighbour.receivePowerFailure();
             }
         }
-        boolean currentSquare = currentTurn.getCurrentPlayer().getCurrentSquare().equals(this);
-        state.newTurn(currentTurn, currentSquare);
+        state.newTurn(currentTurn);
     }
 
     @Override
