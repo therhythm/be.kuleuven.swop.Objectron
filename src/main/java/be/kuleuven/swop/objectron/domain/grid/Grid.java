@@ -36,7 +36,7 @@ public class Grid {
         this.forceFieldArea = new ForceFieldArea();
     }
 
-    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension,ForceFieldArea forceFieldArea) {
+    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension, ForceFieldArea forceFieldArea) {
         this.squares = squares;
         this.walls = walls;
         this.dimension = dimension;
@@ -114,7 +114,7 @@ public class Grid {
     }
 
     public Map<Position, List<Effect>> getEffects() {
-        Map<Position,List<Effect>>effects = new HashMap<>();
+        Map<Position, List<Effect>> effects = new HashMap<>();
         for (Square[] row : squares) {
             for (Square sq : row) {
                 effects.put(sq.getPosition(), sq.getEffects());
@@ -125,5 +125,17 @@ public class Grid {
 
     public ForceFieldArea getForceFieldArea() {
         return forceFieldArea;
+    }
+
+    //obstruction is van het type wall
+    public ArrayList<Square> getSquaresNotObstructed() {
+        ArrayList<Square> result = new ArrayList<Square>();
+        for (int i = 0; i < squares.length; i++) {
+            for (int j = 0; j < squares[i].length; j++) {
+                if (!squares[i][j].isObstructed())
+                    result.add(squares[i][j]);
+            }
+        }
+        return result;
     }
 }
