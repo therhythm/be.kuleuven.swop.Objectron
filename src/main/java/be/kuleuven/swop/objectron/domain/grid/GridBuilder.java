@@ -147,15 +147,9 @@ public class GridBuilder {
             Teleporter teleporter = new Teleporter(randomSquare);
             randomSquare.addEffect(teleporter);
 
-            //TODO no need to set effect as active... all effects are active
-            /*try {
-                randomSquare.setActiveItem(teleporter);
-            } catch (SquareOccupiedException e) {
-                e.printStackTrace();
-            } */
             teleporters[i] = teleporter;
         }
-        //TODO multiple teleporters can have the same destination, is this allowed?
+
         for (int i = 0; i < numberOfTeleporters; i++) {
             int random = (int) Math.floor(Math.random() * 3);
             while (random == i) {

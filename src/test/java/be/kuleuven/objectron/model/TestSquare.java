@@ -3,10 +3,20 @@ package be.kuleuven.objectron.model;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,30 +27,41 @@ import org.junit.Before;
  */
 public class TestSquare {
     private Square square;
-    private Player player;
+    private Item item;
+    private TurnManager turnManager;
 
     @Before
     public void setUp() throws GridTooSmallException, SquareOccupiedException {
         square = new Square(new Position(5, 5));
-        square.addEffect(new LightMine());
-        player = new Player("test", new Square(new Position(5, 4)));
+        item = new LightMine();
+        item.place(square);
+        Player player = new Player("test", new Square(new Position(5, 4)));
+        turnManager = mock(TurnManager.class);
+        Turn turn = new Turn(player);
+        when(turnManager.getCurrentTurn()).thenReturn(turn);
     }
-   /* TODO
+
+
     @Test
     public void test_step_on_active_item(){
-        assertTrue(square.hasActiveItem());
-        square.stepOn(player);
-        assertFalse(square.hasActiveItem());
+        Effect found = null;
+        for(Effect effect : square.getEffects()){
+            if(effect.equals(item)) {
+                found = effect;
+                break;
+            }
+        }
+        assertTrue(found != null);
+
+        square.stepOn(turnManager);
+
+        found = null;
+        for(Effect effect : square.getEffects()){
+            if(effect.equals(item)) {
+                found = effect;
+                break;
+            }
+        }
+        assertFalse(((LightMine) found).isActive());
     }
-
-    @Test
-    public void test_square_lose_power(){
-        Square otherSquare = new Square(new Position(5, 3));
-        Player otherPlayer = new Player("tester", otherSquare);
-        otherSquare.receivePowerFailure();
-        otherSquare.newTurn(otherPlayer);
-        assertEquals(otherPlayer.getAvailableActions(),2);
-    } */
-
-
 }

@@ -78,11 +78,6 @@ public class IdentityDisc implements Item {
         return false;
     }
 
-    public void playerHit(Player player, TurnManager turnManager) {
-        this.activate(player, turnManager);
-        player.getCurrentSquare().addItem(this);
-    }
-
     private boolean validDirection(Direction direction) {
         return direction != Direction.UP_LEFT && direction != Direction.UP_RIGHT && direction != Direction.DOWN_LEFT
                 && direction != Direction.DOWN_RIGHT;

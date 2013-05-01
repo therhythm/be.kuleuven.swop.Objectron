@@ -70,19 +70,6 @@ public class Grid implements TurnSwitchObserver {
         return wallViewModels;
     }
 
-    //todo remove
-    public boolean isWall(Square square) {
-        if (walls == null)
-            return false;
-        for (Wall wall : walls) {
-
-            if (wall.isWall(square))
-                return true;
-        }
-
-        return false;
-    }
-
     public Map<Position, List<Item>> getItems() {
         Map<Position, List<Item>> items = new HashMap<>();
         for (Square[] row : squares) {

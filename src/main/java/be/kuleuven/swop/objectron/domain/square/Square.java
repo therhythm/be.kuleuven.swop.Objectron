@@ -78,7 +78,6 @@ public class Square implements Observable<SquareObserver> {
 
     public void addEffect(Effect effect){
         this.effects.add(effect);
-        //TODO notify
     }
 
     public Position getPosition() {

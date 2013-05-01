@@ -49,6 +49,10 @@ public class LightMine implements Item, Effect {
         throw new UnsupportedOperationException();
     }
 
+    public boolean isActive(){
+        return isActive;
+    }
+
     public String toString() {
         String result = "";
         result += "name: " + this.getName();

@@ -7,6 +7,8 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
+import be.kuleuven.swop.objectron.domain.item.effect.PowerFailureEffectVisitor;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
@@ -88,19 +90,16 @@ public class TestUC_Use_Item {
 
         assertEquals(initialAvailableActions - 1, stateMock.getTurnManager().getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
-        //assertTrue(player.getCurrentSquare().hasActiveItem()); //todo active items don't exist anymore
+
+        Effect found = null;
+        for(Effect effect : player.getCurrentSquare().getEffects()){
+            if(effect.equals(item)) {
+                found = effect;
+                break;
+            }
+        }
+        assertTrue(found != null);
     }
-
-    //todo this can probably be removed because squares can have multiple active items (effects)
-    /*@Test(expected = SquareOccupiedException.class)
-    public void showSquareOccupiedTest() throws SquareOccupiedException, InventoryFullException, NotEnoughActionsException, NoItemSelectedException {
-        player.getCurrentSquare().setActiveItem(item);
-        player.pickupItem(0);
-        turnManager.getCurrentTurn().setCurrentItem(item);
-
-        useItemHandler.selectItemFromInventory(0);
-        useItemHandler.useCurrentItem();
-    } */
 
     @Test
     public void cancelItemUsageTest() throws InventoryFullException, NotEnoughActionsException {
@@ -114,7 +113,15 @@ public class TestUC_Use_Item {
 
         assertEquals(initialAvailableActions, stateMock.getTurnManager().getCurrentTurn().getActionsRemaining());
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
-        //assertFalse(player.getCurrentSquare().hasActiveItem());//todo review test
+
+        Effect found = null;
+        for(Effect effect : player.getCurrentSquare().getEffects()){
+            if(effect.equals(item)) {
+                found = effect;
+                break;
+            }
+        }
+        assertTrue(found == null);
     }
 
     @Test(expected = NotEnoughActionsException.class)
