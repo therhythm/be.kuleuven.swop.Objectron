@@ -139,11 +139,11 @@ public class GridBuilder {
         Teleporter[] teleporters = new Teleporter[numberOfTeleporters];
         for (int i = 0; i < numberOfTeleporters; i++) {
             Square randomSquare = getRandomSquare();
-            //TODO looks for empty squares, but teleporters can be placed alongside other items
-            while (randomSquare.getAvailableItems().size() != 0 ||
-                    randomSquare.isObstructed()) {
+            // todo what with player locations
+            while (randomSquare.isObstructed()) {
                 randomSquare = getRandomSquare();
             }
+
             Teleporter teleporter = new Teleporter(randomSquare);
             randomSquare.addEffect(teleporter);
 

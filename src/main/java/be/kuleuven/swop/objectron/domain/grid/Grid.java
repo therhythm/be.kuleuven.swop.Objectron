@@ -101,6 +101,6 @@ public class Grid implements TurnSwitchObserver {
 
     @Override
     public void update(Turn turn) {
-        //todo useful?
+        // do nothing
     }
 }

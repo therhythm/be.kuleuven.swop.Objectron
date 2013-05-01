@@ -24,7 +24,6 @@ import java.util.logging.Logger;
  *         Time: 01:10
  */
 public class UseItemHandler extends Handler {
-    private static Logger logger = Logger.getLogger(UseItemHandler.class.getCanonicalName());
 
     public UseItemHandler(GameState state) {
         super(state);
@@ -82,19 +81,11 @@ public class UseItemHandler extends Handler {
             throw new NoItemSelectedException("You don't have an item selected.");
         }
 
-        try {
-            currentTurn.checkEnoughActions();
-            ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare());
-            currentTurn.getCurrentPlayer().useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
-            state.getTurnManager().getCurrentTurn().setCurrentItem(null);
-            currentTurn.reduceRemainingActions(1);
-        } catch (SquareOccupiedException e) {
-            logger.log(Level.INFO, turnManager.getCurrentTurn().getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
-            throw e;
-        } catch (NotEnoughActionsException e) {
-            logger.log(Level.INFO, turnManager.getCurrentTurn().getCurrentPlayer().getName() + " tried to do use an item when he had no actions remaining.");
-            throw e;
-        }
+        currentTurn.checkEnoughActions();
+        ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare());
+        currentTurn.getCurrentPlayer().useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
+        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
+        currentTurn.reduceRemainingActions(1);
     }
 
     public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
@@ -104,21 +95,14 @@ public class UseItemHandler extends Handler {
         if (currentTurn.getCurrentItem() == null) {
             throw new NoItemSelectedException("You don't have an item selected.");
         }
-        try {
-            Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
-            currentTurn.checkEnoughActions();
 
-            ItemDeployer deployer = new ThrowingItemDeployer(currentPlayer.getCurrentSquare(), direction, turnManager);
-            currentPlayer.useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
-            state.getTurnManager().getCurrentTurn().setCurrentItem(null);
-            currentTurn.reduceRemainingActions(1);
-        } catch (SquareOccupiedException e) {
-            logger.log(Level.INFO, turnManager.getCurrentTurn().getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
-            throw e;
-        } catch (NotEnoughActionsException e) {
-            logger.log(Level.INFO, turnManager.getCurrentTurn().getCurrentPlayer().getName() + " tried to do use an item when he had no actions remaining.");
-            throw e;
-        }
+        Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
+        currentTurn.checkEnoughActions();
+
+        ItemDeployer deployer = new ThrowingItemDeployer(currentPlayer.getCurrentSquare(), direction, turnManager);
+        currentPlayer.useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
+        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
+        currentTurn.reduceRemainingActions(1);
     }
 
     /**

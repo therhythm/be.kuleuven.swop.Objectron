@@ -1,4 +1,4 @@
-package be.kuleuven.objectron.model;
+package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;

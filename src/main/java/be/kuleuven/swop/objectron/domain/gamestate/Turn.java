@@ -27,6 +27,7 @@ public class Turn implements Observable<TurnObserver> {
 
     public Turn(Player player) {
         this.currentPlayer = player;
+        //TODO what if there are more penalties than remaining actions
         this.actionsRemaining = ACTIONS_EACH_TURN - player.getRemainingPenalties();
         player.reduceRemainingPenalties(ACTIONS_EACH_TURN);
         this.hasMoved = false;

@@ -172,15 +172,6 @@ public class Square implements Observable<SquareObserver> {
         }
     }
 
-    // TODO what is instanceof doing here, after instroduction of effects this needs to be refactored
-    public Teleporter getTeleportItem() {
-        for (Effect effect : effects) {
-            if (effect instanceof Teleporter)
-                return (Teleporter) effect;
-        }
-        return null;
-    }
-
     public List<Effect> getEffects() {
         return Collections.unmodifiableList(effects);
     }

@@ -89,10 +89,10 @@ public class IdentityDisc implements Item {
             return null;
 
         //todo this should be handled by the effect abstraction
-        Teleporter teleportItem = neighbor.getTeleportItem();
+        /*Teleporter teleportItem = neighbor.getTeleportItem();
         if (teleportItem != null) {
             neighbor = this.teleport(teleportItem);
-        }
+        } */
         return neighbor;
     }
 

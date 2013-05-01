@@ -117,7 +117,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         }
     }
 
-    @Override
+    @Override //todo itemviewmodel
     public void itemPlaced(Item item, Position position) {
         for (GameObserver observer : observers) {
             observer.itemPlaced(item, position);

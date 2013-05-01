@@ -1,4 +1,4 @@
-package be.kuleuven.objectron.model;
+package be.kuleuven.swop.objectron.domain.item.effect;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
