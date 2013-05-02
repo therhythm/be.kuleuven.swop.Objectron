@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class ForceField {
     private int currentTurnSwitch = TURNSWITCH;
     private List<Square> affectedSquares;
     private boolean active;
+    private List<Player> playerHitLastTime;
 
     public ForceField(ForcefieldGenerator forceField1, ForcefieldGenerator forceField2, List<Square> squaresBetween) {
 
