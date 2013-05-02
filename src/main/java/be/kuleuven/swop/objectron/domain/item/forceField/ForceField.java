@@ -44,10 +44,16 @@ public class ForceField implements Item, Effect {
     }
 
     @Override
-    public void addToSquare(Square targetSquare) {
+    public void pickedUp() {
+        forcefieldArea.pickUpForceField(this);
+    }
+         /*
+    @Override
+    public void addToSquare(Square targetSquare) throws SquareOccupiedException {
         if (targetSquare == null)
             forcefieldArea.pickUpForceField(this, targetSquare);
-        else
-            forcefieldArea.placeForceField(this, targetSquare);
-    }
+         else
+           forcefieldArea.placeForceField(this, targetSquare);
+
+    }  */
 }

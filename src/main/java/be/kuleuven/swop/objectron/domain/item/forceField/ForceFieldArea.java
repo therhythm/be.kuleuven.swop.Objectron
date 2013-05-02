@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -31,7 +32,10 @@ public class ForceFieldArea implements TurnObserver {
     }
 
 
-    public void placeForceField(Item changedForceField, Square currentSquare) {
+    public void placeForceField(Item changedForceField, Square currentSquare) throws SquareOccupiedException {
+        if(listForceFields.values().contains(currentSquare))
+            throw new SquareOccupiedException("This square already contains a force field");
+        currentSquare.addItem(changedForceField);
         listForceFields.put((ForceField) changedForceField, currentSquare);
         for (ForceField forceField : listForceFields.keySet()) {
             if (!changedForceField.equals(forceField)) {
@@ -41,8 +45,8 @@ public class ForceFieldArea implements TurnObserver {
         }
     }
 
-    public void pickUpForceField(Item changedForceField, Square currentSquare) {
-        listForceFields.put((ForceField) changedForceField, currentSquare);
+    public void pickUpForceField(Item changedForceField) {
+        listForceFields.put((ForceField) changedForceField, null);
         List<ForceFieldPair> forcefieldPairsCopy = new ArrayList<ForceFieldPair>();
         forcefieldPairsCopy.addAll(listForceFieldPairs);
         for (ForceFieldPair forceFieldPair : forcefieldPairsCopy) {

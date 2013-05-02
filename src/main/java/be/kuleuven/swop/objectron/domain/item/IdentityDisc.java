@@ -49,7 +49,8 @@ public class IdentityDisc implements Item {
     }
 
     @Override
-    public void addToSquare(Square targetSquare) {
+    public void pickedUp() {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public boolean playerHit(Square square, GameState state) {

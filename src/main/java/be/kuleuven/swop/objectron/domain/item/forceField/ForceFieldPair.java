@@ -26,7 +26,7 @@ public class ForceFieldPair {
         this.forceField2 = forceField2;
         this.affectedSquares = squaresBetween;
 
-        activate();
+        deactivate();
     }
 
     private void activate() {
@@ -53,9 +53,10 @@ public class ForceFieldPair {
     }
 
     public void update() {
+        currentTurnSwitch--;
         if (currentTurnSwitch == 0)
             this.switchActivation();
-        currentTurnSwitch--;
+
     }
 
     public void prepareToRemove() {

@@ -38,9 +38,10 @@ public class LightMine implements Item, Effect {
     }
 
     @Override
-    public void addToSquare(Square targetSquare) {
+    public void pickedUp() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
 
     public String toString() {
         String result = "";

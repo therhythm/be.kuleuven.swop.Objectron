@@ -64,11 +64,11 @@ public class Square implements Observable<SquareObserver> {
 
         setObstructed(true);
         if (hasActiveItem()) {
-            ((Effect)(activeItem)).activate(gameState.getCurrentTurn()); //TODO no casting
+            ((Effect) (activeItem)).activate(gameState.getCurrentTurn()); //TODO no casting
             activeItem = null;
         }
 
-        for(Effect effect : effects){
+        for (Effect effect : effects) {
             effect.activate(gameState.getCurrentTurn());
         }
     }
@@ -78,12 +78,11 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public void addItem(Item item) {
-        item.addToSquare(this);
         this.items.add(item);
         notifyItemPlaced(item);
     }
 
-    public void addEffect(Effect effect){
+    public void addEffect(Effect effect) {
         this.effects.add(effect);
         //TODO notify?
     }
@@ -96,7 +95,7 @@ public class Square implements Observable<SquareObserver> {
         Item selectedItem = items.get(selectionId);
 
         items.remove(selectedItem);
-        selectedItem.addToSquare(null);
+        selectedItem.pickedUp();
         return selectedItem;
     }
 

@@ -18,5 +18,5 @@ public interface Item {
 
     void throwMe(Square sourceSquare, Direction targetDirection, GameState state);//TODO remove  gamestate ASAP
 
-    void addToSquare(Square targetSquare);
+    void pickedUp();
 }
