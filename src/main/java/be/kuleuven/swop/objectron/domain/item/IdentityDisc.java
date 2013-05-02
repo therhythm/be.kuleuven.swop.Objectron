@@ -78,6 +78,10 @@ public class IdentityDisc implements Item {
         return false;
     }
 
+    @Override
+    public void addToSquare(Square targetSquare) {
+    }
+
     private boolean validDirection(Direction direction) {
         return direction != Direction.UP_LEFT && direction != Direction.UP_RIGHT && direction != Direction.DOWN_LEFT
                 && direction != Direction.DOWN_RIGHT;
@@ -94,11 +98,6 @@ public class IdentityDisc implements Item {
             neighbor = this.teleport(teleportItem);
         } */
         return neighbor;
-    }
-
-    //todo is teleporting removed.. didn't do anything useful here
-    public Square teleport(Teleporter teleporter) {
-        return teleporter.getDestination().getLocation();
     }
 
     public String toString() {

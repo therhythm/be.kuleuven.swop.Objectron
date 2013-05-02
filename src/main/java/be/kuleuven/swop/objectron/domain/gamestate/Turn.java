@@ -5,7 +5,6 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,6 +64,7 @@ public class Turn implements Observable<TurnObserver> {
     }
 
     public void reduceRemainingActions(int amount) {
+        notifyObservers();
         if (actionsRemaining > amount) {
             actionsRemaining -= amount;
         } else {
@@ -101,7 +101,6 @@ public class Turn implements Observable<TurnObserver> {
         this.observers.remove(observer);
     }
 
-    @Override
     public String toString() {
         String result = "";
         result += currentPlayer + "\n";

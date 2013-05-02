@@ -21,4 +21,9 @@ public class PowerFailureEffectVisitor implements EffectVisitor {
     public void visitLightMine() {
         hasLightMine = true;
     }
+
+    @Override
+    public void visitForceField() {
+        // do nothing
+    }
 }

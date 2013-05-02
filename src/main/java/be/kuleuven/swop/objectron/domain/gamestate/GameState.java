@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -36,6 +37,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         turnManager = new TurnManager(players);
         turnManager.attach(this);
         turnManager.attach(gameGrid);
+        turnManager.attach(gameGrid.getForceFieldArea());
     }
 
     public GameState(String player1Name, String player2Name, Dimension dimension,
@@ -57,6 +59,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         turnManager = new TurnManager(players);
         turnManager.attach(this);
         turnManager.attach(gameGrid);
+        turnManager.attach(getGrid().getForceFieldArea());
     }
 
     public TurnManager getTurnManager() {

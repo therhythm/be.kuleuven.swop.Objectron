@@ -4,7 +4,6 @@ package be.kuleuven.swop.objectron.domain.square;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
-import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -72,6 +71,7 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public void addItem(Item item) {
+        item.addToSquare(this);
         this.items.add(item);
         notifyItemPlaced(item);
     }
@@ -88,6 +88,7 @@ public class Square implements Observable<SquareObserver> {
         Item selectedItem = items.get(selectionId);
 
         items.remove(selectedItem);
+        selectedItem.addToSquare(null);
         return selectedItem;
     }
 

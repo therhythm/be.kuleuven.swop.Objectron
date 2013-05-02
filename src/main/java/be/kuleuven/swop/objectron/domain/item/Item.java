@@ -18,4 +18,6 @@ public interface Item {
     void place(Square targetSquare);
 
     void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager);
+
+    void addToSquare(Square targetSquare);
 }
