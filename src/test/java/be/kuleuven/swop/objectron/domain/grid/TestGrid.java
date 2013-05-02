@@ -194,20 +194,46 @@ public class TestGrid {
         p2Pos = new Position(9, 0);
         grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
         int numberOfIdentityDiscsCharged = 0;
-         Square square_charged_ID = null;
+        Square square_charged_ID = null;
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 if (grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() != 0) {
                     for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
                         if (item.getName() == "Charged Identity Disc")
                             numberOfIdentityDiscsCharged++;
-                        square_charged_ID=             grid.getSquareAtPosition(new Position(i, j));
+                        square_charged_ID = grid.getSquareAtPosition(new Position(i, j));
                     }
                 }
             }
         }
         System.out.println(square_charged_ID.getPosition());
-        assertTrue(numberOfIdentityDiscsCharged==1);
+        assertTrue(numberOfIdentityDiscsCharged == 1);
+    }
+
+    @Test
+    public void test_place_force_field_max_one_per_square() throws GridTooSmallException {
+        p1Pos = new Position(0, 1);
+        p2Pos = new Position(0, 0);
+        List<Position> wallPositions = new ArrayList<Position>();
+        for (int i = 1; i < 10; i++) {
+            for (int j = 1; j < 10; j++) {
+                wallPositions.add(new Position(i, j));
+            }
+        }
+        for (int repeat = 0; repeat < 100; repeat++) {
+            grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0), wallPositions);
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    Square square = grid.getSquareAtPosition(new Position(i, j));
+                    int aantalForceFields = 0;
+                    for (Item item : square.getAvailableItems()) {
+                        if (item.getName() == "Force Field")
+                            aantalForceFields++;
+                    }
+                    assertTrue(aantalForceFields <= 1);
+                }
+            }
+        }
     }
 
 }

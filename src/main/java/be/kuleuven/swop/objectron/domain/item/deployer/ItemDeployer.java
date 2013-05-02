@@ -10,5 +10,5 @@ import be.kuleuven.swop.objectron.domain.item.Item;
  */
 public interface ItemDeployer {
 
-    void deploy(Item item);
+    void deploy(Item item) throws SquareOccupiedException;
 }

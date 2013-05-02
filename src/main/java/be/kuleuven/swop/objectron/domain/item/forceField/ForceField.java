@@ -1,62 +1,72 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
-import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.effect.Effect;
-import be.kuleuven.swop.objectron.domain.item.effect.EffectVisitor;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.square.Square;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Peter
  * Date: 28/04/13
- * Time: 9:50
+ * Time: 9:49
  * To change this template use File | Settings | File Templates.
  */
-//todo is this an effect or obstruction>?
-public class ForceField implements Item, Effect {
-    private final String name = "Force Field";
-    private ForceFieldArea forcefieldArea;
 
-    public ForceField(ForceFieldArea forcefieldArea) {
-        this.forcefieldArea = forcefieldArea;
+public class ForceField {
+    public static final int TURNSWITCH = 2;
+
+    private ForcefieldGenerator forceField1;
+    private ForcefieldGenerator forceField2;
+    private int currentTurnSwitch = TURNSWITCH;
+    private List<Square> affectedSquares;
+    private boolean active;
+    private List<Player> playerHitLastTime;
+
+    public ForceField(ForcefieldGenerator forceField1, ForcefieldGenerator forceField2, List<Square> squaresBetween) {
+
+        this.forceField1 = forceField1;
+        this.forceField2 = forceField2;
+        this.affectedSquares = squaresBetween;
+
+        deactivate();
     }
 
-    @Override
-    public void activate(Turn currentTurn) {
-        // forcefieldArea.placeForceField(this,currentTurn);
+    private void activate() {
+        active = true;
+        for (Square square : affectedSquares) {
+            square.setObstructed(true);
+        }
     }
 
-    @Override
-    public void accept(EffectVisitor visitor) {
-        visitor.visitForceField();
+    private void deactivate() {
+        active = false;
+        for (Square square : affectedSquares) {
+            square.setObstructed(false);
+        }
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void place(Square targetSquare){
-        forcefieldArea.placeForceField(this, targetSquare);
-    }
-
-    @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) {
-        throw new UnsupportedOperationException();
-    }
-
-
-    @Override
-    public void addToSquare(Square targetSquare) {
-        if (targetSquare == null)
-            forcefieldArea.pickUpForceField(this, targetSquare);
+    private void switchActivation() {
+        currentTurnSwitch = TURNSWITCH;
+        if (active)
+            deactivate();
         else
-            forcefieldArea.placeForceField(this, targetSquare);
+            activate();
+
+    }
+
+    public void update() {
+        currentTurnSwitch--;
+        if (currentTurnSwitch == 0) {
+            this.switchActivation();
+        }
+    }
+
+    public void prepareToRemove() {
+        this.deactivate();
+    }
+
+    public boolean contains(ForcefieldGenerator forcefield) {
+        return forcefield.equals(forceField1) || forcefield.equals(forceField2);
     }
 }

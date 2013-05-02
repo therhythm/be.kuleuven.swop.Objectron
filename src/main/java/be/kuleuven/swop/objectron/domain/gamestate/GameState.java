@@ -136,4 +136,9 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
     public void update(Turn turn) {
         notifyObservers();
     }
+
+    @Override
+    public void actionReduced() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

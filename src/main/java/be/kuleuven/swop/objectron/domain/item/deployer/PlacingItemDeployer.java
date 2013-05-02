@@ -17,7 +17,7 @@ public class PlacingItemDeployer implements ItemDeployer {
     }
 
     @Override
-    public void deploy(Item item) {
+    public void deploy(Item item) throws SquareOccupiedException {
         item.place(targetSquare);
     }
 }

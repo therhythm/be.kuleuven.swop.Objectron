@@ -8,4 +8,6 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 public interface TurnObserver {
 
     void update(Turn turn);
+
+    void actionReduced();
 }

@@ -15,9 +15,9 @@ public interface Item {
 
     String getName();
 
-    void place(Square targetSquare);
+    void place(Square targetSquare) throws SquareOccupiedException;
 
     void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager);
 
-    void addToSquare(Square targetSquare);
+    void pickedUp();
 }

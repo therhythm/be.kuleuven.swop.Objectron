@@ -82,10 +82,10 @@ public class UseItemHandler extends Handler {
         }
 
         currentTurn.checkEnoughActions();
+        currentTurn.reduceRemainingActions(1);
         ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare());
         currentTurn.getCurrentPlayer().useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
         state.getTurnManager().getCurrentTurn().setCurrentItem(null);
-        currentTurn.reduceRemainingActions(1);
     }
 
     public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {

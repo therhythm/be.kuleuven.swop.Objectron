@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item.forceField;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -17,30 +18,33 @@ import java.util.*;
  */
 public class ForceFieldArea implements TurnSwitchObserver {
     private final int maxRange = 3;
-    private Map<ForceField, Square> listForceFields;
-    private List<ForceFieldPair> listForceFieldPairs;
+    private Map<ForcefieldGenerator, Square> listForceFields;
+    private List<ForceField> listForceFieldPairs;
 
     public ForceFieldArea() {
-        listForceFields = new HashMap<ForceField, Square>();
-        listForceFieldPairs = new ArrayList<ForceFieldPair>();
+        listForceFields = new HashMap<ForcefieldGenerator, Square>();
+        listForceFieldPairs = new ArrayList<ForceField>();
     }
 
-    public void placeForceField(Item changedForceField, Square currentSquare) {
-        listForceFields.put((ForceField) changedForceField, currentSquare);
-        for (ForceField forceField : listForceFields.keySet()) {
+    public void placeForceField(Item changedForceField, Square currentSquare) throws SquareOccupiedException {
+        if(listForceFields.values().contains(currentSquare))
+            throw new SquareOccupiedException("This square already contains a force field");
+        currentSquare.addItem(changedForceField);
+        listForceFields.put((ForcefieldGenerator) changedForceField, currentSquare);
+        for (ForcefieldGenerator forceField : listForceFields.keySet()) {
             if (!changedForceField.equals(forceField)) {
 
-                checkForceField((ForceField) changedForceField, forceField);
+                checkForceField((ForcefieldGenerator) changedForceField, forceField);
             }
         }
     }
 
-    public void pickUpForceField(Item changedForceField, Square currentSquare) {
-        listForceFields.put((ForceField) changedForceField, currentSquare);
-        List<ForceFieldPair> forcefieldPairsCopy = new ArrayList<ForceFieldPair>();
+    public void pickUpForceField(Item changedForceField) {
+        listForceFields.put((ForcefieldGenerator) changedForceField, null);
+        List<ForceField> forcefieldPairsCopy = new ArrayList<ForceField>();
         forcefieldPairsCopy.addAll(listForceFieldPairs);
-        for (ForceFieldPair forceFieldPair : forcefieldPairsCopy) {
-            if (forceFieldPair.contains((ForceField) changedForceField)) {
+        for (ForceField forceFieldPair : forcefieldPairsCopy) {
+            if (forceFieldPair.contains((ForcefieldGenerator) changedForceField)) {
                 forceFieldPair.prepareToRemove();
                 listForceFieldPairs.remove(forceFieldPair);
             }
@@ -48,9 +52,9 @@ public class ForceFieldArea implements TurnSwitchObserver {
     }
 
 
-    private void checkForceField(ForceField forceField1, ForceField forceField2) {
+    private void checkForceField(ForcefieldGenerator forceField1, ForcefieldGenerator forceField2) {
         boolean contains = false;
-        for (ForceFieldPair forceFieldPair : listForceFieldPairs) {
+        for (ForceField forceFieldPair : listForceFieldPairs) {
             if (forceFieldPair.contains(forceField1) && forceFieldPair.contains(forceField2))
                 contains = true;
         }
@@ -58,7 +62,7 @@ public class ForceFieldArea implements TurnSwitchObserver {
             for (Direction direction : Direction.values()) {
                 if (withinRange(listForceFields.get(forceField1), listForceFields.get(forceField2), direction)) {
                     List<Square> squaresBetween = getSquaresBetween(listForceFields.get(forceField1), listForceFields.get(forceField2), direction);
-                    ForceFieldPair forceFieldPair = new ForceFieldPair(forceField1, forceField2, squaresBetween);
+                    ForceField forceFieldPair = new ForceField(forceField1, forceField2, squaresBetween);
                     listForceFieldPairs.add(forceFieldPair);
                 }
             }
@@ -99,8 +103,13 @@ public class ForceFieldArea implements TurnSwitchObserver {
 
     @Override
     public void update(Turn turn) {
-        for (ForceFieldPair forcefieldPair : listForceFieldPairs) {
-            forcefieldPair.update();
+
+    }
+
+    @Override
+    public void actionReduced() {
+        for (ForceField forceFieldPair : listForceFieldPairs) {
+            forceFieldPair.update();
         }
     }
 }

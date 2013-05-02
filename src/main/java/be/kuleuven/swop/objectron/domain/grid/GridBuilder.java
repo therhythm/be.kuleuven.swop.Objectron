@@ -3,11 +3,12 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.*;
-import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
@@ -111,32 +112,6 @@ public class GridBuilder {
                 return;
             }
         }
-
-
-        /*Square middle = calculateMiddleSquare();
-        ArrayList<Square> randomMiddleSquares = new ArrayList<Square>();
-        randomMiddleSquares.add(middle);
-        randomMiddleSquares.add(middle.getNeighbour(Direction.UP));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.UP_LEFT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.LEFT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN_LEFT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN_RIGHT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.RIGHT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.UP_RIGHT));
-        Random random = new Random();
-        Square randomSquare;
-        while (randomMiddleSquares.size() > 0) {
-            int randomIndex = random.nextInt(randomMiddleSquares.size());
-            randomSquare = randomMiddleSquares.get(randomIndex);
-            if (randomSquare != null) {
-                if (!randomSquare.isObstructed()) {
-                    randomSquare.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
-                    break;
-                }
-            }
-            randomMiddleSquares.remove(randomIndex);
-        } */
     }
 
     public void buildItems() {
@@ -153,12 +128,32 @@ public class GridBuilder {
     }
 
     private void placeForceFields(int numberOfItems) {
-        List<Item> forceFields = new ArrayList<Item>();
+        List<ForcefieldGenerator> forceFieldGenerators = new ArrayList<ForcefieldGenerator>();
         for (int i = 0; i < numberOfItems; i++) {
-            ForceField forcefield = new ForceField(forceFieldArea);
-            forceFields.add(forcefield);
+            ForcefieldGenerator forcefieldGenerator = new ForcefieldGenerator(forceFieldArea);
+            forceFieldGenerators.add(forcefieldGenerator);
         }
-        placeOtherItems(forceFields);
+
+        for (ForcefieldGenerator forcefieldGenerator : forceFieldGenerators) {
+            Square randomSquare = getRandomSquare();
+            boolean added = false;
+            while (added == false) {
+                while (randomSquare.getAvailableItems().size() != 0
+                        || randomSquare.isObstructed()) {
+                    randomSquare = getRandomSquare();
+                }
+
+                try {
+                    forceFieldArea.placeForceField(forcefieldGenerator, randomSquare);
+                    added = true;
+                } catch (SquareOccupiedException exc) {
+                    added = false;
+
+                }
+
+            }
+        }
+
     }
 
     private void placeIdentityDiscs(int numberOfItems) {
@@ -282,7 +277,6 @@ public class GridBuilder {
                     || randomSquare.isObstructed()) {
                 randomSquare = getRandomSquare();
             }
-
             randomSquare.addItem(item);
         }
     }

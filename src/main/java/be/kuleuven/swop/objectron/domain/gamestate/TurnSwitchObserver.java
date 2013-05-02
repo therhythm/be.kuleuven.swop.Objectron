@@ -12,4 +12,6 @@ public interface TurnSwitchObserver {
     void turnEnded(Turn newTurn);
 
     void update(Turn turn);
+
+    void actionReduced();
 }

@@ -63,8 +63,11 @@ public class IdentityDisc implements Item {
             }
         }
         currentSquare.addItem(this);
+    }
 
-        //identityDiscBehavior.throwMe(sourceSquare, targetDirection, this, turnManager);
+    @Override
+    public void pickedUp() {
+        //do nothing
     }
 
     public boolean playerHit(Square square, TurnManager turnManager) {
@@ -76,10 +79,6 @@ public class IdentityDisc implements Item {
             }
         }
         return false;
-    }
-
-    @Override
-    public void addToSquare(Square targetSquare) {
     }
 
     private boolean validDirection(Direction direction) {

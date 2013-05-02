@@ -72,7 +72,14 @@ public class Turn implements Observable<TurnObserver> {
             actionsRemaining = 0;
             hasMoved = true;
         }
+        notifyActionsReduced();
         notifyObservers();
+    }
+
+    private void notifyActionsReduced() {
+        for(TurnObserver observer : observers){
+            observer.actionReduced();
+        }
     }
 
     public void checkEnoughActions() throws NotEnoughActionsException {

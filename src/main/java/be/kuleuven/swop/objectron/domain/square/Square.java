@@ -59,6 +59,7 @@ public class Square implements Observable<SquareObserver> {
         state.stepOn(turnManager);
 
         setObstructed(true);
+
         //todo add turnmanager .getplayer to obstruction
 
         for(Effect effect : effects){
@@ -71,12 +72,11 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public void addItem(Item item) {
-        item.addToSquare(this);
         this.items.add(item);
         notifyItemPlaced(item);
     }
 
-    public void addEffect(Effect effect){
+    public void addEffect(Effect effect) {
         this.effects.add(effect);
     }
 
@@ -88,7 +88,7 @@ public class Square implements Observable<SquareObserver> {
         Item selectedItem = items.get(selectionId);
 
         items.remove(selectedItem);
-        selectedItem.addToSquare(null);
+        selectedItem.pickedUp();
         return selectedItem;
     }
 
