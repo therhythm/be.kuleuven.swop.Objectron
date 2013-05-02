@@ -146,6 +146,46 @@ public class Test_Force_Field {
     }
 
     @Test
+    public void test_Force_Field_Direction_Left_Up_no_field() throws InventoryFullException, NotEnoughActionsException, NoItemSelectedException, SquareOccupiedException, InvalidMoveException, GameOverException {
+        Square squareFF1 = grid.getSquareAtPosition(new Position(4, 5));
+        Square squareFF2 = grid.getSquareAtPosition(new Position(8, 1));
+        ForceFieldArea forceFieldArea = grid.getForceFieldArea();
+
+        Item forcefieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forcefieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
+
+        squareFF1.addItem(forcefieldGenerator1);
+        squareFF2.addItem(forcefieldGenerator2);
+
+        forceFieldArea.placeForceField(forcefieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forcefieldGenerator2, squareFF2);
+        Turn currentTurn = state.getCurrentTurn();
+        //currentTurn.attach(forceFieldArea);
+
+        pickUpItemHandler.pickUpItem(0);
+        movePlayerHandler.move(Direction.RIGHT);
+        useItemHandler.selectItemFromInventory(0);
+        assertFalse(squareFF2.isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(6, 4)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(7, 3)).isObstructed());
+        useItemHandler.useCurrentItem();
+        assertFalse(squareFF2.isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(6, 4)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(7, 3)).isObstructed());
+        endTurnHandler.endTurn();
+        movePlayerHandler.move(Direction.LEFT);
+        assertFalse(squareFF2.isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(6, 4)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(7, 3)).isObstructed());
+
+        movePlayerHandler.move(Direction.LEFT);
+
+        assertFalse(squareFF2.isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(6, 4)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(7, 3)).isObstructed());
+    }
+
+    @Test
     public void test_Force_Field_Direction_Up() throws InventoryFullException, NotEnoughActionsException, NoItemSelectedException, SquareOccupiedException, InvalidMoveException, GameOverException {
         Square squareFF1 = grid.getSquareAtPosition(new Position(4, 5));
         Square squareFF2 = grid.getSquareAtPosition(new Position(5, 2));
@@ -184,6 +224,45 @@ public class Test_Force_Field {
         assertTrue(grid.getSquareAtPosition(new Position(5, 3)).isObstructed());
 
         assertTrue(squareFF2.isObstructed());
+    }
+
+    @Test
+    public void test_Force_Field_Direction_Up_no_field() throws InventoryFullException, NotEnoughActionsException, NoItemSelectedException, SquareOccupiedException, InvalidMoveException, GameOverException {
+        Square squareFF1 = grid.getSquareAtPosition(new Position(4, 5));
+        Square squareFF2 = grid.getSquareAtPosition(new Position(4, 3));
+        ForceFieldArea forceFieldArea = grid.getForceFieldArea();
+
+        Item forceFieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forceFieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
+
+        squareFF1.addItem(forceFieldGenerator1);
+        squareFF2.addItem(forceFieldGenerator2);
+
+        forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
+        Turn currentTurn = state.getCurrentTurn();
+        //currentTurn.attach(forceFieldArea);
+
+        pickUpItemHandler.pickUpItem(0);
+        movePlayerHandler.move(Direction.RIGHT);
+        assertTrue(currentTurn.getCurrentPlayer().getCurrentSquare().equals(grid.getSquareAtPosition(new Position(5, 5))));
+        useItemHandler.selectItemFromInventory(0);
+        assertFalse(squareFF2.isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(5, 4)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(5, 3)).isObstructed());
+        useItemHandler.useCurrentItem();
+        assertFalse(squareFF2.isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(5, 4)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(5, 3)).isObstructed());
+        endTurnHandler.endTurn();
+        movePlayerHandler.move(Direction.UP);
+        assertFalse(squareFF2.isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(5, 4)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(5, 3)).isObstructed());
+        movePlayerHandler.move(Direction.UP);
+        assertFalse(squareFF2.isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(5, 4)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(5, 3)).isObstructed());
     }
 
     @Test
