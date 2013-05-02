@@ -8,7 +8,7 @@ import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.*;
-import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
@@ -128,13 +128,13 @@ public class GridBuilder {
     }
 
     private void placeForceFields(int numberOfItems) {
-        List<ForceField> forceFields = new ArrayList<ForceField>();
+        List<ForcefieldGenerator> forceFieldGenerators = new ArrayList<ForcefieldGenerator>();
         for (int i = 0; i < numberOfItems; i++) {
-            ForceField forcefield = new ForceField(forceFieldArea);
-            forceFields.add(forcefield);
+            ForcefieldGenerator forcefieldGenerator = new ForcefieldGenerator(forceFieldArea);
+            forceFieldGenerators.add(forcefieldGenerator);
         }
 
-        for (ForceField forcefield : forceFields) {
+        for (ForcefieldGenerator forcefieldGenerator : forceFieldGenerators) {
             Square randomSquare = getRandomSquare();
             boolean added = false;
             while (added == false) {
@@ -144,7 +144,7 @@ public class GridBuilder {
                 }
 
                 try {
-                    forceFieldArea.placeForceField(forcefield, randomSquare);
+                    forceFieldArea.placeForceField(forcefieldGenerator, randomSquare);
                     added = true;
                 } catch (SquareOccupiedException exc) {
                     added = false;

@@ -1,59 +1,69 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
-import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.square.Square;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Peter
  * Date: 28/04/13
- * Time: 9:50
+ * Time: 9:49
  * To change this template use File | Settings | File Templates.
  */
-public class ForceField implements Item, Effect {
-    private final String name = "Force Field";
-    private ForceFieldArea forcefieldArea;
+public class ForceField {
+    public static final int TURNSWITCH = 2;
 
-    public ForceField(ForceFieldArea forcefieldArea) {
-        this.forcefieldArea = forcefieldArea;
+    private ForcefieldGenerator forceField1;
+    private ForcefieldGenerator forceField2;
+    private int currentTurnSwitch = TURNSWITCH;
+    private List<Square> affectedSquares;
+    private boolean active;
+
+    public ForceField(ForcefieldGenerator forceField1, ForcefieldGenerator forceField2, List<Square> squaresBetween) {
+
+        this.forceField1 = forceField1;
+        this.forceField2 = forceField2;
+        this.affectedSquares = squaresBetween;
+
+        deactivate();
     }
 
-    @Override
-    public void activate(Turn currentTurn) {
-        // forcefieldArea.placeForceField(this,currentTurn);
+    private void activate() {
+        active = true;
+        for (Square square : affectedSquares) {
+            square.setObstructed(true);
+        }
     }
 
-    @Override
-    public String getName() {
-        return name;
+    private void deactivate() {
+        active = false;
+        for (Square square : affectedSquares) {
+            square.setObstructed(false);
+        }
     }
 
-    @Override
-    public void place(Square targetSquare) throws SquareOccupiedException {
-        forcefieldArea.placeForceField(this, targetSquare);
+    private void switchActivation() {
+        currentTurnSwitch = TURNSWITCH;
+        if (active)
+            deactivate();
+        else
+            activate();
+
     }
 
-    @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, GameState state) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void update() {
+        currentTurnSwitch--;
+        if (currentTurnSwitch == 0)
+            this.switchActivation();
+
     }
 
-    @Override
-    public void pickedUp() {
-        forcefieldArea.pickUpForceField(this);
+    public void prepareToRemove() {
+        this.deactivate();
     }
-         /*
-    @Override
-    public void addToSquare(Square targetSquare) throws SquareOccupiedException {
-        if (targetSquare == null)
-            forcefieldArea.pickUpForceField(this, targetSquare);
-         else
-           forcefieldArea.placeForceField(this, targetSquare);
 
-    }  */
+    public boolean contains(ForcefieldGenerator forcefield) {
+        return forcefield.equals(forceField1) || forcefield.equals(forceField2);
+    }
 }

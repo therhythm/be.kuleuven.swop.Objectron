@@ -8,7 +8,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -65,14 +65,14 @@ public class Test_Force_Field {
         Square squareFF2 = grid.getSquareAtPosition(new Position(8, 5));
         ForceFieldArea forceFieldArea = grid.getForceFieldArea();
 
-        Item forceField1 = new ForceField(forceFieldArea);
-        Item forceField2 = new ForceField(forceFieldArea);
+        Item forcefieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forcefieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
 
-        squareFF1.addItem(forceField1);
-        squareFF2.addItem(forceField2);
+        squareFF1.addItem(forcefieldGenerator1);
+        squareFF2.addItem(forcefieldGenerator2);
 
-        forceFieldArea.placeForceField(forceField1, squareFF1);
-        forceFieldArea.placeForceField(forceField2, squareFF2);
+        forceFieldArea.placeForceField(forcefieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forcefieldGenerator2, squareFF2);
         Turn currentTurn = state.getCurrentTurn();
         //currentTurn.attach(forceFieldArea);
 
@@ -109,14 +109,14 @@ public class Test_Force_Field {
         Square squareFF2 = grid.getSquareAtPosition(new Position(8, 2));
         ForceFieldArea forceFieldArea = grid.getForceFieldArea();
 
-        Item forceField1 = new ForceField(forceFieldArea);
-        Item forceField2 = new ForceField(forceFieldArea);
+        Item forcefieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forcefieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
 
-        squareFF1.addItem(forceField1);
-        squareFF2.addItem(forceField2);
+        squareFF1.addItem(forcefieldGenerator1);
+        squareFF2.addItem(forcefieldGenerator2);
 
-        forceFieldArea.placeForceField(forceField1, squareFF1);
-        forceFieldArea.placeForceField(forceField2, squareFF2);
+        forceFieldArea.placeForceField(forcefieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forcefieldGenerator2, squareFF2);
         Turn currentTurn = state.getCurrentTurn();
         //currentTurn.attach(forceFieldArea);
 
@@ -151,14 +151,14 @@ public class Test_Force_Field {
         Square squareFF2 = grid.getSquareAtPosition(new Position(5, 2));
         ForceFieldArea forceFieldArea = grid.getForceFieldArea();
 
-        Item forceField1 = new ForceField(forceFieldArea);
-        Item forceField2 = new ForceField(forceFieldArea);
+        Item forceFieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forceFieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
 
-        squareFF1.addItem(forceField1);
-        squareFF2.addItem(forceField2);
+        squareFF1.addItem(forceFieldGenerator1);
+        squareFF2.addItem(forceFieldGenerator2);
 
-        forceFieldArea.placeForceField(forceField1, squareFF1);
-        forceFieldArea.placeForceField(forceField2, squareFF2);
+        forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
         Turn currentTurn = state.getCurrentTurn();
         //currentTurn.attach(forceFieldArea);
 
@@ -192,14 +192,14 @@ public class Test_Force_Field {
         Square squareFF2 = grid.getSquareAtPosition(new Position(2, 2));
         ForceFieldArea forceFieldArea = grid.getForceFieldArea();
 
-        Item forceField1 = new ForceField(forceFieldArea);
-        Item forceField2 = new ForceField(forceFieldArea);
+        Item forceFieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forceFieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
 
-        squareFF1.addItem(forceField1);
-        squareFF2.addItem(forceField2);
+        squareFF1.addItem(forceFieldGenerator1);
+        squareFF2.addItem(forceFieldGenerator2);
 
-        forceFieldArea.placeForceField(forceField1, squareFF1);
-        forceFieldArea.placeForceField(forceField2, squareFF2);
+        forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
         Turn currentTurn = state.getCurrentTurn();
         //currentTurn.attach(forceFieldArea);
 
@@ -233,14 +233,14 @@ public class Test_Force_Field {
         Square squareFF2 = grid.getSquareAtPosition(new Position(9, 5));
         ForceFieldArea forceFieldArea = grid.getForceFieldArea();
 
-        Item forceField1 = new ForceField(forceFieldArea);
-        Item forceField2 = new ForceField(forceFieldArea);
+        Item forceFieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forceFieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
 
-        squareFF1.addItem(forceField1);
-        squareFF2.addItem(forceField2);
+        squareFF1.addItem(forceFieldGenerator1);
+        squareFF2.addItem(forceFieldGenerator2);
 
-        forceFieldArea.placeForceField(forceField1, squareFF1);
-        forceFieldArea.placeForceField(forceField2, squareFF2);
+        forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
         Turn currentTurn = state.getCurrentTurn();
         // currentTurn.attach(forceFieldArea);
 
@@ -263,14 +263,14 @@ public class Test_Force_Field {
         Square squareFF2 = grid.getSquareAtPosition(new Position(8, 5));
         ForceFieldArea forceFieldArea = grid.getForceFieldArea();
 
-        Item forceField1 = new ForceField(forceFieldArea);
-        Item forceField2 = new ForceField(forceFieldArea);
+        Item forceFieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forceFieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
 
-        squareFF1.addItem(forceField1);
-        squareFF2.addItem(forceField2);
+        squareFF1.addItem(forceFieldGenerator1);
+        squareFF2.addItem(forceFieldGenerator2);
 
-        forceFieldArea.placeForceField(forceField1, squareFF1);
-        forceFieldArea.placeForceField(forceField2, squareFF2);
+        forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
         // Turn currentTurn = state.getCurrentTurn();
         //currentTurn.attach(forceFieldArea);
 
@@ -322,14 +322,14 @@ public class Test_Force_Field {
         Square squareFF2 = grid.getSquareAtPosition(new Position(7, 0));
         ForceFieldArea forceFieldArea = grid.getForceFieldArea();
 
-        Item forceField1 = new ForceField(forceFieldArea);
-        Item forceField2 = new ForceField(forceFieldArea);
+        Item forceFieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forceFieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
 
-        squareFF1.addItem(forceField1);
-        squareFF2.addItem(forceField2);
+        squareFF1.addItem(forceFieldGenerator1);
+        squareFF2.addItem(forceFieldGenerator2);
         ForceFieldArea forceFieldArea1 = grid.getForceFieldArea();
-        forceFieldArea.placeForceField(forceField1, squareFF1);
-        forceFieldArea.placeForceField(forceField2, squareFF2);
+        forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
 
 
         assertFalse(squareFF1.isObstructed());
@@ -365,14 +365,14 @@ public class Test_Force_Field {
         Square squareFF2 = grid.getSquareAtPosition(new Position(7, 5));
         ForceFieldArea forceFieldArea = grid.getForceFieldArea();
 
-        Item forceField1 = new ForceField(forceFieldArea);
-        Item forceField2 = new ForceField(forceFieldArea);
+        Item forceFieldGenerator1 = new ForcefieldGenerator(forceFieldArea);
+        Item forceFieldGenerator2 = new ForcefieldGenerator(forceFieldArea);
 
-        squareFF1.addItem(forceField1);
-        squareFF2.addItem(forceField2);
+        squareFF1.addItem(forceFieldGenerator1);
+        squareFF2.addItem(forceFieldGenerator2);
 
-        forceFieldArea.placeForceField(forceField1, squareFF1);
-        forceFieldArea.placeForceField(forceField2, squareFF2);
+        forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
+        forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
 
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
@@ -396,8 +396,8 @@ public class Test_Force_Field {
        Square square = grid.getSquareAtPosition(new Position(0,0));
        ForceFieldArea forceFieldArea =  grid.getForceFieldArea();
 
-       forceFieldArea.placeForceField(new ForceField(forceFieldArea),square);
-       forceFieldArea.placeForceField(new ForceField(forceFieldArea),square);
+       forceFieldArea.placeForceField(new ForcefieldGenerator(forceFieldArea),square);
+       forceFieldArea.placeForceField(new ForcefieldGenerator(forceFieldArea),square);
 
    }
 
