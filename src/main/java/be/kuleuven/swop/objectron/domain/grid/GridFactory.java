@@ -68,6 +68,23 @@ public class GridFactory {
         return builder.getGrid();
     }
 
+    // Contstruct a grid with specified walls and without powerfailures
+    public static Grid gridWithSpecifiedWallsPowerFailuresItems(Dimension dimension, Position p1, Position p2, List<Position> wallPositions) throws GridTooSmallException {
+        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+        builder.initGrid(0);
+        List<Wall> walls = new ArrayList<Wall>();
+
+        for (Position position : wallPositions) {
+            Wall wall = new Wall();
+            wall.addSquare(builder.getGrid().getSquareAtPosition(position));
+            builder.getGrid().getSquareAtPosition(position).setObstructed(true);
+            walls.add(wall);
+        }
+        builder.buildWalls(walls);
+
+        return builder.getGrid();
+    }
+
     // Contstruct a grid without powerfailures
     public static Grid gridWithoutPowerFailures(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, p1, p2);

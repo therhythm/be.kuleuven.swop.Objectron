@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.*;
@@ -34,7 +35,6 @@ public class GridBuilder {
     private static final double PERCENTAGE_OF_LIGHTMINES = 0.02;
     private static final double PERCENTAGE_OF_IDENTITYDISCS = 0.02;
     private static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
-
 
 
     private Dimension dimension;
@@ -76,17 +76,44 @@ public class GridBuilder {
     }
 
     public Grid getGrid() {
-        return new Grid(squares, walls, dimension,forceFieldArea);
+        return new Grid(squares, walls, dimension, forceFieldArea);
     }
 
-    private Square calculateMiddleSquare() {
-        int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
-        int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
-        return squares[VIndex][HIndex];
+    /*
+   private Square calculateMiddleSquare() {
+       int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
+       int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
+       return squares[VIndex][HIndex];
+   }
+      */
+    private ArrayList<Square> getSquaresNotObstructed() {
+        ArrayList<Square> result = new ArrayList<Square>();
+        for (int i = 0; i < squares.length; i++) {
+            for (int j = 0; j < squares[i].length; j++) {
+
+                //Todo wall obstruction nodig zodat 2de chekc, na de || weg mag.
+                if (!squares[i][j].isObstructed() || (squares[i][j].getPosition().equals(p1Pos) || squares[i][j].getPosition().equals(p2Pos)))
+                    result.add(squares[i][j]);
+            }
+        }
+        return result;
     }
 
     private void placeChargedIdentityDisc() {
-        Square middle = calculateMiddleSquare();
+        ArrayList<Square> squaresNotObstructed = getSquaresNotObstructed();
+        Dijkstra dijkstra = new Dijkstra(squaresNotObstructed);
+        System.out.println("size squares not obstructed: " + squaresNotObstructed.size());
+        for (Square square : squaresNotObstructed) {
+            double distanceP1 = dijkstra.getShortestDistance(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], square);
+            double distanceP2 = dijkstra.getShortestDistance(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], square);
+            if (Math.abs(distanceP1 - distanceP2) <= 2) {
+                square.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
+                return;
+            }
+        }
+
+
+        /*Square middle = calculateMiddleSquare();
         ArrayList<Square> randomMiddleSquares = new ArrayList<Square>();
         randomMiddleSquares.add(middle);
         randomMiddleSquares.add(middle.getNeighbour(Direction.UP));
@@ -109,7 +136,7 @@ public class GridBuilder {
                 }
             }
             randomMiddleSquares.remove(randomIndex);
-        }
+        } */
     }
 
     public void buildItems() {
@@ -127,7 +154,7 @@ public class GridBuilder {
 
     private void placeForceFields(int numberOfItems) {
         List<Item> forceFields = new ArrayList<Item>();
-        for(int i = 0;i<numberOfItems;i++){
+        for (int i = 0; i < numberOfItems; i++) {
             ForceField forcefield = new ForceField(forceFieldArea);
             forceFields.add(forcefield);
         }
@@ -137,7 +164,7 @@ public class GridBuilder {
     private void placeIdentityDiscs(int numberOfItems) {
         placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
         placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
-        numberOfItems-=2;
+        numberOfItems -= 2;
         List<Item> identityDiscs = new ArrayList<Item>();
 
         for (int i = 0; i < numberOfItems; i++) {
