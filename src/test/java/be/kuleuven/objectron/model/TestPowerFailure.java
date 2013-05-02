@@ -74,7 +74,7 @@ public class TestPowerFailure implements SquareObserver {
         int remainingActionsAfterMove = state.getCurrentTurn().getActionsRemaining() - 1;
         movePlayerHandler.move(Direction.UP);
         state.endTurn();
-        assertEquals(4 - remainingActionsAfterMove, player.getRemainingPenalties());
+        assertEquals((1 + Turn.ACTIONS_EACH_TURN) - remainingActionsAfterMove, player.getRemainingPenalties());
     }
 
     @Test

@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -107,10 +108,10 @@ public class TestGrid {
             }
         }
         System.out.println(numberOfIdentityDiscsCharged);
-        assertTrue(numberOfLightMines <= 2);
-        assertTrue(numberOfTeleporters <= 3);
-        assertTrue(numberOfIdentitydiscs <= 2);
-        assertTrue(numberOfForceFields <= 7);
+        assertTrue(numberOfLightMines <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_LIGHTMINES * dimension.area()));
+        assertTrue(numberOfTeleporters <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_TELEPORTERS * dimension.area()));
+        assertTrue(numberOfIdentitydiscs <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_IDENTITYDISCS * dimension.area()));
+        assertTrue(numberOfForceFields <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_FORCEFIELDS * dimension.area()));
         assertTrue(numberOfIdentityDiscsCharged == 1);
         assertTrue(hasItems);
 
@@ -178,7 +179,7 @@ public class TestGrid {
 
     @Test(expected = IllegalArgumentException.class)
     public void test_getInvalidSquare() {
-        grid.getSquareAtPosition(new Position(11, 11));
+        grid.getSquareAtPosition(new Position(grid.getDimension().getHeight() + 1, grid.getDimension().getWidth() + 1));
     }
 
     @Test(expected = InvalidMoveException.class)

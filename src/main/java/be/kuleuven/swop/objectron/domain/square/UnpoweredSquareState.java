@@ -10,7 +10,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
  */
 public class UnpoweredSquareState implements SquareState {
     public static final int TURNS_WITHOUT_POWER = 3;
-    private static final int ACTIONS_TO_REDUCE = 1;
+    public static final int ACTIONS_TO_REDUCE = 1;
 
 
     private int remainingTurns = TURNS_WITHOUT_POWER;

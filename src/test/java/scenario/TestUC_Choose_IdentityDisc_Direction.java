@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
@@ -83,9 +84,9 @@ public class TestUC_Choose_IdentityDisc_Direction {
         // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 3);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 5);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN * 2 - 1);
         for (int i = 1; i < 3; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));

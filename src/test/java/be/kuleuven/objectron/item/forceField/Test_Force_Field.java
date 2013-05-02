@@ -406,21 +406,20 @@ public class Test_Force_Field {
 
         squareFF1.addItem(forceFieldGenerator1);
         squareFF2.addItem(forceFieldGenerator2);
-        ForceFieldArea forceFieldArea1 = grid.getForceFieldArea();
         forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
 
 
         assertFalse(squareFF1.isObstructed());
-        assertFalse(grid.getSquareAtPosition(new Position(7, 0)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(8, 0)).isObstructed());
         assertFalse(squareFF2.isObstructed());
         movePlayerHandler.move(Direction.RIGHT);
         assertFalse(squareFF1.isObstructed());
-        assertFalse(grid.getSquareAtPosition(new Position(7, 0)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(8, 0)).isObstructed());
         assertFalse(squareFF2.isObstructed());
         movePlayerHandler.move(Direction.RIGHT);
         assertTrue(squareFF1.isObstructed());
-        assertTrue(grid.getSquareAtPosition(new Position(7, 0)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(8, 0)).isObstructed());
         assertTrue(squareFF2.isObstructed());
 
     }

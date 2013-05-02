@@ -1,11 +1,13 @@
 package scenario;
 
+import be.kuleuven.swop.objectron.domain.Inventory;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -73,7 +75,7 @@ public class TestUC_pick_up_item {
         currentSquare.addItem(new LightMine());
         assertTrue(currentSquare.getAvailableItems().size() != 0);
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < Inventory.INVENTORY_LIMIT; i++) {
             player.pickupItem(0);
             currentSquare.addItem(new LightMine());
             gameState.endTurn();
@@ -86,7 +88,7 @@ public class TestUC_pick_up_item {
 
     @Test(expected = NotEnoughActionsException.class)
     public void test_no_more_actions() throws InventoryFullException, NotEnoughActionsException, IllegalStateException {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i <= Turn.ACTIONS_EACH_TURN ; i++) {
             currentSquare.addItem(new LightMine());
             pickUpItemHandler.pickUpItem(0);
         }
@@ -95,11 +97,11 @@ public class TestUC_pick_up_item {
     @Test(expected = NotEnoughActionsException.class)
     public void test_getAvailableItems_notEnoughActions() throws InventoryFullException, NotEnoughActionsException, SquareEmptyException {
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < Turn.ACTIONS_EACH_TURN; i++) {
             currentSquare.addItem(new LightMine());
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < Turn.ACTIONS_EACH_TURN; i++) {
             pickUpItemHandler.pickUpItem(0);
         }
 

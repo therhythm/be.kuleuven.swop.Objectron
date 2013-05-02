@@ -2,6 +2,7 @@ package be.kuleuven.objectron.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
@@ -105,10 +106,10 @@ public class Test_Identity_Disc {
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
         //System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 3);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
         // System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 5);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN - 1);
         for (int i = 1; i < 5; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
@@ -159,7 +160,7 @@ public class Test_Identity_Disc {
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentIdentityDisc(Direction.UP);
-        for (int i = 9; i > 4; i--) {
+        for (int i = 9; i >= (9-NormalIdentityDiscBehavior.MAX_RANGE); i--) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, i));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
         }
@@ -230,7 +231,7 @@ public class Test_Identity_Disc {
 
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
         assertFalse(state.getCurrentPlayer().equals(current_player));
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 6);
+        assertTrue(state.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN*2);
     }
 
     @Test
