@@ -17,7 +17,8 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 9:50
  * To change this template use File | Settings | File Templates.
  */
-public class ForcefieldGenerator implements Item{
+public class ForcefieldGenerator implements Item {
+
     private final String name = "Force Field";
     private ForceFieldArea forcefieldArea;
 
