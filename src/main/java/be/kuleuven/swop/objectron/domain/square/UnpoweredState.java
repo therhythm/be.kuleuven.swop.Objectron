@@ -12,16 +12,14 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
  *         Time: 03:01
  */
 public class UnpoweredState implements PowerState {
-    public static final int TURNS_WITHOUT_POWER = 3;
     public static final int ACTIONS_TO_REDUCE = 1;
 
     private Square context;
-    private int remainingTurns;
-    private int remainingActions;
+    private int remainingTurns = 0;
+    private int remainingActions = 0;
 
     public UnpoweredState(Square context) {
         this.context = context;
-        this.remainingTurns = TURNS_WITHOUT_POWER;
     }
 
     @Override
@@ -35,6 +33,8 @@ public class UnpoweredState implements PowerState {
 
     private void checkTransition() {
         if (remainingTurns <= 0 && remainingActions <= 0) {
+            remainingActions = 0;
+            remainingTurns = 0;
             context.transitionState(new PoweredState(context));
             context.notifyPowered();
         }

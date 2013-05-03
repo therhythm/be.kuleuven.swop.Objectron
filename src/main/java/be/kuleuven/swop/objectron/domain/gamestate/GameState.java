@@ -96,6 +96,10 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         return false;
     }
 
+    public void endAction(){
+        gameGrid.endAction();
+    }
+
     @Override
     public void attach(GameObserver observer) {
         observers.add(observer);

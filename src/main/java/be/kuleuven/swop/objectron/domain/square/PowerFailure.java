@@ -95,21 +95,19 @@ public class PowerFailure {
         secondaryNeighbours.add(direction);
         secondaryNeighbours.add(direction.previous());
         secondaryNeighbours.add(direction.next());
-        /*
-        Map<Direction, Square> secondaryNeighbours = new HashMap<Direction, Square>();
-        secondaryNeighbours.put(direction, secondarySquare.getNeighbour(direction));
-        secondaryNeighbours.put(direction.previous(), secondarySquare.getNeighbour(direction.previous()));
-        secondaryNeighbours.put(direction.next(), secondarySquare.getNeighbour(direction.next()));
-          */
-        PowerFailure secondaryFailure = new PowerFailure(secondarySquare, secondaryNeighbours);
 
-        secondaryFailure.receiveSecondaryPowerFailure(direction);
+
+            PowerFailure secondaryFailure = new PowerFailure(secondarySquare, secondaryNeighbours);
+            secondaryFailure.receiveSecondaryPowerFailure(direction);
+
         this.prevDirection = direction;
     }
 
     public void receiveSecondaryPowerFailure(Direction d){
+        if(currentSquare != null){
             currentSquare.receivePowerFailure(PF_SECONDARY_TURNS, PF_SECONDARY_ACTIONS);
             passTertiaryPowerFailure(d);
+        }
     }
 
 

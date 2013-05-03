@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.square.PowerFailure;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -15,6 +16,7 @@ import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -34,8 +36,8 @@ public class TestSquare {
     private Dimension dimension;
     private Grid grid;
     private MovePlayerHandler movePlayerHandler;
-    //todo
-    /*
+
+
     @Before
     public void setUp() throws GridTooSmallException, SquareOccupiedException {
         p1Pos = new Position(5, 4);
@@ -45,33 +47,30 @@ public class TestSquare {
         gamestate = new GameState("p1", "p2", p1Pos, p2Pos, grid);
 
         square = new Square(new Position(5, 5));
-        square.setActiveItem(new LightMine());
-        player1 = gamestate.getCurrentPlayer();
-        gamestate.endTurn();
-        player2 = gamestate.getCurrentPlayer();
-        //player = new Player("test", new Square(new Position(5, 4)));
+        new LightMine().place(square);
+        player1 = gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer();
+        gamestate.getTurnManager().endTurn();
+        player2 = gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer();
         movePlayerHandler = new MovePlayerHandler(gamestate);
     }
 
 
     @Test
-<<<<<<< HEAD
     public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException {
         Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
-        otherSquare.receivePowerFailure();
+        otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         movePlayerHandler.move(Direction.LEFT);
-        System.out.println(gamestate.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
-        assertTrue(gamestate.getCurrentTurn().getActionsRemaining() == (Turn.ACTIONS_EACH_TURN - UnpoweredSquareState.ACTIONS_TO_REDUCE));
-    }        */
-=======
-    public void test_square_lose_power(){
+        assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), (Turn.ACTIONS_EACH_TURN - PowerFailure.PF_PRIMARY_TURNS));
+    }
+
+    @Test
+    public void test_square_lose_power_start(){
         Square otherSquare = new Square(new Position(5, 3));
-        Player otherPlayer = new Player("tester", otherSquare);
-        otherSquare.receivePrimaryPowerFailure();
-        otherSquare.newTurn(otherPlayer);
-        assertEquals(otherPlayer.getAvailableActions(),2);
-    } */
->>>>>>> powerfailure
+        new Player("tester", otherSquare);
+        otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
+        gamestate.getTurnManager().endTurn();
+        assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), 2);
+    }
 
 
 }
