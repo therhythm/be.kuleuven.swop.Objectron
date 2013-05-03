@@ -19,13 +19,22 @@ public class Teleporter implements Effect {
         this.location = location;
     }
 
-    @Override
+    //todo change activate signature... but lightmine needs a fix first
     public void activate(Movable movable) {
-        movable.getTeleportStrategy().teleport(movable,this);
+        try {
+            movable.getTeleportStrategy().teleport(movable,this);
+        } catch (InvalidMoveException e) {
+            //TODO check exception..
+        }
     }
 
     public void teleport(Movable movable) throws InvalidMoveException {
         movable.enter(destination.getLocation());
+    }
+
+    @Override
+    public void activate(Turn currentTurn) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

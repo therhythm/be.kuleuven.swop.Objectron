@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.domain.movement.teleport;
 
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 
@@ -9,5 +10,5 @@ import be.kuleuven.swop.objectron.domain.movement.Movable;
  *         Time: 00:25
  */
 public interface TeleportStrategy {
-    void teleport(Movable movable, Teleporter context);
+    void teleport(Movable movable, Teleporter context) throws InvalidMoveException;
 }
