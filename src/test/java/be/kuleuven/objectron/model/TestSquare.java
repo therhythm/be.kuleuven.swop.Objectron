@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -59,15 +60,14 @@ public class TestSquare {
     public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException {
         Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
         otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
-        movePlayerHandler.move(Direction.LEFT);
-        assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), (Turn.ACTIONS_EACH_TURN - PowerFailure.PF_PRIMARY_TURNS));
+        movePlayerHandler.move(Direction.UP);
+        assertNotEquals(player2, gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer());
     }
 
     @Test
-    public void test_square_lose_power_start(){
-        Square otherSquare = new Square(new Position(5, 3));
-        new Player("tester", otherSquare);
-        otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
+    public void test_action_loss_unpowered(){
+        Square square = grid.getSquareAtPosition(new Position(5,4));
+        square.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         gamestate.getTurnManager().endTurn();
         assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), 2);
     }
