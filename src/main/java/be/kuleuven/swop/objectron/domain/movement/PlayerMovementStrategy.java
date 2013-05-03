@@ -17,6 +17,10 @@ public class PlayerMovementStrategy implements MovementStrategy {
     public static final int POWERFAILURE_ACTION_REDUCTION = 1;
     TurnManager turnManager;
 
+    public PlayerMovementStrategy(TurnManager turnManager) {
+        this.turnManager = turnManager;
+    }
+
     @Override
     public void powerFailure(boolean hasLightMine) {
         if(hasLightMine){
@@ -28,7 +32,9 @@ public class PlayerMovementStrategy implements MovementStrategy {
 
     @Override
     public void hitPlayer(Player player) throws InvalidMoveException {
-        throw new InvalidMoveException();
+        if(!player.equals(turnManager.getCurrentTurn().getCurrentPlayer())){
+            throw new InvalidMoveException();
+        }
     }
 
     @Override

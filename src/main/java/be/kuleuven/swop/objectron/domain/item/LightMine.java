@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.effect.EffectVisitor;
+import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -26,9 +27,9 @@ public class LightMine implements Item, Effect {
     }
 
     @Override
-    public void activate(Turn currentTurn) {
+    public void activate(Movable movable, TurnManager manager) {
         if(isActive){
-            currentTurn.reduceRemainingActions(NB_ACTIONS_BLINDED);
+            manager.getCurrentTurn().reduceRemainingActions(NB_ACTIONS_BLINDED);
             isActive = false;
         }
     }

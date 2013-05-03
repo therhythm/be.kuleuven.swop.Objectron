@@ -42,6 +42,7 @@ public class GridFactory {
         for (Position position : wallPositions) {
             Wall wall = new Wall();
             wall.addSquare(builder.getGrid().getSquareAtPosition(position));
+            builder.getGrid().getSquareAtPosition(position).addObstruction(wall);
             walls.add(wall);
         }
         builder.buildWalls(walls);
@@ -59,7 +60,7 @@ public class GridFactory {
         for (Position position : wallPositions) {
             Wall wall = new Wall();
             wall.addSquare(builder.getGrid().getSquareAtPosition(position));
-            builder.getGrid().getSquareAtPosition(position).setObstructed(true);
+            builder.getGrid().getSquareAtPosition(position).addObstruction(wall);
             walls.add(wall);
         }
         builder.buildWalls(walls);
@@ -77,7 +78,7 @@ public class GridFactory {
         for (Position position : wallPositions) {
             Wall wall = new Wall();
             wall.addSquare(builder.getGrid().getSquareAtPosition(position));
-            builder.getGrid().getSquareAtPosition(position).setObstructed(true);
+            builder.getGrid().getSquareAtPosition(position).addObstruction(wall);
             walls.add(wall);
         }
         builder.buildWalls(walls);

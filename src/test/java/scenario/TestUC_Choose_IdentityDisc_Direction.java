@@ -80,9 +80,12 @@ public class TestUC_Choose_IdentityDisc_Direction {
         movePlayerHandler.move(Direction.RIGHT);
         endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.RIGHT);
-        Player player2 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
-        // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
+
+         System.out.println("test: " + state.getTurnManager().getCurrentTurn().getCurrentPlayer().getCurrentSquare());
+
         endTurnHandler.endTurn();
+
+        System.out.println("test: " + state.getTurnManager().getCurrentTurn().getCurrentPlayer().getCurrentSquare());
         useItemHandler.selectItemFromInventory(0);
 
         assertTrue(state.getTurnManager().getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN);

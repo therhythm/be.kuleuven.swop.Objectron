@@ -4,6 +4,7 @@ package be.kuleuven.swop.objectron.domain.square;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Obstruction;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -31,7 +32,6 @@ public class Square implements Observable<SquareObserver> {
     private Map<Direction, Square> neighbours = new HashMap<>();
     private List<Item> items = new ArrayList<>();
     private List<Effect> effects = new ArrayList<>();
-    private boolean isObstructed = false;
     private int powerFailureChance = POWER_FAILURE_CHANCE;
     private Set<Obstruction> obstructions = new HashSet<>();
 
@@ -57,14 +57,14 @@ public class Square implements Observable<SquareObserver> {
         return !obstructions.isEmpty();
     }
 
-    public void stepOn(Movable movable) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
         for(Obstruction obstruction : obstructions){
             obstruction.hit(movable.getMovementStrategy());
         }
         state.stepOn(movable.getMovementStrategy());
 
         for(Effect effect : effects){
-            //effect.activate();
+            effect.activate(movable, manager);
         }
     }
 

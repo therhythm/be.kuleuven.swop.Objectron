@@ -75,13 +75,9 @@ public class TestPowerFailure implements SquareObserver {
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure();
         int remainingActionsAfterMove = state.getTurnManager().getCurrentTurn().getActionsRemaining() - 1;
         movePlayerHandler.move(Direction.UP);
-<<<<<<< HEAD:src/test/java/be/kuleuven/swop/objectron/domain/square/TestPowerFailure.java
+
         state.getTurnManager().endTurn();
-        assertEquals(4 - remainingActionsAfterMove, player.getRemainingPenalties());
-=======
-        state.endTurn();
-        assertEquals((1 + Turn.ACTIONS_EACH_TURN) - remainingActionsAfterMove, player.getRemainingPenalties());
->>>>>>> testCleanUp:src/test/java/be/kuleuven/objectron/model/TestPowerFailure.java
+        assertEquals(1 + Turn.ACTIONS_EACH_TURN - remainingActionsAfterMove, player.getRemainingPenalties());
     }
 
     @Test

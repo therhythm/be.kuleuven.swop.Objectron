@@ -2,11 +2,11 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-<<<<<<< HEAD:src/test/java/be/kuleuven/swop/objectron/domain/item/Test_Identity_Disc.java
+
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-=======
+
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
->>>>>>> testCleanUp:src/test/java/be/kuleuven/objectron/item/Test_Identity_Disc.java
+
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
@@ -107,17 +107,12 @@ public class Test_Identity_Disc {
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
         //System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-<<<<<<< HEAD:src/test/java/be/kuleuven/swop/objectron/domain/item/Test_Identity_Disc.java
-        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == 3);
+
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
         // System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == 5);
-=======
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN);
-        useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-        // System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN - 1);
->>>>>>> testCleanUp:src/test/java/be/kuleuven/objectron/item/Test_Identity_Disc.java
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN * 2 -1);
+
         for (int i = 1; i < 5; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
@@ -239,13 +234,8 @@ public class Test_Identity_Disc {
         Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 7));
 
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
-<<<<<<< HEAD:src/test/java/be/kuleuven/swop/objectron/domain/item/Test_Identity_Disc.java
         assertFalse(turnManager.getCurrentTurn().getCurrentPlayer().equals(current_player));
-        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == 6);
-=======
-        assertFalse(state.getCurrentPlayer().equals(current_player));
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN*2);
->>>>>>> testCleanUp:src/test/java/be/kuleuven/objectron/item/Test_Identity_Disc.java
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN*2);
     }
 
     @Test

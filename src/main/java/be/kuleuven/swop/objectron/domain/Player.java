@@ -4,10 +4,12 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
+import be.kuleuven.swop.objectron.domain.movement.PlayerMovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.PlayerTeleportStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -32,13 +34,14 @@ public class Player implements Movable, Obstruction{
     private int remainingPenalties;
     private boolean isTeleporting;
     private TeleportStrategy teleportStrategy;
+    private MovementStrategy movementStrategy;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
         this.initialSquare = currentSquare;
         currentSquare.addObstruction(this);
-        teleportStrategy = new PlayerTeleportStrategy();
+        this.teleportStrategy = new PlayerTeleportStrategy();
     }
 
     public Square getCurrentSquare() {
@@ -61,11 +64,11 @@ public class Player implements Movable, Obstruction{
         actionPerformed();
     }
 
-    public void move(Square newPosition) throws InvalidMoveException {
+    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException {
         actionPerformed();
-
+        this.movementStrategy = new PlayerMovementStrategy(manager);
         try {
-            enter(newPosition);
+            enter(newPosition, manager);
         } catch (PlayerHitException | ForceFieldHitException | WallHitException e) {
             throw new InvalidMoveException();
         }
@@ -73,11 +76,12 @@ public class Player implements Movable, Obstruction{
     }
 
     @Override
-    public void enter(Square newPosition) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
-        currentSquare.stepOn(this);
+    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
         lightTrail.expand(currentSquare);
-        currentSquare.addObstruction(this);
+        currentSquare.removeObstruction(this);
+        newPosition.addObstruction(this);
         currentSquare = newPosition;
+        newPosition.stepOn(this, manager);
     }
 
     public void teleport(Square destination) {
@@ -152,7 +156,7 @@ public class Player implements Movable, Obstruction{
 
     @Override
     public MovementStrategy getMovementStrategy() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return movementStrategy;
     }
 
     @Override

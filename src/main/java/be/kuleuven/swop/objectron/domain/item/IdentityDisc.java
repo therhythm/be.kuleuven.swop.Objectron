@@ -30,7 +30,7 @@ public class IdentityDisc implements Item, Movable {
     public IdentityDisc(IdentityDiscBehavior identityDiscBehavior) {
         this.identityDiscBehavior = identityDiscBehavior;
         this.teleportStrategy = new IdentityDiscTeleportStrategy();
-        this.movementStrategy = new IdentityDiscMovementStrategy();
+
     }
 
     @Override
@@ -48,6 +48,7 @@ public class IdentityDisc implements Item, Movable {
         if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
+        movementStrategy = new IdentityDiscMovementStrategy(turnManager, identityDiscBehavior);
 
         Square currentSquare = sourceSquare;
         Square neighbor = currentSquare.getNeighbour(targetDirection);
@@ -58,7 +59,7 @@ public class IdentityDisc implements Item, Movable {
                 break;
 
             try {
-                neighbor.stepOn(this);
+                neighbor.stepOn(this, turnManager);
             } catch (InvalidMoveException e) {
                 break;
             } catch (WallHitException e) {
@@ -111,7 +112,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void enter(Square square) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
-        square.stepOn(this);
+    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+        square.stepOn(this, manager);
     }
 }

@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item.effect;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
@@ -22,22 +23,17 @@ public class Teleporter implements Effect {
         this.location = location;
     }
 
-    //todo change activate signature... but lightmine needs a fix first
-    public void activate(Movable movable) {
+    @Override
+    public void activate(Movable movable, TurnManager manager) {
         try {
-            movable.getTeleportStrategy().teleport(movable,this);
-        } catch (InvalidMoveException e) {
-            //TODO check exception..
+            movable.getTeleportStrategy().teleport(movable,this, manager);
+        } catch (InvalidMoveException | WallHitException | ForceFieldHitException | PlayerHitException e) {
+            // teleportation not possible.. do nothing
         }
     }
 
-    public void teleport(Movable movable) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
-        movable.enter(destination.getLocation());
-    }
-
-    @Override
-    public void activate(Turn currentTurn) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void teleport(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+        movable.enter(destination.getLocation(), manager);
     }
 
     @Override
@@ -51,5 +47,9 @@ public class Teleporter implements Effect {
 
     public Square getLocation() {
         return location;
+    }
+
+    public Teleporter getDestination() {
+        return destination;
     }
 }

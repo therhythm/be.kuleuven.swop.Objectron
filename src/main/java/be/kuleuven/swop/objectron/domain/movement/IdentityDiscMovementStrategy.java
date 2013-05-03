@@ -21,6 +21,12 @@ public class IdentityDiscMovementStrategy implements MovementStrategy{
     private TurnManager turnManager;
     private IdentityDiscBehavior identityDiscBehavior;
 
+
+    public IdentityDiscMovementStrategy(TurnManager turnManager, IdentityDiscBehavior identityDiscBehavior) {
+        this.turnManager = turnManager;
+        this.identityDiscBehavior = identityDiscBehavior;
+    }
+
     @Override
     public void powerFailure(boolean hasLightMine) {
         identityDiscBehavior.moved();

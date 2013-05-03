@@ -17,22 +17,12 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 9:50
  * To change this template use File | Settings | File Templates.
  */
-public class ForcefieldGenerator implements Item, Effect {
+public class ForcefieldGenerator implements Item{
     private final String name = "Force Field";
     private ForceFieldArea forcefieldArea;
 
     public ForcefieldGenerator(ForceFieldArea forcefieldArea) {
         this.forcefieldArea = forcefieldArea;
-    }
-
-    @Override
-    public void activate(Turn currentTurn) {
-        // forcefieldArea.placeForceField(this,currentTurn);
-    }
-
-    @Override
-    public void accept(EffectVisitor visitor) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -54,13 +44,4 @@ public class ForcefieldGenerator implements Item, Effect {
     public void pickedUp() {
         forcefieldArea.pickUpForceField(this);
     }
-         /*
-    @Override
-    public void addToSquare(Square targetSquare) throws SquareOccupiedException {
-        if (targetSquare == null)
-            forcefieldArea.pickUpForceField(this, targetSquare);
-         else
-           forcefieldArea.placeForceField(this, targetSquare);
-
-    }  */
 }

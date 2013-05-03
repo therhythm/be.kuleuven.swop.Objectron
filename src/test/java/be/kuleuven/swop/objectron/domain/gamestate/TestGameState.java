@@ -50,7 +50,7 @@ public class TestGameState {
         handler.move(Direction.DOWN);
         manager.endTurn();
         Square sq = state.getGrid().getSquareAtPosition(new Position(0, 0));
-        manager.getCurrentTurn().getCurrentPlayer().move(sq);
+        manager.getCurrentTurn().getCurrentPlayer().move(sq, manager);
 
         assertTrue(state.checkWin());
     }

@@ -134,4 +134,8 @@ public class Grid implements TurnSwitchObserver {
         }
         return result;
     }
+
+    public Dimension getDimension() {
+        return dimension;
+    }
 }

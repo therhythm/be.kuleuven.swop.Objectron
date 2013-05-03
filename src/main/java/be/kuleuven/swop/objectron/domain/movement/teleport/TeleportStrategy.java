@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.movement.teleport;
 
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
@@ -13,5 +14,5 @@ import be.kuleuven.swop.objectron.exception.WallHitException;
  *         Time: 00:25
  */
 public interface TeleportStrategy {
-    void teleport(Movable movable, Teleporter context) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException;
+    void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException;
 }

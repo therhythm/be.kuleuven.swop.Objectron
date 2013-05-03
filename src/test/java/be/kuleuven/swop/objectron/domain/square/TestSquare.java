@@ -2,14 +2,19 @@ package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
+import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,7 +48,7 @@ public class TestSquare {
 
 
     @Test
-    public void test_step_on_active_item(){
+    public void test_step_on_active_item() throws InvalidMoveException, ForceFieldHitException, WallHitException, PlayerHitException {
         Effect found = null;
         for(Effect effect : square.getEffects()){
             if(effect.equals(item)) {
@@ -53,7 +58,7 @@ public class TestSquare {
         }
         assertTrue(found != null);
 
-        square.stepOn(turnManager);
+        square.stepOn(mock(Movable.class), turnManager);
 
         found = null;
         for(Effect effect : square.getEffects()){

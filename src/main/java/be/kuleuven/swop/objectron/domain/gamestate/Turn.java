@@ -64,7 +64,6 @@ public class Turn implements Observable<TurnObserver> {
     }
 
     public void reduceRemainingActions(int amount) {
-        notifyObservers();
         if (actionsRemaining > amount) {
             actionsRemaining -= amount;
         } else {

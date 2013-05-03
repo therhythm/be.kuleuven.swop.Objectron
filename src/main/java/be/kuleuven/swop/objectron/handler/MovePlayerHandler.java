@@ -48,7 +48,7 @@ public class MovePlayerHandler extends Handler {
             currentTurn.checkEnoughActions();
             Player current = currentTurn.getCurrentPlayer();
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
-            current.move(newSquare);
+            current.move(newSquare, turnManager);
             //newSquare.stepOn(turnManager);
             currentTurn.setMoved();
             if (state.checkWin())
