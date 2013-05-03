@@ -158,7 +158,7 @@ public class Square implements Observable<SquareObserver> {
 
     public void newTurn(Turn currentTurn) {
         if (losingPower()) {
-            powerFailure = new PowerFailure(this, neighbours);
+            powerFailure = new PowerFailure(this);
             powerFailure.receivePrimaryPowerFailure();
         }
         boolean currentSquare = currentTurn.getCurrentPlayer().getCurrentSquare().equals(this);

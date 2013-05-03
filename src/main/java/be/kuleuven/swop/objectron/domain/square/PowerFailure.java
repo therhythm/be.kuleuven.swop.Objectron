@@ -30,16 +30,22 @@ public class PowerFailure {
     private int rotateCounter;
 
     private Square currentSquare;
-    private Map<Direction, Square> neighbours;
+    private List<Direction> directions;
 
-    public PowerFailure(Square currentSquare, Map<Direction, Square> neighbours){
+    public PowerFailure(Square currentSquare,ArrayList<Direction> directions){
         this.currentSquare = currentSquare;
-        this.neighbours = neighbours;
+        this.directions = directions;
 
     }
 
+
     public PowerFailure(Square currentSquare){
         this.currentSquare = currentSquare;
+        this.directions = new ArrayList<Direction>();
+
+        for(Direction direction : Direction.values()){
+            directions.add(direction);
+        }
     }
 
     public void receivePrimaryPowerFailure(){
@@ -56,7 +62,7 @@ public class PowerFailure {
             else
                 this.prevDirection = prevDirection.previous();
 
-            Square mustReceiveFailure =  neighbours.get(prevDirection);
+            Square mustReceiveFailure =  currentSquare.getNeighbour(prevDirection);
             if(mustReceiveFailure != null){
                passSecondaryPowerFailure(mustReceiveFailure, prevDirection);
             }
@@ -72,11 +78,11 @@ public class PowerFailure {
             this.rotateDirection = DIRECTION_COUNTER_CLOCKWISE;
         }
 
-        int startSquare = (int) Math.floor(Math.random() * neighbours.size());
+        int startSquare = (int) Math.floor(Math.random() * directions.size());
         int i = 0;
-        for(Direction d: neighbours.keySet()){
+        for(Direction d: directions){
             if(i == startSquare){
-                passSecondaryPowerFailure(neighbours.get(d), d);
+                passSecondaryPowerFailure(currentSquare.getNeighbour(d), d);
 
             }
 
@@ -85,11 +91,16 @@ public class PowerFailure {
     }
 
     private void passSecondaryPowerFailure(Square secondarySquare, Direction direction){
+        ArrayList<Direction>  secondaryNeighbours = new ArrayList<Direction>();
+        secondaryNeighbours.add(direction);
+        secondaryNeighbours.add(direction.previous());
+        secondaryNeighbours.add(direction.next());
+        /*
         Map<Direction, Square> secondaryNeighbours = new HashMap<Direction, Square>();
         secondaryNeighbours.put(direction, secondarySquare.getNeighbour(direction));
         secondaryNeighbours.put(direction.previous(), secondarySquare.getNeighbour(direction.previous()));
         secondaryNeighbours.put(direction.next(), secondarySquare.getNeighbour(direction.next()));
-
+          */
         PowerFailure secondaryFailure = new PowerFailure(secondarySquare, secondaryNeighbours);
 
         secondaryFailure.receiveSecondaryPowerFailure(direction);
@@ -109,7 +120,7 @@ public class PowerFailure {
         possibleDirections.add(d.previous());
 
         int index = (int) Math.floor(Math.random() * possibleDirections.size());
-        Square neighbour = neighbours.get(possibleDirections.get(index));
+        Square neighbour = currentSquare.getNeighbour((possibleDirections.get(index)));
         if(neighbour != null){
             PowerFailure tertiaryFailure = new PowerFailure(neighbour);
             tertiaryFailure.receiveTertiaryPowerFailure();
