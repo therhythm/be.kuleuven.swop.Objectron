@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.square.PowerFailure;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.square.UnpoweredSquareState;
@@ -54,14 +55,14 @@ public class TestPowerFailure implements SquareObserver {
     @Test
     public void testStartUnpowered() {
         state.endTurn();
-        currentSquare.receivePrimaryPowerFailure();
+        currentSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         state.endTurn();
         assertEquals(Turn.ACTIONS_EACH_TURN - 1, state.getCurrentTurn().getActionsRemaining());
     }
 
     @Test
     public void testStepOnUnpoweredSquare() throws GameOverException, InvalidMoveException, NotEnoughActionsException {
-        currentSquare.getNeighbour(Direction.UP).receivePrimaryPowerFailure();
+        currentSquare.getNeighbour(Direction.UP).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         assertEquals(player, state.getCurrentPlayer());
         movePlayerHandler.move(Direction.UP);
         assertNotEquals(player, state.getCurrentPlayer());
@@ -70,7 +71,7 @@ public class TestPowerFailure implements SquareObserver {
     @Test
     public void testStepOnActiveUnpowered() throws NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException {
         currentSquare.getNeighbour(Direction.UP).setActiveItem(new LightMine());
-        currentSquare.getNeighbour(Direction.UP).receivePrimaryPowerFailure();
+        currentSquare.getNeighbour(Direction.UP).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         int remainingActionsAfterMove = state.getCurrentTurn().getActionsRemaining() - 1;
         movePlayerHandler.move(Direction.UP);
         state.endTurn();
@@ -95,9 +96,9 @@ public class TestPowerFailure implements SquareObserver {
 
     @Test
     public void testRegainPower() {
-        currentSquare.receivePrimaryPowerFailure();
+        currentSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         currentSquare.attach(this);
-        for (int i = 0; i < Square.PF_PRIMARY_TURNS; i++) {
+        for (int i = 0; i < PowerFailure.PF_PRIMARY_TURNS; i++) {
             state.endTurn();
         }
         assertEquals(true, regainedPower);
