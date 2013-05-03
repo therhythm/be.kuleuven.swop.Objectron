@@ -18,5 +18,7 @@ public interface PowerState {
 
     void stepOn(MovementStrategy movementStrategy);
 
-    void powerFailure();
+    void powerFailure(int turns, int actions);
+
+    void endAction();
 }

@@ -17,6 +17,7 @@ public class UnpoweredState implements PowerState {
 
     private Square context;
     private int remainingTurns;
+    private int remainingActions;
 
     public UnpoweredState(Square context) {
         this.context = context;
@@ -29,7 +30,11 @@ public class UnpoweredState implements PowerState {
             currentTurn.reduceRemainingActions(ACTIONS_TO_REDUCE);
         }
         remainingTurns--;
-        if (remainingTurns == 0) {
+        checkTransition();
+    }
+
+    private void checkTransition() {
+        if (remainingTurns <= 0 && remainingActions <= 0) {
             context.transitionState(new PoweredState(context));
             context.notifyPowered();
         }
@@ -46,7 +51,14 @@ public class UnpoweredState implements PowerState {
     }
 
     @Override
-    public void powerFailure() {
-        remainingTurns = TURNS_WITHOUT_POWER;
+    public void powerFailure(int turns, int actions) {
+        remainingTurns += turns;
+        remainingActions += actions;
+    }
+
+    @Override
+    public void endAction() {
+        remainingActions--;
+        checkTransition();
     }
 }

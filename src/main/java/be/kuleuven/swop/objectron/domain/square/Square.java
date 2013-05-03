@@ -24,7 +24,9 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Observable<SquareObserver> {
-    public static final int POWER_FAILURE_CHANCE = 5;
+    public static final int POWER_FAILURE_CHANCE = 1; //TODO public
+
+    PowerFailure powerFailure;
     private final Position position;
 
     private Set<SquareObserver> observers = new HashSet<>();
@@ -34,6 +36,7 @@ public class Square implements Observable<SquareObserver> {
     private List<Effect> effects = new ArrayList<>();
     private int powerFailureChance = POWER_FAILURE_CHANCE;
     private Set<Obstruction> obstructions = new HashSet<>();
+
 
     public Square(final Position position) {
         this.position = position;
@@ -126,8 +129,9 @@ public class Square implements Observable<SquareObserver> {
         this.state = newState;
     }
 
-    public void receivePowerFailure() {
-        state.powerFailure();
+
+    public void receivePowerFailure(int turns, int actions) {
+        state.powerFailure(turns, actions);
         notifyPowerFailure();
     }
 
@@ -138,12 +142,17 @@ public class Square implements Observable<SquareObserver> {
 
     public void newTurn(Turn currentTurn) {   //todo observer
         if (losingPower()) {
-            receivePowerFailure();
-            for (Square neighbour : neighbours.values()) {
-                neighbour.receivePowerFailure();
-            }
+            powerFailure = new PowerFailure(this);
+            powerFailure.receivePrimaryPowerFailure();
         }
         state.newTurn(currentTurn);
+    }
+
+    public void endAction(){
+       state.endAction();
+       if(powerFailure != null) {
+            powerFailure.rotate();
+       }
     }
 
     @Override
@@ -163,6 +172,7 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public void notifyPowered() {
+        powerFailure = null;
         for (SquareObserver observer : observers) {
             observer.regainedPower(this.position);
         }

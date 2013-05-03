@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.square.PowerFailure;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -125,7 +126,7 @@ public class GridFactory {
         // powerfailure on every square
         for (int x = 0; x < dimension.getWidth(); x++) {
             for (int y = 0; y < dimension.getHeight(); y++) {
-                g.getSquareAtPosition(new Position(x, y)).receivePowerFailure();
+                g.getSquareAtPosition(new Position(x, y)).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
             }
         }
         return g;
@@ -141,7 +142,7 @@ public class GridFactory {
         // powerfailure on every square
         for (int x = 0; x < dimension.getWidth(); x++) {
             for (int y = 0; y < dimension.getHeight(); y++) {
-                g.getSquareAtPosition(new Position(x, y)).receivePowerFailure();
+                g.getSquareAtPosition(new Position(x, y)).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
             }
         }
         return g;

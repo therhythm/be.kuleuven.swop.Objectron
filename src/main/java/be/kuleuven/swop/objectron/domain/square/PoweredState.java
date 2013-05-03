@@ -28,7 +28,15 @@ public class PoweredState implements PowerState {
     }
 
     @Override
-    public void powerFailure() {
-        context.transitionState(new UnpoweredState(context));
+    public void powerFailure(int turns, int actions) {
+        PowerState state = new UnpoweredState(context);
+        context.transitionState(state);
+        state.powerFailure(turns, actions);
     }
+
+    @Override
+    public void endAction() {
+        // do nothing
+    }
+
 }

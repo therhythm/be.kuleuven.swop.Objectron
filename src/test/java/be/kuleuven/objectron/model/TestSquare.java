@@ -55,6 +55,7 @@ public class TestSquare {
 
 
     @Test
+<<<<<<< HEAD
     public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException {
         Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
         otherSquare.receivePowerFailure();
@@ -62,6 +63,15 @@ public class TestSquare {
         System.out.println(gamestate.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
         assertTrue(gamestate.getCurrentTurn().getActionsRemaining() == (Turn.ACTIONS_EACH_TURN - UnpoweredSquareState.ACTIONS_TO_REDUCE));
     }        */
+=======
+    public void test_square_lose_power(){
+        Square otherSquare = new Square(new Position(5, 3));
+        Player otherPlayer = new Player("tester", otherSquare);
+        otherSquare.receivePrimaryPowerFailure();
+        otherSquare.newTurn(otherPlayer);
+        assertEquals(otherPlayer.getAvailableActions(),2);
+    } */
+>>>>>>> powerfailure
 
 
 }

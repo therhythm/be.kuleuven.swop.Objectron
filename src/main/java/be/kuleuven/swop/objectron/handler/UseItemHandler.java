@@ -86,6 +86,7 @@ public class UseItemHandler extends Handler {
         ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare());
         currentTurn.getCurrentPlayer().useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
         state.getTurnManager().getCurrentTurn().setCurrentItem(null);
+
     }
 
     public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {

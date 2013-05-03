@@ -79,6 +79,21 @@ public class Grid implements TurnSwitchObserver {
         }
         return wallViewModels;
     }
+    public void newTurn(Turn currentTurn) {
+        for (Square[] square : squares) {
+            for (Square sq : square) {
+                sq.newTurn(currentTurn);
+            }
+        }
+    }
+
+    public void endAction(){
+        for (Square[] square : squares) {
+            for (Square sq : square) {
+                sq.endAction();
+            }
+        }
+    }
 
     public Map<Position, List<Item>> getItems() {
         Map<Position, List<Item>> items = new HashMap<>();
