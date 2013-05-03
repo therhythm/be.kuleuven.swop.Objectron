@@ -52,6 +52,7 @@ public class MovePlayerHandler extends Handler {
                 throw new GameOverException(current.getName() + ", you win the game!");
 
             currentTurn.reduceRemainingActions(1);
+            state.endAction();
             state.notifyObservers();
         } catch (InvalidMoveException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");

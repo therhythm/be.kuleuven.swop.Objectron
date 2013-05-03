@@ -81,6 +81,14 @@ public class Grid {
         }
     }
 
+    public void endAction(){
+        for (Square[] square : squares) {
+            for (Square sq : square) {
+                sq.endAction();
+            }
+        }
+    }
+
     public boolean isWall(Square square) {
         if (walls == null)
             return false;

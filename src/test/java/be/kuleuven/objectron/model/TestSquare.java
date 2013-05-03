@@ -37,7 +37,7 @@ public class TestSquare {
     public void test_square_lose_power(){
         Square otherSquare = new Square(new Position(5, 3));
         Player otherPlayer = new Player("tester", otherSquare);
-        otherSquare.receivePowerFailure();
+        otherSquare.receivePrimaryPowerFailure();
         otherSquare.newTurn(otherPlayer);
         assertEquals(otherPlayer.getAvailableActions(),2);
     } */

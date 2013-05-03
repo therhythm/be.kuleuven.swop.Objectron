@@ -20,7 +20,24 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Observable<SquareObserver> {
-    public static final int POWER_FAILURE_CHANCE = 5; //TODO public
+    public static final int POWER_FAILURE_CHANCE = 1; //TODO public
+
+    public static final int PF_PRIMARY_TURNS = 3;
+    public static final int PF_PRIMARY_ACTIONS = 0;
+
+    public static final int PF_SECONDARY_TURNS = 0;
+    public static final int PF_SECONDARY_ACTIONS = 2;
+
+    public static final int PF_TERTIARY_TURNS = 0;
+    public static final int PF_TERTIARY_ACTIONS = 1;
+
+    public static final String DIRECTION_CLOCKWISE = "CLOCKWISE";
+    public static final String DIRECTION_COUNTER_CLOCKWISE = "COUNTERCLOCKWISE";
+
+    private String rotateDirection = "";
+    private Direction prevDirection;
+    private int rotateCounter;
+
     private final Position position;
 
     private List<SquareObserver> observers = new ArrayList<>();
@@ -31,6 +48,7 @@ public class Square implements Observable<SquareObserver> {
     private boolean isObstructed = false;
     private Item activeItem;
     private int powerFailureChance = POWER_FAILURE_CHANCE;
+
 
     public Square(final Position position) {
         this.position = position;
@@ -142,8 +160,20 @@ public class Square implements Observable<SquareObserver> {
         this.state = newState;
     }
 
-    public void receivePowerFailure() {
-        state.powerFailure(this);
+    public void receivePrimaryPowerFailure() {
+        state.powerFailure(this, PF_PRIMARY_TURNS, PF_PRIMARY_ACTIONS);
+        notifyPowerFailure();
+    }
+
+    public void receiveSecondaryPowerFailure (Direction d){
+        state.powerFailure(this, PF_SECONDARY_TURNS, PF_SECONDARY_ACTIONS);
+        passTertiaryPowerFailure(d);
+        notifyPowerFailure();
+
+    }
+
+    public void receiveTertiaryPowerFailure(){
+        state.powerFailure(this, PF_TERTIARY_TURNS, PF_TERTIARY_ACTIONS);
         notifyPowerFailure();
     }
 
@@ -154,13 +184,69 @@ public class Square implements Observable<SquareObserver> {
 
     public void newTurn(Turn currentTurn) {
         if (losingPower()) {
-            receivePowerFailure();
-            for (Square neighbour : neighbours.values()) {
-                neighbour.receivePowerFailure();
+            receivePrimaryPowerFailure();
+            if(this.rotateDirection == ""){
+                passSecondaryPowerfailure();
             }
         }
         boolean currentSquare = currentTurn.getCurrentPlayer().getCurrentSquare().equals(this);
         state.newTurn(currentTurn, currentSquare, this);
+    }
+
+    public void endAction(){
+        state.endAction(this);
+       if(this.rotateDirection != "") {
+        rotate();
+       }
+    }
+
+    private void rotate(){
+        rotateCounter ++;
+        if(rotateCounter >= 2){
+            rotateCounter = 0;
+            if(this.rotateDirection == DIRECTION_CLOCKWISE)
+                this.prevDirection = prevDirection.next();
+            else
+                this.prevDirection = prevDirection.previous();
+
+           Square mustReceiveFailure =  neighbours.get(prevDirection);
+           if(mustReceiveFailure != null)
+                mustReceiveFailure.receiveSecondaryPowerFailure(prevDirection);
+        }
+    }
+
+    private void passSecondaryPowerfailure(){
+        double random = Math.random();
+        if(random < 0.5){
+            this.rotateDirection = DIRECTION_CLOCKWISE;
+        }else{
+            this.rotateDirection = DIRECTION_COUNTER_CLOCKWISE;
+        }
+
+        int startSquare = (int) Math.floor(Math.random() * neighbours.size());
+        int i = 0;
+        for(Direction d: neighbours.keySet()){
+            if(i == startSquare){
+                neighbours.get(d).receiveSecondaryPowerFailure(d);
+                this.prevDirection = d;
+            }
+
+            i++;
+        }
+
+    }
+
+    private void passTertiaryPowerFailure(Direction d){
+       List<Direction> possibleDirections = new ArrayList<Direction>();
+       possibleDirections.add(d);
+       possibleDirections.add(d.next());
+       possibleDirections.add(d.previous());
+
+       int index = (int) Math.floor(Math.random() * possibleDirections.size());
+       Square neighbour = neighbours.get(possibleDirections.get(index));
+       if(neighbour != null){
+           neighbour.receiveTertiaryPowerFailure();
+       }
     }
 
     @Override
@@ -180,6 +266,8 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public void notifyPowered() {
+        this.rotateDirection = "";
+        this.rotateCounter = 0;
         for (SquareObserver observer : observers) {
             observer.regainedPower(this.position);
         }

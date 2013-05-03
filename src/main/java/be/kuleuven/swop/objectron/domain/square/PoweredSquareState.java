@@ -21,7 +21,14 @@ public class PoweredSquareState implements SquareState {
     }
 
     @Override
-    public void powerFailure(Square context) {
-        context.transitionState(new UnpoweredSquareState());
+    public void powerFailure(Square context, int turns, int actions) {
+        SquareState state = new UnpoweredSquareState();
+        context.transitionState(state);
+        state.powerFailure(context, turns, actions);
+    }
+
+    @Override
+    public void endAction(Square context){
+        //do nothing
     }
 }

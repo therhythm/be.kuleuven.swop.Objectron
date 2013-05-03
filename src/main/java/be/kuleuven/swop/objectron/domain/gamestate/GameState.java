@@ -76,6 +76,11 @@ public class GameState implements Observable<GameObserver>, SquareObserver {
         notifyObservers();
     }
 
+    public void endAction(){
+        //currentTurn.reduceRemainingActions(1);
+        gameGrid.endAction();
+    }
+
     public void extraTurn() {
         gameGrid.newTurn(currentTurn);
         notifyObservers();

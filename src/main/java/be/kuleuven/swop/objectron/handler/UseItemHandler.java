@@ -85,6 +85,7 @@ public class UseItemHandler extends Handler {
             currentTurn.getCurrentPlayer().useItem(state.getCurrentItem(), deployer);
             state.setCurrentItem(null);
             currentTurn.reduceRemainingActions(1);
+            state.endAction();
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
             throw e;
@@ -107,6 +108,7 @@ public class UseItemHandler extends Handler {
             currentPlayer.useItem(state.getCurrentItem(), deployer);
             state.setCurrentItem(null);
             currentTurn.reduceRemainingActions(1);
+            //state.endAction();
         } catch (SquareOccupiedException e) {
             logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
             throw e;

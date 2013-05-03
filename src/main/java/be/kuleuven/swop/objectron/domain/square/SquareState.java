@@ -13,5 +13,7 @@ public interface SquareState {
 
     void stepOn(GameState gameState);
 
-    void powerFailure(Square context);
+    void powerFailure(Square context, int turns, int actions);
+
+    void endAction(Square context);
 }
