@@ -33,7 +33,7 @@ public class PlayerMovementStrategy implements MovementStrategy {
     @Override
     public void hitPlayer(Player player) throws InvalidMoveException {
         if(!player.equals(turnManager.getCurrentTurn().getCurrentPlayer())){
-            throw new InvalidMoveException();
+        throw new InvalidMoveException();
         }
     }
 

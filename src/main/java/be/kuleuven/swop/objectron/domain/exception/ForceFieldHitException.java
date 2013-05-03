@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.exception;
+package be.kuleuven.swop.objectron.domain.exception;
 
 /**
  * @author : Nik Torfs

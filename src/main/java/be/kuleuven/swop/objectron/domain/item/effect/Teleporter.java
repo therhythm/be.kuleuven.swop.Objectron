@@ -1,14 +1,12 @@
 package be.kuleuven.swop.objectron.domain.item.effect;
 
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
-import be.kuleuven.swop.objectron.exception.PlayerHitException;
-import be.kuleuven.swop.objectron.exception.WallHitException;
+import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 /**
  * @author : Kasper Vervaecke

@@ -11,9 +11,9 @@ import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
-import be.kuleuven.swop.objectron.exception.PlayerHitException;
-import be.kuleuven.swop.objectron.exception.WallHitException;
+import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 import java.util.*;
 

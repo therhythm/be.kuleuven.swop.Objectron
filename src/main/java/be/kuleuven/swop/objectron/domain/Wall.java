@@ -4,7 +4,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.exception.WallHitException;
+import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 import java.util.ArrayList;
 import java.util.List;
