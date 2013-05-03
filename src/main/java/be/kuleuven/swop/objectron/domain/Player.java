@@ -1,10 +1,15 @@
 package be.kuleuven.swop.objectron.domain;
 
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
+import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
+import be.kuleuven.swop.objectron.domain.movement.teleport.PlayerTeleportStrategy;
+import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
@@ -15,7 +20,7 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public class Player{
+public class Player implements Movable, Obstruction{
     private String name;
     private Square currentSquare;
     private Square initialSquare;
@@ -23,12 +28,14 @@ public class Player{
     private Inventory inventory = new Inventory();
     private int remainingPenalties;
     private boolean isTeleporting;
+    private TeleportStrategy teleportStrategy;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
         this.initialSquare = currentSquare;
-        currentSquare.setObstructed(true);
+        currentSquare.addObstruction(this);
+        teleportStrategy = new PlayerTeleportStrategy();
     }
 
     public Square getCurrentSquare() {
@@ -51,12 +58,18 @@ public class Player{
         actionPerformed();
     }
 
-    public void move(Square newPosition) {
-
+    public void move(Square newPosition) throws InvalidMoveException {
         actionPerformed();
+        enter(newPosition);
+        teleportStrategy = new PlayerTeleportStrategy();
+    }
+
+    @Override
+    public void enter(Square newPosition) throws InvalidMoveException {
         lightTrail.expand(currentSquare);
+        currentSquare.stepOn(this);
+        currentSquare.addObstruction(this);
         currentSquare = newPosition;
-        isTeleporting = false;
     }
 
     public void teleport(Square destination) {
@@ -122,5 +135,20 @@ public class Player{
 
     public boolean isTeleporting() {
         return isTeleporting;
+    }
+
+    @Override
+    public TeleportStrategy getTeleportStrategy() {
+        return teleportStrategy;
+    }
+
+    @Override
+    public MovementStrategy getMovementStrategy() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void hit(MovementStrategy strategy) throws InvalidMoveException {
+        strategy.hitPlayer(this);
     }
 }

@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 
 /**
  * @author : Nik Torfs
@@ -23,6 +24,11 @@ public class PoweredState implements PowerState {
 
     @Override
     public void stepOn(TurnManager turnManager) {
+        // do nothing
+    }
+
+    @Override
+    public void stepOn(MovementStrategy movementStrategy) {
         // do nothing
     }
 

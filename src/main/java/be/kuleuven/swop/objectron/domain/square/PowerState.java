@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,6 +17,8 @@ public interface PowerState {
     void newTurn(Turn currentTurn);
 
     void stepOn(TurnManager turnManager);
+
+    void stepOn(MovementStrategy movementStrategy);
 
     void powerFailure();
 }

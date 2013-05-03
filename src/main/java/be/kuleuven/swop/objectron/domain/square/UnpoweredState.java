@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.item.effect.PowerFailureEffectVisitor;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 
 /**
  * @author : Nik Torfs
@@ -46,6 +47,16 @@ public class UnpoweredState implements PowerState {
         } else {
             turnManager.endTurn();
         }
+    }
+
+    @Override
+    public void stepOn(MovementStrategy movementStrategy) {
+        PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
+        for(Effect effect : context.getEffects()){
+            effect.accept(visitor);
+        }
+
+        movementStrategy.powerFailure(visitor.hasLightMine());
     }
 
     @Override

@@ -35,4 +35,9 @@ public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
     public String getName() {
         return "Uncharged Identity Disc";
     }
+
+    @Override
+    public void reset() {
+        remainingRange = MAX_RANGE;
+    }
 }

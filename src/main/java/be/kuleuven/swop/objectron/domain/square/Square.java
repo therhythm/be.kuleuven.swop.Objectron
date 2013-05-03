@@ -2,10 +2,12 @@ package be.kuleuven.swop.objectron.domain.square;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.Obstruction;
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -28,6 +30,7 @@ public class Square implements Observable<SquareObserver> {
     private List<Effect> effects = new ArrayList<>();
     private boolean isObstructed = false;
     private int powerFailureChance = POWER_FAILURE_CHANCE;
+    private Set<Obstruction> obstructions = new HashSet<>();
 
     public Square(final Position position) {
         this.position = position;
@@ -48,22 +51,17 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public boolean isObstructed() {
-        return isObstructed;
+        return !obstructions.isEmpty();
     }
 
-    public void setObstructed(boolean value) {
-        isObstructed = value;
-    }
-
-    public void stepOn(TurnManager turnManager) {
-        state.stepOn(turnManager);
-
-        setObstructed(true);
-
-        //todo add turnmanager .getplayer to obstruction
+    public void stepOn(Movable movable) throws InvalidMoveException {
+        for(Obstruction obstruction : obstructions){
+            obstruction.hit(movable.getMovementStrategy());
+        }
+        state.stepOn(movable.getMovementStrategy());
 
         for(Effect effect : effects){
-            effect.activate(turnManager.getCurrentTurn());
+            //effect.activate();
         }
     }
 
@@ -175,5 +173,13 @@ public class Square implements Observable<SquareObserver> {
 
     public List<Effect> getEffects() {
         return Collections.unmodifiableList(effects);
+    }
+
+    public void addObstruction(Obstruction obstruction) {
+        this.obstructions.add(obstruction);
+    }
+
+    public void removeObstruction(Obstruction obstruction) {
+        this.obstructions.remove(obstruction);
     }
 }

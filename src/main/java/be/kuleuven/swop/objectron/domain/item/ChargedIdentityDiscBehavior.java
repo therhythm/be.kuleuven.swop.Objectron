@@ -28,4 +28,9 @@ public class ChargedIdentityDiscBehavior implements IdentityDiscBehavior {
     public String getName() {
         return "Charged Identity Disc";
     }
+
+    @Override
+    public void reset() {
+        // do nothing
+    }
 }

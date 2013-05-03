@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain;
 
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -13,7 +14,7 @@ import java.util.List;
  *         Date: 27/02/13
  *         Time: 22:45
  */
-public class LightTrail {
+public class LightTrail implements Obstruction {
     private static int MAX_LIGHT_TRAIL_COVERAGE = 3;
     private static int LIGHT_TRAIL_LIFETIME = 3;
 
@@ -27,7 +28,7 @@ public class LightTrail {
 
     public void expand(Square newSquare) {
         if (trail[MAX_LIGHT_TRAIL_COVERAGE - 1] != null) {
-            trail[MAX_LIGHT_TRAIL_COVERAGE - 1].setObstructed(false);
+            trail[MAX_LIGHT_TRAIL_COVERAGE - 1].removeObstruction(this);
         }
 
         System.arraycopy(trail, 0, trail, 1, MAX_LIGHT_TRAIL_COVERAGE - 1);
@@ -35,13 +36,13 @@ public class LightTrail {
 
         trail[0] = newSquare;
         remainingActions[0] = LIGHT_TRAIL_LIFETIME;
-        newSquare.setObstructed(true);
+        newSquare.addObstruction(this);
     }
 
     private void retract() {
         for (int i = 0; i < MAX_LIGHT_TRAIL_COVERAGE; i++) {
             if (remainingActions[i] == 0) {
-                trail[i].setObstructed(false);
+                trail[i].removeObstruction(this);
                 trail[i] = null;
                 remainingActions[i] = 0;
             }
@@ -64,5 +65,10 @@ public class LightTrail {
             }
         }
         return list;
+    }
+
+    @Override
+    public void hit(MovementStrategy strategy) throws InvalidMoveException {
+        strategy.hitLightTrail(this);
     }
 }

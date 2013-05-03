@@ -1,7 +1,9 @@
 package be.kuleuven.swop.objectron.domain.item.effect;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -18,22 +20,17 @@ public class Teleporter implements Effect {
     }
 
     @Override
-    public void activate(Turn currentTurn) {
-        Player currentPlayer = currentTurn.getCurrentPlayer();
-        if (currentPlayer != null) {
-            if (!currentPlayer.isTeleporting() && !destination.getLocation().isObstructed()) {
-                currentPlayer.teleport(destination.getLocation());
-            }
-        }
+    public void activate(Movable movable) {
+        movable.getTeleportStrategy().teleport(movable,this);
+    }
+
+    public void teleport(Movable movable) throws InvalidMoveException {
+        movable.enter(destination.getLocation());
     }
 
     @Override
     public void accept(EffectVisitor visitor) {
         visitor.visitTeleporter();
-    }
-
-    public Teleporter getDestination() {
-        return destination;
     }
 
     public void setDestination(Teleporter destination) {

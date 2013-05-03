@@ -20,4 +20,6 @@ public interface IdentityDiscBehavior {
     void moved();
 
     String getName();
+
+    void reset();
 }
