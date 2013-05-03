@@ -13,7 +13,7 @@ import java.util.List;
  *         Time: 23:51
  */
 public class Inventory {
-    private static final int INVENTORY_LIMIT = 6;
+    public static final int INVENTORY_LIMIT = 6;
 
     private List<Item> items = new ArrayList<Item>();
 

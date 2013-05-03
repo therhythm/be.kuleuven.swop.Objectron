@@ -16,8 +16,6 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 public interface PowerState {
     void newTurn(Turn currentTurn);
 
-    void stepOn(TurnManager turnManager);
-
     void stepOn(MovementStrategy movementStrategy);
 
     void powerFailure();

@@ -23,11 +23,6 @@ public class PoweredState implements PowerState {
     }
 
     @Override
-    public void stepOn(TurnManager turnManager) {
-        // do nothing
-    }
-
-    @Override
     public void stepOn(MovementStrategy movementStrategy) {
         // do nothing
     }

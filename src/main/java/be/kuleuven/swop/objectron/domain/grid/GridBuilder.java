@@ -32,10 +32,10 @@ public class GridBuilder {
     private static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
     private static final int MIN_GRID_WIDTH = 10;
     private static final int MIN_GRID_HEIGHT = 10;
-    private static final double PERCENTAGE_OF_TELEPORTERS = 0.03;
-    private static final double PERCENTAGE_OF_LIGHTMINES = 0.02;
-    private static final double PERCENTAGE_OF_IDENTITYDISCS = 0.02;
-    private static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
+    public static final double PERCENTAGE_OF_TELEPORTERS = 0.03;
+    public static final double PERCENTAGE_OF_LIGHTMINES = 0.02;
+    public static final double PERCENTAGE_OF_IDENTITYDISCS = 0.02;
+    public static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
 
 
     private Dimension dimension;

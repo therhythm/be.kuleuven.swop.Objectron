@@ -14,8 +14,12 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
-    private static final int MAX_RANGE = 4;
+
+
+    public static final int MAX_RANGE = 4;
+
     private int remainingRange;
+
 
     public NormalIdentityDiscBehavior() {
         this.remainingRange = MAX_RANGE;

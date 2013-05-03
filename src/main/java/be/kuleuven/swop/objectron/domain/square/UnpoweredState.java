@@ -13,7 +13,7 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
  */
 public class UnpoweredState implements PowerState {
     public static final int TURNS_WITHOUT_POWER = 3;
-    private static final int ACTIONS_TO_REDUCE = 1;
+    public static final int ACTIONS_TO_REDUCE = 1;
 
     private Square context;
     private int remainingTurns;
@@ -32,20 +32,6 @@ public class UnpoweredState implements PowerState {
         if (remainingTurns == 0) {
             context.transitionState(new PoweredState(context));
             context.notifyPowered();
-        }
-    }
-
-    @Override
-    public void stepOn(TurnManager turnManager) {
-        PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
-        for(Effect effect : context.getEffects()){
-            effect.accept(visitor);
-        }
-
-        if (visitor.hasLightMine()) {
-            turnManager.getCurrentTurn().reduceRemainingActions(ACTIONS_TO_REDUCE);
-        } else {
-            turnManager.endTurn();
         }
     }
 
