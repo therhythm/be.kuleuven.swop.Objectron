@@ -11,6 +11,9 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.PlayerTeleportStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.List;
@@ -60,14 +63,19 @@ public class Player implements Movable, Obstruction{
 
     public void move(Square newPosition) throws InvalidMoveException {
         actionPerformed();
-        enter(newPosition);
+
+        try {
+            enter(newPosition);
+        } catch (PlayerHitException | ForceFieldHitException | WallHitException e) {
+            throw new InvalidMoveException();
+        }
         teleportStrategy = new PlayerTeleportStrategy();
     }
 
     @Override
-    public void enter(Square newPosition) throws InvalidMoveException {
-        lightTrail.expand(currentSquare);
+    public void enter(Square newPosition) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
         currentSquare.stepOn(this);
+        lightTrail.expand(currentSquare);
         currentSquare.addObstruction(this);
         currentSquare = newPosition;
     }
@@ -148,7 +156,7 @@ public class Player implements Movable, Obstruction{
     }
 
     @Override
-    public void hit(MovementStrategy strategy) throws InvalidMoveException {
+    public void hit(MovementStrategy strategy) throws InvalidMoveException, PlayerHitException {
         strategy.hitPlayer(this);
     }
 }

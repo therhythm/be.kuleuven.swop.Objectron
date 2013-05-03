@@ -8,6 +8,8 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.IdentityDiscBehavior;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
+import be.kuleuven.swop.objectron.exception.ForceFieldHitException;import be.kuleuven.swop.objectron.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 
 /**
  * @author : Nik Torfs
@@ -18,25 +20,24 @@ import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 public class IdentityDiscMovementStrategy implements MovementStrategy{
     private TurnManager turnManager;
     private IdentityDiscBehavior identityDiscBehavior;
-    private IdentityDisc identityDisc;
 
     @Override
     public void powerFailure(boolean hasLightMine) {
-        identityDiscBehavior.moved(); //identityDiscBehavior range gets reduced by one
+        identityDiscBehavior.moved();
     }
 
     @Override
-    public void hitPlayer(Player player) {
+    public void hitPlayer(Player player) throws PlayerHitException {
         if(player.equals(turnManager.getCurrentTurn().getCurrentPlayer())){
             turnManager.endTurn();
         }
         turnManager.getCurrentTurn().extraTurn();
-        identityDisc.playerHit();    //todo fix with exception?
+        throw new PlayerHitException();
     }
 
     @Override
-    public void hitWall(Wall wall) throws InvalidMoveException {
-        throw new InvalidMoveException();
+    public void hitWall(Wall wall) throws InvalidMoveException, WallHitException {
+        throw new WallHitException();
     }
 
     @Override
@@ -45,8 +46,8 @@ public class IdentityDiscMovementStrategy implements MovementStrategy{
     }
 
     @Override
-    public void hitForceField(ForceField forceField) throws InvalidMoveException {
-        //todo destroy identitydisc
+    public void hitForceField(ForceField forceField) throws InvalidMoveException, ForceFieldHitException {
+        throw new ForceFieldHitException();
     }
 
 }

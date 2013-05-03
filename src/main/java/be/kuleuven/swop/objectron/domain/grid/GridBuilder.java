@@ -318,9 +318,6 @@ public class GridBuilder {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Position pos = new Position(horizontal, vertical);
                 squares[vertical][horizontal] = new Square(pos, powerFailureChance);
-                if (pos.equals(p1Pos) || pos.equals(p2Pos)) {
-                    squares[vertical][horizontal].setObstructed(true);
-                }
             }
         }
         setupNeighbours();

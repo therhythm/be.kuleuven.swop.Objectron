@@ -10,6 +10,9 @@ import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 
 import java.util.*;
 
@@ -54,7 +57,7 @@ public class Square implements Observable<SquareObserver> {
         return !obstructions.isEmpty();
     }
 
-    public void stepOn(Movable movable) throws InvalidMoveException {
+    public void stepOn(Movable movable) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
         for(Obstruction obstruction : obstructions){
             obstruction.hit(movable.getMovementStrategy());
         }

@@ -5,6 +5,9 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
+import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 
 /**
  * @author : Nik Torfs
@@ -15,11 +18,11 @@ public interface MovementStrategy {
     void powerFailure(boolean hasLightMine);
 
     //todo move to somewhere else
-    void hitPlayer(Player player) throws InvalidMoveException;
+    void hitPlayer(Player player) throws InvalidMoveException, PlayerHitException;
 
-    void hitWall(Wall wall) throws InvalidMoveException;
+    void hitWall(Wall wall) throws InvalidMoveException, WallHitException;
 
     void hitLightTrail(LightTrail lightTrail) throws InvalidMoveException;
 
-    void hitForceField(ForceField forceField) throws InvalidMoveException;
+    void hitForceField(ForceField forceField) throws InvalidMoveException, ForceFieldHitException;
 }

@@ -1,7 +1,13 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
+import be.kuleuven.swop.objectron.domain.Obstruction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 
 import java.util.List;
 
@@ -13,7 +19,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 
-public class ForceField {
+public class ForceField implements Obstruction {
     public static final int TURNSWITCH = 2;
 
     private ForcefieldGenerator forceField1;
@@ -35,14 +41,14 @@ public class ForceField {
     private void activate() {
         active = true;
         for (Square square : affectedSquares) {
-            square.setObstructed(true);
+            square.addObstruction(this);
         }
     }
 
     private void deactivate() {
         active = false;
         for (Square square : affectedSquares) {
-            square.setObstructed(false);
+            square.removeObstruction(this);
         }
     }
 
@@ -68,5 +74,10 @@ public class ForceField {
 
     public boolean contains(ForcefieldGenerator forcefield) {
         return forcefield.equals(forceField1) || forcefield.equals(forceField2);
+    }
+
+    @Override
+    public void hit(MovementStrategy strategy) throws InvalidMoveException, ForceFieldHitException {
+        strategy.hitForceField(this);
     }
 }

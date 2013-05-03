@@ -5,6 +5,9 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 
 /**
  * @author : Kasper Vervaecke
@@ -28,7 +31,7 @@ public class Teleporter implements Effect {
         }
     }
 
-    public void teleport(Movable movable) throws InvalidMoveException {
+    public void teleport(Movable movable) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
         movable.enter(destination.getLocation());
     }
 

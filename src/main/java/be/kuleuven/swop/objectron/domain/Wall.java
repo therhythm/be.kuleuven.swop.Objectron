@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class Wall implements Obstruction{
     }
 
     @Override
-    public void hit(MovementStrategy strategy) throws InvalidMoveException {
+    public void hit(MovementStrategy strategy) throws InvalidMoveException, WallHitException {
         strategy.hitWall(this);
     }
 }

@@ -11,6 +11,9 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.IdentityDiscTeleportStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.exception.WallHitException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +26,6 @@ public class IdentityDisc implements Item, Movable {
     private IdentityDiscBehavior identityDiscBehavior;
     private TeleportStrategy teleportStrategy;
     private MovementStrategy movementStrategy;
-    private boolean playerHit = false;
 
     public IdentityDisc(IdentityDiscBehavior identityDiscBehavior) {
         this.identityDiscBehavior = identityDiscBehavior;
@@ -50,6 +52,7 @@ public class IdentityDisc implements Item, Movable {
         Square currentSquare = sourceSquare;
         Square neighbor = currentSquare.getNeighbour(targetDirection);
 
+        boolean forceFieldHit = false;
         while (identityDiscBehavior.getRemainingRange() > 0) {
             if (neighbor == null)
                 break;
@@ -58,20 +61,25 @@ public class IdentityDisc implements Item, Movable {
                 neighbor.stepOn(this);
             } catch (InvalidMoveException e) {
                 break;
-            }
-
-            if (playerHit) {
+            } catch (WallHitException e) {
+                break;
+            } catch (PlayerHitException e) {
                 currentSquare = neighbor;
                 break;
-            }else {
-                currentSquare = neighbor;
-                neighbor = currentSquare.getNeighbour(targetDirection);
-                identityDiscBehavior.moved();
+            } catch (ForceFieldHitException e){
+                forceFieldHit = true;
+                break;
             }
-        }
-        currentSquare.addItem(this);
 
-        playerHit = false;
+
+            currentSquare = neighbor;
+            neighbor = currentSquare.getNeighbour(targetDirection);
+            identityDiscBehavior.moved();
+        }
+
+        if(!forceFieldHit){
+            currentSquare.addItem(this);
+        }
         identityDiscBehavior.reset();
     }
 
@@ -103,11 +111,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void enter(Square square) throws InvalidMoveException {
+    public void enter(Square square) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
         square.stepOn(this);
-    }
-
-    public void playerHit(){
-        playerHit = true;
     }
 }
