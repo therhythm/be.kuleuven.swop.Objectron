@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.logging.Level;
@@ -40,24 +41,27 @@ public class MovePlayerHandler extends Handler {
      * |  != state.getCurrentPlayer().getCurrentSquare()
      */
     public void move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+        TurnManager turnManager = state.getTurnManager();
+        Turn currentTurn = turnManager.getCurrentTurn();
         try {
-            Turn currentTurn = state.getCurrentTurn();
+
             currentTurn.checkEnoughActions();
             Player current = currentTurn.getCurrentPlayer();
             Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
-            current.move(newSquare);
-            newSquare.stepOn(state);
-            currentTurn.setMoved(true);
-            if(state.checkWin())
+            current.move(newSquare, turnManager);
+            //newSquare.stepOn(turnManager);
+            currentTurn.setMoved();
+            if (state.checkWin())
                 throw new GameOverException(current.getName() + ", you win the game!");
 
             currentTurn.reduceRemainingActions(1);
+            state.endAction();
             state.notifyObservers();
         } catch (InvalidMoveException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do an invalid move!");
+            logger.log(Level.INFO, currentTurn.getCurrentPlayer().getName() + " tried to do an invalid move!");
             throw e;
         } catch (NotEnoughActionsException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do a move when he had no actions remaining.");
+            logger.log(Level.INFO, currentTurn.getCurrentPlayer().getName() + " tried to do a move when he had no actions remaining.");
             throw e;
         }
     }

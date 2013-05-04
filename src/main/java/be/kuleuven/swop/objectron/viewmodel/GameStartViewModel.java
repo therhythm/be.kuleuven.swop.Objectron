@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.viewmodel;
 
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -24,9 +25,10 @@ public class GameStartViewModel {
     private TurnViewModel currentTurn;
     private List<List<Position>> walls;
 
-    private Map<Position,List<Item>> items;
+    private Map<Position, List<Item>> items;
 
     private Observable<GameObserver> observable;
+    private Map<Position, List<Effect>> effects;
 
 
     public GameStartViewModel(HandlerCatalog catalog,
@@ -35,10 +37,8 @@ public class GameStartViewModel {
                               PlayerViewModel p2,
                               TurnViewModel currentTurn,
                               List<List<Position>> walls,
-
-                              Map<Position,List<Item>> items,
-
-
+                              Map<Position, List<Item>> items,
+                              Map<Position, List<Effect>> effects,
                               Observable<GameObserver> observable) {
 
         this.catalog = catalog;
@@ -48,6 +48,7 @@ public class GameStartViewModel {
         this.currentTurn = currentTurn;
         this.walls = walls;
         this.items = items;
+        this.effects = effects;
         this.observable = observable;
     }
 
@@ -55,7 +56,7 @@ public class GameStartViewModel {
         return catalog;
     }
 
-    public Dimension getDimension(){
+    public Dimension getDimension() {
         return this.dimension;
     }
 
@@ -67,7 +68,7 @@ public class GameStartViewModel {
         return p2;
     }
 
-    public TurnViewModel getCurrentTurn(){
+    public TurnViewModel getCurrentTurn() {
         return this.currentTurn;
     }
 
@@ -76,7 +77,7 @@ public class GameStartViewModel {
     }
 
 
-    public Map<Position,List<Item>> getItems(){
+    public Map<Position, List<Item>> getItems() {
         return items;
     }
 
@@ -84,5 +85,9 @@ public class GameStartViewModel {
     public Observable<GameObserver> getObservable() {
 
         return observable;
+    }
+
+    public Map<Position, List<Effect>> getEffects() {
+        return effects;
     }
 }

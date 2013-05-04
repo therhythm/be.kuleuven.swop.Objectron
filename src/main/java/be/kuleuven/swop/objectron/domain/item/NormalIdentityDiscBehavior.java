@@ -1,6 +1,9 @@
 package be.kuleuven.swop.objectron.domain.item;
 
+import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -11,34 +14,34 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
-    private final int maxRange = 4;
-    @Override
-        public void useItem(UseItemRequest useItemRequest,IdentityDisc identityDisc) throws SquareOccupiedException {
-            Square currentSquare = useItemRequest.getSquare();
 
-        Square neighbor = identityDisc.getNextSquare(currentSquare,useItemRequest.getDirection());
 
-            for (int i = 0; i < maxRange; i++) {
-                System.out.println(neighbor);
-                if (neighbor == null)
-                    break;
-                if (identityDisc.playerHit(useItemRequest, neighbor)) {
-                    currentSquare = neighbor;
-                    break;
+    public static final int MAX_RANGE = 4;
 
-                } else if (!useItemRequest.getGrid().isWall(neighbor)) {
-                    currentSquare = neighbor;
-                    neighbor = identityDisc.getNextSquare(currentSquare,useItemRequest.getDirection());
-                } else
-                    break;
-            }
-            currentSquare.addItem(identityDisc);
+    private int remainingRange;
+
+
+    public NormalIdentityDiscBehavior() {
+        this.remainingRange = MAX_RANGE;
     }
 
+    @Override
+    public int getRemainingRange() {
+        return remainingRange;
+    }
 
+    @Override
+    public void moved() {
+        remainingRange--;
+    }
 
     @Override
     public String getName() {
         return "Uncharged Identity Disc";
+    }
+
+    @Override
+    public void reset() {
+        remainingRange = MAX_RANGE;
     }
 }

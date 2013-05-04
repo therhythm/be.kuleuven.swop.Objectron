@@ -1,7 +1,10 @@
 package be.kuleuven.swop.objectron.domain;
 
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +16,7 @@ import java.util.List;
  * Time: 21:45
  * To change this template use File | Settings | File Templates.
  */
-public class Wall {
+public class Wall implements Obstruction{
 
     private List<Square> squares = new ArrayList<Square>();
 
@@ -27,7 +30,7 @@ public class Wall {
 
     public void build() {
         for (Square square : squares) {
-            square.setObstructed(true);
+            square.addObstruction(this);
         }
     }
 
@@ -39,7 +42,8 @@ public class Wall {
         return squaresVm;
     }
 
-    public boolean isWall(Square square){
-        return squares.contains(square);
+    @Override
+    public void hit(MovementStrategy strategy) throws InvalidMoveException, WallHitException {
+        strategy.hitWall(this);
     }
 }

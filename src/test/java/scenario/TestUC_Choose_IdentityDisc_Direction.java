@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
@@ -51,7 +52,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getCurrentPlayer();
+        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
     }
 
     @Test
@@ -79,13 +80,18 @@ public class TestUC_Choose_IdentityDisc_Direction {
         movePlayerHandler.move(Direction.RIGHT);
         endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.RIGHT);
-        Player player2 = state.getCurrentPlayer();
-        // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
+
+         System.out.println("test: " + state.getTurnManager().getCurrentTurn().getCurrentPlayer().getCurrentSquare());
+
         endTurnHandler.endTurn();
+
+        System.out.println("test: " + state.getTurnManager().getCurrentTurn().getCurrentPlayer().getCurrentSquare());
         useItemHandler.selectItemFromInventory(0);
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 3);
+
+        assertTrue(state.getTurnManager().getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-        assertTrue(state.getCurrentTurn().getActionsRemaining() == 5);
+        assertTrue(state.getTurnManager().getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN * 2 - 1);
+
         for (int i = 1; i < 3; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
@@ -94,8 +100,6 @@ public class TestUC_Choose_IdentityDisc_Direction {
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
 
     }
-
-
 
 
 }

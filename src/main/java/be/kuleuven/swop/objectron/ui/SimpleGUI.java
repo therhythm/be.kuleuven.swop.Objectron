@@ -57,9 +57,9 @@ public abstract class SimpleGUI {
         return b;
     }
 
-    public final JTextField createTextField(int x, int y, int width, int height){
+    public final JTextField createTextField(int x, int y, int width, int height) {
         JTextField textField = new JTextField();
-        textField.setLocation(x,y);
+        textField.setLocation(x, y);
         textField.setSize(width, height);
         panel.add(textField);
         textField.setVisible(true);
@@ -87,7 +87,7 @@ public abstract class SimpleGUI {
 
     }
 
-    public void setVisible(boolean value){
+    public void setVisible(boolean value) {
         frame.setVisible(value);
     }
 }

@@ -6,7 +6,10 @@ import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.effect.Effect;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -21,15 +24,24 @@ import java.util.Map;
  *         Date: 22/02/13
  *         Time: 07:04
  */
-public class Grid {
+public class Grid implements TurnSwitchObserver {
     private Square[][] squares;
     private Dimension dimension;
     private List<Wall> walls;
+    private ForceFieldArea forceFieldArea;
 
-    public Grid(Square[][] squares,List<Wall> walls, Dimension dimension){
+    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension) {
         this.squares = squares;
         this.walls = walls;
         this.dimension = dimension;
+        this.forceFieldArea = new ForceFieldArea();
+    }
+
+    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension, ForceFieldArea forceFieldArea) {
+        this.squares = squares;
+        this.walls = walls;
+        this.dimension = dimension;
+        this.forceFieldArea = forceFieldArea;
     }
 
     public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException, NotEnoughActionsException {
@@ -67,11 +79,6 @@ public class Grid {
         }
         return wallViewModels;
     }
-
-    public Dimension getDimension() {
-        return this.dimension;
-    }
-
     public void newTurn(Turn currentTurn) {
         for (Square[] square : squares) {
             for (Square sq : square) {
@@ -80,25 +87,70 @@ public class Grid {
         }
     }
 
-    public boolean isWall(Square square) {
-        if (walls==null)
-            return false;
-        for (Wall wall : walls) {
-
-                if (wall.isWall(square))
-                    return true;
+    public void endAction(){
+        for (Square[] square : squares) {
+            for (Square sq : square) {
+                sq.endAction();
+            }
         }
-
-        return false;
     }
 
-    public Map<Position,List<Item>> getItems() {
-        Map<Position,List<Item>> items = new HashMap<>();
-        for(Square[] row : squares){
-            for(Square sq : row){
-                items.put(sq.getPosition(),sq.getAvailableItems());
+    public Map<Position, List<Item>> getItems() {
+        Map<Position, List<Item>> items = new HashMap<>();
+        for (Square[] row : squares) {
+            for (Square sq : row) {
+                items.put(sq.getPosition(), sq.getAvailableItems());
             }
         }
         return items;
+    }
+
+    public Map<Position, List<Effect>> getEffects() {
+        Map<Position, List<Effect>> effects = new HashMap<>();
+        for (Square[] row : squares) {
+            for (Square sq : row) {
+                effects.put(sq.getPosition(), sq.getEffects());
+            }
+        }
+        return effects;
+    }
+
+    @Override
+    public void turnEnded(Turn turn) {
+        for (Square[] square : squares) {
+            for (Square sq : square) {
+                sq.newTurn(turn);
+            }
+        }
+    }
+
+    @Override
+    public void update(Turn turn) {
+        // do nothing
+    }
+
+    @Override
+    public void actionReduced() {
+        // actionreduced
+    }
+
+    public ForceFieldArea getForceFieldArea() {
+        return forceFieldArea;
+    }
+
+    //obstruction is van het type wall  //todo ??
+    public ArrayList<Square> getSquaresNotObstructed() {
+        ArrayList<Square> result = new ArrayList<Square>();
+        for (Square[] row : squares) {
+            for (Square square : row) {
+                if (!square.isObstructed())
+                    result.add(square);
+            }
+        }
+        return result;
+    }
+
+    public Dimension getDimension() {
+        return dimension;
     }
 }

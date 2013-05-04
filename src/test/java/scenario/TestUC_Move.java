@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -44,8 +45,11 @@ public class TestUC_Move {
         player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
         Turn turn = new Turn(player1);
         stateMock = mock(GameState.class);
-        when(stateMock.getCurrentPlayer()).thenReturn(player1);
-        when(stateMock.getCurrentTurn()).thenReturn(turn);
+        TurnManager turnManager = mock(TurnManager.class);
+        when(turnManager.getCurrentTurn()).thenReturn(turn);
+
+        when(stateMock.getTurnManager()).thenReturn(turnManager);
+        when(stateMock.getTurnManager().getCurrentTurn()).thenReturn(turn);
         when(stateMock.getGrid()).thenReturn(grid);
 
         movePlayerHandler = new MovePlayerHandler(stateMock);
@@ -70,7 +74,8 @@ public class TestUC_Move {
 
     @Test(expected = NotEnoughActionsException.class)
     public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
-        stateMock.getCurrentTurn().reduceRemainingActions(3);
+        stateMock.getTurnManager().getCurrentTurn().reduceRemainingActions(Turn.ACTIONS_EACH_TURN);
+
         movePlayerHandler.move(Direction.UP);
     }
 }

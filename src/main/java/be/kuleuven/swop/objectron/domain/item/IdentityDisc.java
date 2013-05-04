@@ -1,9 +1,17 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.movement.IdentityDiscMovementStrategy;
+import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
+import be.kuleuven.swop.objectron.domain.movement.teleport.IdentityDiscTeleportStrategy;
+import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,12 +20,14 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 20:04
  * To change this template use File | Settings | File Templates.
  */
-public class IdentityDisc implements Item {
+public class IdentityDisc implements Item, Movable {
     private IdentityDiscBehavior identityDiscBehavior;
-    private boolean isTeleporting = false;
+    private TeleportStrategy teleportStrategy;
+    private MovementStrategy movementStrategy;
 
     public IdentityDisc(IdentityDiscBehavior identityDiscBehavior) {
         this.identityDiscBehavior = identityDiscBehavior;
+        this.teleportStrategy = new IdentityDiscTeleportStrategy();
 
     }
 
@@ -27,78 +37,60 @@ public class IdentityDisc implements Item {
     }
 
     @Override
-    public boolean pickupAble() {
-        return true;
+    public void place(Square targetSquare) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void activate(ActivateRequest activateRequest) {
-        if (activateRequest.getPlayerHit().equals(activateRequest.getCurrentPlayer()))
-            activateRequest.getGamestate().endTurn();
-
-        activateRequest.getCurrentTurn().extraTurn();
-    }
-
-
-    @Override
-    public void useItem(UseItemRequest useItemRequest) throws SquareOccupiedException {
-        if (!validDirection(useItemRequest.getDirection()))
-            throw new IllegalArgumentException("the direction can't be diagonal");
-        identityDiscBehavior.useItem(useItemRequest, this);
-    }
-
-    @Override
-    public boolean isTeleporting() {
-        return this.isTeleporting;
-    }
-
-    public boolean playerHit(UseItemRequest useItemRequest, Square squareItem) {
-        for (Player player : useItemRequest.getPlayers()) {
-            if (player.getCurrentSquare().equals(squareItem)) {
-                this.activate(new ActivateRequest(player, useItemRequest.getGameState()));
-                return true;
-            }
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) {
+        if (!validDirection(targetDirection)) {
+            throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
-        return false;
+        movementStrategy = new IdentityDiscMovementStrategy(turnManager, identityDiscBehavior);
+
+        Square currentSquare = sourceSquare;
+        Square neighbor = currentSquare.getNeighbour(targetDirection);
+
+        boolean forceFieldHit = false;
+        while (identityDiscBehavior.getRemainingRange() > 0) {
+            if (neighbor == null)
+                break;
+
+            try {
+                neighbor.stepOn(this, turnManager);
+            } catch (InvalidMoveException e) {
+                break;
+            } catch (WallHitException e) {
+                break;
+            } catch (PlayerHitException e) {
+                currentSquare = neighbor;
+                break;
+            } catch (ForceFieldHitException e){
+                forceFieldHit = true;
+                break;
+            }
+
+
+            currentSquare = neighbor;
+            neighbor = currentSquare.getNeighbour(targetDirection);
+            identityDiscBehavior.moved();
+        }
+
+        if(!forceFieldHit){
+            currentSquare.addItem(this);
+        }
+        identityDiscBehavior.reset();
+    }
+
+    @Override
+    public void pickedUp() {
+        //do nothing
     }
 
     private boolean validDirection(Direction direction) {
-        if (direction == Direction.UP_LEFT)
-            return false;
-
-        if (direction == Direction.UP_RIGHT)
-            return false;
-
-        if (direction == Direction.DOWN_LEFT)
-            return false;
-
-        if (direction == Direction.DOWN_RIGHT)
-            return false;
-
-        return true;
+        return direction != Direction.UP_LEFT && direction != Direction.UP_RIGHT && direction != Direction.DOWN_LEFT
+                && direction != Direction.DOWN_RIGHT;
     }
-
-    public Square getNextSquare(Square currentSquare,Direction direction){
-        Square neighbor = currentSquare.getNeighbour(direction);
-        if(neighbor==null)
-            return null;
-        Teleporter teleportItem = neighbor.getTeleportItem();
-        if(teleportItem!=null){
-            neighbor = this.teleport(teleportItem);
-        }
-        return neighbor;
-    }
-
-    public Square teleport(Teleporter teleporter) {
-        isTeleporting = true;
-        Square destination = teleporter.getDestination().getLocation();
-        // if(destination.getTeleportItem()!=null)
-        //    return teleport(destination.getTeleportItem());
-
-        isTeleporting = false;
-        return destination;
-    }
-
 
     public String toString() {
         String result = "";
@@ -107,4 +99,18 @@ public class IdentityDisc implements Item {
         return result;
     }
 
+    @Override
+    public TeleportStrategy getTeleportStrategy() {
+        return this.teleportStrategy;
+    }
+
+    @Override
+    public MovementStrategy getMovementStrategy() {
+        return this.movementStrategy;
+    }
+
+    @Override
+    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+        square.stepOn(this, manager);
+    }
 }

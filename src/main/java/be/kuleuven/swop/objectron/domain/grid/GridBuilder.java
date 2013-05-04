@@ -2,11 +2,14 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Settings;
 import be.kuleuven.swop.objectron.domain.Wall;
-import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
+import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.*;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -24,30 +27,43 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class GridBuilder {
+    private static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
+    private static final int MIN_WALL_LENGTH = 2;
+    private static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
+    private static final int MIN_GRID_WIDTH = 10;
+    private static final int MIN_GRID_HEIGHT = 10;
+    public static final double PERCENTAGE_OF_TELEPORTERS = 0.03;
+    public static final double PERCENTAGE_OF_LIGHTMINES = 0.02;
+    public static final double PERCENTAGE_OF_IDENTITYDISCS = 0.02;
+    public static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
+
+
     private Dimension dimension;
     private Position p1Pos;
     private Position p2Pos;
 
     private Square[][] squares;
     private List<Wall> walls;
+    private ForceFieldArea forceFieldArea;
 
     public GridBuilder(Dimension dimension, Position p1Pos, Position p2Pos) throws GridTooSmallException {
         if (!isValidDimension(dimension)) {
             throw new GridTooSmallException("The grid needs to be at least " +
-                    Settings.MIN_GRID_HEIGHT + " rows by " +
-                    Settings.MIN_GRID_HEIGHT + " columns");
+                    MIN_GRID_HEIGHT + " rows by " +
+                    MIN_GRID_HEIGHT + " columns");
         }
         this.dimension = dimension;
         this.p1Pos = p1Pos;
         this.p2Pos = p2Pos;
-        initGrid(Settings.POWER_FAILURE_CHANCE);
+        initGrid(Square.POWER_FAILURE_CHANCE);
+        forceFieldArea = new ForceFieldArea();
     }
 
     public void buildWalls() {
         walls = new ArrayList<Wall>();
 
-        int maxNumberOfWalls = (int) Math.floor(Settings.MAX_WALL_COVERAGE_PERCENTAGE *
-                (dimension.area() / Settings.MIN_WALL_LENGTH));
+        int maxNumberOfWalls = (int) Math.floor(MAX_WALL_COVERAGE_PERCENTAGE *
+                (dimension.area() / MIN_WALL_LENGTH));
         int numberOfWalls = getRandomWithMax(1, maxNumberOfWalls);
 
         while (walls.size() < numberOfWalls && isAnotherWallPossible()) {
@@ -61,54 +77,96 @@ public class GridBuilder {
     }
 
     public Grid getGrid() {
-        return new Grid(squares, walls, dimension);
+        return new Grid(squares, walls, dimension, forceFieldArea);
     }
 
-    private Square calculateMiddleSquare() {
-        int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()+1) / 2);
-        int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex()+1) / 2);
-        return squares[VIndex][HIndex];
+    /*
+   private Square calculateMiddleSquare() {
+       int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
+       int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
+       return squares[VIndex][HIndex];
+   }
+      */
+    private ArrayList<Square> getSquaresNotObstructed() {
+        ArrayList<Square> result = new ArrayList<Square>();
+        for (int i = 0; i < squares.length; i++) {
+            for (int j = 0; j < squares[i].length; j++) {
+
+                //Todo wall obstruction nodig zodat 2de chekc, na de || weg mag.
+                if (!squares[i][j].isObstructed() || (squares[i][j].getPosition().equals(p1Pos) || squares[i][j].getPosition().equals(p2Pos)))
+                    result.add(squares[i][j]);
+            }
+        }
+        return result;
     }
 
     private void placeChargedIdentityDisc() {
-        Square middle = calculateMiddleSquare();
-        ArrayList<Square> randomMiddleSquares = new ArrayList<Square>();
-        randomMiddleSquares.add(middle);
-        randomMiddleSquares.add(middle.getNeighbour(Direction.UP));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.UP_LEFT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.LEFT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN_LEFT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.DOWN_RIGHT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.RIGHT));
-        randomMiddleSquares.add(middle.getNeighbour(Direction.UP_RIGHT));
-        Random random = new Random();
-        Square randomSquare;
-        while (randomMiddleSquares.size() > 0) {
-            int randomIndex = random.nextInt(randomMiddleSquares.size());
-            randomSquare = randomMiddleSquares.get(randomIndex);
-            if (randomSquare != null) {
-                if (!randomSquare.isObstructed()) {
-                    randomSquare.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
-                    break;
-                }
+        ArrayList<Square> squaresNotObstructed = getSquaresNotObstructed();
+        Dijkstra dijkstra = new Dijkstra(squaresNotObstructed);
+        System.out.println("size squares not obstructed: " + squaresNotObstructed.size());
+        for (Square square : squaresNotObstructed) {
+            double distanceP1 = dijkstra.getShortestDistance(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], square);
+            double distanceP2 = dijkstra.getShortestDistance(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], square);
+            if (Math.abs(distanceP1 - distanceP2) <= 2) {
+                square.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
+                return;
             }
-            randomMiddleSquares.remove(randomIndex);
         }
     }
 
     public void buildItems() {
-        int numberOfLightmines = (int) Math.ceil(Settings.PERCENTAGE_OF_LIGHTMINES * dimension.area());
-        int numberOfTeleporters = (int) Math.ceil(Settings.PERCENTAGE_OF_TELEPORTERS * dimension.area());
+        int numberOfLightmines = (int) Math.ceil(PERCENTAGE_OF_LIGHTMINES * dimension.area());
+        int numberOfTeleporters = (int) Math.ceil(PERCENTAGE_OF_TELEPORTERS * dimension.area());
+        int numberOfIdentityDiscs = (int) Math.ceil(PERCENTAGE_OF_IDENTITYDISCS * dimension.area());
+        int numberOfForceFields = (int) Math.floor(PERCENTAGE_OF_FORCEFIELDS * dimension.area());
+
 
         placeLightMines(numberOfLightmines);
         placeTeleporters(numberOfTeleporters);
-        placeIdentityDiscs();
+        placeIdentityDiscs(numberOfIdentityDiscs);
+        placeForceFields(numberOfForceFields);
     }
 
-    private void placeIdentityDiscs() {
+    private void placeForceFields(int numberOfItems) {
+        List<ForcefieldGenerator> forceFieldGenerators = new ArrayList<ForcefieldGenerator>();
+        for (int i = 0; i < numberOfItems; i++) {
+            ForcefieldGenerator forcefieldGenerator = new ForcefieldGenerator(forceFieldArea);
+            forceFieldGenerators.add(forcefieldGenerator);
+        }
+
+        for (ForcefieldGenerator forcefieldGenerator : forceFieldGenerators) {
+            Square randomSquare = getRandomSquare();
+            boolean added = false;
+            while (added == false) {
+                while (randomSquare.getAvailableItems().size() != 0
+                        || randomSquare.isObstructed()) {
+                    randomSquare = getRandomSquare();
+                }
+
+                try {
+                    forceFieldArea.placeForceField(forcefieldGenerator, randomSquare);
+                    added = true;
+                } catch (SquareOccupiedException exc) {
+                    added = false;
+
+                }
+
+            }
+        }
+
+    }
+
+    private void placeIdentityDiscs(int numberOfItems) {
         placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
         placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
+        numberOfItems -= 2;
+        List<Item> identityDiscs = new ArrayList<Item>();
+
+        for (int i = 0; i < numberOfItems; i++) {
+            identityDiscs.add(new IdentityDisc(new NormalIdentityDiscBehavior()));
+        }
+        placeOtherItems(identityDiscs);
+
         placeChargedIdentityDisc();
     }
 
@@ -121,31 +179,25 @@ public class GridBuilder {
 
         for (int i = 0; i < numberOfItems; i++) {
             lightMines.add(new LightMine());
-            identityDiscs.add(new IdentityDisc(new NormalIdentityDiscBehavior()));
         }
         placeOtherItems(lightMines);
-        placeOtherItems(identityDiscs);
     }
 
     private void placeTeleporters(int numberOfTeleporters) {
         Teleporter[] teleporters = new Teleporter[numberOfTeleporters];
         for (int i = 0; i < numberOfTeleporters; i++) {
             Square randomSquare = getRandomSquare();
-            //TODO looks for empty squares, but teleporters can be placed alongside other items
-            while (randomSquare.getAvailableItems().size() != 0 ||
-                    randomSquare.isObstructed()) {
+            // todo what with player locations
+            while (randomSquare.isObstructed()) {
                 randomSquare = getRandomSquare();
             }
+
             Teleporter teleporter = new Teleporter(randomSquare);
-            randomSquare.addItem(teleporter);
-            try {
-                randomSquare.setActiveItem(teleporter);
-            } catch (SquareOccupiedException e) {
-                e.printStackTrace();
-            }
+            randomSquare.addEffect(teleporter);
+
             teleporters[i] = teleporter;
         }
-        //TODO multiple teleporters can have the same destination, is this allowed?
+
         for (int i = 0; i < numberOfTeleporters; i++) {
             int random = (int) Math.floor(Math.random() * 3);
             while (random == i) {
@@ -155,7 +207,7 @@ public class GridBuilder {
         }
     }
 
-    private void buildWall(){
+    private void buildWall() {
         Square randomSquare = getRandomSquare();
         while (!isValidWallPosition(randomSquare)) {
             randomSquare = getRandomSquare();
@@ -167,23 +219,23 @@ public class GridBuilder {
         switch (rand) {
             case 1:
                 direction = Direction.UP;
-                maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
-                        dimension.getHeight() * Settings.MAX_WALL_LENGTH_PERCENTAGE);
+                maxLength = getRandomWithMax(MIN_WALL_LENGTH,
+                        dimension.getHeight() * MAX_WALL_LENGTH_PERCENTAGE);
                 break;
             case 2:
                 direction = Direction.LEFT;
-                maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
-                        dimension.getWidth() * Settings.MAX_WALL_LENGTH_PERCENTAGE);
+                maxLength = getRandomWithMax(MIN_WALL_LENGTH,
+                        dimension.getWidth() * MAX_WALL_LENGTH_PERCENTAGE);
                 break;
             case 3:
                 direction = Direction.DOWN;
-                maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
-                        dimension.getHeight() * Settings.MAX_WALL_LENGTH_PERCENTAGE);
+                maxLength = getRandomWithMax(MIN_WALL_LENGTH,
+                        dimension.getHeight() * MAX_WALL_LENGTH_PERCENTAGE);
                 break;
             default:
                 direction = Direction.RIGHT;
-                maxLength = getRandomWithMax(Settings.MIN_WALL_LENGTH,
-                        dimension.getWidth() * Settings.MAX_WALL_LENGTH_PERCENTAGE);
+                maxLength = getRandomWithMax(MIN_WALL_LENGTH,
+                        dimension.getWidth() * MAX_WALL_LENGTH_PERCENTAGE);
         }
 
         buildWall(randomSquare, direction, maxLength);
@@ -193,7 +245,7 @@ public class GridBuilder {
         Wall wall = new Wall();
         double wallPercentage = calculateWallPercentage(0);
         while (wall.getLength() <= maxLength
-                && wallPercentage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE
+                && wallPercentage <= MAX_WALL_COVERAGE_PERCENTAGE
                 && currentSquare != null
                 && isValidWallPosition(currentSquare)) {
 
@@ -202,7 +254,7 @@ public class GridBuilder {
             currentSquare = currentSquare.getNeighbour(direction);
         }
 
-        if (wall.getLength() >= Settings.MIN_WALL_LENGTH) {
+        if (wall.getLength() >= MIN_WALL_LENGTH) {
             wall.build();
             walls.add(wall);
         }
@@ -225,7 +277,6 @@ public class GridBuilder {
                     || randomSquare.isObstructed()) {
                 randomSquare = getRandomSquare();
             }
-
             randomSquare.addItem(item);
         }
     }
@@ -267,9 +318,6 @@ public class GridBuilder {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Position pos = new Position(horizontal, vertical);
                 squares[vertical][horizontal] = new Square(pos, powerFailureChance);
-                if (pos.equals(p1Pos) || pos.equals(p2Pos)) {
-                    squares[vertical][horizontal].setObstructed(true);
-                }
             }
         }
         setupNeighbours();
@@ -308,8 +356,8 @@ public class GridBuilder {
     }
 
     private boolean isValidDimension(Dimension dimension) {
-        return dimension.getWidth() >= Settings.MIN_GRID_WIDTH
-                && dimension.getHeight() >= Settings.MIN_GRID_HEIGHT;
+        return dimension.getWidth() >= MIN_GRID_WIDTH
+                && dimension.getHeight() >= MIN_GRID_HEIGHT;
     }
 
     private boolean isValidPosition(Position pos) {
@@ -350,7 +398,7 @@ public class GridBuilder {
         double wallCoverage = calculateWallPercentage(1);
 
         return possible &&
-                wallCoverage <= Settings.MAX_WALL_COVERAGE_PERCENTAGE;
+                wallCoverage <= MAX_WALL_COVERAGE_PERCENTAGE;
     }
 
     public void addObserver(SquareObserver observer) {

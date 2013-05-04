@@ -22,7 +22,7 @@ public class DirectionListView {
             }
         };
         gui.setCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        gui.createButton(50, 10, 40, 40, new Runnable(){
+        gui.createButton(50, 10, 40, 40, new Runnable() {
 
             @Override
             public void run() {
@@ -31,7 +31,7 @@ public class DirectionListView {
             }
         }).setImage(gui.loadImage("arrow_N.png", 20, 20));
 
-        gui.createButton(90, 50, 40, 40, new Runnable(){
+        gui.createButton(90, 50, 40, 40, new Runnable() {
             @Override
             public void run() {
                 action.doAction(Direction.RIGHT.ordinal());
@@ -39,7 +39,7 @@ public class DirectionListView {
             }
         }).setImage(gui.loadImage("arrow_E.png", 20, 20));
 
-        gui.createButton(50, 90, 40, 40, new Runnable(){
+        gui.createButton(50, 90, 40, 40, new Runnable() {
             @Override
             public void run() {
                 action.doAction(Direction.DOWN.ordinal());
@@ -47,7 +47,7 @@ public class DirectionListView {
             }
         }).setImage(gui.loadImage("arrow_S.png", 20, 20));
 
-        gui.createButton(10, 50, 40, 40, new Runnable(){
+        gui.createButton(10, 50, 40, 40, new Runnable() {
             @Override
             public void run() {
                 action.doAction(Direction.LEFT.ordinal());

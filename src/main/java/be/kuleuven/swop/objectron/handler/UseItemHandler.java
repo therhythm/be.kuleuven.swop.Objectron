@@ -8,8 +8,11 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
+import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.PlacingItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.ThrowingItemDeployer;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -21,7 +24,6 @@ import java.util.logging.Logger;
  *         Time: 01:10
  */
 public class UseItemHandler extends Handler {
-    private static Logger logger = Logger.getLogger(UseItemHandler.class.getCanonicalName());
 
     public UseItemHandler(GameState state) {
         super(state);
@@ -36,7 +38,7 @@ public class UseItemHandler extends Handler {
      *          | getCurrentPlayer().getInventory().isEmpty()
      */
     public List<Item> showInventory() throws InventoryEmptyException {
-        List<Item> inventory = state.getCurrentPlayer().getInventoryItems();
+        List<Item> inventory = state.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItems();
         if (!inventory.isEmpty()) {
             return inventory;
         } else {
@@ -53,8 +55,8 @@ public class UseItemHandler extends Handler {
      * |  == currentPlayer.getInventory().retrieveItem(identifier)
      */
     public String selectItemFromInventory(int identifier) {
-        Item currentlySelectedItem =  state.getCurrentPlayer().getInventoryItem(identifier);
-        state.setCurrentItem(currentlySelectedItem);
+        Item currentlySelectedItem = state.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItem(identifier);
+        state.getTurnManager().getCurrentTurn().setCurrentItem(currentlySelectedItem);
         return currentlySelectedItem.getName();
     }
 
@@ -73,44 +75,36 @@ public class UseItemHandler extends Handler {
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
     public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
-        if (state.getCurrentItem() == null) {
+        TurnManager turnManager = state.getTurnManager();
+        Turn currentTurn = turnManager.getCurrentTurn();
+        if (currentTurn.getCurrentItem() == null) {
             throw new NoItemSelectedException("You don't have an item selected.");
         }
-        try {
-            Turn currentTurn = state.getCurrentTurn();
-            currentTurn.checkEnoughActions();
-            UseItemRequest useItemRequest = new UseItemRequest(state.getCurrentPlayer().getCurrentSquare());
-            currentTurn.getCurrentPlayer().useItem(state.getCurrentItem(),useItemRequest);
-            state.setCurrentItem(null);
-            currentTurn.reduceRemainingActions(1);
-        } catch (SquareOccupiedException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
-            throw e;
-        } catch (NotEnoughActionsException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do use an item when he had no actions remaining.");
-            throw e;
-        }
+
+        currentTurn.checkEnoughActions();
+        currentTurn.reduceRemainingActions(1);
+        state.endAction();
+        ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare());
+        currentTurn.getCurrentPlayer().useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
+        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
+
     }
 
     public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
-        if (state.getCurrentItem() == null) {
+        TurnManager turnManager = state.getTurnManager();
+        Turn currentTurn = turnManager.getCurrentTurn();
+
+        if (currentTurn.getCurrentItem() == null) {
             throw new NoItemSelectedException("You don't have an item selected.");
         }
-        try {
-            Turn currentTurn = state.getCurrentTurn();
-            Player currentPlayer = state.getCurrentPlayer();
-            currentTurn.checkEnoughActions();
-            UseItemRequest useItemRequest = new UseItemRequest(currentPlayer.getCurrentSquare(), direction, state);
-            currentPlayer.useItem(state.getCurrentItem(), useItemRequest);
-            state.setCurrentItem(null);
-            currentTurn.reduceRemainingActions(1);
-        } catch (SquareOccupiedException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to place an item on an occupied square!");
-            throw e;
-        } catch (NotEnoughActionsException e) {
-            logger.log(Level.INFO, state.getCurrentPlayer().getName() + " tried to do use an item when he had no actions remaining.");
-            throw e;
-        }
+
+        Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
+        currentTurn.checkEnoughActions();
+
+        ItemDeployer deployer = new ThrowingItemDeployer(currentPlayer.getCurrentSquare(), direction, turnManager);
+        currentPlayer.useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
+        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
+        currentTurn.reduceRemainingActions(1);
     }
 
     /**
@@ -120,6 +114,6 @@ public class UseItemHandler extends Handler {
      * | new.state.getCurrentPlayer().getCurrentlySelectedItem() == null
      */
     public void cancelItemUsage() {
-        state.setCurrentItem(null);
+        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
     }
 }

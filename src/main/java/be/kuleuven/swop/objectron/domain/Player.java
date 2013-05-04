@@ -1,11 +1,21 @@
 package be.kuleuven.swop.objectron.domain;
 
+import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.UseItemRequest;
+import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
+import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
+import be.kuleuven.swop.objectron.domain.movement.PlayerMovementStrategy;
+import be.kuleuven.swop.objectron.domain.movement.teleport.PlayerTeleportStrategy;
+import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
+import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
+import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.List;
@@ -15,8 +25,7 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public class Player {
-
+public class Player implements Movable, Obstruction{
     private String name;
     private Square currentSquare;
     private Square initialSquare;
@@ -24,12 +33,15 @@ public class Player {
     private Inventory inventory = new Inventory();
     private int remainingPenalties;
     private boolean isTeleporting;
+    private TeleportStrategy teleportStrategy;
+    private MovementStrategy movementStrategy;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
         this.initialSquare = currentSquare;
-        currentSquare.setObstructed(true);
+        currentSquare.addObstruction(this);
+        this.teleportStrategy = new PlayerTeleportStrategy();
     }
 
     public Square getCurrentSquare() {
@@ -42,22 +54,34 @@ public class Player {
 
     public void pickupItem(int identifier) throws InventoryFullException {
         Item item = currentSquare.pickUpItem(identifier);
-        if (item.pickupAble()) {
-            try{
-                this.inventory.addItem(item);
-            }catch(InventoryFullException ex){
-                currentSquare.addItem(item);
-                throw ex;
-            }
+
+        try {
+            this.inventory.addItem(item);
+        } catch (InventoryFullException ex) {
+            currentSquare.addItem(item);
+            throw ex;
         }
         actionPerformed();
     }
 
-    public void move(Square newPosition) {
+    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException {
         actionPerformed();
+        this.movementStrategy = new PlayerMovementStrategy(manager);
+        try {
+            enter(newPosition, manager);
+        } catch (PlayerHitException | ForceFieldHitException | WallHitException e) {
+            throw new InvalidMoveException();
+        }
+        teleportStrategy = new PlayerTeleportStrategy();
+    }
+
+    @Override
+    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
         lightTrail.expand(currentSquare);
+        currentSquare.removeObstruction(this);
+        newPosition.addObstruction(this);
         currentSquare = newPosition;
-        isTeleporting = false;
+        newPosition.stepOn(this, manager);
     }
 
     public void teleport(Square destination) {
@@ -78,9 +102,9 @@ public class Player {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item,UseItemRequest useItemRequest) throws SquareOccupiedException, NotEnoughActionsException {
-       
-        item.useItem(useItemRequest);
+    public void useItem(Item item, ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException {
+
+        deployer.deploy(item);
 
         inventory.removeItem(item);
 
@@ -108,12 +132,12 @@ public class Player {
 
     public void reduceRemainingPenalties(int playerActionsEachTurn) {
         this.remainingPenalties -= playerActionsEachTurn;
-        if(this.remainingPenalties < 0){
+        if (this.remainingPenalties < 0) {
             this.remainingPenalties = 0;
         }
     }
 
-    public String toString(){
+    public String toString() {
         String result = "";
         result += "name: " + this.getName() + "\n";
         result += "position: " + this.getCurrentSquare() + "\n";
@@ -123,5 +147,20 @@ public class Player {
 
     public boolean isTeleporting() {
         return isTeleporting;
+    }
+
+    @Override
+    public TeleportStrategy getTeleportStrategy() {
+        return teleportStrategy;
+    }
+
+    @Override
+    public MovementStrategy getMovementStrategy() {
+        return movementStrategy;
+    }
+
+    @Override
+    public void hit(MovementStrategy strategy) throws InvalidMoveException, PlayerHitException {
+        strategy.hitPlayer(this);
     }
 }

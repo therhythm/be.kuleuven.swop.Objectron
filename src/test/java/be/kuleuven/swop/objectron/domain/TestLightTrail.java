@@ -1,4 +1,4 @@
-package be.kuleuven.objectron.model;
+package be.kuleuven.swop.objectron.domain;
 
 import be.kuleuven.swop.objectron.domain.LightTrail;
 import be.kuleuven.swop.objectron.domain.square.Square;

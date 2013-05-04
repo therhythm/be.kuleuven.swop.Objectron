@@ -11,11 +11,11 @@ import java.util.Map;
 public class HandlerCatalog {
     private Map<Class<?>, Handler> catalog = new HashMap<>();
 
-    public void addHandler(Handler handler){
+    public void addHandler(Handler handler) {
         catalog.put(handler.getClass(), handler);
     }
 
-    public Handler getHandler(Class<?> handler){
+    public Handler getHandler(Class<?> handler) {
         return catalog.get(handler);
     }
 }

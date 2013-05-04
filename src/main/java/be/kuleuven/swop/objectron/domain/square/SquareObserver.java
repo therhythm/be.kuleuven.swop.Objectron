@@ -12,6 +12,8 @@ import be.kuleuven.swop.objectron.domain.util.Position;
  */
 public interface SquareObserver {
     public void lostPower(Position position);
+
     public void regainedPower(Position position);
+
     public void itemPlaced(Item item, Position position);
 }

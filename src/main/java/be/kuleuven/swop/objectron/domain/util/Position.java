@@ -11,21 +11,21 @@ public class Position {
     private final int hIndex;
     private final int vIndex;
 
-    public Position(int hIndex, int vIndex){
+    public Position(int hIndex, int vIndex) {
         this.hIndex = hIndex;
         this.vIndex = vIndex;
     }
 
-    public int getHIndex(){
+    public int getHIndex() {
         return this.hIndex;
     }
 
-    public int getVIndex(){
+    public int getVIndex() {
         return this.vIndex;
     }
 
-    public String toString(){
-        String result="";
+    public String toString() {
+        String result = "";
         result += "horizontal: " + hIndex + "\t" + "vertical: " + vIndex;
         return result;
     }
