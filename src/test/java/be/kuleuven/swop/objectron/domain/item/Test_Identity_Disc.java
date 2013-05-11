@@ -194,7 +194,7 @@ public class Test_Identity_Disc {
 
         Square squareIdentityDisc = grid.getSquareAtPosition(new Position(1, 5));
         //TODO fix bug, vermoedelijk in methode "enter" van de klasse IdentityDisc
-        //assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+        assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
     }
 
     @Test
@@ -233,9 +233,9 @@ public class Test_Identity_Disc {
 
         Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, 7));
         //TODO fix bug, vermoedelijk in methode "enter" van de klasse IdentityDisc
-       // assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
-       // assertFalse(turnManager.getCurrentTurn().getCurrentPlayer().equals(current_player));
-       // assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN*2);
+        assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
+        assertFalse(turnManager.getCurrentTurn().getCurrentPlayer().equals(current_player));
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN*2);
     }
 
     @Test
