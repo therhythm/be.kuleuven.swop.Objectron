@@ -1,11 +1,15 @@
 package scenario;
 
+import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.util.GridFileReader;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -17,19 +21,12 @@ import static org.junit.Assert.assertTrue;
 public class TestUC_ChooseGridFromFile {
 
     private char[][] input;
-    private GridBuilder gridBuilder;
+    private FileGridBuilder gridBuilder;
 
     @Before
-    public void setUp() {
-        input = new char[][]{
-                {'*', '*', '*', '*', '*', '*', '*'},
-                {'*', ' ', ' ', ' ', '#', '2', '*'},
-                {'*', ' ', ' ', ' ', '#', ' ', '*'},
-                {'*', ' ', '#', ' ', '#', ' ', '*'},
-                {'*', ' ', '#', ' ', ' ', ' ', '*'},
-                {'*', '1', '#', ' ', ' ', ' ', '*'},
-                {'*', '*', '*', '*', '*', '*', '*'}
-        };
+    public void setUp() throws IOException {
+        GridFileReader fileReader = new GridFileReader();
+        input = fileReader.readGridFile("/Users/kasper/Desktop/test_file.txt");
         gridBuilder = new FileGridBuilder();
     }
 
