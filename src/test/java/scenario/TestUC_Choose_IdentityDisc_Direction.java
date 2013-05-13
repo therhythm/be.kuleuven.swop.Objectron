@@ -5,7 +5,9 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -38,6 +40,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
     private GameState state;
     private Player player1;
     private Grid grid;
+    private GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException {
@@ -46,7 +49,9 @@ public class TestUC_Choose_IdentityDisc_Direction {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(2, 9);
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);

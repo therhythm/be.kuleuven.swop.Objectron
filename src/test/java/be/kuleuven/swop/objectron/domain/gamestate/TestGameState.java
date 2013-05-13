@@ -7,7 +7,9 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -28,12 +30,15 @@ import static org.junit.Assert.assertTrue;
 public class TestGameState {
 
     GameState state;
+    GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException {
         Position p1Pos = new Position(0, 0);
         Position p2Pos = new Position(1, 0);
-        Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), p1Pos, p2Pos);
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        Grid grid = gridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
 
     }

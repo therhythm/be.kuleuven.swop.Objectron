@@ -10,7 +10,9 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -34,13 +36,16 @@ public class TestUC_Move {
     private MovePlayerHandler movePlayerHandler;
     private Player player1;
     private GameState stateMock;
+    private GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(0, 5);
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        Grid grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
 
         player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
         Turn turn = new Turn(player1);

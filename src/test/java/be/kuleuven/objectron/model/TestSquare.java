@@ -5,7 +5,9 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.PowerFailure;
@@ -37,6 +39,7 @@ public class TestSquare {
     private Dimension dimension;
     private Grid grid;
     private MovePlayerHandler movePlayerHandler;
+    private GridFactory gridFactory;
 
 
     @Before
@@ -44,7 +47,9 @@ public class TestSquare {
         p1Pos = new Position(5, 4);
         p2Pos = new Position(5, 3);
         dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         gamestate = new GameState("p1", "p2", p1Pos, p2Pos, grid);
 
         square = new Square(new Position(5, 5));

@@ -5,7 +5,9 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
@@ -38,6 +40,7 @@ public class Test_Force_Field {
     private GameState state;
     private Player player1;
     private Grid grid;
+    private GridFactory gridFactory;
 
     private Dimension dimension;
     private Position p1Pos;
@@ -50,7 +53,9 @@ public class Test_Force_Field {
         p1Pos = new Position(4, 5);
         p2Pos = new Position(7, 6);
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        GridBuilder gridBuilder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(gridBuilder);
+        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -432,7 +437,7 @@ public class Test_Force_Field {
         p1Pos = new Position(4, 5);
         p2Pos = new Position(6, 6);
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);

@@ -2,6 +2,8 @@ package be.kuleuven.swop.objectron.domain.item.effect;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
@@ -26,11 +28,14 @@ public class TestTeleporter {
     private Player player;
     private Square currentSquare;
     private MovePlayerHandler movePlayerHandler;
+    private GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutWalls(dimension, new Position(0, 9), new Position(9, 0));
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        Grid grid = gridFactory.gridWithoutWalls(dimension, new Position(0, 9), new Position(9, 0));
         gameState = new GameState("p1", "p2", dimension, grid);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();

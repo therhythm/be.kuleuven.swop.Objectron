@@ -8,7 +8,9 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
@@ -35,11 +37,14 @@ public class TestUC_pick_up_item {
     private Player player;
     private Square currentSquare;
     private GameState gameState;
+    private GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutItems(dimension, new Position(0, 9), new Position(9, 0));
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        Grid grid = gridFactory.gridWithoutItems(dimension, new Position(0, 9), new Position(9, 0));
         gameState = new GameState("p1", "p2", dimension, grid);
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();

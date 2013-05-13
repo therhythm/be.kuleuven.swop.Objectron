@@ -6,7 +6,9 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
@@ -39,11 +41,14 @@ public class TestPowerFailure implements SquareObserver {
     private boolean regainedPower;
     private boolean powerLoss;
     private int powerLossCounter;
+    private GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException, SquareOccupiedException {
         Dimension dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        grid = gridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
         state = new GameState("p1", "p2", dimension, grid);
         player = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
@@ -89,7 +94,7 @@ public class TestPowerFailure implements SquareObserver {
 
     @Test
     public void checkRotatingPowerFailure() throws GridTooSmallException, InvalidMoveException, NotEnoughActionsException, GameOverException {
-        grid = GridFactory.gridWithoutWalls(new Dimension(10, 10), new Position(0, 0), new Position(2, 2));
+        grid = gridFactory.gridWithoutWalls(new Dimension(10, 10), new Position(0, 0), new Position(2, 2));
         Square currentSquare = grid.getSquareAtPosition(new Position(5, 5));
         currentSquare.attach(this);
         for (Direction d : Direction.values()) {

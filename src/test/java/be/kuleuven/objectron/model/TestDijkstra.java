@@ -7,7 +7,9 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -36,6 +38,7 @@ public class TestDijkstra {
     private Position p1Pos;
     private Position p2Pos;
     private Dimension dimension;
+    private GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException {
@@ -47,7 +50,9 @@ public class TestDijkstra {
         wallPositions.add(new Position(6, 6));
         wallPositions.add(new Position(5, 6));
         wallPositions.add(new Position(4, 6));
-        grid = GridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension, p1Pos, p2Pos, wallPositions);
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        grid = gridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension, p1Pos, p2Pos, wallPositions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
     }
 

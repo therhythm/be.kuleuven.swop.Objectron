@@ -2,8 +2,6 @@ package scenario;
 
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.util.GridFileReader;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
@@ -25,14 +23,13 @@ public class TestUC_ChooseGridFromFile {
 
     @Before
     public void setUp() throws IOException {
-        GridFileReader fileReader = new GridFileReader();
-        input = fileReader.readGridFile("/Users/kasper/Desktop/test_file.txt");
-        gridBuilder = new FileGridBuilder();
+        //String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").toString();
+        String input_file = "/Users/kasper/Desktop/test_file.txt";
+        gridBuilder = new FileGridBuilder(input_file);
     }
 
     @Test
     public void test_basic_flow() {
-        gridBuilder.gridFromFile(input);
         Grid grid = gridBuilder.getGrid();
 
         //check dimensions

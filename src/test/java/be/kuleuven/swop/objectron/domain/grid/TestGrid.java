@@ -6,9 +6,6 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -39,6 +36,7 @@ public class TestGrid {
     private Position p1Pos;
     private Position p2Pos;
     private Dimension dimension;
+    private GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException {
@@ -46,7 +44,9 @@ public class TestGrid {
         p1Pos = new Position(1, 8);
         p2Pos = new Position(3, 8);
         dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -77,7 +77,7 @@ public class TestGrid {
      */
     @Test
     public void test_items_grid() throws GridTooSmallException {
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
+        grid = gridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
         boolean hasItems = false;
         int numberOfLightMines = 0;
         int numberOfTeleporters = 0;
@@ -108,10 +108,10 @@ public class TestGrid {
             }
         }
         System.out.println(numberOfIdentityDiscsCharged);
-        assertTrue(numberOfLightMines <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_LIGHTMINES * dimension.area()));
-        assertTrue(numberOfTeleporters <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_TELEPORTERS * dimension.area()));
-        assertTrue(numberOfIdentitydiscs <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_IDENTITYDISCS * dimension.area()));
-        assertTrue(numberOfForceFields <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_FORCEFIELDS * dimension.area()));
+        assertTrue(numberOfLightMines <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_LIGHTMINES * dimension.area()));
+        assertTrue(numberOfTeleporters <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_TELEPORTERS * dimension.area()));
+        assertTrue(numberOfIdentitydiscs <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_IDENTITYDISCS * dimension.area()));
+        assertTrue(numberOfForceFields <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_FORCEFIELDS * dimension.area()));
         assertTrue(numberOfIdentityDiscsCharged == 1);
         assertTrue(hasItems);
 
@@ -126,7 +126,7 @@ public class TestGrid {
 
     @Test
     public void test_charged_identity_disc() throws GridTooSmallException {
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
+        grid = gridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
         int aantal = 0;
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -156,7 +156,7 @@ public class TestGrid {
         wallPositions.add(new Position(4, 4));
         wallPositions.add(new Position(4, 3));
         int aantal = 0;
-        grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0), wallPositions);
+        grid = gridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0), wallPositions);
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
@@ -193,7 +193,7 @@ public class TestGrid {
     public void test_place_charged_identity_disc() throws GridTooSmallException {
         p1Pos = new Position(0, 9);
         p2Pos = new Position(9, 0);
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
+        grid = gridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
         int numberOfIdentityDiscsCharged = 0;
         Square square_charged_ID = null;
         for (int i = 0; i < 10; i++) {
@@ -222,7 +222,7 @@ public class TestGrid {
             }
         }
         for (int repeat = 0; repeat < 100; repeat++) {
-            grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0), wallPositions);
+            grid = gridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0), wallPositions);
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     Square square = grid.getSquareAtPosition(new Position(i, j));

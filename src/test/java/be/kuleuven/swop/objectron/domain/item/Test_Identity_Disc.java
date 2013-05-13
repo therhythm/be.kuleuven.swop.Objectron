@@ -7,6 +7,8 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
@@ -43,6 +45,7 @@ public class Test_Identity_Disc {
     private GameState state;
     private Player player1;
     private Grid grid;
+    private GridFactory gridFactory;
 
     private Dimension dimension;
     private Position p1Pos;
@@ -55,7 +58,9 @@ public class Test_Identity_Disc {
         p1Pos = new Position(0, 9);
         p2Pos = new Position(5, 9);
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        GridBuilder builder = new GeneratedGridBuilder();
+        gridFactory = new GridFactory(builder);
+        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -127,7 +132,7 @@ public class Test_Identity_Disc {
         List<Position> wallPositions = new ArrayList<Position>();
         wallPositions.add(new Position(0, 6));
 
-        grid = GridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, p1Pos, p2Pos, wallPositions);
+        grid = gridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, p1Pos, p2Pos, wallPositions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
@@ -152,7 +157,7 @@ public class Test_Identity_Disc {
         List<Position> wallPositions = new ArrayList<Position>();
         wallPositions.add(new Position(0, 3));
 
-        grid = GridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, p1Pos, p2Pos, wallPositions);
+        grid = gridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, p1Pos, p2Pos, wallPositions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
@@ -205,7 +210,7 @@ public class Test_Identity_Disc {
         p2Pos = new Position(5, 9);
 
         TurnManager turnManager = state.getTurnManager();
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);

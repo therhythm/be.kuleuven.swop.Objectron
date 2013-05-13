@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.square.PowerFailure;
+import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -18,8 +19,17 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class GridFactory {
-    public static Grid normalGrid(Dimension dimension, Position p1, Position p2, SquareObserver observer) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+
+    private GridBuilder builder;
+
+    public GridFactory(GridBuilder builder) {
+        this.builder = builder;
+    }
+
+    public Grid normalGrid(Dimension dimension, Position p1, Position p2, SquareObserver observer) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
+        builder.initGrid(Square.POWER_FAILURE_CHANCE);
         builder.buildWalls();
         builder.buildItems();
         builder.addObserver(observer);
@@ -27,16 +37,18 @@ public class GridFactory {
     }
 
     // Contstruct a grid without walls and powerfailures
-    public static Grid gridWithoutWallsPowerFailures(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid gridWithoutWallsPowerFailures(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
         builder.initGrid(0);
         builder.buildItems();
         return builder.getGrid();
     }
 
     // Contstruct a grid with specified walls and without powerfailures and Items
-    public static Grid gridWithSpecifiedWallsWithoutItemsAndPowerFailures(Dimension dimension, Position p1, Position p2, List<Position> wallPositions) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid gridWithSpecifiedWallsWithoutItemsAndPowerFailures(Dimension dimension, Position p1, Position p2, List<Position> wallPositions) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
         builder.initGrid(0);
         List<Wall> walls = new ArrayList<Wall>();
 
@@ -48,13 +60,13 @@ public class GridFactory {
         }
         builder.buildWalls(walls);
 
-
         return builder.getGrid();
     }
 
     // Contstruct a grid with specified walls and without powerfailures
-    public static Grid gridWithSpecifiedWallsPowerFailures(Dimension dimension, Position p1, Position p2, List<Position> wallPositions) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid gridWithSpecifiedWallsPowerFailures(Dimension dimension, Position p1, Position p2, List<Position> wallPositions) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
         builder.initGrid(0);
         List<Wall> walls = new ArrayList<Wall>();
 
@@ -71,8 +83,9 @@ public class GridFactory {
     }
 
     // Contstruct a grid with specified walls and without powerfailures
-    public static Grid gridWithSpecifiedWallsPowerFailuresItems(Dimension dimension, Position p1, Position p2, List<Position> wallPositions) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid gridWithSpecifiedWallsPowerFailuresItems(Dimension dimension, Position p1, Position p2, List<Position> wallPositions) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
         builder.initGrid(0);
         List<Wall> walls = new ArrayList<Wall>();
 
@@ -88,8 +101,9 @@ public class GridFactory {
     }
 
     // Contstruct a grid without powerfailures
-    public static Grid gridWithoutPowerFailures(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid gridWithoutPowerFailures(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
         builder.initGrid(0);
         builder.buildItems();
         builder.buildWalls();
@@ -97,30 +111,37 @@ public class GridFactory {
     }
 
     // Contstruct a grid without walls, items and powerfailures
-    public static Grid gridWithoutWallsItemsPowerFailures(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid gridWithoutWallsItemsPowerFailures(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
         builder.initGrid(0);
         return builder.getGrid();
     }
 
     //construct a grid without walls
-    public static Grid gridWithoutWalls(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid gridWithoutWalls(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
+        builder.initGrid(Square.POWER_FAILURE_CHANCE);
         builder.buildItems();
         return builder.getGrid();
     }
 
 
     //construct a grid without items
-    public static Grid gridWithoutItems(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid gridWithoutItems(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
+        builder.initGrid(Square.POWER_FAILURE_CHANCE);
         builder.buildWalls();
         return builder.getGrid();
     }
 
     // construct a grid without power , walls or items
-    public static Grid unpoweredGridWithoutWallsWithoutItems(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid unpoweredGridWithoutWallsWithoutItems(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
+        builder.initGrid(Square.POWER_FAILURE_CHANCE);
         Grid g = builder.getGrid();
 
         // powerfailure on every square
@@ -133,8 +154,10 @@ public class GridFactory {
     }
 
     // construct a grid without power
-    public static Grid unpoweredGrid(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, p1, p2);
+    public Grid unpoweredGrid(Dimension dimension, Position p1, Position p2) throws GridTooSmallException {
+        builder.setDimension(dimension);
+        builder.setStartingPositions(p1, p2);
+        builder.initGrid(Square.POWER_FAILURE_CHANCE);
         builder.buildWalls();
         builder.buildItems();
         Grid g = builder.getGrid();
