@@ -2,10 +2,7 @@ package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
-import be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException;
-import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
@@ -74,7 +71,7 @@ public class UseItemHandler extends Handler {
      * @post The player's available actions is reduced by 1
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
-    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
+    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException, GameOverException {
         TurnManager turnManager = state.getTurnManager();
         Turn currentTurn = turnManager.getCurrentTurn();
         if (currentTurn.getCurrentItem() == null) {
@@ -90,7 +87,7 @@ public class UseItemHandler extends Handler {
 
     }
 
-    public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
+    public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException, GameOverException {
         TurnManager turnManager = state.getTurnManager();
         Turn currentTurn = turnManager.getCurrentTurn();
 

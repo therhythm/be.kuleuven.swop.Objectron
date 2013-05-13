@@ -269,7 +269,7 @@ public class GameView implements GameObserver {
                                 ItemSelectionAction action = new ItemSelectionAction() {
 
                                     @Override
-                                    public void doAction(int index) {
+                                    public void doAction(int index) throws GameOverException {
                                         Direction direction = Direction.values()[index];
                                         try {
                                             useItemHandler.useCurrentIdentityDisc(direction);
@@ -294,6 +294,8 @@ public class GameView implements GameObserver {
                             new DialogView("You have no actions remaining, end the turn.");
                         } catch (NoItemSelectedException e) {
                             new DialogView("You don't have an item selected");
+                        } catch (GameOverException e) {
+                            new DialogView(e.getMessage());
                         }
 
                         gui.repaint();

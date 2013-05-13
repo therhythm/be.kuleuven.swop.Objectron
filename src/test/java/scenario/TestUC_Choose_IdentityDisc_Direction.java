@@ -56,7 +56,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
     }
 
     @Test
-    public void basic_flow() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+    public void basic_flow() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);

@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.item.effect.RaceFinish;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -34,6 +35,10 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         players.add(new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos)));
         players.add(new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos)));
 
+        for(Player player : players){
+            gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
+        }
+
         turnManager = new TurnManager(players);
         turnManager.attach(this);
         turnManager.attach(gameGrid);
@@ -55,6 +60,10 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
 
         players.add(new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos)));
         players.add(new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos)));
+
+        for(Player player : players){
+            gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
+        }
 
         turnManager = new TurnManager(players);
         turnManager.attach(this);
@@ -86,13 +95,13 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
 
     public boolean checkWin() {
         Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
-
+          /*
         for (Player otherPlayer : players) {
             if (!otherPlayer.equals(currentPlayer) &&
                     otherPlayer.getInitialSquare().equals(currentPlayer.getCurrentSquare())) {
                 return true;
             }
-        }
+        }          */
         return false;
     }
 

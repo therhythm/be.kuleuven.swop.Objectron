@@ -65,7 +65,7 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_Charged_identity_disc_no_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+    public void test_Charged_identity_disc_no_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
@@ -81,7 +81,7 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_UnCharged_identity_disc_hit_boundary() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+    public void test_UnCharged_identity_disc_hit_boundary() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
@@ -123,7 +123,7 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_Uncharged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
+    public void test_Uncharged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
         List<Position> wallPositions = new ArrayList<Position>();
         wallPositions.add(new Position(0, 6));
 
@@ -148,7 +148,7 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_Charged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
+    public void test_Charged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
         List<Position> wallPositions = new ArrayList<Position>();
         wallPositions.add(new Position(0, 3));
 
@@ -174,7 +174,7 @@ public class Test_Identity_Disc {
 
 
     @Test
-    public void test_UnCharged_identity_disc_no_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+    public void test_UnCharged_identity_disc_no_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         Square currentSquare = grid.getSquareAtPosition(new Position(0, 9));
 
         Square upNeighbor = grid.getSquareAtPosition(new Position(0, 7));
@@ -198,7 +198,7 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_UnCharged_identity_disc_self_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
+    public void test_UnCharged_identity_disc_self_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
         dimension = new Dimension(10, 10);
 
         p1Pos = new Position(0, 7);

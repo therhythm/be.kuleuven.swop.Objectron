@@ -1,12 +1,9 @@
 package be.kuleuven.swop.objectron.domain.movement.teleport;
 
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
-import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
-import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
-import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +18,7 @@ public class IdentityDiscTeleportStrategy implements TeleportStrategy{
     private boolean isTeleporting;
 
     @Override
-    public void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+    public void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
 
         if(cycle.contains(context)||cycle.contains(context.getDestination())){
             return;

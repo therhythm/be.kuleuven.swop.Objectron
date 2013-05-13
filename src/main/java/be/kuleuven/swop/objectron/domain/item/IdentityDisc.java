@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.IdentityDiscMovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
@@ -9,9 +9,6 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.IdentityDiscTeleportStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
-import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
-import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,7 +39,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException {
         if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
@@ -110,7 +107,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
         square.stepOn(this, manager);
     }
 }

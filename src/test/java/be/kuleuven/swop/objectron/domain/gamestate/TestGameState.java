@@ -38,7 +38,7 @@ public class TestGameState {
 
     }
 
-    @Test
+    @Test(expected = GameOverException.class)
     public void test_win() throws GameOverException, NotEnoughActionsException, InvalidMoveException {
         MovePlayerHandler handler = new MovePlayerHandler(state);
         TurnManager manager = state.getTurnManager();

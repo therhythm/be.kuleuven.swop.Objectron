@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
@@ -17,7 +18,7 @@ public interface Item {
 
     void place(Square targetSquare) throws SquareOccupiedException;
 
-    void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager);
+    void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException;
 
     void pickedUp();
 }
