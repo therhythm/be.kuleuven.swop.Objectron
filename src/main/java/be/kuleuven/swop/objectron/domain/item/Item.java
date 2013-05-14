@@ -21,4 +21,6 @@ public interface Item {
     void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException;
 
     void pickedUp();
+
+    int getMaxInBag();
 }

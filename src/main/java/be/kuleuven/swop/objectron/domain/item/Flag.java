@@ -15,6 +15,8 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public class Flag implements Item {
+    private static final int MAX_IN_BAG = 1;
+
     private final Player owner;
     private final Square base;
 
@@ -43,12 +45,11 @@ public class Flag implements Item {
     }
 
     @Override
-    public void pickedUp(Player player) {
-        if (player.equals(owner)) {
-            //player.getInventoryItems().remove(this);
-            base.addItem(this);
-        } else
-        //    player.getInventoryItems().add(this);
+    public void pickedUp() {
+    }
 
+    @Override
+    public int getMaxInBag() {
+        return MAX_IN_BAG;
     }
 }

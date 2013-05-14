@@ -54,6 +54,8 @@ public class Player implements Movable, Obstruction{
         } catch (InventoryFullException ex) {
             currentSquare.addItem(item);
             throw ex;
+        } catch (TooManyItemsOfSameTypeException e) {
+            currentSquare.addItem(item);
         }
         actionPerformed();
     }

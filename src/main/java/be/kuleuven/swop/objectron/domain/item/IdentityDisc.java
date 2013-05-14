@@ -18,6 +18,8 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public class IdentityDisc implements Item, Movable {
+    private static final int MAX_IN_BAG = Integer.MAX_VALUE; // Can't have annoying side effects. It would be impossible for a game to have even this amount of items.
+
     private IdentityDiscBehavior identityDiscBehavior;
     private TeleportStrategy teleportStrategy;
     private MovementStrategy movementStrategy;
@@ -82,6 +84,11 @@ public class IdentityDisc implements Item, Movable {
     @Override
     public void pickedUp() {
         //do nothing
+    }
+
+    @Override
+    public int getMaxInBag() {
+        return MAX_IN_BAG;
     }
 
     private boolean validDirection(Direction direction) {

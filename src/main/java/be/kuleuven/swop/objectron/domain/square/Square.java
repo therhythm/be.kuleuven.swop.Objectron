@@ -89,7 +89,6 @@ public class Square implements Observable<SquareObserver> {
         Item selectedItem = items.get(selectionId);
 
         items.remove(selectedItem);
-        selectedItem.pickedUp();
         return selectedItem;
     }
 
