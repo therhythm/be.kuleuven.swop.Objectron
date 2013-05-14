@@ -7,7 +7,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 
-import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;

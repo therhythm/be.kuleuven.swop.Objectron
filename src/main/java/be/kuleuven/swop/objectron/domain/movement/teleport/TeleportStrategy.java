@@ -2,7 +2,7 @@ package be.kuleuven.swop.objectron.domain.movement.teleport;
 
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
 import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;

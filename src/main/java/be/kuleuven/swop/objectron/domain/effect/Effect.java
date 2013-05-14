@@ -1,6 +1,5 @@
-package be.kuleuven.swop.objectron.domain.item.effect;
+package be.kuleuven.swop.objectron.domain.effect;
 
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 
