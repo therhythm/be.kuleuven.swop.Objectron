@@ -1,6 +1,8 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.GameMode;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -26,28 +28,53 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
     private TurnManager turnManager;
+    private GameMode gamemode;
 
-
-    public GameState(ArrayList<String> playerNames, Dimension dimension) throws GridTooSmallException {
+    public GameState(List<String> playerNames, Dimension dimension) throws GridTooSmallException {
         List<Position> positions = new ArrayList<Position>();
 
         positions.add(new Position(0, dimension.getHeight() - 1));
         positions.add(new Position(dimension.getWidth() - 1, 0));
+        positions.add(new Position(dimension.getWidth() - 1, dimension.getHeight() - 1));
+        positions.add(new Position(0, 0));
 
-        this.gameGrid = GridFactory.normalGrid(dimension, positions, this);
+
+        this.gameGrid = GridFactory.normalGrid(dimension, positions.subList(0, playerNames.size()), this);
 
         for (int i = 0; i < playerNames.size(); i++) {
             players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
         }
 
-        for (Player player : players) {
-            gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
-        }
+        gamemode = new RaceMode();
+        gamemode.initialize(players);
 
         initializeTurnmanager();
     }
-                  //Todo deze cunstructor mag weg als constructor erboven overal werkt
-    public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException {
+
+    //Todo remove constructor above if this is working and properly implemented
+    public GameState(List<String> playerNames, Dimension dimension, GameMode gameMode) throws GridTooSmallException {
+        List<Position> positions = new ArrayList<Position>();
+
+        positions.add(new Position(0, dimension.getHeight() - 1));
+        positions.add(new Position(dimension.getWidth() - 1, 0));
+        positions.add(new Position(dimension.getWidth() - 1, dimension.getHeight() - 1));
+        positions.add(new Position(0, 0));
+
+
+        this.gameGrid = GridFactory.normalGrid(dimension, positions.subList(0, playerNames.size()), this);
+
+        for (int i = 0; i < playerNames.size(); i++) {
+            players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
+        }
+
+        this.gamemode = gameMode;
+        gamemode.initialize(players);
+
+        initializeTurnmanager();
+    }
+
+    //Todo deze cunstructor mag weg als constructor erboven overal werkt
+  /*  public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException {
         Position p1Pos = new Position(0, dimension.getHeight() - 1);
         Position p2Pos = new Position(dimension.getWidth() - 1, 0);
 
@@ -66,7 +93,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         }
 
         initializeTurnmanager();
-    }
+    }*/
 
     private void initializeTurnmanager() {
         turnManager = new TurnManager(players);
@@ -84,6 +111,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
                 gameGrid);
     }
 
+    //Todo mag weg als constructor onder deze werkt en alle testen zijn aangepast aan die constructor
     public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos,
                      Grid gameGrid) throws GridTooSmallException {
         this.gameGrid = gameGrid;
@@ -91,6 +119,25 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         players.add(new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos)));
         players.add(new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos)));
 
+        for (Player player : players) {
+            gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
+        }
+        this.gamemode = new RaceMode();
+        turnManager = new TurnManager(players);
+        turnManager.attach(this);
+        turnManager.attach(gameGrid);
+        turnManager.attach(getGrid().getForceFieldArea());
+    }
+
+    public GameState(List<String> playerNames, List<Position> positions,
+                     Grid gameGrid, GameMode gameMode) throws GridTooSmallException {
+        this.gameGrid = gameGrid;
+        this.gamemode = gameMode;
+
+
+        for (int i = 0; i < playerNames.size(); i++) {
+            players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
+        }
         for (Player player : players) {
             gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
         }

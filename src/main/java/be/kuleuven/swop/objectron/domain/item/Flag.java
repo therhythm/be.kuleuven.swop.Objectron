@@ -46,6 +46,7 @@ public class Flag implements Item {
 
     @Override
     public void pickedUp() {
+
     }
 
     @Override
