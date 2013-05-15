@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
@@ -15,6 +16,9 @@ import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -43,15 +47,22 @@ public class TestSquare {
     public void setUp() throws GridTooSmallException, SquareOccupiedException {
         p1Pos = new Position(5, 4);
         p2Pos = new Position(5, 3);
+
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
         dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
         gamestate = new GameState("p1", "p2", p1Pos, p2Pos, grid);
 
         square = new Square(new Position(5, 5));
         new LightMine().place(square);
-        player1 = gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer();
-        gamestate.getTurnManager().endTurn();
-        player2 = gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer();
+        TurnManager turnManager = gamestate.getTurnManager();
+        player1 = turnManager.getCurrentTurn().getCurrentPlayer();
+        turnManager.getCurrentTurn().setMoved();
+        turnManager.endTurn();
+        player2 = turnManager.getCurrentTurn().getCurrentPlayer();
         movePlayerHandler = new MovePlayerHandler(gamestate);
     }
 
@@ -68,6 +79,7 @@ public class TestSquare {
     public void test_action_loss_unpowered(){
         Square square = grid.getSquareAtPosition(new Position(5,4));
         square.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
+        gamestate.getTurnManager().getCurrentTurn().setMoved();
         gamestate.getTurnManager().endTurn();
         assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), 2);
     }

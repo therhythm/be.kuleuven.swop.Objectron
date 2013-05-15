@@ -19,6 +19,7 @@ import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -39,7 +40,12 @@ public class TestUC_pick_up_item {
     @Before
     public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutItems(dimension, new Position(0, 9), new Position(9, 0));
+
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(new Position(0, 9));
+        positions.add( new Position(9, 0));
+
+        Grid grid = GridFactory.gridWithoutItems(dimension,positions);
         gameState = new GameState("p1", "p2", dimension, grid);
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
@@ -78,7 +84,9 @@ public class TestUC_pick_up_item {
         for (int i = 0; i < Inventory.INVENTORY_LIMIT; i++) {
             player.pickupItem(0);
             currentSquare.addItem(new LightMine());
+            gameState.getTurnManager().getCurrentTurn().setMoved();
             gameState.getTurnManager().endTurn();
+            gameState.getTurnManager().getCurrentTurn().setMoved();
             gameState.getTurnManager().endTurn();
         }
 

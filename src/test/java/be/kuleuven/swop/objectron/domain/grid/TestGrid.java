@@ -39,14 +39,21 @@ public class TestGrid {
     private Position p1Pos;
     private Position p2Pos;
     private Dimension dimension;
+    private  List<Position> positions;
 
     @Before
     public void setUp() throws GridTooSmallException {
 
         p1Pos = new Position(1, 8);
         p2Pos = new Position(3, 8);
+
+       positions = new ArrayList<Position>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
+
         dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -77,7 +84,9 @@ public class TestGrid {
      */
     @Test
     public void test_items_grid() throws GridTooSmallException {
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
+
+
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, positions);
         boolean hasItems = false;
         int numberOfLightMines = 0;
         int numberOfTeleporters = 0;
@@ -126,7 +135,10 @@ public class TestGrid {
 
     @Test
     public void test_charged_identity_disc() throws GridTooSmallException {
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
+        positions = new ArrayList<Position>();
+        positions.add( new Position(0, 9));
+        positions.add( new Position(9, 0));
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension,positions);
         int aantal = 0;
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -156,7 +168,12 @@ public class TestGrid {
         wallPositions.add(new Position(4, 4));
         wallPositions.add(new Position(4, 3));
         int aantal = 0;
-        grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0), wallPositions);
+
+        positions = new ArrayList<Position>();
+        positions.add( new Position(0, 9));
+        positions.add( new Position(9, 0));
+
+        grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, positions, wallPositions);
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
@@ -191,9 +208,11 @@ public class TestGrid {
 
     @Test
     public void test_place_charged_identity_disc() throws GridTooSmallException {
-        p1Pos = new Position(0, 9);
-        p2Pos = new Position(9, 0);
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, p1Pos, p2Pos);
+        positions = new ArrayList<Position>();
+        positions.add( new Position(0, 9));
+        positions.add( new Position(9, 0));
+
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, positions);
         int numberOfIdentityDiscsCharged = 0;
         Square square_charged_ID = null;
         for (int i = 0; i < 10; i++) {
@@ -215,6 +234,12 @@ public class TestGrid {
     public void test_place_force_field_max_one_per_square() throws GridTooSmallException {
         p1Pos = new Position(0, 1);
         p2Pos = new Position(0, 0);
+
+        positions = new ArrayList<Position>();
+        positions.add( new Position(0, 9));
+        positions.add( new Position(9, 0));
+
+
         List<Position> wallPositions = new ArrayList<Position>();
         for (int i = 1; i < 10; i++) {
             for (int j = 1; j < 10; j++) {
@@ -222,7 +247,7 @@ public class TestGrid {
             }
         }
         for (int repeat = 0; repeat < 100; repeat++) {
-            grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0), wallPositions);
+            grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, positions, wallPositions);
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     Square square = grid.getSquareAtPosition(new Position(i, j));

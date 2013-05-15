@@ -28,10 +28,15 @@ public class EndTurnHandler extends Handler {
      */
     public void endTurn() throws GameOverException {
         TurnManager turnManager = state.getTurnManager();
+       /*
         if (!turnManager.getCurrentTurn().hasMoved()) {
             throw new GameOverException("You haven't moved the previous turn and therefore you have lost the gamestate");
         }
+          */
+
 
         turnManager.endTurn();
+        if(turnManager.checkWin())
+            throw new GameOverException(turnManager.getCurrentTurn().getCurrentPlayer().getName() + ", you win the game!");
     }
 }

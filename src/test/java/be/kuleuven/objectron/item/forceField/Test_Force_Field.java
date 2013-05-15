@@ -20,6 +20,9 @@ import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -50,7 +53,11 @@ public class Test_Force_Field {
         p1Pos = new Position(4, 5);
         p2Pos = new Position(7, 6);
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -432,7 +439,11 @@ public class Test_Force_Field {
         p1Pos = new Position(4, 5);
         p2Pos = new Position(6, 6);
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);

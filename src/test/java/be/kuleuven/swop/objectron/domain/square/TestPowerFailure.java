@@ -20,6 +20,9 @@ import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -43,7 +46,12 @@ public class TestPowerFailure implements SquareObserver {
     @Before
     public void setUp() throws GridTooSmallException, SquareOccupiedException {
         Dimension dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, new Position(0, 9), new Position(9, 0));
+
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(new Position(0, 9));
+        positions.add(new Position(9, 0));
+
+        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, positions);
         state = new GameState("p1", "p2", dimension, grid);
         player = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
@@ -56,13 +64,17 @@ public class TestPowerFailure implements SquareObserver {
     @Test
     public void testStartUnpowered() {
         TurnManager turnManager = state.getTurnManager();
+        turnManager.getCurrentTurn().setMoved();
         turnManager.endTurn();
         currentSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
+        turnManager.getCurrentTurn().setMoved();
         turnManager.endTurn();
         assertEquals(Turn.ACTIONS_EACH_TURN - 1, turnManager.getCurrentTurn().getActionsRemaining());
-        state.getTurnManager().endTurn();
+        turnManager.getCurrentTurn().setMoved();
+        turnManager.endTurn();
         currentSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
-        state.getTurnManager().endTurn();
+        turnManager.getCurrentTurn().setMoved();
+        turnManager.endTurn();
         assertEquals(Turn.ACTIONS_EACH_TURN - 1, state.getTurnManager().getCurrentTurn().getActionsRemaining());
     }
 
@@ -89,7 +101,11 @@ public class TestPowerFailure implements SquareObserver {
 
     @Test
     public void checkRotatingPowerFailure() throws GridTooSmallException, InvalidMoveException, NotEnoughActionsException, GameOverException {
-        grid = GridFactory.gridWithoutWalls(new Dimension(10, 10), new Position(0, 0), new Position(2, 2));
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(new Position(0, 0));
+        positions.add(new Position(2, 2));
+
+        grid = GridFactory.gridWithoutWalls(new Dimension(10, 10), positions);
         Square currentSquare = grid.getSquareAtPosition(new Position(5, 5));
         currentSquare.attach(this);
         for (Direction d : Direction.values()) {
@@ -113,6 +129,7 @@ public class TestPowerFailure implements SquareObserver {
         currentSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         currentSquare.attach(this);
         for (int i = 0; i < PowerFailure.PF_PRIMARY_TURNS; i++) {
+            state.getTurnManager().getCurrentTurn().setMoved();
             state.getTurnManager().endTurn();
         }
         assertEquals(true, regainedPower);

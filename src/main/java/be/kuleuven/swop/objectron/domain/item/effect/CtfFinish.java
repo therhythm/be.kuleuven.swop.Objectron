@@ -7,9 +7,7 @@ import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,20 +17,17 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class CtfFinish implements Effect {
+    private List<Player> players;
     private Player starter;
-    private Map<Player, Flag> collectedFlags;
+    private Set<Flag> collectedFlags;
 
     public CtfFinish(Player starter,List<Player> players) {
         this.starter = starter;
-        collectedFlags = new HashMap<Player,Flag>();
-        initializeCollectedFlags(players);
+        collectedFlags = new HashSet<Flag>();
+        this.players = players;
     }
 
-    private void initializeCollectedFlags(List<Player> players) {
-        for(Player player : players){
-            collectedFlags.put(player,null);
-        }
-    }
+
 
     @Override
     public void activate(Movable movable, TurnManager manager) throws GameOverException {
@@ -50,16 +45,13 @@ public class CtfFinish implements Effect {
     }
 
     private boolean checkWin() {
-        for(Player player : collectedFlags.keySet()){
-            if(collectedFlags.get(player)==null){
-                return false;
-            }
-        }
-        return true;
+        if(collectedFlags.size()==players.size())
+            return true;
+        return false;
     }
 
     private void collectFlag(Flag flag) {
-        collectedFlags.put(flag.getOwner(),flag);
+        collectedFlags.add(flag);
     }
 
     @Override

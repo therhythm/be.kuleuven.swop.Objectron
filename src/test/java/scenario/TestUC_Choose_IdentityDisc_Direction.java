@@ -20,6 +20,9 @@ import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -46,7 +49,11 @@ public class TestUC_Choose_IdentityDisc_Direction {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(2, 9);
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
