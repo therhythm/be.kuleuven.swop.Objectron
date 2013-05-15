@@ -104,10 +104,12 @@ public class GridBuilder {
     }
 
     private boolean validSquare(int i, int j) {
-        if (squares[i][j].isObstructed())
-            return false;
+
         for (Position position : this.playerPositions) {
             if (squares[i][j].getPosition().equals(position))
+                return true;
+
+            if (squares[i][j].isObstructed())
                 return false;
 
         }
@@ -134,8 +136,10 @@ public class GridBuilder {
 
     private boolean validDistances(List<Double> distancePlayers) {
         for (int i = 0; i < distancePlayers.size(); i++) {
-            for(int j=0;j<distancePlayers.size();j++){
-                if (Math.abs(distancePlayers.get(i) - distancePlayers.get(j)) > 2) {
+            for (int j = 0; j < distancePlayers.size(); j++) {
+                double distance = Math.abs(distancePlayers.get(i) - distancePlayers.get(j));
+                System.out.println(distance);
+                if (distance > 2) {
                     return false;
                 }
             }
@@ -200,7 +204,7 @@ public class GridBuilder {
         placeOtherItems(identityDiscs);
 
         //todo uncomment
-        //placeChargedIdentityDisc();
+        placeChargedIdentityDisc();
     }
 
     private void placeLightMines(int numberOfItems) {
