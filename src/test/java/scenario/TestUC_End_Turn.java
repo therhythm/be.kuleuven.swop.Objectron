@@ -17,6 +17,9 @@ import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 
 
@@ -29,7 +32,13 @@ public class TestUC_End_Turn {
     @Before
     public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutWalls(dimension, new Position(0, 9), new Position(9, 0));
+
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(new Position(0, 9));
+        positions.add(new Position(9, 0));
+
+
+        Grid grid = GridFactory.gridWithoutWalls(dimension, positions);
         state = new GameState("jos", "piet", dimension, grid);
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);

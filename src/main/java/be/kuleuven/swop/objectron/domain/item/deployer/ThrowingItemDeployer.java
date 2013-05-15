@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item.deployer;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -23,7 +24,7 @@ public class ThrowingItemDeployer implements ItemDeployer {
     }
 
     @Override
-    public void deploy(Item item) {
+    public void deploy(Item item) throws GameOverException {
         item.throwMe(sourceSquare, throwingDirection, turnManager);
     }
 }

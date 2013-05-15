@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -42,12 +43,20 @@ public class TestDijkstra {
 
         p1Pos = new Position(1, 8);
         p2Pos = new Position(3, 8);
+
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
         dimension = new Dimension(10, 10);
         ArrayList<Position> wallPositions = new ArrayList<Position>();
         wallPositions.add(new Position(6, 6));
         wallPositions.add(new Position(5, 6));
         wallPositions.add(new Position(4, 6));
-        grid = GridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension, p1Pos, p2Pos, wallPositions);
+
+
+
+        grid = GridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension,positions, wallPositions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
     }
 
@@ -55,7 +64,7 @@ public class TestDijkstra {
     public void test_DijkstraShortestPath_straight_line() {
         Square startSquare = grid.getSquareAtPosition(new Position(0, 0));
         Square destinationSquare = grid.getSquareAtPosition(new Position(0, 5));
-        Dijkstra dijkstra = new Dijkstra( grid.getSquaresNotObstructed());
+        Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
         //System.out.println(dijkstra.toStringEdges());
         Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);

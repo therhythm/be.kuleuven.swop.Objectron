@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.IdentityDiscMovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
@@ -9,9 +9,6 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.IdentityDiscTeleportStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
-import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
-import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,6 +18,8 @@ import be.kuleuven.swop.objectron.domain.exception.WallHitException;
  * To change this template use File | Settings | File Templates.
  */
 public class IdentityDisc implements Item, Movable {
+    private static final int MAX_IN_BAG = Integer.MAX_VALUE; // Can't have annoying side effects. It would be impossible for a game to have even this amount of items.
+
     private IdentityDiscBehavior identityDiscBehavior;
     private TeleportStrategy teleportStrategy;
     private MovementStrategy movementStrategy;
@@ -42,7 +41,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException {
         if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
@@ -87,6 +86,11 @@ public class IdentityDisc implements Item, Movable {
         //do nothing
     }
 
+    @Override
+    public int getMaxInBag() {
+        return MAX_IN_BAG;
+    }
+
     private boolean validDirection(Direction direction) {
         return direction != Direction.UP_LEFT && direction != Direction.UP_RIGHT && direction != Direction.DOWN_LEFT
                 && direction != Direction.DOWN_RIGHT;
@@ -110,7 +114,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
         square.stepOn(this, manager);
     }
 }

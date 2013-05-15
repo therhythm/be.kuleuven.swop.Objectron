@@ -39,22 +39,23 @@ public class GridBuilder {
 
 
     private Dimension dimension;
-    private Position p1Pos;
-    private Position p2Pos;
+    //private Position p1Pos;
+    //private Position p2Pos;
+    private List<Position> playerPositions;
 
     private Square[][] squares;
     private List<Wall> walls;
     private ForceFieldArea forceFieldArea;
 
-    public GridBuilder(Dimension dimension, Position p1Pos, Position p2Pos) throws GridTooSmallException {
+    public GridBuilder(Dimension dimension, List<Position> positions) throws GridTooSmallException {
         if (!isValidDimension(dimension)) {
             throw new GridTooSmallException("The grid needs to be at least " +
                     MIN_GRID_HEIGHT + " rows by " +
                     MIN_GRID_HEIGHT + " columns");
         }
         this.dimension = dimension;
-        this.p1Pos = p1Pos;
-        this.p2Pos = p2Pos;
+        this.playerPositions = positions;
+
         initGrid(Square.POWER_FAILURE_CHANCE);
         forceFieldArea = new ForceFieldArea();
     }
@@ -93,25 +94,58 @@ public class GridBuilder {
             for (int j = 0; j < squares[i].length; j++) {
 
                 //Todo wall obstruction nodig zodat 2de chekc, na de || weg mag.
-                if (!squares[i][j].isObstructed() || (squares[i][j].getPosition().equals(p1Pos) || squares[i][j].getPosition().equals(p2Pos)))
+                if (validSquare(i, j)) {
                     result.add(squares[i][j]);
+                }
+
             }
         }
         return result;
     }
 
+    private boolean validSquare(int i, int j) {
+
+        for (Position position : this.playerPositions) {
+            if (squares[i][j].getPosition().equals(position))
+                return true;
+
+            if (squares[i][j].isObstructed())
+                return false;
+
+        }
+        return true;
+
+    }
+
     private void placeChargedIdentityDisc() {
         ArrayList<Square> squaresNotObstructed = getSquaresNotObstructed();
         Dijkstra dijkstra = new Dijkstra(squaresNotObstructed);
-        System.out.println("size squares not obstructed: " + squaresNotObstructed.size());
         for (Square square : squaresNotObstructed) {
-            double distanceP1 = dijkstra.getShortestDistance(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], square);
-            double distanceP2 = dijkstra.getShortestDistance(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], square);
-            if (Math.abs(distanceP1 - distanceP2) <= 2) {
+            List<Double> distancePlayers = new ArrayList<Double>();
+            for (Position position : this.playerPositions) {
+                distancePlayers.add(dijkstra.getShortestDistance(squares[position.getVIndex()][position.getHIndex()], square));
+
+            }
+            if (validDistances(distancePlayers)) {
                 square.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
                 return;
             }
+
         }
+    }
+
+    private boolean validDistances(List<Double> distancePlayers) {
+        for (int i = 0; i < distancePlayers.size(); i++) {
+            for (int j = 0; j < distancePlayers.size(); j++) {
+                double distance = Math.abs(distancePlayers.get(i) - distancePlayers.get(j));
+                System.out.println(distance);
+                if (distance > 2) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
     }
 
     public void buildItems() {
@@ -157,9 +191,11 @@ public class GridBuilder {
     }
 
     private void placeIdentityDiscs(int numberOfItems) {
-        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
-        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
-        numberOfItems -= 2;
+        for (Position position : this.playerPositions) {
+            placeItemToPlayer(squares[position.getVIndex()][position.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
+            numberOfItems -= 1;
+        }
+
         List<Item> identityDiscs = new ArrayList<Item>();
 
         for (int i = 0; i < numberOfItems; i++) {
@@ -167,15 +203,18 @@ public class GridBuilder {
         }
         placeOtherItems(identityDiscs);
 
+        //todo uncomment
         placeChargedIdentityDisc();
     }
 
     private void placeLightMines(int numberOfItems) {
-        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new LightMine());
-        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new LightMine());
-        numberOfItems -= 2;
+        for (Position position : this.playerPositions) {
+            placeItemToPlayer(squares[position.getVIndex()][position.getHIndex()], new LightMine());
+            numberOfItems -= 1;
+        }
+
+
         List<Item> lightMines = new ArrayList<Item>();
-        List<Item> identityDiscs = new ArrayList<Item>();
 
         for (int i = 0; i < numberOfItems; i++) {
             lightMines.add(new LightMine());

@@ -19,6 +19,9 @@ import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -39,8 +42,13 @@ public class TestUC_Move {
     public void setUp() throws GridTooSmallException {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(0, 5);
+
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
 
         player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
         Turn turn = new Turn(player1);

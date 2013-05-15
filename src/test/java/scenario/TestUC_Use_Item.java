@@ -77,7 +77,7 @@ public class TestUC_Use_Item {
     }
 
     @Test
-    public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException {
+    public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException, GameOverException {
         player.pickupItem(0);
         turnManager.getCurrentTurn().setCurrentItem(item);
 
@@ -124,7 +124,7 @@ public class TestUC_Use_Item {
     }
 
     @Test(expected = NotEnoughActionsException.class)
-    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException, NoItemSelectedException {
+    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         PickUpItemHandler pickUpItemHandler = new PickUpItemHandler(stateMock);
         pickUpItemHandler.pickUpItem(0);
         player.getCurrentSquare().addItem(new LightMine());
@@ -137,7 +137,7 @@ public class TestUC_Use_Item {
     }
 
     @Test(expected = NoItemSelectedException.class)
-    public void test_no_item_selected() throws NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+    public void test_no_item_selected() throws NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         useItemHandler.useCurrentItem();
     }
 }

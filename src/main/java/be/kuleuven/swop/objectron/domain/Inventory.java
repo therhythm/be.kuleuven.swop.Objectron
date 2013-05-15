@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.domain;
 
+import be.kuleuven.swop.objectron.domain.exception.TooManyItemsOfSameTypeException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
@@ -43,10 +44,22 @@ public class Inventory {
      *
      * @param itemToAdd
      */
-    public void addItem(Item itemToAdd) throws InventoryFullException {
+    public void addItem(Item itemToAdd) throws InventoryFullException, TooManyItemsOfSameTypeException {
         if (isLimitReached()) {
             throw new InventoryFullException("Inventory full");
         }
+
+        int itemCount = 0;
+        for(Item item : items){
+            if(itemToAdd.getClass().isInstance(item)){
+                itemCount++;
+            }
+        }
+
+        if(itemCount + 1 > itemToAdd.getMaxInBag()) {
+            throw new TooManyItemsOfSameTypeException();
+        }
+        itemToAdd.pickedUp();
         items.add(itemToAdd);
     }
 

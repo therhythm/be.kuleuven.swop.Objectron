@@ -13,6 +13,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  *         Time: 20:56
  */
 public class LightMine implements Item, Effect {
+    private static final int MAX_IN_BAG = Integer.MAX_VALUE;
     private static final int NB_ACTIONS_BLINDED = 3;
 
     private static final String name = "Light Mine";
@@ -54,6 +55,11 @@ public class LightMine implements Item, Effect {
     @Override
     public void pickedUp() {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getMaxInBag() {
+        return MAX_IN_BAG;
     }
 
 
