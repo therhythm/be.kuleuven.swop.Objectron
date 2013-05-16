@@ -123,6 +123,8 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
             gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
         }
         this.gamemode = new RaceMode();
+        gamemode.initialize(players);
+
         turnManager = new TurnManager(players);
         turnManager.attach(this);
         turnManager.attach(gameGrid);
@@ -135,12 +137,12 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         this.gamemode = gameMode;
 
 
+
         for (int i = 0; i < playerNames.size(); i++) {
             players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
         }
-        for (Player player : players) {
-            gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
-        }
+
+        gamemode.initialize(players);
 
         turnManager = new TurnManager(players);
         turnManager.attach(this);

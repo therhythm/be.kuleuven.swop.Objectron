@@ -1,10 +1,8 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.exception.GameOverException;
-import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.gamestate.gamemode.CtfMode;
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,7 +45,7 @@ public class TestGameState {
         positions.add(p1Pos);
         positions.add(p2Pos);
 
-         grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
+        grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
         state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
 
     }
@@ -86,7 +85,7 @@ public class TestGameState {
 
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
-        positions.add(new Position(9,9));
+        positions.add(new Position(9, 9));
         positions.add(new Position(0, 0));
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
@@ -107,7 +106,7 @@ public class TestGameState {
     }
 
     @Test
-    public void test_win_ctf_mode() throws GridTooSmallException, GameOverException, NotEnoughActionsException, InvalidMoveException {
+    public void test_win_ctf_mode() throws GridTooSmallException, GameOverException, NotEnoughActionsException, InvalidMoveException, InventoryFullException {
         List<String> playerNames = new ArrayList<String>();
         playerNames.add("p1");
         playerNames.add("p2");
@@ -118,7 +117,7 @@ public class TestGameState {
 
         positions.add(new Position(1, 2));
         positions.add(new Position(2, 1));
-        positions.add(new Position(2,2));
+        positions.add(new Position(2, 2));
         positions.add(new Position(1, 1));
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
@@ -126,25 +125,124 @@ public class TestGameState {
         MovePlayerHandler movePlayerHandler = new MovePlayerHandler(state);
         PickUpItemHandler pickUpItemHandler = new PickUpItemHandler(state);
         EndTurnHandler endTurnHandler = new EndTurnHandler(state);
-       TurnManager turnManager = state.getTurnManager();
-     //player 1 gaat winnen
+        TurnManager turnManager = state.getTurnManager();
+        //player 1 gaat winnen
         //andere 3 players verplaatsen zodat ze niet meer op hun startpositie staan
-                            turnManager.getCurrentTurn().setMoved();
+        turnManager.getCurrentTurn().setMoved();
         turnManager.endTurn();
 
+        //PLAYER 2
+        Player playerTemp = turnManager.getCurrentTurn().getCurrentPlayer();
         movePlayerHandler.move(Direction.UP);
+        for (int i = 0; i < 2; i++) {
+            System.out.println("1--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.RIGHT);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("1--------------");
+        }
+        turnManager.getCurrentTurn().setMoved();
+        endTurnHandler.endTurn();
+        while (!turnManager.getCurrentTurn().getCurrentPlayer().equals(playerTemp)) {
+            turnManager.getCurrentTurn().setMoved();
+            endTurnHandler.endTurn();
+        }
+        for (int i = 0; i < 3; i++) {
+            System.out.println("2--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.RIGHT);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("2--------------");
+        }
+
 
         endTurnHandler.endTurn();
 
+        //PLAYER 3
+        playerTemp = turnManager.getCurrentTurn().getCurrentPlayer();
+        for (int i = 0; i < 2; i++) {
+            System.out.println("3--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.DOWN);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("3--------------");
+        }
+        turnManager.getCurrentTurn().setMoved();
+        endTurnHandler.endTurn();
+        while (!turnManager.getCurrentTurn().getCurrentPlayer().equals(playerTemp)) {
+            turnManager.getCurrentTurn().setMoved();
+            endTurnHandler.endTurn();
+        }
+        for (int i = 0; i < 3; i++) {
+            System.out.println("3--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.DOWN);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("3--------------");
+        }
+
+
+        endTurnHandler.endTurn();
+
+
+        //PLAYER 4
+        playerTemp = turnManager.getCurrentTurn().getCurrentPlayer();
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.LEFT);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        for (int i = 0; i < 2; i++) {
+            movePlayerHandler.move(Direction.DOWN);
+        }
+
+        endTurnHandler.endTurn();
+        while (!turnManager.getCurrentTurn().getCurrentPlayer().equals(playerTemp)) {
+            turnManager.getCurrentTurn().setMoved();
+            endTurnHandler.endTurn();
+        }
+        for (int i = 0; i < 2; i++) {
+            System.out.println("4--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.DOWN);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("4--------------");
+        }
+        endTurnHandler.endTurn();
+        while (!turnManager.getCurrentTurn().getCurrentPlayer().equals(playerTemp)) {
+            turnManager.getCurrentTurn().setMoved();
+            endTurnHandler.endTurn();
+        }
+        for (int i = 0; i < 2; i++) {
+            System.out.println("4--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.DOWN);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("4--------------");
+        }
+        endTurnHandler.endTurn();
+        assertFalse(grid.getSquareAtPosition(new Position(1, 1)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(2, 1)).isObstructed());
+        assertFalse(grid.getSquareAtPosition(new Position(2, 2)).isObstructed());
+
+        //Verzamelen van de vlaggen
+        //eerste vlag
+        System.out.println();
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.RIGHT);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        pickUpItemHandler.pickUpItem(0);
+        movePlayerHandler.move(Direction.RIGHT);
+        endTurnHandler.endTurn();
+        while (!turnManager.getCurrentTurn().getCurrentPlayer().equals(playerTemp)) {
+            turnManager.getCurrentTurn().setMoved();
+            endTurnHandler.endTurn();
+        }
         movePlayerHandler.move(Direction.DOWN);
-
-        endTurnHandler.endTurn();
-
+        movePlayerHandler.move(Direction.LEFT);
         movePlayerHandler.move(Direction.LEFT);
 
-        endTurnHandler.endTurn();
-        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
-        movePlayerHandler.move(Direction.DOWN);
-        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+
+
     }
+
+
 }
