@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
@@ -34,19 +35,21 @@ public class TestDijkstra {
     private MovePlayerHandler movePlayerHandler;
     private Grid grid;
     private GameState state;
-    private Position p1Pos;
-    private Position p2Pos;
+    private List<Position> positions;
     private Dimension dimension;
 
     @Before
     public void setUp() throws GridTooSmallException {
+                                    positions = new ArrayList<>();
 
-        p1Pos = new Position(1, 8);
-        p2Pos = new Position(3, 8);
+      Position  p1Pos = new Position(1, 8);
+       Position p2Pos = new Position(3, 8);
 
-        List<Position> positions = new ArrayList<Position>();
         positions.add(p1Pos);
         positions.add(p2Pos);
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
 
         dimension = new Dimension(10, 10);
         ArrayList<Position> wallPositions = new ArrayList<Position>();
@@ -57,7 +60,8 @@ public class TestDijkstra {
 
 
         grid = GridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension,positions, wallPositions);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+
+        state = new GameState(playerNames, positions, grid,new RaceMode());
     }
 
     @Test

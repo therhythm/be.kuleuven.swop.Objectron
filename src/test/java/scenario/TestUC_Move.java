@@ -3,10 +3,7 @@ package scenario;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.GameOverException;
-import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
@@ -64,7 +61,7 @@ public class TestUC_Move {
     }
 
     @Test
-    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         Square prev = player1.getCurrentSquare();
 
         movePlayerHandler.move(Direction.UP);
@@ -75,13 +72,13 @@ public class TestUC_Move {
     }
 
     @Test(expected = InvalidMoveException.class)
-    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         movePlayerHandler.move(Direction.DOWN);
     }
 
 
     @Test(expected = NotEnoughActionsException.class)
-    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         stateMock.getTurnManager().getCurrentTurn().reduceRemainingActions(Turn.ACTIONS_EACH_TURN);
 
         movePlayerHandler.move(Direction.UP);

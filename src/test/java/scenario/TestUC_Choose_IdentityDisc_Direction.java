@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
@@ -53,8 +54,13 @@ public class TestUC_Choose_IdentityDisc_Direction {
         positions.add(p1Pos);
         positions.add(p2Pos);
 
+        List<String> playerNames = new ArrayList<String>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        state = new GameState(playerNames,positions, grid,new RaceMode());
+
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);

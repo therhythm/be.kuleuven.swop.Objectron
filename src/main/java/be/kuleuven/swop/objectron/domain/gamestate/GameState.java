@@ -30,28 +30,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
     private TurnManager turnManager;
     private GameMode gamemode;
 
-    public GameState(List<String> playerNames, Dimension dimension) throws GridTooSmallException {
-        List<Position> positions = new ArrayList<Position>();
 
-        positions.add(new Position(0, dimension.getHeight() - 1));
-        positions.add(new Position(dimension.getWidth() - 1, 0));
-        positions.add(new Position(dimension.getWidth() - 1, dimension.getHeight() - 1));
-        positions.add(new Position(0, 0));
-
-
-        this.gameGrid = GridFactory.normalGrid(dimension, positions.subList(0, playerNames.size()), this);
-
-        for (int i = 0; i < playerNames.size(); i++) {
-            players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
-        }
-
-        gamemode = new RaceMode();
-        gamemode.initialize(players);
-
-        initializeTurnmanager();
-    }
-
-    //Todo remove constructor above if this is working and properly implemented
     public GameState(List<String> playerNames, Dimension dimension, GameMode gameMode) throws GridTooSmallException {
         List<Position> positions = new ArrayList<Position>();
 
@@ -73,27 +52,6 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         initializeTurnmanager();
     }
 
-    //Todo deze cunstructor mag weg als constructor erboven overal werkt
-  /*  public GameState(String player1Name, String player2Name, Dimension dimension) throws GridTooSmallException {
-        Position p1Pos = new Position(0, dimension.getHeight() - 1);
-        Position p2Pos = new Position(dimension.getWidth() - 1, 0);
-
-        List<Position> positions = new ArrayList<Position>();
-
-        positions.add(p1Pos);
-        positions.add(p2Pos);
-
-        this.gameGrid = GridFactory.normalGrid(dimension, positions, this);
-
-        players.add(new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos)));
-        players.add(new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos)));
-
-        for (Player player : players) {
-            gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
-        }
-
-        initializeTurnmanager();
-    }*/
 
     private void initializeTurnmanager() {
         turnManager = new TurnManager(players);
@@ -101,46 +59,18 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         turnManager.attach(gameGrid);
         turnManager.attach(gameGrid.getForceFieldArea());
     }
-
-    public GameState(String player1Name, String player2Name, Dimension dimension,
-                     Grid gameGrid) throws GridTooSmallException {
-        this(player1Name,
-                player2Name,
-                new Position(0, dimension.getHeight() - 1),
-                new Position(dimension.getWidth() - 1, 0),
-                gameGrid);
-    }
-
-    //Todo mag weg als constructor onder deze werkt en alle testen zijn aangepast aan die constructor
-    public GameState(String player1Name, String player2Name, Position p1Pos, Position p2Pos,
-                     Grid gameGrid) throws GridTooSmallException {
-        this.gameGrid = gameGrid;
-
-        players.add(new Player(player1Name, gameGrid.getSquareAtPosition(p1Pos)));
-        players.add(new Player(player2Name, gameGrid.getSquareAtPosition(p2Pos)));
-
-        for (Player player : players) {
-            gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
-        }
-        this.gamemode = new RaceMode();
-        turnManager = new TurnManager(players);
-        turnManager.attach(this);
-        turnManager.attach(gameGrid);
-        turnManager.attach(getGrid().getForceFieldArea());
-    }
-
     public GameState(List<String> playerNames, List<Position> positions,
                      Grid gameGrid, GameMode gameMode) throws GridTooSmallException {
         this.gameGrid = gameGrid;
         this.gamemode = gameMode;
 
 
+
         for (int i = 0; i < playerNames.size(); i++) {
             players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
         }
-        for (Player player : players) {
-            gameGrid.getSquareAtPosition(player.getCurrentSquare().getPosition()).addEffect(new RaceFinish(player));
-        }
+
+        gamemode.initialize(players);
 
         turnManager = new TurnManager(players);
         turnManager.attach(this);
@@ -170,17 +100,18 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         }
     }
 
-    public boolean checkWin() {
+  /*  public boolean checkWin() {
         Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
-          /*
+
         for (Player otherPlayer : players) {
             if (!otherPlayer.equals(currentPlayer) &&
                     otherPlayer.getInitialSquare().equals(currentPlayer.getCurrentSquare())) {
                 return true;
             }
-        }          */
+        }
         return false;
     }
+    */
 
     public void endAction() {
         gameGrid.endAction();

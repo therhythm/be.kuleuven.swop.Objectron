@@ -1,9 +1,9 @@
 package be.kuleuven.swop.objectron.domain.gamestate.gamemode;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.item.effect.CtfFinish;
-import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.List;

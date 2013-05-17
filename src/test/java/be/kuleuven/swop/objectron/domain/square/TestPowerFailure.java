@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -51,8 +52,13 @@ public class TestPowerFailure implements SquareObserver {
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
 
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+
         grid = GridFactory.gridWithoutWallsPowerFailures(dimension, positions);
-        state = new GameState("p1", "p2", dimension, grid);
+        state = new GameState(playerNames,positions, grid,new RaceMode());
+
         player = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
         movePlayerHandler = new MovePlayerHandler(state);
@@ -79,7 +85,7 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void testStepOnUnpoweredSquare() throws GameOverException, InvalidMoveException, NotEnoughActionsException {
+    public void testStepOnUnpoweredSquare() throws GameOverException, InvalidMoveException, NotEnoughActionsException, SquareOccupiedException {
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         assertEquals(player, state.getTurnManager().getCurrentTurn().getCurrentPlayer());
         currentSquare.getNeighbour(Direction.UP).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
@@ -100,7 +106,7 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void checkRotatingPowerFailure() throws GridTooSmallException, InvalidMoveException, NotEnoughActionsException, GameOverException {
+    public void checkRotatingPowerFailure() throws GridTooSmallException, InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         List<Position> positions = new ArrayList<Position>();
         positions.add(new Position(0, 0));
         positions.add(new Position(2, 2));
@@ -136,7 +142,7 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void testRegainPowerSecodary() throws InvalidMoveException, NotEnoughActionsException, GameOverException{
+    public void testRegainPowerSecodary() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         regainedPower = false;
         currentSquare.receivePowerFailure(PowerFailure.PF_SECONDARY_TURNS, PowerFailure.PF_SECONDARY_ACTIONS);
         currentSquare.attach(this);
@@ -147,7 +153,7 @@ public class TestPowerFailure implements SquareObserver {
     }
 
     @Test
-    public void testRegainPowerTertiary() throws InvalidMoveException, NotEnoughActionsException, GameOverException{
+    public void testRegainPowerTertiary() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         regainedPower = false;
         currentSquare.receivePowerFailure(PowerFailure.PF_TERTIARY_TURNS, PowerFailure.PF_TERTIARY_ACTIONS);
         currentSquare.attach(this);

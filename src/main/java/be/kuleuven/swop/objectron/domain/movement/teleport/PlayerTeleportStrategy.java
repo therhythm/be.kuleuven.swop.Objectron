@@ -15,7 +15,7 @@ public class PlayerTeleportStrategy implements TeleportStrategy{
     boolean isTeleporting = false;
 
     @Override
-    public void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
+    public void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
         if(!isTeleporting){
             isTeleporting = true;
             context.teleport(movable, manager);

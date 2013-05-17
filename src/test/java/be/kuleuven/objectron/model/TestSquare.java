@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
@@ -52,9 +53,13 @@ public class TestSquare {
         positions.add(p1Pos);
         positions.add(p2Pos);
 
+        List<String> playerNames = new ArrayList<String>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+
         dimension = new Dimension(10, 10);
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        gamestate = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        gamestate = new GameState(playerNames,positions, grid,new RaceMode());
 
         square = new Square(new Position(5, 5));
         new LightMine().place(square);
@@ -68,7 +73,7 @@ public class TestSquare {
 
 
     @Test
-    public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException {
+    public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException, SquareOccupiedException {
         Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
         otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         movePlayerHandler.move(Direction.UP);

@@ -18,7 +18,7 @@ public class IdentityDiscTeleportStrategy implements TeleportStrategy{
     private boolean isTeleporting;
 
     @Override
-    public void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
+    public void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
 
         if(cycle.contains(context)||cycle.contains(context.getDestination())){
             return;

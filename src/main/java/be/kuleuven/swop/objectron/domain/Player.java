@@ -60,7 +60,7 @@ public class Player implements Movable, Obstruction{
         actionPerformed();
     }
 
-    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException {
+    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException, SquareOccupiedException, NotEnoughActionsException {
         actionPerformed();
         this.movementStrategy = new PlayerMovementStrategy(manager);
         try {
@@ -72,7 +72,7 @@ public class Player implements Movable, Obstruction{
     }
 
     @Override
-    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
+    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
         lightTrail.expand(currentSquare);
         currentSquare.removeObstruction(this);
         newPosition.addObstruction(this);
