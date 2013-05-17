@@ -38,7 +38,7 @@ public class TestTeleporter {
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
 
-        Grid grid = GridFactory.gridWithoutWalls(dimension, positions);
+        Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
         gameState = new GameState("p1", "p2", dimension, grid);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
