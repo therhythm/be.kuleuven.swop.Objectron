@@ -14,5 +14,5 @@ public interface Movable {
     TeleportStrategy getTeleportStrategy();
     MovementStrategy getMovementStrategy();
 
-    void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException;
+    void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException;
 }

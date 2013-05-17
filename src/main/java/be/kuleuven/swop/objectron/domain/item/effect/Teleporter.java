@@ -19,7 +19,7 @@ public class Teleporter implements Effect {
     }
 
     @Override
-    public void activate(Movable movable, TurnManager manager) throws GameOverException {
+    public void activate(Movable movable, TurnManager manager) throws GameOverException, SquareOccupiedException, NotEnoughActionsException {
         try {
             movable.getTeleportStrategy().teleport(movable,this, manager);
         } catch (InvalidMoveException | WallHitException | ForceFieldHitException | PlayerHitException e) {
@@ -27,7 +27,7 @@ public class Teleporter implements Effect {
         }
     }
 
-    public void teleport(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
+    public void teleport(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException, NotEnoughActionsException {
         movable.enter(destination.getLocation(), manager);
     }
 

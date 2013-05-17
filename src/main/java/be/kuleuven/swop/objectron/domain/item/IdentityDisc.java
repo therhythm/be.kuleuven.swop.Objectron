@@ -41,7 +41,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
         if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
@@ -114,7 +114,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
+    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
         square.stepOn(this, manager);
     }
 }

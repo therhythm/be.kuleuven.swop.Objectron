@@ -57,7 +57,7 @@ public class Square implements Observable<SquareObserver> {
         return !obstructions.isEmpty();
     }
 
-    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException {
+    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException, NotEnoughActionsException {
         for(Obstruction obstruction : obstructions){
             obstruction.hit(movable.getMovementStrategy());
         }

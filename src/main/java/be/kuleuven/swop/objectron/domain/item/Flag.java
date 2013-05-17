@@ -29,6 +29,10 @@ public class Flag implements Item {
         return this.owner;
     }
 
+    public void returnToBase(){
+        base.addItem(this);
+    }
+
     @Override
     public String getName() {
         return "Flag";

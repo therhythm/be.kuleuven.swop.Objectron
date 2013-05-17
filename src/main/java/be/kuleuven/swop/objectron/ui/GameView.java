@@ -176,6 +176,9 @@ public class GameView implements GameObserver {
                             try {
                                 MovePlayerHandler movePlayerHandler = (MovePlayerHandler) catalog.getHandler(MovePlayerHandler.class);
                                 movePlayerHandler.move(direction);
+                            } catch (SquareOccupiedException e) {
+                                new DialogView("The square is already occupied.");
+
                             } catch (InvalidMoveException e) {
                                 new DialogView("Sorry that is not a valid move");
                             } catch (NotEnoughActionsException e) {

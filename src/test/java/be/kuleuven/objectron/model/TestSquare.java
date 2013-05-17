@@ -68,7 +68,7 @@ public class TestSquare {
 
 
     @Test
-    public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException {
+    public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException, SquareOccupiedException {
         Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
         otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         movePlayerHandler.move(Direction.UP);

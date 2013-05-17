@@ -67,7 +67,7 @@ public class Test_Flag {
     }
 
     @Test
-    public void test_amount_flags() throws InventoryFullException, NotEnoughActionsException, InvalidMoveException, GameOverException {
+    public void test_amount_flags() throws InventoryFullException, NotEnoughActionsException, InvalidMoveException, GameOverException, SquareOccupiedException {
         grid.getSquareAtPosition(new Position(0,9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
         grid.getSquareAtPosition(new Position(1,9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
         pickUpItemHandler.pickUpItem(0);

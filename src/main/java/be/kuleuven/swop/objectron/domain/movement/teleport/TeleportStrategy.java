@@ -11,5 +11,5 @@ import be.kuleuven.swop.objectron.domain.movement.Movable;
  *         Time: 00:25
  */
 public interface TeleportStrategy {
-    void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException;
+    void teleport(Movable movable, Teleporter context, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException;
 }

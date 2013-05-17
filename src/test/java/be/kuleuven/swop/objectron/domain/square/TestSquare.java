@@ -42,7 +42,7 @@ public class TestSquare {
 
 
     @Test
-    public void test_step_on_active_item() throws InvalidMoveException, ForceFieldHitException, WallHitException, PlayerHitException, GameOverException {
+    public void test_step_on_active_item() throws InvalidMoveException, ForceFieldHitException, WallHitException, PlayerHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
         Effect found = null;
         for(Effect effect : square.getEffects()){
             if(effect.equals(item)) {

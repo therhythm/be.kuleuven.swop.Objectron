@@ -51,7 +51,7 @@ public class TestGameState {
     }
 
     @Test
-    public void test_win() throws GameOverException, NotEnoughActionsException, InvalidMoveException {
+    public void test_win() throws GameOverException, NotEnoughActionsException, InvalidMoveException, SquareOccupiedException {
         MovePlayerHandler handler = new MovePlayerHandler(state);
         TurnManager manager = state.getTurnManager();
         handler.move(Direction.DOWN);
@@ -72,7 +72,7 @@ public class TestGameState {
 
 
     @Test
-    public void test_win_meerdere_players() throws GridTooSmallException, GameOverException, InvalidMoveException, NotEnoughActionsException {
+    public void test_win_meerdere_players() throws GridTooSmallException, GameOverException, InvalidMoveException, NotEnoughActionsException, SquareOccupiedException {
 
 
         List<String> playerNames = new ArrayList<String>();
@@ -106,7 +106,7 @@ public class TestGameState {
     }
 
     @Test
-    public void test_win_ctf_mode() throws GridTooSmallException, GameOverException, NotEnoughActionsException, InvalidMoveException, InventoryFullException {
+    public void test_win_ctf_mode() throws GridTooSmallException, GameOverException, NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException {
         List<String> playerNames = new ArrayList<String>();
         playerNames.add("p1");
         playerNames.add("p2");
@@ -122,6 +122,13 @@ public class TestGameState {
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
         state = new GameState(playerNames, positions, grid, new CtfMode());
+
+        //controleren of vlaggen op juiste square staan
+        assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,1)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(1,1)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,2)).getAvailableItems().size()==1);
+
         MovePlayerHandler movePlayerHandler = new MovePlayerHandler(state);
         PickUpItemHandler pickUpItemHandler = new PickUpItemHandler(state);
         EndTurnHandler endTurnHandler = new EndTurnHandler(state);
@@ -225,23 +232,175 @@ public class TestGameState {
 
         //Verzamelen van de vlaggen
         //eerste vlag
-        System.out.println();
+        System.out.println(0);
+        System.out.println("collecting flags");
+        System.out.println("*--------------");
         System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
         movePlayerHandler.move(Direction.RIGHT);
         System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
+        endTurnWithoutGameOver(endTurnHandler, turnManager);
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.DOWN);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.LEFT);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+        movePlayerHandler.move(Direction.LEFT);
+
+        endTurnWithoutGameOver(endTurnHandler, turnManager);
+
+        //controleren of vlaggen op juiste square staan
+        assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,1)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(1,1)).getAvailableItems().size()==1);
+        assertFalse(grid.getSquareAtPosition(new Position(2,2)).getAvailableItems().size()==1);
+         assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size()==1);
+
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.UP);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+
+        //controleren of vlaggen op juiste square staan
+        assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,1)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(1,1)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,2)).getAvailableItems().size()==1);
+        assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size()==0);
+
+        //collecting 2de vlag
+        System.out.println("2de vlag");
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.UP);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+
+        pickUpItemHandler.pickUpItem(0);
+
+        //controleren of vlaggen op juiste square staan
+        assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,1)).getAvailableItems().size()==1);
+        assertFalse(grid.getSquareAtPosition(new Position(1,1)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,2)).getAvailableItems().size()==1);
+        assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size()==1);
+
+        endTurnWithoutGameOver(endTurnHandler, turnManager);
+
+        for(int i = 0;i<2;i++){
+            System.out.println("*--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.RIGHT);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("*--------------");
+        }
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.DOWN);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+
+        endTurnWithoutGameOver(endTurnHandler, turnManager);
+
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.DOWN);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+
+        for(int i = 0;i<2;i++){
+            System.out.println("*--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.LEFT);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("*--------------");
+        }
+
+        endTurnWithoutGameOver(endTurnHandler, turnManager);
+
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.UP);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+
+        //controleren of vlaggen op juiste square staan
+        assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,1)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(1,1)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2,2)).getAvailableItems().size()==1);
+        assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size()==0);
+
+          //3de vlag
+        System.out.println("3de vlag");
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.UP_RIGHT);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+
+        pickUpItemHandler.pickUpItem(0);
+
+        endTurnWithoutGameOver(endTurnHandler, turnManager);
+
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.RIGHT);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+
+        for(int i = 0;i<2;i++){
+            System.out.println("*--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.DOWN);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("*--------------");
+        }
+
+        endTurnWithoutGameOver(endTurnHandler, turnManager);
+
+
+        for(int i = 0;i<2;i++){
+            System.out.println("*--------------");
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.LEFT);
+            System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            System.out.println("*--------------");
+        }
+
+        //win
+        boolean win = false;
+        try{
+        System.out.println("*--------------");
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        movePlayerHandler.move(Direction.UP);
+        System.out.println(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        System.out.println("*--------------");
+        }catch(GameOverException exc){
+            win = true;
+        }
+        assertTrue(win);
+
+
+    }
+
+    private void endTurnWithoutGameOver(EndTurnHandler endTurnHandler, TurnManager turnManager) throws GameOverException {
+        Player playerTemp;
+        playerTemp = turnManager.getCurrentTurn().getCurrentPlayer();
         endTurnHandler.endTurn();
         while (!turnManager.getCurrentTurn().getCurrentPlayer().equals(playerTemp)) {
             turnManager.getCurrentTurn().setMoved();
             endTurnHandler.endTurn();
         }
-        movePlayerHandler.move(Direction.DOWN);
-        movePlayerHandler.move(Direction.LEFT);
-        movePlayerHandler.move(Direction.LEFT);
-
-
-
     }
 
 
