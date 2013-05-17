@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -34,9 +35,12 @@ public class TestUC_End_Turn {
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
 
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("jos");
+        playerNames.add("piet")  ;
 
         Grid grid = GridFactory.gridWithoutWalls(dimension, positions);
-        state = new GameState("jos", "piet", dimension, grid);
+        state = new GameState(playerNames,positions, grid,new RaceMode());
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);
     }

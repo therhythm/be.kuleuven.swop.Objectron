@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
@@ -21,7 +22,9 @@ public class StartGameHandler {
        List<String> players = new ArrayList<String>();
         players.add(p1Name);
         players.add(p2Name);
-        GameState state = new GameState(players, dimension);
+
+        //todo implement gamemode choice
+        GameState state = new GameState(players, dimension,new RaceMode());
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(state));

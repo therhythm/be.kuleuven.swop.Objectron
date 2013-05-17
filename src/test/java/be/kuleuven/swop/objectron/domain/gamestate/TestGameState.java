@@ -45,8 +45,12 @@ public class TestGameState {
         positions.add(p1Pos);
         positions.add(p2Pos);
 
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        state = new GameState(playerNames, positions, grid,new RaceMode());
 
     }
 
@@ -261,7 +265,7 @@ public class TestGameState {
         assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);
         assertTrue(grid.getSquareAtPosition(new Position(2,1)).getAvailableItems().size()==1);
         assertTrue(grid.getSquareAtPosition(new Position(1,1)).getAvailableItems().size()==1);
-        assertFalse(grid.getSquareAtPosition(new Position(2,2)).getAvailableItems().size()==1);
+        assertFalse(grid.getSquareAtPosition(new Position(2, 2)).getAvailableItems().size() == 1);
          assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size()==1);
 
         System.out.println("*--------------");
@@ -274,7 +278,7 @@ public class TestGameState {
         assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);
         assertTrue(grid.getSquareAtPosition(new Position(2,1)).getAvailableItems().size()==1);
         assertTrue(grid.getSquareAtPosition(new Position(1,1)).getAvailableItems().size()==1);
-        assertTrue(grid.getSquareAtPosition(new Position(2,2)).getAvailableItems().size()==1);
+        assertTrue(grid.getSquareAtPosition(new Position(2, 2)).getAvailableItems().size() == 1);
         assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size()==0);
 
         //collecting 2de vlag
@@ -290,9 +294,9 @@ public class TestGameState {
         //controleren of vlaggen op juiste square staan
         assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);
         assertTrue(grid.getSquareAtPosition(new Position(2,1)).getAvailableItems().size()==1);
-        assertFalse(grid.getSquareAtPosition(new Position(1,1)).getAvailableItems().size()==1);
-        assertTrue(grid.getSquareAtPosition(new Position(2,2)).getAvailableItems().size()==1);
-        assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size()==1);
+        assertFalse(grid.getSquareAtPosition(new Position(1, 1)).getAvailableItems().size() == 1);
+        assertTrue(grid.getSquareAtPosition(new Position(2, 2)).getAvailableItems().size() == 1);
+        assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size() == 1);
 
         endTurnWithoutGameOver(endTurnHandler, turnManager);
 

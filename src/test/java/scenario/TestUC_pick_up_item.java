@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -45,8 +46,12 @@ public class TestUC_pick_up_item {
         positions.add(new Position(0, 9));
         positions.add( new Position(9, 0));
 
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+
         Grid grid = GridFactory.gridWithoutItems(dimension,positions);
-        gameState = new GameState("p1", "p2", dimension, grid);
+        gameState = new GameState(playerNames,positions, grid,new RaceMode());
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();

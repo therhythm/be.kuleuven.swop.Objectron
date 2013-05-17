@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.item.effect;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameState;
@@ -39,7 +40,10 @@ public class TestTeleporter {
         positions.add(new Position(9, 0));
 
         Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        gameState = new GameState("p1", "p2", dimension, grid);
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+        gameState = new GameState(playerNames, positions, grid,new RaceMode());
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
         movePlayerHandler = new MovePlayerHandler(gameState);
