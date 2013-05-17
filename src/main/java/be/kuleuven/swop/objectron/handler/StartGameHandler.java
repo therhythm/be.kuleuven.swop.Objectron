@@ -5,6 +5,10 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
+import com.sun.xml.internal.org.jvnet.fastinfoset.stax.LowLevelFastInfosetStreamWriter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author : Nik Torfs
@@ -14,7 +18,10 @@ import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 public class StartGameHandler {
 
     public GameStartViewModel startNewGame(String p1Name, String p2Name, Dimension dimension) throws GridTooSmallException {
-        GameState state = new GameState(p1Name, p2Name, dimension);
+       List<String> players = new ArrayList<String>();
+        players.add(p1Name);
+        players.add(p2Name);
+        GameState state = new GameState(players, dimension);
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(state));

@@ -203,7 +203,6 @@ public class GridBuilder {
         }
         placeOtherItems(identityDiscs);
 
-        //todo uncomment
         placeChargedIdentityDisc();
     }
 

@@ -26,6 +26,14 @@ public class GridFactory {
         return builder.getGrid();
     }
 
+    public static Grid normalGridCtfMode(Dimension dimension, List<Position> positions, SquareObserver observer) throws GridTooSmallException {
+        GridBuilder builder = new GridBuilder(dimension, positions);
+        builder.buildWalls();
+        builder.buildItems();
+        builder.addObserver(observer);
+        return builder.getGrid();
+    }
+
     // Contstruct a grid without walls and powerfailures
     public static Grid gridWithoutWallsPowerFailures(Dimension dimension, List<Position> positions) throws GridTooSmallException {
         GridBuilder builder = new GridBuilder(dimension, positions);
