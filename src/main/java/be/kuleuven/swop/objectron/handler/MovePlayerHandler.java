@@ -6,7 +6,7 @@ import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -20,10 +20,9 @@ import java.util.logging.Logger;
  *         Time: 01:11
  */
 public class MovePlayerHandler extends Handler {
-    private static Logger logger = Logger.getLogger(MovePlayerHandler.class.getCanonicalName());
 
-    public MovePlayerHandler(GameState state) {
-        super(state);
+    public MovePlayerHandler(Game game) {
+        super(game);
     }
 
     /**
@@ -32,38 +31,26 @@ public class MovePlayerHandler extends Handler {
      * @param direction The direction the player wants to move in.
      * @throws be.kuleuven.swop.objectron.domain.exception.InvalidMoveException
      *          This is an invalid move.
-     *          | !state.getGrid().validPosition(
+     *          | !game.getGrid().validPosition(
      *          |  player.getCurrentSquare().getNeighbour(direction))
      * @throws be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException
      *          The player has not enough actions remaining.
-     *          | state.getCurrentPlayer().getAvailableActions() == 0
+     *          | game.getCurrentPlayer().getAvailableActions() == 0
      * @post The player is moved in the chosen direction.
-     * | new.state.getCurrentPlayer().getCurrentSquare()
-     * |  != state.getCurrentPlayer().getCurrentSquare()
+     * | new.game.getCurrentPlayer().getCurrentSquare()
+     * |  != game.getCurrentPlayer().getCurrentSquare()
      */
     public void move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
-        TurnManager turnManager = state.getTurnManager();
+        TurnManager turnManager = game.getTurnManager();
         Turn currentTurn = turnManager.getCurrentTurn();
-        try {
+        currentTurn.checkEnoughActions();
+        Player current = currentTurn.getCurrentPlayer();
+        Square newSquare = game.getGrid().makeMove(direction, current.getCurrentSquare());
+        current.move(newSquare, turnManager);
+        currentTurn.setMoved();
 
-            currentTurn.checkEnoughActions();
-            Player current = currentTurn.getCurrentPlayer();
-            Square newSquare = state.getGrid().makeMove(direction, current.getCurrentSquare());
-            current.move(newSquare, turnManager);
-            //newSquare.stepOn(turnManager);
-            currentTurn.setMoved();
-           // if (state.checkWin())
-            //    throw new GameOverException(current.getName() + ", you win the game!");
-
-            currentTurn.reduceRemainingActions(1);
-            state.endAction();
-            state.notifyObservers();
-        } catch (InvalidMoveException e) {
-            logger.log(Level.INFO, currentTurn.getCurrentPlayer().getName() + " tried to do an invalid move!");
-            throw e;
-        } catch (NotEnoughActionsException e) {
-            logger.log(Level.INFO, currentTurn.getCurrentPlayer().getName() + " tried to do a move when he had no actions remaining.");
-            throw e;
-        }
+        currentTurn.reduceRemainingActions(1);
+        game.endAction();
+        game.notifyObservers();
     }
 }

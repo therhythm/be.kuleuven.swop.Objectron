@@ -3,8 +3,6 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.gamestate.gamemode.CtfMode;
 import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -71,7 +69,7 @@ public class TestGameState {
         Square sq = state.getGrid().getSquareAtPosition(new Position(0, 0));
         manager.getCurrentTurn().getCurrentPlayer().move(sq, manager);
 
-        // assertTrue(state.checkWin());
+        // assertTrue(game.checkWin());
     }
 
 

@@ -3,7 +3,6 @@ package be.kuleuven.objectron.item.forceField;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -367,7 +366,7 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
-        // Turn currentTurn = state.getCurrentTurn();
+        // Turn currentTurn = game.getCurrentTurn();
         //currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);

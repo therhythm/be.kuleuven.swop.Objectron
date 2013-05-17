@@ -7,7 +7,6 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -110,14 +109,14 @@ public class Test_Identity_Disc {
         endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.RIGHT);
         Player player2 = turnManager.getCurrentTurn().getCurrentPlayer();
-        // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
+        // System.out.println("test: " + game.getCurrentPlayer().getCurrentSquare());
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
-        //System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
+        //System.out.println("remaining actions: " + game.getCurrentTurn().getActionsRemaining());
 
         assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-        // System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
+        // System.out.println("remaining actions: " + game.getCurrentTurn().getActionsRemaining());
         assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN * 2 -1);
 
         for (int i = 1; i < 5; i++) {

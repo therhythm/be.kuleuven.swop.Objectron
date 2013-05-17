@@ -3,7 +3,7 @@ package be.kuleuven.swop.objectron.handler;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -12,8 +12,6 @@ import be.kuleuven.swop.objectron.domain.item.deployer.PlacingItemDeployer;
 import be.kuleuven.swop.objectron.domain.item.deployer.ThrowingItemDeployer;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author : Nik Torfs
@@ -22,8 +20,8 @@ import java.util.logging.Logger;
  */
 public class UseItemHandler extends Handler {
 
-    public UseItemHandler(GameState state) {
-        super(state);
+    public UseItemHandler(Game game) {
+        super(game);
     }
 
     /**
@@ -35,7 +33,7 @@ public class UseItemHandler extends Handler {
      *          | getCurrentPlayer().getInventory().isEmpty()
      */
     public List<Item> showInventory() throws InventoryEmptyException {
-        List<Item> inventory = state.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItems();
+        List<Item> inventory = game.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItems();
         if (!inventory.isEmpty()) {
             return inventory;
         } else {
@@ -52,8 +50,8 @@ public class UseItemHandler extends Handler {
      * |  == currentPlayer.getInventory().retrieveItem(identifier)
      */
     public String selectItemFromInventory(int identifier) {
-        Item currentlySelectedItem = state.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItem(identifier);
-        state.getTurnManager().getCurrentTurn().setCurrentItem(currentlySelectedItem);
+        Item currentlySelectedItem = game.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItem(identifier);
+        game.getTurnManager().getCurrentTurn().setCurrentItem(currentlySelectedItem);
         return currentlySelectedItem.getName();
     }
 
@@ -62,17 +60,17 @@ public class UseItemHandler extends Handler {
      *
      * @throws be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException
      *          The square the player is trying to access, is occupied.
-     *          | state.getCurrentPlayer().getCurrentSquare().hasActiveItem()
+     *          | game.getCurrentPlayer().getCurrentSquare().hasActiveItem()
      * @throws be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException
      *          The player has no more available actions.
-     *          | state.getCurrentPlayer().getAvailableActions() == 0
+     *          | game.getCurrentPlayer().getAvailableActions() == 0
      * @post The item is removed from the player's inventory
      * | !currentPlayer.getInventory().contains(currentPlayer.getCurrentlySelectedItem())
      * @post The player's available actions is reduced by 1
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
     public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException, GameOverException {
-        TurnManager turnManager = state.getTurnManager();
+        TurnManager turnManager = game.getTurnManager();
         Turn currentTurn = turnManager.getCurrentTurn();
         if (currentTurn.getCurrentItem() == null) {
             throw new NoItemSelectedException("You don't have an item selected.");
@@ -80,15 +78,15 @@ public class UseItemHandler extends Handler {
 
         currentTurn.checkEnoughActions();
         currentTurn.reduceRemainingActions(1);
-        state.endAction();
+        game.endAction();
         ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare());
-        currentTurn.getCurrentPlayer().useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
-        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
+        currentTurn.getCurrentPlayer().useItem(game.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
+        game.getTurnManager().getCurrentTurn().setCurrentItem(null);
 
     }
 
     public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException, GameOverException {
-        TurnManager turnManager = state.getTurnManager();
+        TurnManager turnManager = game.getTurnManager();
         Turn currentTurn = turnManager.getCurrentTurn();
 
         if (currentTurn.getCurrentItem() == null) {
@@ -99,8 +97,8 @@ public class UseItemHandler extends Handler {
         currentTurn.checkEnoughActions();
 
         ItemDeployer deployer = new ThrowingItemDeployer(currentPlayer.getCurrentSquare(), direction, turnManager);
-        currentPlayer.useItem(state.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
-        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
+        currentPlayer.useItem(game.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
+        game.getTurnManager().getCurrentTurn().setCurrentItem(null);
         currentTurn.reduceRemainingActions(1);
     }
 
@@ -108,9 +106,9 @@ public class UseItemHandler extends Handler {
      * Cancel the usage of a selected item
      *
      * @post The item is no longer selected.
-     * | new.state.getCurrentPlayer().getCurrentlySelectedItem() == null
+     * | new.game.getCurrentPlayer().getCurrentlySelectedItem() == null
      */
     public void cancelItemUsage() {
-        state.getTurnManager().getCurrentTurn().setCurrentItem(null);
+        game.getTurnManager().getCurrentTurn().setCurrentItem(null);
     }
 }

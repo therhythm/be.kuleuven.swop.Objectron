@@ -1,14 +1,10 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.GameMode;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.item.effect.RaceFinish;
-import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -19,39 +15,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author : Nik Torfs
- *         Date: 26/02/13
- *         Time: 21:02
+ * Created with IntelliJ IDEA.
+ * User: Nik
+ * Date: 5/17/13
+ * Time: 4:25 PM
  */
-public class GameState implements Observable<GameObserver>, SquareObserver, TurnSwitchObserver {
+public abstract class Game implements SquareObserver, TurnSwitchObserver, Observable<GameObserver> {
     private Grid gameGrid;
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
     private TurnManager turnManager;
-    private GameMode gamemode;
 
-
-    public GameState(List<String> playerNames, Dimension dimension, GameMode gameMode) throws GridTooSmallException {
-        List<Position> positions = new ArrayList<Position>();
-
-        positions.add(new Position(0, dimension.getHeight() - 1));
-        positions.add(new Position(dimension.getWidth() - 1, 0));
-        positions.add(new Position(dimension.getWidth() - 1, dimension.getHeight() - 1));
-        positions.add(new Position(0, 0));
-
-
-        this.gameGrid = GridFactory.normalGrid(dimension, positions.subList(0, playerNames.size()), this);
+    public Game(List<String> playerNames, List<Position> positions,
+                Grid gameGrid){
+        this.gameGrid = gameGrid;
 
         for (int i = 0; i < playerNames.size(); i++) {
             players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
         }
 
-        this.gamemode = gameMode;
-        gamemode.initialize(players);
-
+        initialize(players);
         initializeTurnmanager();
     }
 
+    protected abstract void initialize(List<Player> players);
 
     private void initializeTurnmanager() {
         turnManager = new TurnManager(players);
@@ -59,24 +46,7 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
         turnManager.attach(gameGrid);
         turnManager.attach(gameGrid.getForceFieldArea());
     }
-    public GameState(List<String> playerNames, List<Position> positions,
-                     Grid gameGrid, GameMode gameMode) throws GridTooSmallException {
-        this.gameGrid = gameGrid;
-        this.gamemode = gameMode;
 
-
-
-        for (int i = 0; i < playerNames.size(); i++) {
-            players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
-        }
-
-        gamemode.initialize(players);
-
-        turnManager = new TurnManager(players);
-        turnManager.attach(this);
-        turnManager.attach(gameGrid);
-        turnManager.attach(getGrid().getForceFieldArea());
-    }
 
     public TurnManager getTurnManager() {
         return turnManager;
@@ -99,19 +69,6 @@ public class GameState implements Observable<GameObserver>, SquareObserver, Turn
             observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs);
         }
     }
-
-  /*  public boolean checkWin() {
-        Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
-
-        for (Player otherPlayer : players) {
-            if (!otherPlayer.equals(currentPlayer) &&
-                    otherPlayer.getInitialSquare().equals(currentPlayer.getCurrentSquare())) {
-                return true;
-            }
-        }
-        return false;
-    }
-    */
 
     public void endAction() {
         gameGrid.endAction();
