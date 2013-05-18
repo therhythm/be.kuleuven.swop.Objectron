@@ -38,7 +38,6 @@ public class GridBuilder {
     public static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
 
 
-
     private Dimension dimension;
     private List<Position> playerPositions;
 
@@ -105,7 +104,7 @@ public class GridBuilder {
     }
 
     public Grid getGrid() {
-        return new Grid(squares, walls, dimension, forceFieldArea);
+        return new Grid(squares, walls, dimension, forceFieldArea, playerPositions);
     }
 
     private ArrayList<Square> getSquaresNotObstructed() {

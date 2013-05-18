@@ -21,7 +21,7 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Observable<SquareObserver> {
-    public static final int POWER_FAILURE_CHANCE = 1; //TODO public
+    public static final int POWER_FAILURE_CHANCE = 1;
 
     PowerFailure powerFailure;
     private final Position position;
