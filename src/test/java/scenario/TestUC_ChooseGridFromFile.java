@@ -2,6 +2,7 @@ package scenario;
 
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.GridFileReader;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
@@ -30,22 +31,34 @@ public class TestUC_ChooseGridFromFile {
 
     @Test
     public void test_basic_flow() {
+        gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
+        gridBuilder.buildWalls();
         Grid grid = gridBuilder.getGrid();
 
         //check dimensions
-        assertTrue(grid.getDimension().getHeight() == 5);
-        assertTrue(grid.getDimension().getWidth() == 5);
+        assertTrue(grid.getDimension().getHeight() == 10);
+        assertTrue(grid.getDimension().getWidth() == 10);
 
         //check walls
-        assertTrue(grid.getSquareAtPosition(new Position(3,0)).isObstructed());
-        assertTrue(grid.getSquareAtPosition(new Position(3,1)).isObstructed());
         assertTrue(grid.getSquareAtPosition(new Position(3,2)).isObstructed());
-        assertTrue(grid.getSquareAtPosition(new Position(1,2)).isObstructed());
-        assertTrue(grid.getSquareAtPosition(new Position(1,3)).isObstructed());
-        assertTrue(grid.getSquareAtPosition(new Position(1,4)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(3,3)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(3,4)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(3,5)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(3,6)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(3,7)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(3,8)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(3,9)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6,0)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6,1)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6,2)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6,3)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6,4)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6,5)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6,6)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(6,7)).isObstructed());
 
         //check start positions
-        assertTrue(grid.getSquareAtPosition(new Position(0,4)).isObstructed());
-        assertTrue(grid.getSquareAtPosition(new Position(4,0)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(0,9)).isObstructed());
+        assertTrue(grid.getSquareAtPosition(new Position(9,0)).isObstructed());
     }
 }

@@ -47,6 +47,7 @@ public class FileGridBuilder implements GridBuilder {
 
     @Override
     public void buildWalls() {
+        //TODO: squares in 'walls' are obstructed but not in 'squares'
         walls = new ArrayList<>();
         for (Square segment: wallSegments) {
             Wall wall = new Wall();
@@ -58,12 +59,12 @@ public class FileGridBuilder implements GridBuilder {
 
     @Override
     public void buildWalls(List<Wall> walls) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //Building pre-defined walls is not possible with file-generated grids.
     }
 
     @Override
     public void buildItems() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //Items are not supported for file-generated grids.
     }
 
     @Override
