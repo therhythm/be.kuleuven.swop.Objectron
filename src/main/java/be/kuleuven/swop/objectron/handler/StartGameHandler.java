@@ -4,6 +4,8 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.gamestate.CTFGame;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
@@ -19,38 +21,56 @@ import java.util.List;
 public class StartGameHandler {
 
     public GameStartViewModel startNewRaceGame(List<String> playerNames,  Dimension dimension) throws GridTooSmallException {
-        Game game = new RaceGame(playerNames, dimension);     // todo building the dependency graph the right way and inject it all
+        try {
+            GridBuilder builder  = new GridBuilder(dimension, playerNames.size());
+            builder.buildWalls();
+            builder.buildItems();
+            Grid grid = builder.getGrid();
 
-        HandlerCatalog catalog = new HandlerCatalog();
-        catalog.addHandler(new EndTurnHandler(game));
-        catalog.addHandler(new PickUpItemHandler(game));
-        catalog.addHandler(new MovePlayerHandler(game));
-        catalog.addHandler(new UseItemHandler(game));
+            Game game = new RaceGame(playerNames, grid);// todo building the dependency graph the right way and inject it all
 
-        List<PlayerViewModel> playerViewModels = new ArrayList<>();
-        //todo fill list
+            HandlerCatalog catalog = new HandlerCatalog();
+            catalog.addHandler(new EndTurnHandler(game));
+            catalog.addHandler(new PickUpItemHandler(game));
+            catalog.addHandler(new MovePlayerHandler(game));
+            catalog.addHandler(new UseItemHandler(game));
 
-        PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
-        PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
+            List<PlayerViewModel> playerViewModels = new ArrayList<>();
+            //todo fill list
 
-        return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel(), game.getGrid().getWalls(), game.getGrid().getItems(),game.getGrid().getEffects(), game);
+            PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
+            PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
+
+            return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel(), game.getGrid().getWalls(), game.getGrid().getItems(),game.getGrid().getEffects(), game);
+        } catch (GridTooSmallException e) {
+            throw e;
+        }
     }
 
-    public GameStartViewModel startNewCTFGame(List<String> playerNames, Dimension dimension){
-        Game game = new CTFGame(playerNames, dimension);     // todo building the dependency graph the right way and inject it all
+    public GameStartViewModel startNewCTFGame(List<String> playerNames, Dimension dimension) throws GridTooSmallException {
+        try {
+            GridBuilder builder  = new GridBuilder(dimension, playerNames.size());
+            builder.buildWalls();
+            builder.buildItems();
+            Grid grid = builder.getGrid();
 
-        HandlerCatalog catalog = new HandlerCatalog();
-        catalog.addHandler(new EndTurnHandler(game));
-        catalog.addHandler(new PickUpItemHandler(game));
-        catalog.addHandler(new MovePlayerHandler(game));
-        catalog.addHandler(new UseItemHandler(game));
+            Game game = new CTFGame(playerNames, grid);     // todo building the dependency graph the right way and inject it all
 
-        List<PlayerViewModel> playerViewModels = new ArrayList<>();
-        //todo fill list
+            HandlerCatalog catalog = new HandlerCatalog();
+            catalog.addHandler(new EndTurnHandler(game));
+            catalog.addHandler(new PickUpItemHandler(game));
+            catalog.addHandler(new MovePlayerHandler(game));
+            catalog.addHandler(new UseItemHandler(game));
 
-        PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
-        PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
+            List<PlayerViewModel> playerViewModels = new ArrayList<>();
+            //todo fill list
 
-        return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel(), game.getGrid().getWalls(), game.getGrid().getItems(),game.getGrid().getEffects(), game);
+            PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
+            PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
+
+            return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel(), game.getGrid().getWalls(), game.getGrid().getItems(),game.getGrid().getEffects(), game);
+        } catch (GridTooSmallException e) {
+            throw e;
+        }
     }
 }

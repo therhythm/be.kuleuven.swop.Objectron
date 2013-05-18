@@ -6,8 +6,9 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -35,7 +36,7 @@ public class TestUC_pick_up_item {
     private PickUpItemHandler pickUpItemHandler;
     private Player player;
     private Square currentSquare;
-    private GameState gameState;
+    private Game gameState;
 
     @Before
     public void setUp() throws GridTooSmallException {
@@ -50,7 +51,7 @@ public class TestUC_pick_up_item {
         playerNames.add("p2");
 
         Grid grid = GridFactory.gridWithoutItems(dimension,positions);
-        gameState = new GameState(playerNames,positions, grid,new RaceMode());
+        gameState = new RaceGame(playerNames, grid);
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();

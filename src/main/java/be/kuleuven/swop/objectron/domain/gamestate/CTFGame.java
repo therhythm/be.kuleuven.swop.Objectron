@@ -19,8 +19,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class CTFGame extends Game {
-    public CTFGame(List<String> playerNames, List<Position> positions, Grid gameGrid) throws GridTooSmallException {
-        super(playerNames, positions, gameGrid);
+    public CTFGame(List<String> playerNames, Grid gameGrid){
+        super(playerNames, gameGrid);
     }
 
     @Override

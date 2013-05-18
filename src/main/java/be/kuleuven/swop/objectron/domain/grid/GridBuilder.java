@@ -38,10 +38,10 @@ public class GridBuilder {
     public static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
 
 
+
     private Dimension dimension;
-    //private Position p1Pos;
-    //private Position p2Pos;
     private List<Position> playerPositions;
+
 
     private Square[][] squares;
     private List<Wall> walls;
@@ -56,8 +56,36 @@ public class GridBuilder {
         this.dimension = dimension;
         this.playerPositions = positions;
 
+
+
         initGrid(Square.POWER_FAILURE_CHANCE);
         forceFieldArea = new ForceFieldArea();
+    }
+
+    public GridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException {
+        if (!isValidDimension(dimension)) {
+            throw new GridTooSmallException("The grid needs to be at least " +
+                    MIN_GRID_HEIGHT + " rows by " +
+                    MIN_GRID_HEIGHT + " columns");
+        }
+        this.dimension = dimension;
+
+        initPlayerPositions(nbPlayers);
+        initGrid(Square.POWER_FAILURE_CHANCE);
+        forceFieldArea = new ForceFieldArea();
+    }
+
+    private void initPlayerPositions(int nbPlayers) {
+        List<Position> tempPositions = new ArrayList<>();
+        tempPositions.add(new Position(0, this.dimension.getHeight() - 1));
+        tempPositions.add(new Position(this.dimension.getWidth() - 1, 0));
+        tempPositions.add(new Position(0, 0));
+        tempPositions.add(new Position(this.dimension.getWidth() - 1, dimension.getHeight() - 1));
+
+        playerPositions = new ArrayList<>();
+        for(int i = 0; i < nbPlayers; i ++){
+            playerPositions.add(tempPositions.get(i));
+        }
     }
 
     public void buildWalls() {
@@ -74,20 +102,12 @@ public class GridBuilder {
 
     public void buildWalls(List<Wall> walls) {
         this.walls = walls;
-
     }
 
     public Grid getGrid() {
         return new Grid(squares, walls, dimension, forceFieldArea);
     }
 
-    /*
-   private Square calculateMiddleSquare() {
-       int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
-       int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
-       return squares[VIndex][HIndex];
-   }
-      */
     private ArrayList<Square> getSquaresNotObstructed() {
         ArrayList<Square> result = new ArrayList<Square>();
         for (int i = 0; i < squares.length; i++) {

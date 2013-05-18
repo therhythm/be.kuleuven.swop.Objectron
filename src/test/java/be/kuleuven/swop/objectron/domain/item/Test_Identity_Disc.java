@@ -2,10 +2,11 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
@@ -37,7 +38,7 @@ public class Test_Identity_Disc {
     private MovePlayerHandler movePlayerHandler;
     private PickUpItemHandler pickUpItemHandler;
     private UseItemHandler useItemHandler;
-    private GameState state;
+    private Game state;
     private Player player1;
     private Grid grid;
 
@@ -62,7 +63,7 @@ public class Test_Identity_Disc {
         playerNames.add("p2");
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new GameState(playerNames,positions, grid,new RaceMode());
+        state = new RaceGame(playerNames,grid);
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
@@ -135,7 +136,7 @@ public class Test_Identity_Disc {
 
 
         grid = GridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, positions, wallPositions);
-        state = new GameState(playerNames,positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
 
@@ -160,7 +161,7 @@ public class Test_Identity_Disc {
         wallPositions.add(new Position(0, 3));
 
         grid = GridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, positions, wallPositions);
-        state = new GameState(playerNames,positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
 
@@ -217,7 +218,7 @@ public class Test_Identity_Disc {
 
         TurnManager turnManager = state.getTurnManager();
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new GameState(playerNames,positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
         Player current_player = turnManager.getCurrentTurn().getCurrentPlayer();

@@ -3,7 +3,8 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -29,11 +30,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class Test_Flag {
 
-    private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
     private PickUpItemHandler pickUpItemHandler;
-    private UseItemHandler useItemHandler;
-    private GameState state;
+    private Game state;
     private Player player1,player2;
     private Grid grid;
 
@@ -57,11 +56,9 @@ public class Test_Flag {
         playerNames.add("p2");
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new GameState(playerNames, positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
         movePlayerHandler = new MovePlayerHandler(state);
-        endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
-        useItemHandler = new UseItemHandler(state);
         player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         state.getTurnManager().getCurrentTurn().setMoved();
         state.getTurnManager().endTurn();

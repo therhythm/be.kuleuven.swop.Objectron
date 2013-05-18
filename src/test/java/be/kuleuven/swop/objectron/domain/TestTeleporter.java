@@ -1,8 +1,9 @@
 package be.kuleuven.swop.objectron.domain;
 
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertTrue;
  *         Time: 13:18
  */
 public class TestTeleporter {
-    private GameState gameState;
+    private Game gameState;
     private Player player;
     private Square currentSquare;
     private MovePlayerHandler movePlayerHandler;
@@ -41,7 +42,7 @@ public class TestTeleporter {
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
-        gameState = new GameState(playerNames, positions, grid,new RaceMode());
+        gameState = new RaceGame(playerNames, grid);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
         movePlayerHandler = new MovePlayerHandler(gameState);

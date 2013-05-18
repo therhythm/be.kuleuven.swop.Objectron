@@ -18,8 +18,8 @@ import java.util.List;
  */
 public class RaceGame extends Game {
 
-    public RaceGame(List<String> playerNames, List<Position> positions, Grid gameGrid) throws GridTooSmallException {
-        super(playerNames, positions, gameGrid);
+    public RaceGame(List<String> playerNames, Grid gameGrid) {
+        super(playerNames, gameGrid);
     }
 
     @Override

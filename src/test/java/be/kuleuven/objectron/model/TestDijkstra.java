@@ -1,7 +1,7 @@
 package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
@@ -26,10 +26,7 @@ import static junit.framework.Assert.assertTrue;
  * To change this template use File | Settings | File Templates.
  */
 public class TestDijkstra {
-    private EndTurnHandler endTurnHandler;
-    private MovePlayerHandler movePlayerHandler;
     private Grid grid;
-    private GameState state;
     private List<Position> positions;
     private Dimension dimension;
 
@@ -55,8 +52,6 @@ public class TestDijkstra {
 
 
         grid = GridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension,positions, wallPositions);
-
-        state = new GameState(playerNames, positions, grid,new RaceMode());
     }
 
     @Test

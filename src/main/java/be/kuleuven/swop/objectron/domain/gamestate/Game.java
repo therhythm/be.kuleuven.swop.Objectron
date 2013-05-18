@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -26,13 +27,16 @@ public abstract class Game implements SquareObserver, TurnSwitchObserver, Observ
     private List<GameObserver> observers = new ArrayList<>();
     private TurnManager turnManager;
 
-    public Game(List<String> playerNames, List<Position> positions,
+    public Game(List<String> playerNames,
                 Grid gameGrid){
         this.gameGrid = gameGrid;
 
+        // TODO fix dependencies in gamebuilder
+        List<Square> playerPositions = gameGrid.getPlayerPositions();
         for (int i = 0; i < playerNames.size(); i++) {
-            players.add(new Player(playerNames.get(i), gameGrid.getSquareAtPosition(positions.get(i))));
+            players.add(new Player(playerNames.get(i), playerPositions.get(i)));
         }
+
 
         initialize(players);
         initializeTurnmanager();

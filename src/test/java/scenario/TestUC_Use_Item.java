@@ -2,6 +2,7 @@ package scenario;
 
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -31,7 +32,7 @@ public class TestUC_Use_Item {
     private UseItemHandler useItemHandler;
     private Player player;
     private Item item;
-    private GameState stateMock;
+    private Game stateMock;
     private TurnManager turnManager;
 
 
@@ -45,7 +46,7 @@ public class TestUC_Use_Item {
         turnManager = mock(TurnManager.class);
         when(turnManager.getCurrentTurn()).thenReturn(turn);
 
-        stateMock = mock(GameState.class);
+        stateMock = mock(Game.class);
         when(stateMock.getTurnManager()).thenReturn(turnManager);
 
         useItemHandler = new UseItemHandler(stateMock);

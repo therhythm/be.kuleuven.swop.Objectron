@@ -4,7 +4,8 @@ package scenario;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -24,7 +25,7 @@ public class TestUC_End_Turn {
 
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
-    private GameState state;
+    private Game state;
 
     @Before
     public void setUp() throws GridTooSmallException {
@@ -39,7 +40,7 @@ public class TestUC_End_Turn {
         playerNames.add("piet")  ;
 
         Grid grid = GridFactory.gridWithoutWalls(dimension, positions);
-        state = new GameState(playerNames,positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);
     }

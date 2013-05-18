@@ -3,8 +3,9 @@ package be.kuleuven.objectron.model;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
@@ -34,7 +35,7 @@ public class TestSquare {
     private Square square;
     private Player player1;
     private Player player2;
-    private GameState gamestate;
+    private Game gamestate;
     private Position p1Pos;
     private Position p2Pos;
     private Dimension dimension;
@@ -57,7 +58,7 @@ public class TestSquare {
 
         dimension = new Dimension(10, 10);
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        gamestate = new GameState(playerNames,positions, grid,new RaceMode());
+        gamestate = new RaceGame(playerNames,grid);
 
         square = new Square(new Position(5, 5));
         new LightMine().place(square);

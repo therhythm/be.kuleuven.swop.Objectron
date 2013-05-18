@@ -3,8 +3,9 @@ package be.kuleuven.objectron.item.forceField;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -38,8 +39,7 @@ public class Test_Force_Field {
     private MovePlayerHandler movePlayerHandler;
     private PickUpItemHandler pickUpItemHandler;
     private UseItemHandler useItemHandler;
-    private GameState state;
-    private Player player1;
+    private Game state;
     private Grid grid;
 
     private Dimension dimension;
@@ -62,13 +62,12 @@ public class Test_Force_Field {
         playerNames.add("p2");
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new GameState(playerNames,positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
     }
 
     @Test(expected = InvalidMoveException.class)
@@ -85,9 +84,6 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forcefieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forcefieldGenerator2, squareFF2);
-        Turn currentTurn = state.getTurnManager().getCurrentTurn();
-
-        //currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
@@ -453,13 +449,12 @@ public class Test_Force_Field {
         playerNames.add("p2");
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new GameState(playerNames,positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
 
 
         Square squareFF1 = grid.getSquareAtPosition(new Position(4, 5));

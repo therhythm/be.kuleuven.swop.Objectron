@@ -3,8 +3,6 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.CtfMode;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -31,7 +29,7 @@ import static org.junit.Assert.assertFalse;
  */
 public class TestGameState {
 
-    private GameState state;
+    private Game state;
     private Grid grid;
 
     @Before
@@ -48,7 +46,7 @@ public class TestGameState {
         playerNames.add("p2");
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
-        state = new GameState(playerNames, positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
 
     }
 
@@ -92,7 +90,7 @@ public class TestGameState {
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
 
-        state = new GameState(playerNames, positions, grid, new RaceMode());
+        state = new RaceGame(playerNames, grid);
         EndTurnHandler endTurnHandler = new EndTurnHandler(state);
         MovePlayerHandler movePlayerHandler = new MovePlayerHandler(state);
 
@@ -123,7 +121,7 @@ public class TestGameState {
         positions.add(new Position(1, 1));
 
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(new Dimension(10, 10), positions);
-        state = new GameState(playerNames, positions, grid, new CtfMode());
+        state = new CTFGame(playerNames, grid);
 
         //controleren of vlaggen op juiste square staan
         assertTrue(grid.getSquareAtPosition(new Position(1,2)).getAvailableItems().size()==1);

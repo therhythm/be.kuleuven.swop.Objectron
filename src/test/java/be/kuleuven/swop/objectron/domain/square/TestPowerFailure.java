@@ -3,9 +3,10 @@ package be.kuleuven.swop.objectron.domain.square;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -32,7 +33,7 @@ import static org.junit.Assert.assertNotEquals;
 public class TestPowerFailure implements SquareObserver {
     private Square currentSquare;
     private Player player;
-    private GameState state;
+    private Game state;
     private MovePlayerHandler movePlayerHandler;
     private Grid grid;
     private boolean regainedPower;
@@ -52,7 +53,7 @@ public class TestPowerFailure implements SquareObserver {
         playerNames.add("p2");
 
         grid = GridFactory.gridWithoutWallsPowerFailures(dimension, positions);
-        state = new GameState(playerNames,positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
 
         player = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();

@@ -2,7 +2,8 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.gamemode.RaceMode;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -29,7 +30,7 @@ public class TestGrid {
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
     private Grid grid;
-    private GameState state;
+    private Game state;
     private Position p1Pos;
     private Position p2Pos;
     private Dimension dimension;
@@ -51,7 +52,7 @@ public class TestGrid {
 
         dimension = new Dimension(10, 10);
         grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new GameState(playerNames, positions, grid,new RaceMode());
+        state = new RaceGame(playerNames, grid);
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
