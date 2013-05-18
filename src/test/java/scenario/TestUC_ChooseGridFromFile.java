@@ -24,8 +24,7 @@ public class TestUC_ChooseGridFromFile {
 
     @Before
     public void setUp() throws IOException {
-        //String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").toString();
-        String input_file = "/Users/kasper/Desktop/test_file.txt";
+        String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").getFile();
         gridBuilder = new FileGridBuilder(input_file);
     }
 

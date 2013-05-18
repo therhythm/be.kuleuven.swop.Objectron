@@ -26,11 +26,11 @@ public class FileGridBuilder implements GridBuilder {
     private List<Square> wallSegments;
     private Square[][] squares;
     private ForceFieldArea forceFieldArea;
+    private char[][] input;
 
     public FileGridBuilder(String file) throws IOException {
         GridFileReader fileReader = new GridFileReader();
-        char[][] input = fileReader.readGridFile(file);
-        interpretInput(input);
+        input = fileReader.readGridFile(file);
         forceFieldArea = new ForceFieldArea();
     }
 
@@ -47,7 +47,6 @@ public class FileGridBuilder implements GridBuilder {
 
     @Override
     public void buildWalls() {
-        //TODO: squares in 'walls' are obstructed but not in 'squares'
         walls = new ArrayList<>();
         for (Square segment: wallSegments) {
             Wall wall = new Wall();
@@ -64,7 +63,7 @@ public class FileGridBuilder implements GridBuilder {
 
     @Override
     public void buildItems() {
-        //Items are not supported for file-generated grids.
+
     }
 
     @Override
@@ -78,6 +77,7 @@ public class FileGridBuilder implements GridBuilder {
 
     @Override
     public void initGrid(int powerFailureChance) {
+        setDimension(new Dimension(input.length-2, input.length-2));
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
@@ -86,6 +86,7 @@ public class FileGridBuilder implements GridBuilder {
             }
         }
         setupNeighbours();
+        interpretInput(input);
     }
 
     @Override
@@ -97,13 +98,12 @@ public class FileGridBuilder implements GridBuilder {
         wallSegments = new ArrayList<>();
         Position playerOnePosition = null;
         Position playerTwoPosition = null;
-        setDimension(new Dimension(input.length-2, input.length-2));
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input.length; j++) {
                 char c = input[i][j];
                 switch (c) {
                     case '#':
-                        Square square = new Square(new Position(j - 1,i - 1));
+                        Square square = squares[j - 1][i - 1];
                         wallSegments.add(square);
                         break;
                     case '1':
