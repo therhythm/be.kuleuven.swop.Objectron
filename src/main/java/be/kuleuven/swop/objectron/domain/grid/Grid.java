@@ -3,12 +3,12 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.effect.Effect;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -29,6 +29,7 @@ public class Grid implements TurnSwitchObserver {
     private Dimension dimension;
     private List<Wall> walls;
     private ForceFieldArea forceFieldArea;
+    private List<Position> playerPositions;
 
     public Grid(Square[][] squares, List<Wall> walls, Dimension dimension) {
         this.squares = squares;
@@ -44,7 +45,17 @@ public class Grid implements TurnSwitchObserver {
         this.forceFieldArea = forceFieldArea;
     }
 
-    public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException, NotEnoughActionsException {
+    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension, ForceFieldArea forceFieldArea,
+                List<Position> playerPositions) {
+        this.squares = squares;
+        this.walls = walls;
+        this.dimension = dimension;
+        this.forceFieldArea = forceFieldArea;
+        this.playerPositions = playerPositions;
+    }
+
+    public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException,
+            NotEnoughActionsException {
         Square neighbour = currentSquare.getNeighbour(direction);
 
         if (neighbour == null)
@@ -54,6 +65,14 @@ public class Grid implements TurnSwitchObserver {
         }
 
         return neighbour;
+    }
+
+    public List<Square> getPlayerPositions() {
+        List<Square> positions = new ArrayList<>();
+        for (Position pos : playerPositions) {
+            positions.add(getSquareAtPosition(pos));
+        }
+        return positions;
     }
 
     public Square getSquareAtPosition(Position position) {
@@ -79,6 +98,7 @@ public class Grid implements TurnSwitchObserver {
         }
         return wallViewModels;
     }
+
     public void newTurn(Turn currentTurn) {
         for (Square[] square : squares) {
             for (Square sq : square) {
@@ -87,7 +107,7 @@ public class Grid implements TurnSwitchObserver {
         }
     }
 
-    public void endAction(){
+    public void endAction() {
         for (Square[] square : squares) {
             for (Square sq : square) {
                 sq.endAction();

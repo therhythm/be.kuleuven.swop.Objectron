@@ -2,10 +2,10 @@ package be.kuleuven.swop.objectron.domain.item.forceField;
 
 import be.kuleuven.swop.objectron.domain.Obstruction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
 
 import java.util.List;
 

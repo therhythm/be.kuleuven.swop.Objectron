@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.domain.item.effect;
+package be.kuleuven.swop.objectron.domain.effect;
 
 /**
  * @author : Nik Torfs
@@ -7,6 +7,8 @@ package be.kuleuven.swop.objectron.domain.item.effect;
  */
 public interface EffectVisitor {
     void visitTeleporter();
+
     void visitLightMine();
+
     void visitForceField();//todo effect or not?
 }

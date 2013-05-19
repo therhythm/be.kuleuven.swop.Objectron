@@ -120,7 +120,9 @@ public class Dijkstra {
         TableEntry smallestEntry = new TableEntry(null, Double.POSITIVE_INFINITY);
         for (TableEntry tableEntry : L) {
             //System.out.println(tableEntry);
-            if ((tableEntry.distance < smallestEntry.getDistance()) && (T.contains(tableEntry.getSquare()))) {
+            boolean isDistanceSmaller = tableEntry.distance < smallestEntry.getDistance();
+            boolean existInT = T.contains(tableEntry.getSquare());
+            if (isDistanceSmaller && existInT) {
                 smallestEntry = tableEntry;
             }
 

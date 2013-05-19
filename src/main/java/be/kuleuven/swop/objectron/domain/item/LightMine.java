@@ -1,12 +1,9 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.effect.Effect;
+import be.kuleuven.swop.objectron.domain.effect.EffectVisitor;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.item.effect.Effect;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.item.effect.EffectVisitor;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -16,6 +13,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  *         Time: 20:56
  */
 public class LightMine implements Item, Effect {
+    private static final int MAX_IN_BAG = Integer.MAX_VALUE;
     private static final int NB_ACTIONS_BLINDED = 3;
 
     private static final String name = "Light Mine";
@@ -28,7 +26,7 @@ public class LightMine implements Item, Effect {
 
     @Override
     public void activate(Movable movable, TurnManager manager) {
-        if(isActive){
+        if (isActive) {
             manager.getCurrentTurn().reduceRemainingActions(NB_ACTIONS_BLINDED);
             isActive = false;
         }
@@ -40,7 +38,7 @@ public class LightMine implements Item, Effect {
     }
 
     @Override
-    public void place(Square targetSquare){
+    public void place(Square targetSquare) {
         targetSquare.addEffect(this);
         isActive = true;
     }
@@ -50,13 +48,18 @@ public class LightMine implements Item, Effect {
         throw new UnsupportedOperationException();
     }
 
-    public boolean isActive(){
+    public boolean isActive() {
         return isActive;
     }
 
     @Override
     public void pickedUp() {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getMaxInBag() {
+        return MAX_IN_BAG;
     }
 
 

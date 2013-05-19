@@ -8,6 +8,9 @@ import be.kuleuven.swop.objectron.handler.StartGameHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,24 +20,27 @@ import org.junit.Test;
  * To change this template use File | Settings | File Templates.
  */
 public class TestUC_Start_New_Game {
-    private String player1 = "player1";
-    private String player2 = "player2";
     private StartGameHandler startGameHandler;
+    private List<String> players = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception {
         startGameHandler = new StartGameHandler();
+        players.add("player 1");
+        players.add("player 2");
+
     }
 
     @Test
     public void test_basic_flow() throws InventoryEmptyException, GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
-        startGameHandler.startNewGame(player1, player2, dimension);
+        startGameHandler.startNewRaceGame(players, dimension);
     }
 
     @Test(expected = GridTooSmallException.class)
     public void test_invalid_size() throws InventoryEmptyException, GridTooSmallException {
         Dimension dimension = new Dimension(9, 10);
-        startGameHandler.startNewGame(player1, player2, dimension);
+
+        startGameHandler.startNewRaceGame(players, dimension);
     }
 }

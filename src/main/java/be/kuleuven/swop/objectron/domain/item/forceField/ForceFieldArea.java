@@ -1,13 +1,16 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,10 +34,11 @@ public class ForceFieldArea implements TurnSwitchObserver {
      * @param currentSquare
      * @throws SquareOccupiedException Thrown when the square already contains a ForceFieldGenerator
      * @effect the square will be assigned to the "changedForceFieldGenerator" in the list listForceFieldGenerators
-     * @effect if there is a focrefieldGenerator within range and fullfills the requirements to create a forcefield, a forcefield will be created
+     * @effect if there is a focrefieldGenerator within range and fullfills the requirements to create a forcefield,
+     * a forcefield will be created
      */
     public void placeForceField(Item changedForceFieldGenerator, Square currentSquare) throws SquareOccupiedException {
-        if(listForceFieldGenerators.values().contains(currentSquare))
+        if (listForceFieldGenerators.values().contains(currentSquare))
             throw new SquareOccupiedException("This square already contains a force field");
         currentSquare.addItem(changedForceFieldGenerator);
         listForceFieldGenerators.put((ForcefieldGenerator) changedForceFieldGenerator, currentSquare);
@@ -49,7 +53,8 @@ public class ForceFieldArea implements TurnSwitchObserver {
     /**
      * @param changedForceFieldGenerator
      * @Effect The corresponding square in the "listForceFields" is set to null
-     * @Effect if there is a ForceField that contains that ForceFieldGenerator,   that forcefield is removed from the list forceFields.
+     * @Effect if there is a ForceField that contains that ForceFieldGenerator,   that forcefield is removed from the
+     * list forceFields.
      */
     public void pickUpForceField(Item changedForceFieldGenerator) {
         listForceFieldGenerators.put((ForcefieldGenerator) changedForceFieldGenerator, null);
@@ -72,8 +77,10 @@ public class ForceFieldArea implements TurnSwitchObserver {
         }
         if (!contains)
             for (Direction direction : Direction.values()) {
-                if (withinRange(listForceFieldGenerators.get(forceField1), listForceFieldGenerators.get(forceField2), direction)) {
-                    List<Square> squaresBetween = getSquaresBetween(listForceFieldGenerators.get(forceField1), listForceFieldGenerators.get(forceField2), direction);
+                if (withinRange(listForceFieldGenerators.get(forceField1), listForceFieldGenerators.get(forceField2),
+                        direction)) {
+                    List<Square> squaresBetween = getSquaresBetween(listForceFieldGenerators.get(forceField1),
+                            listForceFieldGenerators.get(forceField2), direction);
                     ForceField forceFieldPair = new ForceField(forceField1, forceField2, squaresBetween);
                     listForceFields.add(forceFieldPair);
                 }

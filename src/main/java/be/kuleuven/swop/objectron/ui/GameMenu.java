@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * @author : Nik Torfs
@@ -49,7 +50,14 @@ public class GameMenu {
                         if (nbHorizontalTiles < 0 || nbVerticalTiles < 1) {
                             new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!");
                         }
-                        GameStartViewModel vm = handler.startNewGame(p1NameField.getText(), p2NameField.getText(), new Dimension(nbHorizontalTiles, nbVerticalTiles));
+
+                        //todo dynamicly fill list
+                        java.util.List<String> playerNames = new ArrayList();
+                        playerNames.add(p1NameField.getText());
+                        playerNames.add(p2NameField.getText());
+
+                        GameStartViewModel vm = handler.startNewRaceGame(playerNames,
+                                new Dimension(nbHorizontalTiles, nbVerticalTiles));
                         new GameView(vm).run();
                         gui.dispose();
                     } catch (NumberFormatException ex) {

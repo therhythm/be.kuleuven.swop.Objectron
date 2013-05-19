@@ -2,18 +2,16 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -42,35 +40,42 @@ public class Test_Identity_Disc {
     private MovePlayerHandler movePlayerHandler;
     private PickUpItemHandler pickUpItemHandler;
     private UseItemHandler useItemHandler;
-    private GameState state;
-    private Player player1;
+    private Game state;
     private Grid grid;
-    private GridFactory gridFactory;
+    private GridBuilder builder;
 
-    private Dimension dimension;
     private Position p1Pos;
-    private Position p2Pos;
+    private List<String> playerNames;
 
     @Before
     public void setUp() throws GridTooSmallException {
-        dimension = new Dimension(10, 10);
+        Dimension dimension = new Dimension(10, 10);
 
         p1Pos = new Position(0, 9);
-        p2Pos = new Position(5, 9);
+        Position p2Pos = new Position(5, 9);
+        List<Position> positions = new ArrayList<>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
 
-        GridBuilder builder = new GeneratedGridBuilder();
-        gridFactory = new GridFactory(builder);
-        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
+
+
+        playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+        state = new RaceGame(playerNames, grid);
+
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
     }
 
     @Test
-    public void test_Charged_identity_disc_no_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+    public void test_Charged_identity_disc_no_hit() throws InventoryFullException, NotEnoughActionsException,
+            SquareOccupiedException, NoItemSelectedException, GameOverException {
         Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
@@ -86,7 +91,8 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_UnCharged_identity_disc_hit_boundary() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+    public void test_UnCharged_identity_disc_hit_boundary() throws InventoryFullException, NotEnoughActionsException,
+            SquareOccupiedException, NoItemSelectedException, GameOverException {
         Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
@@ -98,7 +104,8 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_Charged_identity_disc_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
+    public void test_Charged_identity_disc_hit() throws InventoryFullException, NotEnoughActionsException,
+            SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
         Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
         TurnManager turnManager = state.getTurnManager();
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
@@ -107,16 +114,12 @@ public class Test_Identity_Disc {
         movePlayerHandler.move(Direction.RIGHT);
         endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.RIGHT);
-        Player player2 = turnManager.getCurrentTurn().getCurrentPlayer();
-        // System.out.println("test: " + state.getCurrentPlayer().getCurrentSquare());
         endTurnHandler.endTurn();
         useItemHandler.selectItemFromInventory(0);
-        //System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
 
         assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN);
         useItemHandler.useCurrentIdentityDisc(Direction.RIGHT);
-        // System.out.println("remaining actions: " + state.getCurrentTurn().getActionsRemaining());
-        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN * 2 -1);
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN * 2 - 1);
 
         for (int i = 1; i < 5; i++) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(i, 9));
@@ -128,12 +131,14 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_Uncharged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
-        List<Position> wallPositions = new ArrayList<Position>();
+    public void test_Uncharged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException,
+            SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
+        List<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(0, 6));
 
-        grid = gridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, p1Pos, p2Pos, wallPositions);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        grid = GridObjectMother.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(builder, wallPositions);
+        state = new RaceGame(playerNames, grid);
+
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
 
@@ -153,12 +158,14 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_Charged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
-        List<Position> wallPositions = new ArrayList<Position>();
+    public void test_Charged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException,
+            SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
+        List<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(0, 3));
 
-        grid = gridFactory.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, p1Pos, p2Pos, wallPositions);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        grid = GridObjectMother.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(builder, wallPositions);
+        state = new RaceGame(playerNames, grid);
+
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
 
@@ -168,7 +175,7 @@ public class Test_Identity_Disc {
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
         useItemHandler.useCurrentIdentityDisc(Direction.UP);
-        for (int i = 9; i >= (9-NormalIdentityDiscBehavior.MAX_RANGE); i--) {
+        for (int i = 9; i >= (9 - NormalIdentityDiscBehavior.MAX_RANGE); i--) {
             Square squareIdentityDisc = grid.getSquareAtPosition(new Position(0, i));
             assertFalse(squareIdentityDisc.getAvailableItems().contains(identityDisc));
         }
@@ -179,7 +186,8 @@ public class Test_Identity_Disc {
 
 
     @Test
-    public void test_UnCharged_identity_disc_no_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException {
+    public void test_UnCharged_identity_disc_no_hit_teleported() throws InventoryFullException,
+            NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         Square currentSquare = grid.getSquareAtPosition(new Position(0, 9));
 
         Square upNeighbor = grid.getSquareAtPosition(new Position(0, 7));
@@ -203,15 +211,22 @@ public class Test_Identity_Disc {
     }
 
     @Test
-    public void test_UnCharged_identity_disc_self_hit_teleported() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException {
-        dimension = new Dimension(10, 10);
+    public void test_UnCharged_identity_disc_self_hit_teleported() throws InventoryFullException,
+            NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException,
+            GameOverException {
+        Position p1Pos = new Position(0, 7);
+        Position p2Pos = new Position(5, 9);
 
-        p1Pos = new Position(0, 7);
-        p2Pos = new Position(5, 9);
+        List<Position> positions = new ArrayList<>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
+        state = new RaceGame(playerNames, grid);
 
         TurnManager turnManager = state.getTurnManager();
-        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
         Player current_player = turnManager.getCurrentTurn().getCurrentPlayer();
@@ -240,7 +255,7 @@ public class Test_Identity_Disc {
         //TODO fix bug, vermoedelijk in methode "enter" van de klasse IdentityDisc
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
         assertFalse(turnManager.getCurrentTurn().getCurrentPlayer().equals(current_player));
-        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN*2);
+        assertTrue(turnManager.getCurrentTurn().getActionsRemaining() == Turn.ACTIONS_EACH_TURN * 2);
     }
 
     @Test
