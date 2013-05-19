@@ -1,13 +1,10 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
-import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
@@ -28,7 +25,7 @@ public abstract class Game implements SquareObserver, TurnSwitchObserver, Observ
     private TurnManager turnManager;
 
     public Game(List<String> playerNames,
-                Grid gameGrid){
+                Grid gameGrid) {
         this.gameGrid = gameGrid;
 
         // TODO fix dependencies in gamebuilder

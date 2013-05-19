@@ -1,22 +1,21 @@
 package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.handler.EndTurnHandler;
-import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,31 +26,25 @@ import static junit.framework.Assert.assertTrue;
  */
 public class TestDijkstra {
     private Grid grid;
-    private List<Position> positions;
-    private Dimension dimension;
 
     @Before
     public void setUp() throws GridTooSmallException {
-                                    positions = new ArrayList<>();
-
-      Position  p1Pos = new Position(1, 8);
-       Position p2Pos = new Position(3, 8);
-
+        List<Position> positions = new ArrayList<>();
+        Position p1Pos = new Position(1, 8);
+        Position p2Pos = new Position(3, 8);
         positions.add(p1Pos);
         positions.add(p2Pos);
-        List<String> playerNames = new ArrayList<>();
-        playerNames.add("p1");
-        playerNames.add("p2");
 
-        dimension = new Dimension(10, 10);
-        ArrayList<Position> wallPositions = new ArrayList<Position>();
+        Dimension dimension = new Dimension(10, 10);
+
+        ArrayList<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(6, 6));
         wallPositions.add(new Position(5, 6));
         wallPositions.add(new Position(4, 6));
 
-
-
-        grid = GridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension,positions, wallPositions);
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithSpecifiedWallsPowerFailuresItems(builder, wallPositions);
     }
 
     @Test
@@ -60,7 +53,6 @@ public class TestDijkstra {
         Square destinationSquare = grid.getSquareAtPosition(new Position(0, 5));
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
-        //System.out.println(dijkstra.toStringEdges());
         Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
         System.out.println("Distance: " + distance);
         assertTrue(distance == 5);

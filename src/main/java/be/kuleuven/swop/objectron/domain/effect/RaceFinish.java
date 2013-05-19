@@ -1,8 +1,6 @@
-package be.kuleuven.swop.objectron.domain.item.effect;
+package be.kuleuven.swop.objectron.domain.effect;
 
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.effect.Effect;
-import be.kuleuven.swop.objectron.domain.effect.EffectVisitor;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
@@ -24,9 +22,10 @@ public class RaceFinish implements Effect {
 
     @Override
     public void activate(Movable movable, TurnManager manager) throws GameOverException {
-        if (movable instanceof Player){
-            if (!((Player) movable).equals(this.starter)){
-                throw new GameOverException(manager.getCurrentTurn().getCurrentPlayer().getName() + ", you win the game!");
+        if (movable instanceof Player) {
+            if (!((Player) movable).equals(this.starter)) {
+                throw new GameOverException(manager.getCurrentTurn().getCurrentPlayer().getName() + ", " +
+                        "you win the game!");
             }
         }
     }

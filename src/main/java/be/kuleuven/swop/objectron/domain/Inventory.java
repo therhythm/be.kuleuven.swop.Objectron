@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.domain.exception.TooManyItemsOfSameTypeException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
+import be.kuleuven.swop.objectron.domain.exception.TooManyItemsOfSameTypeException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
 import java.util.ArrayList;
@@ -50,13 +50,13 @@ public class Inventory {
         }
 
         int itemCount = 0;
-        for(Item item : items){
-            if(itemToAdd.getClass().isInstance(item)){
+        for (Item item : items) {
+            if (itemToAdd.getClass().isInstance(item)) {
                 itemCount++;
             }
         }
 
-        if(itemCount + 1 > itemToAdd.getMaxInBag()) {
+        if (itemCount + 1 > itemToAdd.getMaxInBag()) {
             throw new TooManyItemsOfSameTypeException();
         }
         itemToAdd.pickedUp();

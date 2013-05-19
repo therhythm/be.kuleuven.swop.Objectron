@@ -19,7 +19,7 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public class Player implements Movable, Obstruction{
+public class Player implements Movable, Obstruction {
     private String name;
     private Square currentSquare;
     private Square initialSquare;
@@ -60,7 +60,8 @@ public class Player implements Movable, Obstruction{
         actionPerformed();
     }
 
-    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException, SquareOccupiedException, NotEnoughActionsException {
+    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException,
+            SquareOccupiedException, NotEnoughActionsException {
         actionPerformed();
         this.movementStrategy = new PlayerMovementStrategy(manager);
         try {
@@ -72,7 +73,9 @@ public class Player implements Movable, Obstruction{
     }
 
     @Override
-    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
+    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException,
+            WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException,
+            SquareOccupiedException {
         lightTrail.expand(currentSquare);
         currentSquare.removeObstruction(this);
         newPosition.addObstruction(this);
@@ -98,7 +101,8 @@ public class Player implements Movable, Obstruction{
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item, ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException, GameOverException {
+    public void useItem(Item item, ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException,
+            GameOverException {
 
         deployer.deploy(item);
 

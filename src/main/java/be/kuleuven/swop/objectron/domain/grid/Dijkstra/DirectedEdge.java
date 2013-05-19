@@ -32,13 +32,13 @@ public class DirectedEdge {
         return distance;
     }
 
-    public String toString(){
+    public String toString() {
         String result = "square 1: ";
-        result +=  '\t' + squareSource.getPosition().toString() + '\n';
+        result += '\t' + squareSource.getPosition().toString() + '\n';
 
         result += "square 2: ";
-        result +=  '\t' + squareDestination.getPosition().toString() + '\n';
+        result += '\t' + squareDestination.getPosition().toString() + '\n';
         result += "distance: " + distance;
-          return result;
+        return result;
     }
 }

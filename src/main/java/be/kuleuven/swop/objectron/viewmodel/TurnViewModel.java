@@ -14,7 +14,8 @@ public class TurnViewModel {
     private PlayerViewModel playerViewModel;
     private String selectedItem;
 
-    public TurnViewModel(int remainingActions, PlayerViewModel playerViewModel, Item selectedItem) {//TODO item viewmodel instead of strings
+    public TurnViewModel(int remainingActions, PlayerViewModel playerViewModel, Item selectedItem) {//TODO item
+    // viewmodel instead of strings
         this.remainingActions = remainingActions;
         this.playerViewModel = playerViewModel;
         this.selectedItem = selectedItem == null ? "no item" : selectedItem.getName();

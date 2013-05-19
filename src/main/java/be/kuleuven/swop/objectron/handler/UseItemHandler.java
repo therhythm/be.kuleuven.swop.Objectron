@@ -50,7 +50,8 @@ public class UseItemHandler extends Handler {
      * |  == currentPlayer.getInventory().retrieveItem(identifier)
      */
     public String selectItemFromInventory(int identifier) {
-        Item currentlySelectedItem = game.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItem(identifier);
+        Item currentlySelectedItem = game.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItem
+                (identifier);
         game.getTurnManager().getCurrentTurn().setCurrentItem(currentlySelectedItem);
         return currentlySelectedItem.getName();
     }
@@ -69,7 +70,8 @@ public class UseItemHandler extends Handler {
      * @post The player's available actions is reduced by 1
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
-    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException, GameOverException {
+    public void useCurrentItem() throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException,
+            GameOverException {
         TurnManager turnManager = game.getTurnManager();
         Turn currentTurn = turnManager.getCurrentTurn();
         if (currentTurn.getCurrentItem() == null) {
@@ -84,7 +86,8 @@ public class UseItemHandler extends Handler {
 
     }
 
-    public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException, GameOverException {
+    public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException,
+            NotEnoughActionsException, NoItemSelectedException, GameOverException {
         TurnManager turnManager = game.getTurnManager();
         Turn currentTurn = turnManager.getCurrentTurn();
 

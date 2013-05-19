@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public class Turn implements Observable<TurnObserver> {
 
     public void reduceAction(){
        actionsRemaining -= 1;
-       notifyActionReduced();
+       notifyActionsReduced();
        notifyObservers();
     }
 
@@ -81,8 +82,8 @@ public class Turn implements Observable<TurnObserver> {
         notifyObservers();
     }
 
-    private void notifyActionReduced() {
-        for(TurnObserver observer : observers){
+    private void notifyActionsReduced() {
+        for (TurnObserver observer : observers) {
             observer.actionReduced();
         }
     }
@@ -104,7 +105,7 @@ public class Turn implements Observable<TurnObserver> {
     }
 
     private void notifyObservers() {
-        for(TurnObserver observer : observers){
+        for (TurnObserver observer : observers) {
             observer.update(this);
         }
     }

@@ -13,7 +13,8 @@ import be.kuleuven.swop.objectron.domain.movement.Movable;
  */
 public interface Effect {
 
-    void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException;
+    void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException,
+            SquareOccupiedException;
 
     void accept(EffectVisitor visitor);
 }

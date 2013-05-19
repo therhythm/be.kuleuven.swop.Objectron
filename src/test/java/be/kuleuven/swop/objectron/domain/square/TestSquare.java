@@ -1,19 +1,18 @@
 package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
-import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,10 +41,11 @@ public class TestSquare {
 
 
     @Test
-    public void test_step_on_active_item() throws InvalidMoveException, ForceFieldHitException, WallHitException, PlayerHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
+    public void test_step_on_active_item() throws InvalidMoveException, ForceFieldHitException, WallHitException,
+            PlayerHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
         Effect found = null;
-        for(Effect effect : square.getEffects()){
-            if(effect.equals(item)) {
+        for (Effect effect : square.getEffects()) {
+            if (effect.equals(item)) {
                 found = effect;
                 break;
             }
@@ -55,12 +55,13 @@ public class TestSquare {
         square.stepOn(mock(Movable.class), turnManager);
 
         found = null;
-        for(Effect effect : square.getEffects()){
-            if(effect.equals(item)) {
+        for (Effect effect : square.getEffects()) {
+            if (effect.equals(item)) {
                 found = effect;
                 break;
             }
         }
+        assertNotNull(found);
         assertFalse(((LightMine) found).isActive());
     }
 }

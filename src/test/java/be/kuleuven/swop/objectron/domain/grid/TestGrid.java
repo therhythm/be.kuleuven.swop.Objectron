@@ -30,11 +30,11 @@ public class TestGrid {
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
     private Grid grid;
-    private Game state;
+    private GridBuilder builder;
+    private Dimension dimension;
     private Position p1Pos;
     private Position p2Pos;
-    private Dimension dimension;
-    private  List<Position> positions;
+
 
     @Before
     public void setUp() throws GridTooSmallException {
@@ -42,24 +42,27 @@ public class TestGrid {
         p1Pos = new Position(1, 8);
         p2Pos = new Position(3, 8);
 
-       positions = new ArrayList<Position>();
+        List<Position> positions = new ArrayList<>();
         positions.add(p1Pos);
         positions.add(p2Pos);
 
-        List<String> playerNames = new ArrayList<String>();
+        List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
 
         dimension = new Dimension(10, 10);
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new RaceGame(playerNames, grid);
+        builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
+        Game state = new RaceGame(playerNames, grid);
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
     }
 
     @Test(expected = InvalidMoveException.class)
-    public void test_invalid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
+    public void test_invalid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException,
+            GameOverException, SquareOccupiedException {
         movePlayerHandler.move(Direction.RIGHT);
         movePlayerHandler.move(Direction.UP_RIGHT);
         endTurnHandler.endTurn();
@@ -68,7 +71,8 @@ public class TestGrid {
     }
 
     @Test
-    public void test_valid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
+    public void test_valid_move_diagonal() throws InvalidMoveException, NotEnoughActionsException, GameOverException,
+            SquareOccupiedException {
         movePlayerHandler.move(Direction.RIGHT);
         movePlayerHandler.move(Direction.UP_RIGHT);
         endTurnHandler.endTurn();
@@ -83,9 +87,8 @@ public class TestGrid {
      */
     @Test
     public void test_items_grid() throws GridTooSmallException {
+        grid = GridObjectMother.gridWithoutWallsPowerFailures(builder);
 
-
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, positions);
         boolean hasItems = false;
         int numberOfLightMines = 0;
         int numberOfTeleporters = 0;
@@ -98,28 +101,32 @@ public class TestGrid {
                 if (grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() != 0) {
                     hasItems = true;
                     for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
-                        if (item.getName() == "Light Mine") {
+                        if (item.getName().equals("Light Mine")) {
                             numberOfLightMines++;
                         }
-                        if (item.getName() == "Teleporter") {
+                        if (item.getName().equals("Teleporter")) {
                             numberOfTeleporters++;
                         }
-                        if (item.getName() == "Uncharged Identity Disc")
+                        if (item.getName().equals("Uncharged Identity Disc"))
                             numberOfIdentitydiscs++;
-                        if (item.getName() == "Force Field")
+                        if (item.getName().equals("Force Field"))
                             numberOfForceFields++;
 
-                        if (item.getName() == "Charged Identity Disc")
+                        if (item.getName().equals("Charged Identity Disc"))
                             numberOfIdentityDiscsCharged++;
                     }
                 }
             }
         }
         System.out.println(numberOfIdentityDiscsCharged);
-        assertTrue(numberOfLightMines <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_LIGHTMINES * dimension.area()));
-        assertTrue(numberOfTeleporters <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_TELEPORTERS * dimension.area()));
-        assertTrue(numberOfIdentitydiscs <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_IDENTITYDISCS * dimension.area()));
-        assertTrue(numberOfForceFields <= (int) Math.ceil(GridBuilder.PERCENTAGE_OF_FORCEFIELDS * dimension.area()));
+        assertTrue(numberOfLightMines <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_LIGHTMINES * dimension
+                .area()));
+        assertTrue(numberOfTeleporters <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_TELEPORTERS * dimension
+                .area()));
+        assertTrue(numberOfIdentitydiscs <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_IDENTITYDISCS *
+                dimension.area()));
+        assertTrue(numberOfForceFields <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_FORCEFIELDS * dimension
+                .area()));
         assertTrue(numberOfIdentityDiscsCharged == 1);
         assertTrue(hasItems);
 
@@ -134,22 +141,24 @@ public class TestGrid {
 
     @Test
     public void test_charged_identity_disc() throws GridTooSmallException {
-        positions = new ArrayList<Position>();
-        positions.add( new Position(0, 9));
-        positions.add( new Position(9, 0));
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension,positions);
+        Position p1Pos = new Position(0, 9);
+        Position p2Pos = new Position(9, 0);
+
+        List<Position> positions = new ArrayList<>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithoutWallsPowerFailures(builder);
+
         int aantal = 0;
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
-                    if (item.getName() == "Charged Identity Disc") {
+                    if (item.getName().equals("Charged Identity Disc")) {
                         int distanceFromPlayer1 = calculatedistance(p1Pos, new Position(i, j));
                         int distanceFromPlayer2 = calculatedistance(p2Pos, new Position(i, j));
-                        System.out.println("distance from player1: " + distanceFromPlayer1);
-                        System.out.println("distance from player2: " + distanceFromPlayer2);
                         assertTrue(Math.abs(distanceFromPlayer1 - distanceFromPlayer2) < 2);
                         aantal++;
-
                     }
 
                 }
@@ -160,29 +169,21 @@ public class TestGrid {
 
     @Test
     public void test_no_charged_identity_disc() throws GridTooSmallException {
-        List<Position> wallPositions = new ArrayList<Position>();
+        List<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(4, 5));
         wallPositions.add(new Position(5, 5));
         wallPositions.add(new Position(5, 4));
         wallPositions.add(new Position(4, 4));
         wallPositions.add(new Position(4, 3));
+
         int aantal = 0;
-
-        positions = new ArrayList<Position>();
-        positions.add( new Position(0, 9));
-        positions.add( new Position(9, 0));
-
-        grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, positions, wallPositions);
+        grid = GridObjectMother.gridWithSpecifiedWallsPowerFailures(builder, wallPositions);
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
-                    if (item.getName() == "Charged Identity Disc") {
+                    if (item.getName().equals("Charged Identity Disc")) {
                         int distanceFromPlayer1 = calculatedistance(p1Pos, new Position(i, j));
                         int distanceFromPlayer2 = calculatedistance(p2Pos, new Position(i, j));
-                        System.out.println("squaere:");
-                        System.out.println(grid.getSquareAtPosition(new Position(i, j)));
-                        System.out.println("distance from player1: " + distanceFromPlayer1);
-                        System.out.println("distance from player2: " + distanceFromPlayer2);
                         assertTrue(Math.abs(distanceFromPlayer1 - distanceFromPlayer2) < 2);
                         aantal++;
                     }
@@ -199,7 +200,8 @@ public class TestGrid {
     }
 
     @Test(expected = InvalidMoveException.class)
-    public void test_invalid_move_neighbor() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
+    public void test_invalid_move_neighbor() throws InvalidMoveException, NotEnoughActionsException,
+            GameOverException, SquareOccupiedException {
         movePlayerHandler.move(Direction.RIGHT);
         movePlayerHandler.move(Direction.RIGHT);
         endTurnHandler.endTurn();
@@ -207,52 +209,45 @@ public class TestGrid {
 
     @Test
     public void test_place_charged_identity_disc() throws GridTooSmallException {
-        positions = new ArrayList<Position>();
-        positions.add( new Position(0, 9));
-        positions.add( new Position(9, 0));
+        List<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 9));
+        positions.add(new Position(9, 0));
 
-        grid = GridFactory.gridWithoutWallsPowerFailures(dimension, positions);
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithoutWallsPowerFailures(builder);
+
         int numberOfIdentityDiscsCharged = 0;
-        Square square_charged_ID = null;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {  // todo use dimension here! magic numbers!
             for (int j = 0; j < 10; j++) {
                 if (grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() != 0) {
                     for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
-                        if (item.getName() == "Charged Identity Disc")
+                        if (item.getName().equals("Charged Identity Disc"))
                             numberOfIdentityDiscsCharged++;
-                        square_charged_ID = grid.getSquareAtPosition(new Position(i, j));
                     }
                 }
             }
         }
-        System.out.println(square_charged_ID.getPosition());
         assertTrue(numberOfIdentityDiscsCharged == 1);
     }
 
     @Test
     public void test_place_force_field_max_one_per_square() throws GridTooSmallException {
-        p1Pos = new Position(0, 1);
-        p2Pos = new Position(0, 0);
+        List<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 9));
+        positions.add(new Position(9, 0));
 
-        positions = new ArrayList<Position>();
-        positions.add( new Position(0, 9));
-        positions.add( new Position(9, 0));
-
-
-        List<Position> wallPositions = new ArrayList<Position>();
-        for (int i = 1; i < 10; i++) {
-            for (int j = 1; j < 10; j++) {
-                wallPositions.add(new Position(i, j));
-            }
-        }
         for (int repeat = 0; repeat < 100; repeat++) {
-            grid = GridFactory.gridWithSpecifiedWallsPowerFailures(dimension, positions, wallPositions);
-            for (int i = 0; i < 10; i++) {
+            GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+            builder.setStartingPositions(positions);
+            grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
+
+            for (int i = 0; i < 10; i++) {   // todo use dimension here! magic numbers!
                 for (int j = 0; j < 10; j++) {
                     Square square = grid.getSquareAtPosition(new Position(i, j));
                     int aantalForceFields = 0;
                     for (Item item : square.getAvailableItems()) {
-                        if (item.getName() == "Force Field")
+                        if (item.getName().equals("Force Field"))
                             aantalForceFields++;
                     }
                     assertTrue(aantalForceFields <= 1);

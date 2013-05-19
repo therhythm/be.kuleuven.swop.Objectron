@@ -1,9 +1,9 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.EffectVisitor;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -38,7 +38,7 @@ public class LightMine implements Item, Effect {
     }
 
     @Override
-    public void place(Square targetSquare){
+    public void place(Square targetSquare) {
         targetSquare.addEffect(this);
         isActive = true;
     }
@@ -48,7 +48,7 @@ public class LightMine implements Item, Effect {
         throw new UnsupportedOperationException();
     }
 
-    public boolean isActive(){
+    public boolean isActive() {
         return isActive;
     }
 

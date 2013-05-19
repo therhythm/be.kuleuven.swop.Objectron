@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 
 /**

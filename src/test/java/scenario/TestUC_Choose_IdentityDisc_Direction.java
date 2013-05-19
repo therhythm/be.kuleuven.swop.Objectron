@@ -1,13 +1,14 @@
 package scenario;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.NormalIdentityDiscBehavior;
@@ -40,7 +41,6 @@ public class TestUC_Choose_IdentityDisc_Direction {
     private PickUpItemHandler pickUpItemHandler;
     private UseItemHandler useItemHandler;
     private Game state;
-    private Player player1;
     private Grid grid;
 
     @Before
@@ -49,27 +49,28 @@ public class TestUC_Choose_IdentityDisc_Direction {
 
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(2, 9);
-
-        List<Position> positions = new ArrayList<Position>();
+        List<Position> positions = new ArrayList<>();
         positions.add(p1Pos);
         positions.add(p2Pos);
 
-        List<String> playerNames = new ArrayList<String>();
+        List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
         state = new RaceGame(playerNames, grid);
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
     }
 
     @Test
-    public void basic_flow() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GameOverException {
+    public void basic_flow() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException,
+            NoItemSelectedException, GameOverException {
         Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
@@ -85,7 +86,8 @@ public class TestUC_Choose_IdentityDisc_Direction {
     }
 
     @Test
-    public void alternate_flow_player_hit() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
+    public void alternate_flow_player_hit() throws InventoryFullException, NotEnoughActionsException,
+            SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
         Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
@@ -94,7 +96,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
         endTurnHandler.endTurn();
         movePlayerHandler.move(Direction.RIGHT);
 
-         System.out.println("test: " + state.getTurnManager().getCurrentTurn().getCurrentPlayer().getCurrentSquare());
+        System.out.println("test: " + state.getTurnManager().getCurrentTurn().getCurrentPlayer().getCurrentSquare());
 
         endTurnHandler.endTurn();
 

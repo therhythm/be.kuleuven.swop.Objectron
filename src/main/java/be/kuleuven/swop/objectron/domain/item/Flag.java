@@ -29,7 +29,7 @@ public class Flag implements Item {
         return this.owner;
     }
 
-    public void returnToBase(){
+    public void returnToBase() {
         base.addItem(this);
     }
 
@@ -44,7 +44,8 @@ public class Flag implements Item {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws
+            GameOverException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

@@ -56,7 +56,8 @@ public class GameMenu {
                         playerNames.add(p1NameField.getText());
                         playerNames.add(p2NameField.getText());
 
-                        GameStartViewModel vm = handler.startNewRaceGame(playerNames, new Dimension(nbHorizontalTiles, nbVerticalTiles));
+                        GameStartViewModel vm = handler.startNewRaceGame(playerNames,
+                                new Dimension(nbHorizontalTiles, nbVerticalTiles));
                         new GameView(vm).run();
                         gui.dispose();
                     } catch (NumberFormatException ex) {

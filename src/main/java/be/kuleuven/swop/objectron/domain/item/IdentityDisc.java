@@ -18,7 +18,8 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * To change this template use File | Settings | File Templates.
  */
 public class IdentityDisc implements Item, Movable {
-    private static final int MAX_IN_BAG = Integer.MAX_VALUE; // Can't have annoying side effects. It would be impossible for a game to have even this amount of items.
+    private static final int MAX_IN_BAG = Integer.MAX_VALUE; // Can't have annoying side effects. It would be
+    // impossible for a game to have even this amount of items.
 
     private IdentityDiscBehavior identityDiscBehavior;
     private TeleportStrategy teleportStrategy;
@@ -41,7 +42,8 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws
+            GameOverException, NotEnoughActionsException, SquareOccupiedException {
         if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
@@ -64,7 +66,7 @@ public class IdentityDisc implements Item, Movable {
             } catch (PlayerHitException e) {
                 currentSquare = neighbor;
                 break;
-            } catch (ForceFieldHitException e){
+            } catch (ForceFieldHitException e) {
                 forceFieldHit = true;
                 break;
             }
@@ -75,7 +77,7 @@ public class IdentityDisc implements Item, Movable {
             identityDiscBehavior.moved();
         }
 
-        if(!forceFieldHit){
+        if (!forceFieldHit) {
             currentSquare.addItem(this);
         }
         identityDiscBehavior.reset();
@@ -114,7 +116,9 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
+    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException,
+            WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException,
+            SquareOccupiedException {
         square.stepOn(this, manager);
     }
 }

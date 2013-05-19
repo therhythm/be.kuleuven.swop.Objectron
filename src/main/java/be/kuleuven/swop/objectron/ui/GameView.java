@@ -81,16 +81,20 @@ public class GameView implements GameObserver {
         players = new ArrayList<>();
         players.add(p1);
         players.add(p2);
-        playerColorMap.put(p1.getName(), new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL, SquareStates.P1_FINISH});
-        playerColorMap.put(p2.getName(), new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL, SquareStates.P2_FINISH});
+        playerColorMap.put(p1.getName(), new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL,
+                SquareStates.P1_FINISH});
+        playerColorMap.put(p2.getName(), new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL,
+                SquareStates.P2_FINISH});
         Position p1Pos = p1.getPosition();
         gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()].put(SquareStates.PLAYER1.zIndex, SquareStates.PLAYER1);
         Position p2Pos = p2.getPosition();
         lastPositions.put(p1.getName(), new Position[0]);
         lastPositions.put(p2.getName(), new Position[0]);
         gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()].put(SquareStates.PLAYER2.zIndex, SquareStates.PLAYER2);
-        gameGrid[p1.getStartPosition().getVIndex()][p1.getStartPosition().getHIndex()].put(SquareStates.P2_FINISH.zIndex, SquareStates.P2_FINISH);
-        gameGrid[p2.getStartPosition().getVIndex()][p2.getStartPosition().getHIndex()].put(SquareStates.P1_FINISH.zIndex, SquareStates.P1_FINISH);
+        gameGrid[p1.getStartPosition().getVIndex()][p1.getStartPosition().getHIndex()].put(SquareStates.P2_FINISH
+                .zIndex, SquareStates.P2_FINISH);
+        gameGrid[p2.getStartPosition().getVIndex()][p2.getStartPosition().getHIndex()].put(SquareStates.P1_FINISH
+                .zIndex, SquareStates.P1_FINISH);
 
     }
 
@@ -105,6 +109,7 @@ public class GameView implements GameObserver {
             return SquareStates.EMPTY;
         }
     }
+
     private SquareStates getEffectSquareState(Effect effect) {
         // no need for lightmine, the effects are invisible
         if (effect instanceof Teleporter) {
@@ -119,7 +124,8 @@ public class GameView implements GameObserver {
             int buttonWidth = dimension.getWidth() * TILEWIDTH / 4;
 
             public void run() {
-                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * dimension.getWidth(), TILEHEIGHT * dimension.getHeight() + 3 * VPADDING) {
+                gui = new SimpleGUI("OBJECTRON", 2 * HPADDING + TILEWIDTH * dimension.getWidth(),
+                        TILEHEIGHT * dimension.getHeight() + 3 * VPADDING) {
 
                     @Override
                     public void paint(Graphics2D graphics) {
@@ -128,7 +134,9 @@ public class GameView implements GameObserver {
                                 List<Integer> keys = new ArrayList<Integer>(gameGrid[j][i].keySet());
                                 Collections.sort(keys);
                                 for (Integer key : keys) {
-                                    graphics.drawImage(gridImageMap.get(gameGrid[j][i].get(key)), HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH, TILEHEIGHT, null);
+                                    graphics.drawImage(gridImageMap.get(gameGrid[j][i].get(key)),
+                                            HPADDING + i * TILEWIDTH, VPADDING + j * TILEHEIGHT, TILEWIDTH,
+                                            TILEHEIGHT, null);
                                 }
                             }
                         }
@@ -144,12 +152,15 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.EMPTY, gui.loadImage("cell.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.P1_FINISH, gui.loadImage("cell_finish_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_FINISH, gui.loadImage("cell_finish_blue.png", TILEWIDTH, TILEHEIGHT));
-                gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH, TILEHEIGHT));
-                gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH,
+                        TILEHEIGHT));
                 gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("identity_disk.png", TILEWIDTH, TILEHEIGHT));
-                gridImageMap.put(SquareStates.CHARGED_IDENTITY_DISK, gui.loadImage("identity_disk_charged.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.CHARGED_IDENTITY_DISK, gui.loadImage("identity_disk_charged.png",
+                        TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.POWERFAILURE, gui.loadImage("cell_unpowered.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.TELEPORTER, gui.loadImage("teleporter.png", TILEWIDTH, TILEHEIGHT));
 
@@ -170,11 +181,13 @@ public class GameView implements GameObserver {
                 // generate direction buttons
                 for (final Direction direction : Direction.values()) {
 
-                    gui.createButton(HPADDING + hMultiplier * 20, dimension.getHeight() * TILEHEIGHT + VPADDING + 20 + vMultiplier * 20, 20, 20, new Runnable() {
+                    gui.createButton(HPADDING + hMultiplier * 20, dimension.getHeight() * TILEHEIGHT + VPADDING + 20
+                            + vMultiplier * 20, 20, 20, new Runnable() {
                         @Override
                         public void run() {
                             try {
-                                MovePlayerHandler movePlayerHandler = (MovePlayerHandler) catalog.getHandler(MovePlayerHandler.class);
+                                MovePlayerHandler movePlayerHandler = (MovePlayerHandler) catalog.getHandler
+                                        (MovePlayerHandler.class);
                                 movePlayerHandler.move(direction);
                             } catch (SquareOccupiedException e) {
                                 new DialogView("The square is already occupied.");
@@ -204,19 +217,22 @@ public class GameView implements GameObserver {
                     }
                 }
 
-                final Button pickupButton = gui.createButton(HPADDING + buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button pickupButton = gui.createButton(HPADDING + buttonWidth,
+                        dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
 
 
                         try {
-                            final PickUpItemHandler pickUpItemHandler = (PickUpItemHandler) catalog.getHandler(PickUpItemHandler.class);
+                            final PickUpItemHandler pickUpItemHandler = (PickUpItemHandler) catalog.getHandler
+                                    (PickUpItemHandler.class);
                             final List<Item> items = pickUpItemHandler.getAvailableItems();
                             ItemSelectionAction action = new ItemSelectionAction() {
                                 @Override
                                 public void doAction(int index) {
                                     try {
                                         Position currentPosition = currentTurn.getPlayerViewModel().getPosition();
-                                        gameGrid[currentPosition.getVIndex()][currentPosition.getHIndex()].remove(getItemSquareState(items.get(index)).zIndex);
+                                        gameGrid[currentPosition.getVIndex()][currentPosition.getHIndex()].remove
+                                                (getItemSquareState(items.get(index)).zIndex);
                                         pickUpItemHandler.pickUpItem(index);
 
                                         gui.repaint();
@@ -239,10 +255,12 @@ public class GameView implements GameObserver {
                 });
                 pickupButton.setText("Pickup item");
 
-                final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button inventoryButton = gui.createButton(HPADDING + 2 * buttonWidth,
+                        dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
-                            final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
+                            final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler
+                                    .class);
                             final List<Item> currentItems = useItemHandler.showInventory();
                             ItemSelectionAction action = new ItemSelectionAction() {
 
@@ -261,10 +279,12 @@ public class GameView implements GameObserver {
                 });
                 inventoryButton.setText("Open inventory");
 
-                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
+                final Button useItemButton = gui.createButton(HPADDING + 2 * buttonWidth,
+                        dimension.getHeight() * TILEHEIGHT + VPADDING + 40, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
-                            final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
+                            final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler
+                                    .class);
 
 
                             if (selectedItem.contains("Identity Disc")) {
@@ -306,7 +326,8 @@ public class GameView implements GameObserver {
                 });
                 useItemButton.setText("Use Item");
 
-                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
+                final Button cancelItemButton = gui.createButton(HPADDING + 2 * buttonWidth,
+                        dimension.getHeight() * TILEHEIGHT + VPADDING + 60, buttonWidth, 20, new Runnable() {
                     public void run() {
                         final UseItemHandler useItemHandler = (UseItemHandler) catalog.getHandler(UseItemHandler.class);
                         useItemHandler.cancelItemUsage();
@@ -317,10 +338,12 @@ public class GameView implements GameObserver {
                 });
                 cancelItemButton.setText("Unselect item");
 
-                final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth, dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
+                final Button endTurnButton = gui.createButton(HPADDING + 3 * buttonWidth,
+                        dimension.getHeight() * TILEHEIGHT + VPADDING + 20, buttonWidth, 20, new Runnable() {
                     public void run() {
                         try {
-                            final EndTurnHandler endTurnHandler = (EndTurnHandler) catalog.getHandler(EndTurnHandler.class);
+                            final EndTurnHandler endTurnHandler = (EndTurnHandler) catalog.getHandler(EndTurnHandler
+                                    .class);
                             selectedItem = "no item";
                             endTurnHandler.endTurn();
 
@@ -374,7 +397,8 @@ public class GameView implements GameObserver {
 
     @Override
     public void noPower(Position position) {
-        gameGrid[position.getVIndex()][position.getHIndex()].put(SquareStates.POWERFAILURE.zIndex, SquareStates.POWERFAILURE);
+        gameGrid[position.getVIndex()][position.getHIndex()].put(SquareStates.POWERFAILURE.zIndex,
+                SquareStates.POWERFAILURE);
         gui.repaint();
     }
 

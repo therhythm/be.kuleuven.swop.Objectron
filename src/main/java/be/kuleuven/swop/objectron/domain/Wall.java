@@ -1,10 +1,10 @@
 package be.kuleuven.swop.objectron.domain;
 
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * Time: 21:45
  * To change this template use File | Settings | File Templates.
  */
-public class Wall implements Obstruction{
+public class Wall implements Obstruction {
 
     private List<Square> squares = new ArrayList<Square>();
 

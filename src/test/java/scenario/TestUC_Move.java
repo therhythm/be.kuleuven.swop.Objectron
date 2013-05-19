@@ -7,8 +7,10 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -40,12 +42,14 @@ public class TestUC_Move {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(0, 5);
 
-        List<Position> positions = new ArrayList<Position>();
+        List<Position> positions = new ArrayList<>();
         positions.add(p1Pos);
         positions.add(p2Pos);
 
         Dimension dimension = new Dimension(10, 10);
-        Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        Grid grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
 
         player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
         Turn turn = new Turn(player1);
@@ -61,7 +65,8 @@ public class TestUC_Move {
     }
 
     @Test
-    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
+    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException, GameOverException,
+            SquareOccupiedException {
         Square prev = player1.getCurrentSquare();
 
         movePlayerHandler.move(Direction.UP);
@@ -72,7 +77,8 @@ public class TestUC_Move {
     }
 
     @Test(expected = InvalidMoveException.class)
-    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
+    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException, GameOverException,
+            SquareOccupiedException {
         movePlayerHandler.move(Direction.DOWN);
     }
 

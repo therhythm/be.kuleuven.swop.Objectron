@@ -30,7 +30,8 @@ public class EndTurnHandler extends Handler {
         TurnManager turnManager = game.getTurnManager();
 
         turnManager.endTurn();
-        if(turnManager.checkWin())
-            throw new GameOverException(turnManager.getCurrentTurn().getCurrentPlayer().getName() + ", you win the game!");
+        if (turnManager.checkWin())
+            throw new GameOverException(turnManager.getCurrentTurn().getCurrentPlayer().getName() + ", " +
+                    "you win the game!");
     }
 }

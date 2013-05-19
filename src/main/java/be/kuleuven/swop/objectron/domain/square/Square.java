@@ -3,10 +3,10 @@ package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Obstruction;
-import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.effect.PrimaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
@@ -38,7 +38,6 @@ public class Square implements Observable<SquareObserver> {
 
     public Square(final Position position) {
         this.position = position;
-       // this.state = new PoweredState(this);
     }
 
     public Square(final Position position, int powerFailureChance) {
@@ -58,13 +57,15 @@ public class Square implements Observable<SquareObserver> {
         return !obstructions.isEmpty();
     }
 
-    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException, NotEnoughActionsException {
-        for(Obstruction obstruction : obstructions){
+    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException,
+            WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException,
+            NotEnoughActionsException {
+        for (Obstruction obstruction : obstructions) {
             obstruction.hit(movable.getMovementStrategy());
         }
       //  state.stepOn(movable.getMovementStrategy());
 
-        for(Effect effect : effects){
+        for (Effect effect : effects) {
             effect.activate(movable, manager);
         }
     }
@@ -121,16 +122,6 @@ public class Square implements Observable<SquareObserver> {
     public String toString() {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
-     /*
-    public void transitionState(PowerState newState) {
-        this.state = newState;
-    }
-
-
-    public void receivePowerFailure(int turns, int actions) {
-        state.powerFailure(turns, actions);
-        notifyPowerFailure();
-    }    */
 
     private boolean losingPower() {
         int r = (int) (Math.random() * 100);
@@ -142,13 +133,6 @@ public class Square implements Observable<SquareObserver> {
             new PrimaryPowerFailure(this);
         }
     }
-         /*
-    public void endAction(){
-       state.endAction();
-       if(powerFailure != null) {
-            powerFailure.rotate();
-       }
-    }   */
 
     @Override
     public void attach(SquareObserver observer) {

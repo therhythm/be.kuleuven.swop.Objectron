@@ -11,7 +11,8 @@ public class PlayerViewModel {
     private final Position initialPosition;
     private final List<Position> lightTrail;
 
-    public PlayerViewModel(String name, Position currentPosition, Position initialPosition, List<Position> lightTrailViewModel) {
+    public PlayerViewModel(String name, Position currentPosition, Position initialPosition,
+                           List<Position> lightTrailViewModel) {
         this.name = name;
         this.currentPosition = currentPosition;
         this.initialPosition = initialPosition;

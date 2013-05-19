@@ -6,7 +6,6 @@ import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
-import be.kuleuven.swop.objectron.domain.square.UnpoweredState;
 
 /**
  * @author : Nik Torfs
@@ -37,8 +36,8 @@ public class PlayerMovementStrategy implements MovementStrategy {
 
     @Override
     public void hitPlayer(Player player) throws InvalidMoveException {
-        if(!player.equals(turnManager.getCurrentTurn().getCurrentPlayer())){
-        throw new InvalidMoveException();
+        if (!player.equals(turnManager.getCurrentTurn().getCurrentPlayer())) {
+            throw new InvalidMoveException();
         }
     }
 

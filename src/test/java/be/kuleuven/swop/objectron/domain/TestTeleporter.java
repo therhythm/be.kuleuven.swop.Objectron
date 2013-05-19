@@ -4,8 +4,10 @@ import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -25,31 +27,34 @@ import static org.junit.Assert.assertTrue;
  *         Time: 13:18
  */
 public class TestTeleporter {
-    private Game gameState;
     private Player player;
     private Square currentSquare;
     private MovePlayerHandler movePlayerHandler;
+
 
     @Before
     public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
 
-        List<Position> positions = new ArrayList<Position>();
+        List<Position> positions = new ArrayList<>();
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
 
-        Grid grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        Grid grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
-        gameState = new RaceGame(playerNames, grid);
+        Game gameState = new RaceGame(playerNames, grid);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
         movePlayerHandler = new MovePlayerHandler(gameState);
     }
 
     @Test
-    public void test_basic_flow() throws NotEnoughActionsException, SquareOccupiedException, InvalidMoveException, GameOverException {
+    public void test_basic_flow() throws NotEnoughActionsException, SquareOccupiedException, InvalidMoveException,
+            GameOverException {
         Square upNeighbor = currentSquare.getNeighbour(Direction.UP);
         Square rightNeighbor = currentSquare.getNeighbour(Direction.RIGHT);
         Teleporter teleporter1 = new Teleporter(upNeighbor);

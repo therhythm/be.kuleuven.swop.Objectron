@@ -1,13 +1,13 @@
 package scenario;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
-import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
@@ -77,7 +77,8 @@ public class TestUC_Use_Item {
     }
 
     @Test
-    public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException, NoItemSelectedException, GameOverException {
+    public void useItemTest() throws InventoryFullException, SquareOccupiedException, NotEnoughActionsException,
+            NoItemSelectedException, GameOverException {
         player.pickupItem(0);
         turnManager.getCurrentTurn().setCurrentItem(item);
 
@@ -91,8 +92,8 @@ public class TestUC_Use_Item {
         assertEquals(initialNumberOfItemsInInventory - 1, player.getInventoryItems().size());
 
         Effect found = null;
-        for(Effect effect : player.getCurrentSquare().getEffects()){
-            if(effect.equals(item)) {
+        for (Effect effect : player.getCurrentSquare().getEffects()) {
+            if (effect.equals(item)) {
                 found = effect;
                 break;
             }
@@ -114,8 +115,8 @@ public class TestUC_Use_Item {
         assertEquals(initialNumberOfItemsInInventory, player.getInventoryItems().size());
 
         Effect found = null;
-        for(Effect effect : player.getCurrentSquare().getEffects()){
-            if(effect.equals(item)) {
+        for (Effect effect : player.getCurrentSquare().getEffects()) {
+            if (effect.equals(item)) {
                 found = effect;
                 break;
             }
@@ -124,7 +125,8 @@ public class TestUC_Use_Item {
     }
 
     @Test(expected = NotEnoughActionsException.class)
-    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException, InventoryFullException, SquareOccupiedException, NoItemSelectedException, GameOverException {
+    public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException,
+            InventoryFullException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         PickUpItemHandler pickUpItemHandler = new PickUpItemHandler(stateMock);
         pickUpItemHandler.pickUpItem(0);
         player.getCurrentSquare().addItem(new LightMine());
@@ -137,7 +139,8 @@ public class TestUC_Use_Item {
     }
 
     @Test(expected = NoItemSelectedException.class)
-    public void test_no_item_selected() throws NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GameOverException {
+    public void test_no_item_selected() throws NotEnoughActionsException, SquareOccupiedException,
+            NoItemSelectedException, GameOverException {
         useItemHandler.useCurrentItem();
     }
 }

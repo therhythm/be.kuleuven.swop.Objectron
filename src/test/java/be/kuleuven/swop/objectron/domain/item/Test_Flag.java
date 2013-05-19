@@ -5,14 +5,14 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
-import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,22 +32,20 @@ public class Test_Flag {
 
     private MovePlayerHandler movePlayerHandler;
     private PickUpItemHandler pickUpItemHandler;
-    private Game state;
-    private Player player1,player2;
+    private Player player1, player2;
     private Grid grid;
 
-    private Dimension dimension;
     private Position p1Pos;
     private Position p2Pos;
 
     @Before
     public void setUp() throws GridTooSmallException {
-        dimension = new Dimension(10, 10);
+        Dimension dimension = new Dimension(10, 10);
 
         p1Pos = new Position(0, 9);
         p2Pos = new Position(5, 9);
 
-        List<Position> positions = new ArrayList<Position>();
+        List<Position> positions = new ArrayList<>();
         positions.add(p1Pos);
         positions.add(p2Pos);
 
@@ -55,8 +53,10 @@ public class Test_Flag {
         playerNames.add("p1");
         playerNames.add("p2");
 
-        grid = GridFactory.gridWithoutWallsItemsPowerFailures(dimension, positions);
-        state = new RaceGame(playerNames, grid);
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
+        Game state = new RaceGame(playerNames, grid);
         movePlayerHandler = new MovePlayerHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
@@ -68,16 +68,17 @@ public class Test_Flag {
     }
 
     @Test
-    public void test_amount_flags() throws InventoryFullException, NotEnoughActionsException, InvalidMoveException, GameOverException, SquareOccupiedException {
-        grid.getSquareAtPosition(new Position(0,9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
-        grid.getSquareAtPosition(new Position(1,9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
+    public void test_amount_flags() throws InventoryFullException, NotEnoughActionsException, InvalidMoveException,
+            GameOverException, SquareOccupiedException {
+        grid.getSquareAtPosition(new Position(0, 9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
+        grid.getSquareAtPosition(new Position(1, 9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
         pickUpItemHandler.pickUpItem(0);
 
-        assertTrue(player1.getInventoryItems().size()==1);
-        assertTrue(player1.getCurrentSquare().getAvailableItems().size()==1);
-        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size()==0);
+        assertTrue(player1.getInventoryItems().size() == 1);
+        assertTrue(player1.getCurrentSquare().getAvailableItems().size() == 1);
+        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size() == 0);
     }
 
 }

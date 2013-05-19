@@ -1,8 +1,8 @@
 package be.kuleuven.swop.objectron.domain.square;
 
-import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.PowerFailureEffectVisitor;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 
 /**
@@ -42,7 +42,7 @@ public class UnpoweredState implements PowerState {
     @Override
     public void stepOn(MovementStrategy movementStrategy) {
         PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
-        for(Effect effect : context.getEffects()){
+        for (Effect effect : context.getEffects()) {
             effect.accept(visitor);
         }
 

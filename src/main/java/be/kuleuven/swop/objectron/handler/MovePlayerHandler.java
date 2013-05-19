@@ -11,9 +11,6 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author : Nik Torfs
  *         Date: 12/03/13
@@ -31,7 +28,7 @@ public class MovePlayerHandler extends Handler {
      * @param direction The direction the player wants to move in.
      * @throws be.kuleuven.swop.objectron.domain.exception.InvalidMoveException
      *          This is an invalid move.
-     *          | !game.getGrid().validPosition(
+     *          | !game.buildGrid().validPosition(
      *          |  player.getCurrentSquare().getNeighbour(direction))
      * @throws be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException
      *          The player has not enough actions remaining.
@@ -40,7 +37,8 @@ public class MovePlayerHandler extends Handler {
      * | new.game.getCurrentPlayer().getCurrentSquare()
      * |  != game.getCurrentPlayer().getCurrentSquare()
      */
-    public void move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
+    public void move(Direction direction) throws InvalidMoveException, NotEnoughActionsException, GameOverException,
+            SquareOccupiedException {
         TurnManager turnManager = game.getTurnManager();
         Turn currentTurn = turnManager.getCurrentTurn();
         currentTurn.checkEnoughActions();
