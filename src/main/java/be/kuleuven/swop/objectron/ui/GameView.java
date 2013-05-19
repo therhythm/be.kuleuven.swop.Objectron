@@ -1,8 +1,8 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.item.effect.Effect;
-import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.effect.Effect;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
@@ -176,6 +176,9 @@ public class GameView implements GameObserver {
                             try {
                                 MovePlayerHandler movePlayerHandler = (MovePlayerHandler) catalog.getHandler(MovePlayerHandler.class);
                                 movePlayerHandler.move(direction);
+                            } catch (SquareOccupiedException e) {
+                                new DialogView("The square is already occupied.");
+
                             } catch (InvalidMoveException e) {
                                 new DialogView("Sorry that is not a valid move");
                             } catch (NotEnoughActionsException e) {
@@ -269,7 +272,7 @@ public class GameView implements GameObserver {
                                 ItemSelectionAction action = new ItemSelectionAction() {
 
                                     @Override
-                                    public void doAction(int index) {
+                                    public void doAction(int index) throws GameOverException {
                                         Direction direction = Direction.values()[index];
                                         try {
                                             useItemHandler.useCurrentIdentityDisc(direction);
@@ -294,6 +297,8 @@ public class GameView implements GameObserver {
                             new DialogView("You have no actions remaining, end the turn.");
                         } catch (NoItemSelectedException e) {
                             new DialogView("You don't have an item selected");
+                        } catch (GameOverException e) {
+                            new DialogView(e.getMessage());
                         }
 
                         gui.repaint();

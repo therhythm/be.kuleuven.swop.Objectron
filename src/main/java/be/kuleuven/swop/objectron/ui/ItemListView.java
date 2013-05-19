@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.ui;
 
+import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
@@ -31,7 +32,11 @@ public class ItemListView {
             inv.createButton(10 + hcount * 40, 10 + vcount * 40, 40, 40, new Runnable() {
                 @Override
                 public void run() {
-                    action.doAction(index);
+                    try {
+                        action.doAction(index);
+                    } catch (GameOverException e) {
+                        new DialogView(e.getMessage());
+                    }
                     inv.dispose();
                 }
             }).setImage(itemMap.get(items.get(index).getClass()));

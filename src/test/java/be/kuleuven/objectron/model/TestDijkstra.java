@@ -1,27 +1,21 @@
 package be.kuleuven.objectron.model;
 
-import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.handler.EndTurnHandler;
-import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,38 +25,34 @@ import static junit.framework.Assert.assertTrue;
  * To change this template use File | Settings | File Templates.
  */
 public class TestDijkstra {
-    private EndTurnHandler endTurnHandler;
-    private MovePlayerHandler movePlayerHandler;
     private Grid grid;
-    private GameState state;
-    private Position p1Pos;
-    private Position p2Pos;
-    private Dimension dimension;
-    private GridFactory gridFactory;
 
     @Before
     public void setUp() throws GridTooSmallException {
+        List<Position> positions = new ArrayList<>();
+        Position p1Pos = new Position(1, 8);
+        Position p2Pos = new Position(3, 8);
+        positions.add(p1Pos);
+        positions.add(p2Pos);
 
-        p1Pos = new Position(1, 8);
-        p2Pos = new Position(3, 8);
-        dimension = new Dimension(10, 10);
-        ArrayList<Position> wallPositions = new ArrayList<Position>();
+        Dimension dimension = new Dimension(10, 10);
+
+        ArrayList<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(6, 6));
         wallPositions.add(new Position(5, 6));
         wallPositions.add(new Position(4, 6));
-        GridBuilder builder = new GeneratedGridBuilder();
-        gridFactory = new GridFactory(builder);
-        grid = gridFactory.gridWithSpecifiedWallsPowerFailuresItems(dimension, p1Pos, p2Pos, wallPositions);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithSpecifiedWallsPowerFailuresItems(builder, wallPositions);
     }
 
     @Test
     public void test_DijkstraShortestPath_straight_line() {
         Square startSquare = grid.getSquareAtPosition(new Position(0, 0));
         Square destinationSquare = grid.getSquareAtPosition(new Position(0, 5));
-        Dijkstra dijkstra = new Dijkstra( grid.getSquaresNotObstructed());
+        Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
-        //System.out.println(dijkstra.toStringEdges());
         Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
         System.out.println("Distance: " + distance);
         assertTrue(distance == 5);

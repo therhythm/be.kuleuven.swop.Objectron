@@ -13,11 +13,10 @@ import java.util.List;
  *         Date: 13/05/13
  *         Time: 10:13
  */
+
 public interface GridBuilder {
 
-    public void setDimension(Dimension dimension) throws GridTooSmallException;
-
-    public void setStartingPositions(Position playerOnePosition, Position playerTwoPosition);
+    public void setStartingPositions(List<Position> positions);
 
     public void buildWalls();
 
@@ -29,6 +28,6 @@ public interface GridBuilder {
 
     public void initGrid(int powerFailureChance);
 
-    public Grid getGrid();
+    public Grid buildGrid();
 
 }

@@ -1,4 +1,4 @@
-package be.kuleuven.swop.objectron.domain.item.effect;
+package be.kuleuven.swop.objectron.domain.effect;
 
 /**
  * @author : Nik Torfs

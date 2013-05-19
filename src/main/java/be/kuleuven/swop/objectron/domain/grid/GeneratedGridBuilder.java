@@ -3,9 +3,9 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
-import be.kuleuven.swop.objectron.domain.item.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
@@ -36,38 +36,53 @@ public class GeneratedGridBuilder implements GridBuilder {
     public static final double PERCENTAGE_OF_LIGHTMINES = 0.02;
     public static final double PERCENTAGE_OF_IDENTITYDISCS = 0.02;
     public static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
+    private static final int IDENTITY_DISK_PLAYER_AREA = 7;
+    private static final int LIGHT_MINE_PLAYER_AREA = 5;
 
     private Dimension dimension;
-    private Position p1Pos;
-    private Position p2Pos;
-
+    private List<Position> playerPositions;
     private Square[][] squares;
     private List<Wall> walls;
     private ForceFieldArea forceFieldArea;
 
-    public GeneratedGridBuilder() {
-        forceFieldArea = new ForceFieldArea();
-    }
-
-    @Override
-    public void setDimension(Dimension dimension) throws GridTooSmallException {
+    public GeneratedGridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException {
         if (!isValidDimension(dimension)) {
             throw new GridTooSmallException("The grid needs to be at least " +
                     MIN_GRID_HEIGHT + " rows by " +
                     MIN_GRID_HEIGHT + " columns");
         }
+
         this.dimension = dimension;
+
+
+        forceFieldArea = new ForceFieldArea();
+
+        initPlayerPositions(nbPlayers);
+        initGrid(Square.POWER_FAILURE_CHANCE);
+    }
+
+
+    private void initPlayerPositions(int nbPlayers) {
+        List<Position> tempPositions = new ArrayList<>();
+        tempPositions.add(new Position(0, this.dimension.getHeight() - 1));
+        tempPositions.add(new Position(this.dimension.getWidth() - 1, 0));
+        tempPositions.add(new Position(0, 0));
+        tempPositions.add(new Position(this.dimension.getWidth() - 1, dimension.getHeight() - 1));
+
+        playerPositions = new ArrayList<>();
+        for(int i = 0; i < nbPlayers; i ++){
+            playerPositions.add(tempPositions.get(i));
+        }
     }
 
     @Override
-    public void setStartingPositions(Position playerOnePosition, Position playerTwoPosition) {
-        this.p1Pos = playerOnePosition;
-        this.p2Pos = playerTwoPosition;
+    public void setStartingPositions(List<Position> positions) {
+        this.playerPositions = positions;
     }
 
     @Override
     public void buildWalls() {
-        walls = new ArrayList<Wall>();
+        walls = new ArrayList<>();
 
         int maxNumberOfWalls = (int) Math.floor(MAX_WALL_COVERAGE_PERCENTAGE *
                 (dimension.area() / MIN_WALL_LENGTH));
@@ -120,26 +135,18 @@ public class GeneratedGridBuilder implements GridBuilder {
     }
 
     @Override
-    public Grid getGrid() {
-        return new Grid(squares, walls, dimension, forceFieldArea);
+    public Grid buildGrid() {
+        return new Grid(squares, walls, dimension, forceFieldArea, playerPositions);
     }
 
-    /*
-   private Square calculateMiddleSquare() {
-       int HIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
-       int VIndex = Math.round(Math.abs(p1Pos.getHIndex() - p2Pos.getHIndex() + 1) / 2);
-       return squares[VIndex][HIndex];
-   }
-   */
-
     private ArrayList<Square> getSquaresNotObstructed() {
-        ArrayList<Square> result = new ArrayList<Square>();
-        for (int i = 0; i < squares.length; i++) {
-            for (int j = 0; j < squares[i].length; j++) {
+        ArrayList<Square> result = new ArrayList<>();
+        for (Square[] row : squares) {
+            for (Square square : row) {
 
-                //Todo wall obstruction nodig zodat 2de chekc, na de || weg mag.
-                if (!squares[i][j].isObstructed() || (squares[i][j].getPosition().equals(p1Pos) || squares[i][j].getPosition().equals(p2Pos)))
-                    result.add(squares[i][j]);
+                if (!square.isObstructed()){
+                    result.add(square);
+                }
             }
         }
         return result;
@@ -148,11 +155,22 @@ public class GeneratedGridBuilder implements GridBuilder {
     private void placeChargedIdentityDisc() {
         ArrayList<Square> squaresNotObstructed = getSquaresNotObstructed();
         Dijkstra dijkstra = new Dijkstra(squaresNotObstructed);
-        System.out.println("size squares not obstructed: " + squaresNotObstructed.size());
+
         for (Square square : squaresNotObstructed) {
-            double distanceP1 = dijkstra.getShortestDistance(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], square);
-            double distanceP2 = dijkstra.getShortestDistance(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], square);
-            if (Math.abs(distanceP1 - distanceP2) <= 2) {
+            List<Double> distances = new ArrayList<>();
+            for(Position pos : playerPositions){
+                distances.add(dijkstra.getShortestDistance(squares[pos.getVIndex()][pos.getHIndex()], square));
+            }
+            boolean distOk = true;
+            for(Double distance : distances){
+                for(Double distance2 : distances){
+                    if (Math.abs(distance - distance2) > 2) {
+                        distOk = false;
+                    }
+                }
+            }
+
+            if(distOk){
                 square.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
                 return;
             }
@@ -160,7 +178,7 @@ public class GeneratedGridBuilder implements GridBuilder {
     }
 
     private void placeForceFields(int numberOfItems) {
-        List<ForcefieldGenerator> forceFieldGenerators = new ArrayList<ForcefieldGenerator>();
+        List<ForcefieldGenerator> forceFieldGenerators = new ArrayList<>();
         for (int i = 0; i < numberOfItems; i++) {
             ForcefieldGenerator forcefieldGenerator = new ForcefieldGenerator(forceFieldArea);
             forceFieldGenerators.add(forcefieldGenerator);
@@ -169,7 +187,7 @@ public class GeneratedGridBuilder implements GridBuilder {
         for (ForcefieldGenerator forcefieldGenerator : forceFieldGenerators) {
             Square randomSquare = getRandomSquare();
             boolean added = false;
-            while (added == false) {
+            while (!added) {
                 while (randomSquare.getAvailableItems().size() != 0
                         || randomSquare.isObstructed()) {
                     randomSquare = getRandomSquare();
@@ -189,10 +207,14 @@ public class GeneratedGridBuilder implements GridBuilder {
     }
 
     private void placeIdentityDiscs(int numberOfItems) {
-        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
-        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
-        numberOfItems -= 2;
-        List<Item> identityDiscs = new ArrayList<Item>();
+        for(Position pos : playerPositions){
+            Square target = squares[pos.getVIndex()][pos.getHIndex()];
+            IdentityDisc disc = new IdentityDisc(new NormalIdentityDiscBehavior());
+            placeItemToPlayer(target, disc, IDENTITY_DISK_PLAYER_AREA);
+            numberOfItems--;
+        }
+
+        List<Item> identityDiscs = new ArrayList<>();
 
         for (int i = 0; i < numberOfItems; i++) {
             identityDiscs.add(new IdentityDisc(new NormalIdentityDiscBehavior()));
@@ -203,11 +225,12 @@ public class GeneratedGridBuilder implements GridBuilder {
     }
 
     private void placeLightMines(int numberOfItems) {
-        placeItemToPlayer(squares[p1Pos.getVIndex()][p1Pos.getHIndex()], new LightMine());
-        placeItemToPlayer(squares[p2Pos.getVIndex()][p2Pos.getHIndex()], new LightMine());
-        numberOfItems -= 2;
-        List<Item> lightMines = new ArrayList<Item>();
-        List<Item> identityDiscs = new ArrayList<Item>();
+        for(Position pos : playerPositions){
+            Square target = squares[pos.getVIndex()][pos.getHIndex()];
+            placeItemToPlayer(target, new LightMine(), LIGHT_MINE_PLAYER_AREA);
+            numberOfItems--;
+        }
+        List<Item> lightMines = new ArrayList<>();
 
         for (int i = 0; i < numberOfItems; i++) {
             lightMines.add(new LightMine());
@@ -292,14 +315,24 @@ public class GeneratedGridBuilder implements GridBuilder {
         }
     }
 
-    private void placeItemToPlayer(Square playerOneSquare, Item item) {
-        for (Square square : getAllNeighboursFromSquare(playerOneSquare)) {
-            //find the middle tile
-            if (getAllNeighboursFromSquare(square).size() == 8) {
-                placeItemArea(square, item);
-                break;
+    private void placeItemToPlayer(Square playerSquare, Item item, int sizeOfArea) {
+        int hIndex = playerSquare.getPosition().getHIndex() - (int) Math.floor(sizeOfArea / 2);
+        int vIndex = playerSquare.getPosition().getVIndex() - (int) Math.floor(sizeOfArea / 2);
+
+        List<Position> area = new ArrayList<>();
+
+        for(int v = vIndex; v < vIndex + sizeOfArea; v ++){
+            if(v >= 0 && v < squares.length)  {
+                for(int h = hIndex; h < hIndex + sizeOfArea; h++){
+                    if(h >= 0 && h < squares[0].length){
+                        area.add(new Position(h,v));
+                    }
+                }
             }
         }
+
+        area.remove(playerSquare.getPosition());
+        placeItemArea(area, item);
     }
 
     private void placeOtherItems(List<Item> items) {
@@ -313,27 +346,40 @@ public class GeneratedGridBuilder implements GridBuilder {
         }
     }
 
-    private void placeItemArea(Square square, Item item) {
-        List<Square> possibleSquares = getAllNeighboursFromSquare(square);
-        List<Square> goodSquares = new ArrayList<Square>();
-        possibleSquares.add(square);
-        for (Square s : possibleSquares) {
-            if (!s.isObstructed() && s.getAvailableItems().size() == 0) {
-                goodSquares.add(s);
+    private void placeItemArea(List<Position> area, Item item) {
+        List<Position> goodPositions = new ArrayList<>();
+        for (Position p : area) {
+            if (!squares[p.getVIndex()][p.getHIndex()].isObstructed() && squares[p.getVIndex()][p.getHIndex()].getAvailableItems().size() == 0) {
+                goodPositions.add(p);
             }
         }
 
         Random generator = new Random();
-        int randomIndex = generator.nextInt(goodSquares.size());
-
-
-        goodSquares.get(randomIndex).addItem(item);
-
-
+        Position randomPosition = goodPositions.get(generator.nextInt(goodPositions.size()));
+        squares[randomPosition.getVIndex()][randomPosition.getHIndex()].addItem(item);
     }
 
+    private boolean isValidWallPosition(Square square) {
+        if (square.isObstructed()) {
+            return false;
+        }
+        for (Direction d : Direction.values()) {
+            if (square.getNeighbour(d) != null && square.getNeighbour(d).isObstructed()) {
+                return false;
+            }
+        }
+
+        for(Position p: playerPositions){
+            if(p.getVIndex() == square.getPosition().getVIndex() && p.getHIndex() == square.getPosition().getHIndex()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     private List<Square> getAllNeighboursFromSquare(Square square) {
-        List<Square> neighbourSquares = new ArrayList<Square>();
+        List<Square> neighbourSquares = new ArrayList<>();
         for (Direction d : Direction.values()) {
             if (square.getNeighbour(d) != null) {
                 neighbourSquares.add(square.getNeighbour(d));
@@ -384,18 +430,6 @@ public class GeneratedGridBuilder implements GridBuilder {
                 && pos.getHIndex() < dimension.getWidth()
                 && pos.getVIndex() > -1
                 && pos.getVIndex() < dimension.getHeight();
-    }
-
-    private boolean isValidWallPosition(Square square) {
-        if (square.isObstructed()) {
-            return false;
-        }
-        for (Direction d : Direction.values()) {
-            if (square.getNeighbour(d) != null && square.getNeighbour(d).isObstructed()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private boolean isAnotherWallPossible() {

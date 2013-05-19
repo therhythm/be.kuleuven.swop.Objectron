@@ -11,7 +11,9 @@ import be.kuleuven.swop.objectron.domain.util.Position;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : Kasper Vervaecke
@@ -20,13 +22,12 @@ import java.util.List;
  */
 public class FileGridBuilder implements GridBuilder {
     private Dimension dimension;
-    private Position playerOnePosition;
-    private Position playerTwoPosition;
     private List<Wall> walls;
     private List<Square> wallSegments;
     private Square[][] squares;
     private ForceFieldArea forceFieldArea;
     private char[][] input;
+    private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
     public FileGridBuilder(String file) throws IOException {
         GridFileReader fileReader = new GridFileReader();
@@ -35,14 +36,10 @@ public class FileGridBuilder implements GridBuilder {
     }
 
     @Override
-    public void setDimension(Dimension dimension) {
-        this.dimension = dimension;
-    }
-
-    @Override
-    public void setStartingPositions(Position playerOnePosition, Position playerTwoPosition) {
-        this.playerOnePosition = playerOnePosition;
-        this.playerTwoPosition = playerTwoPosition;
+    public void setStartingPositions(List<Position> positions) {
+        for(int i = 1; i <= positions.size(); i++){
+            playerPositions.put(i, positions.get(i));
+        }
     }
 
     @Override
@@ -77,7 +74,7 @@ public class FileGridBuilder implements GridBuilder {
 
     @Override
     public void initGrid(int powerFailureChance) {
-        setDimension(new Dimension(input.length-2, input.length-2));
+        dimension = new Dimension(input.length-2, input.length-2);
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
@@ -90,32 +87,29 @@ public class FileGridBuilder implements GridBuilder {
     }
 
     @Override
-    public Grid getGrid() {
-        return new Grid(squares, walls, dimension, forceFieldArea);
+    public Grid buildGrid() {
+        List<Position> positions = new ArrayList<>();
+        for(int i = 1; i < playerPositions.size(); i++){
+            positions.add(playerPositions.get(i));
+        }
+
+        return new Grid(squares, walls, dimension, forceFieldArea, positions);
     }
 
     private void interpretInput(char[][] input) {
         wallSegments = new ArrayList<>();
-        Position playerOnePosition = null;
-        Position playerTwoPosition = null;
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input.length; j++) {
                 char c = input[i][j];
-                switch (c) {
-                    case '#':
-                        Square square = squares[j - 1][i - 1];
-                        wallSegments.add(square);
-                        break;
-                    case '1':
-                        playerOnePosition = new Position(j - 1,i - 1);
-                        break;
-                    case '2':
-                        playerTwoPosition = new Position(j - 1,i - 1);
-                        break;
+
+                if(c == '#'){
+                    Square square = squares[j - 1][i - 1];
+                    wallSegments.add(square);
+                }else if((c-'0') > 0 && (c-'0') < 10){ // little trick
+                    playerPositions.put(c-48, new Position(j - 1,i - 1));
                 }
             }
         }
-        setStartingPositions(playerOnePosition, playerTwoPosition);
     }
 
     private void setupNeighbours() {
@@ -137,17 +131,5 @@ public class FileGridBuilder implements GridBuilder {
                 && pos.getHIndex() < dimension.getWidth()
                 && pos.getVIndex() > -1
                 && pos.getVIndex() < dimension.getHeight();
-    }
-
-    public Dimension getDimension() {
-        return dimension;
-    }
-
-    public Position getPlayerOnePosition() {
-        return playerOnePosition;
-    }
-
-    public Position getPlayerTwoPosition() {
-        return playerTwoPosition;
     }
 }

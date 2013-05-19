@@ -3,23 +3,23 @@ package scenario;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.GameOverException;
-import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.exception.*;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
@@ -35,21 +35,25 @@ import static org.mockito.Mockito.when;
 public class TestUC_Move {
     private MovePlayerHandler movePlayerHandler;
     private Player player1;
-    private GameState stateMock;
-    private GridFactory gridFactory;
+    private Game stateMock;
 
     @Before
     public void setUp() throws GridTooSmallException {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(0, 5);
+
+        List<Position> positions = new ArrayList<>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
         Dimension dimension = new Dimension(10, 10);
-        GridBuilder builder = new GeneratedGridBuilder();
-        gridFactory = new GridFactory(builder);
-        Grid grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        Grid grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
 
         player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
         Turn turn = new Turn(player1);
-        stateMock = mock(GameState.class);
+        stateMock = mock(Game.class);
         TurnManager turnManager = mock(TurnManager.class);
         when(turnManager.getCurrentTurn()).thenReturn(turn);
 
@@ -61,7 +65,7 @@ public class TestUC_Move {
     }
 
     @Test
-    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+    public void test_main_flow() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         Square prev = player1.getCurrentSquare();
 
         movePlayerHandler.move(Direction.UP);
@@ -72,13 +76,13 @@ public class TestUC_Move {
     }
 
     @Test(expected = InvalidMoveException.class)
-    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+    public void test_wrong_positioning() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         movePlayerHandler.move(Direction.DOWN);
     }
 
 
     @Test(expected = NotEnoughActionsException.class)
-    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException {
+    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
         stateMock.getTurnManager().getCurrentTurn().reduceRemainingActions(Turn.ACTIONS_EACH_TURN);
 
         movePlayerHandler.move(Direction.UP);

@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,11 @@ public class DirectionListView {
 
             @Override
             public void run() {
-                action.doAction(Direction.UP.ordinal());
+                try {
+                    action.doAction(Direction.UP.ordinal());
+                } catch (GameOverException e) {
+                    new DialogView(e.getMessage());
+                }
                 gui.dispose();
             }
         }).setImage(gui.loadImage("arrow_N.png", 20, 20));
@@ -34,7 +39,11 @@ public class DirectionListView {
         gui.createButton(90, 50, 40, 40, new Runnable() {
             @Override
             public void run() {
-                action.doAction(Direction.RIGHT.ordinal());
+                try {
+                    action.doAction(Direction.RIGHT.ordinal());
+                } catch (GameOverException e) {
+                    new DialogView(e.getMessage());
+                }
                 gui.dispose();
             }
         }).setImage(gui.loadImage("arrow_E.png", 20, 20));
@@ -42,7 +51,11 @@ public class DirectionListView {
         gui.createButton(50, 90, 40, 40, new Runnable() {
             @Override
             public void run() {
-                action.doAction(Direction.DOWN.ordinal());
+                try {
+                    action.doAction(Direction.DOWN.ordinal());
+                } catch (GameOverException e) {
+                    new DialogView(e.getMessage());
+                }
                 gui.dispose();
             }
         }).setImage(gui.loadImage("arrow_S.png", 20, 20));
@@ -50,7 +63,11 @@ public class DirectionListView {
         gui.createButton(10, 50, 40, 40, new Runnable() {
             @Override
             public void run() {
-                action.doAction(Direction.LEFT.ordinal());
+                try {
+                    action.doAction(Direction.LEFT.ordinal());
+                } catch (GameOverException e) {
+                    new DialogView(e.getMessage());
+                }
                 gui.dispose();
             }
         }).setImage(gui.loadImage("arrow_W.png", 20, 20));

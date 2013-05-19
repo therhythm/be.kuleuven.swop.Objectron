@@ -3,7 +3,6 @@ package scenario;
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.util.GridFileReader;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +18,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestUC_ChooseGridFromFile {
 
-    private char[][] input;
     private FileGridBuilder gridBuilder;
 
     @Before
@@ -32,7 +30,7 @@ public class TestUC_ChooseGridFromFile {
     public void test_basic_flow() {
         gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
         gridBuilder.buildWalls();
-        Grid grid = gridBuilder.getGrid();
+        Grid grid = gridBuilder.buildGrid();
 
         //check dimensions
         assertTrue(grid.getDimension().getHeight() == 10);

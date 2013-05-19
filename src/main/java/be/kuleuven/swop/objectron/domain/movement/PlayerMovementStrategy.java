@@ -26,6 +26,11 @@ public class PlayerMovementStrategy implements MovementStrategy {
         if(hasLightMine){
             turnManager.getCurrentTurn().reduceRemainingActions(POWERFAILURE_ACTION_REDUCTION);
         } else{
+            //Todo (Peter) kan mss beter.
+            //Ja van het moment een player niet gemoved had, werd er meteen een gameOverException gegooid.
+            //Nu wordt die player in zo'n geval verwijderd uit de lijst van players.
+            //Pas als er nog maar 1 player in die lijst zit, wordt er een gameOverException gegooid.
+            turnManager.getCurrentTurn().setMoved();
             turnManager.endTurn();
         }
     }

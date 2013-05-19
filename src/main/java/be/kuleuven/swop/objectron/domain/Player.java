@@ -1,9 +1,6 @@
 package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
-import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
@@ -13,9 +10,6 @@ import be.kuleuven.swop.objectron.domain.movement.PlayerMovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.PlayerTeleportStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
-import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
-import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.List;
@@ -60,11 +54,13 @@ public class Player implements Movable, Obstruction{
         } catch (InventoryFullException ex) {
             currentSquare.addItem(item);
             throw ex;
+        } catch (TooManyItemsOfSameTypeException e) {
+            currentSquare.addItem(item);
         }
         actionPerformed();
     }
 
-    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException {
+    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException, SquareOccupiedException, NotEnoughActionsException {
         actionPerformed();
         this.movementStrategy = new PlayerMovementStrategy(manager);
         try {
@@ -76,7 +72,7 @@ public class Player implements Movable, Obstruction{
     }
 
     @Override
-    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException {
         lightTrail.expand(currentSquare);
         currentSquare.removeObstruction(this);
         newPosition.addObstruction(this);
@@ -102,7 +98,7 @@ public class Player implements Movable, Obstruction{
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item, ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException {
+    public void useItem(Item item, ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException, GameOverException {
 
         deployer.deploy(item);
 

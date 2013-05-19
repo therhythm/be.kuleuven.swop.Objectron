@@ -3,17 +3,14 @@ package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Obstruction;
-import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.item.effect.Effect;
+import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
-import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
-import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 
 import java.util.*;
 
@@ -24,7 +21,7 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Observable<SquareObserver> {
-    public static final int POWER_FAILURE_CHANCE = 1; //TODO public
+    public static final int POWER_FAILURE_CHANCE = 1;
 
     PowerFailure powerFailure;
     private final Position position;
@@ -60,7 +57,7 @@ public class Square implements Observable<SquareObserver> {
         return !obstructions.isEmpty();
     }
 
-    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException {
+    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException, NotEnoughActionsException {
         for(Obstruction obstruction : obstructions){
             obstruction.hit(movable.getMovementStrategy());
         }
@@ -92,7 +89,6 @@ public class Square implements Observable<SquareObserver> {
         Item selectedItem = items.get(selectionId);
 
         items.remove(selectedItem);
-        selectedItem.pickedUp();
         return selectedItem;
     }
 

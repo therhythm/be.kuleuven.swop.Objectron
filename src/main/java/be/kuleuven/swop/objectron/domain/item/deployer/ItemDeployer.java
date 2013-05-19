@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item.deployer;
 
+import be.kuleuven.swop.objectron.domain.exception.GameOverException;
+import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
@@ -10,5 +12,5 @@ import be.kuleuven.swop.objectron.domain.item.Item;
  */
 public interface ItemDeployer {
 
-    void deploy(Item item) throws SquareOccupiedException;
+    void deploy(Item item) throws SquareOccupiedException, GameOverException, NotEnoughActionsException;
 }

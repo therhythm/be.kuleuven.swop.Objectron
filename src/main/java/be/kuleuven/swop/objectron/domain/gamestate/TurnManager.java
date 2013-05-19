@@ -35,10 +35,24 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
         int index = players.indexOf(currentTurn.getCurrentPlayer());
         index = (index + 1) % players.size();
 
-        currentTurn = new Turn(players.get(index));
-        currentTurn.attach(this);
+        Turn newTurn = new Turn(players.get(index));
+        newTurn.attach(this);
 
+        checkMoved();
+
+        currentTurn = newTurn;
         notifyObservers();
+    }
+
+    private void checkMoved() {
+        if (!currentTurn.hasMoved())
+            this.players.remove(currentTurn.getCurrentPlayer());
+    }
+
+    public boolean checkWin() {
+        if (getPlayers().size() <= 1)
+            return true;
+        return false;
     }
 
     private void notifyObservers() {

@@ -1,14 +1,14 @@
-package be.kuleuven.objectron.item.forceField;
+package be.kuleuven.swop.objectron.domain.forceField;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
@@ -21,6 +21,9 @@ import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import be.kuleuven.swop.objectron.handler.UseItemHandler;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -37,10 +40,8 @@ public class Test_Force_Field {
     private MovePlayerHandler movePlayerHandler;
     private PickUpItemHandler pickUpItemHandler;
     private UseItemHandler useItemHandler;
-    private GameState state;
-    private Player player1;
+    private Game state;
     private Grid grid;
-    private GridFactory gridFactory;
 
     private Dimension dimension;
     private Position p1Pos;
@@ -53,15 +54,24 @@ public class Test_Force_Field {
         p1Pos = new Position(4, 5);
         p2Pos = new Position(7, 6);
 
-        GridBuilder gridBuilder = new GeneratedGridBuilder();
-        gridFactory = new GridFactory(gridBuilder);
-        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        List<Position> positions = new ArrayList<>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
+        GridBuilder gridBuilder = new GeneratedGridBuilder(dimension, 2);
+        gridBuilder.setStartingPositions(positions);
+
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+
+        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(gridBuilder);
+        state = new RaceGame(playerNames, grid);
+
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
     }
 
     @Test(expected = InvalidMoveException.class)
@@ -78,9 +88,6 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forcefieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forcefieldGenerator2, squareFF2);
-        Turn currentTurn = state.getTurnManager().getCurrentTurn();
-
-        //currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
@@ -124,9 +131,6 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forcefieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forcefieldGenerator2, squareFF2);
-        Turn currentTurn = state.getTurnManager().getCurrentTurn();
-
-        //currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
@@ -167,8 +171,6 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forcefieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forcefieldGenerator2, squareFF2);
-        Turn currentTurn = state.getTurnManager().getCurrentTurn();
-        //currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
@@ -287,9 +289,6 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
-        Turn currentTurn = state.getTurnManager().getCurrentTurn();
-
-        //currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
@@ -329,8 +328,6 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
-        Turn currentTurn = state.getTurnManager().getCurrentTurn();
-        // currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);
         movePlayerHandler.move(Direction.RIGHT);
@@ -359,7 +356,7 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(forceFieldGenerator1, squareFF1);
         forceFieldArea.placeForceField(forceFieldGenerator2, squareFF2);
-        // Turn currentTurn = state.getCurrentTurn();
+        // Turn currentTurn = game.getCurrentTurn();
         //currentTurn.attach(forceFieldArea);
 
         pickUpItemHandler.pickUpItem(0);
@@ -437,13 +434,23 @@ public class Test_Force_Field {
         p1Pos = new Position(4, 5);
         p2Pos = new Position(6, 6);
 
-        grid = gridFactory.gridWithoutWallsItemsPowerFailures(dimension, p1Pos, p2Pos);
-        state = new GameState("p1", "p2", p1Pos, p2Pos, grid);
+        List<Position> positions = new ArrayList<>();
+        positions.add(p1Pos);
+        positions.add(p2Pos);
+
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
+        state = new RaceGame(playerNames, grid);
+
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
-        player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
 
 
         Square squareFF1 = grid.getSquareAtPosition(new Position(4, 5));

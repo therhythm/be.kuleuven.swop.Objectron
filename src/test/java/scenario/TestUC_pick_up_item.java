@@ -6,12 +6,13 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
-import be.kuleuven.swop.objectron.domain.gamestate.GameState;
+import be.kuleuven.swop.objectron.domain.gamestate.Game;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridFactory;
+import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -21,6 +22,7 @@ import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -36,16 +38,25 @@ public class TestUC_pick_up_item {
     private PickUpItemHandler pickUpItemHandler;
     private Player player;
     private Square currentSquare;
-    private GameState gameState;
-    private GridFactory gridFactory;
+    private Game gameState;
 
     @Before
     public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
-        GridBuilder builder = new GeneratedGridBuilder();
-        gridFactory = new GridFactory(builder);
-        Grid grid = gridFactory.gridWithoutItems(dimension, new Position(0, 9), new Position(9, 0));
-        gameState = new GameState("p1", "p2", dimension, grid);
+
+        List<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 9));
+        positions.add( new Position(9, 0));
+
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+
+        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
+        builder.setStartingPositions(positions);
+        Grid grid = GridObjectMother.gridWithoutItems(builder);
+        gameState = new RaceGame(playerNames, grid);
+
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
@@ -83,7 +94,9 @@ public class TestUC_pick_up_item {
         for (int i = 0; i < Inventory.INVENTORY_LIMIT; i++) {
             player.pickupItem(0);
             currentSquare.addItem(new LightMine());
+            gameState.getTurnManager().getCurrentTurn().setMoved();
             gameState.getTurnManager().endTurn();
+            gameState.getTurnManager().getCurrentTurn().setMoved();
             gameState.getTurnManager().endTurn();
         }
 
