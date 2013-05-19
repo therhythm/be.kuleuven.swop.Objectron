@@ -25,7 +25,7 @@ import java.util.List;
  * Time: 17:21
  * To change this template use File | Settings | File Templates.
  */
-public class PrimaryPowerFailure implements Effect, TurnObserver, TurnSwitchObserver {
+public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
 
     public static final int PF_PRIMARY_TURNS = 3;
 
@@ -41,6 +41,7 @@ public class PrimaryPowerFailure implements Effect, TurnObserver, TurnSwitchObse
         this.square = square;
         square.addEffect(this);
         square.notifyPowerFailure();
+
 
         initiateSecondaryPowerFailure();
     }
@@ -111,12 +112,12 @@ public class PrimaryPowerFailure implements Effect, TurnObserver, TurnSwitchObse
     }
 
     @Override
-    public void penaltyAdded() {
-        //nothing to do
+    public void actionReduced() {
+       //do nothing
     }
 
     @Override
-    public void actionReduced() {
+    public void actionHappened() {
         rotate();
     }
 }

@@ -10,6 +10,7 @@ import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -23,7 +24,7 @@ import java.util.List;
  * Time: 17:42
  * To change this template use File | Settings | File Templates.
  */
-public class SecondaryPowerFailure implements Effect, TurnObserver {
+public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
 
     public static final int PF_SECONDARY_ACTIONS = 2;
     private boolean active = true;
@@ -36,7 +37,6 @@ public class SecondaryPowerFailure implements Effect, TurnObserver {
         if(square != null){
             initiateTertiaryPowerFailure(direction);
             square.addEffect(this);
-
             square.notifyPowerFailure();
         }
 
@@ -72,17 +72,22 @@ public class SecondaryPowerFailure implements Effect, TurnObserver {
     }
 
     @Override
+    public void turnEnded(Turn newTurn) {
+        //do nothing
+    }
+
+    @Override
     public void update(Turn turn) {
         //do nothing
     }
 
     @Override
-    public void penaltyAdded() {
+    public void actionReduced() {
         //do nothing
     }
 
     @Override
-    public void actionReduced() {
+    public void actionHappened() {
         actionsLeft --;
         if(actionsLeft == 0){
             this.active = false;

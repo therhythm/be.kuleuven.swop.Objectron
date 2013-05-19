@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -19,7 +20,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 17:58
  * To change this template use File | Settings | File Templates.
  */
-public class TertiaryPowerFailure implements Effect, TurnObserver {
+public class TertiaryPowerFailure implements Effect, TurnSwitchObserver {
 
     public static final int PF_TERTIARY_ACTIONS = 1;
     private int actionsLeft = PF_TERTIARY_ACTIONS;
@@ -45,21 +46,27 @@ public class TertiaryPowerFailure implements Effect, TurnObserver {
 
     @Override
     public void accept(EffectVisitor visitor) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //do nothing
+    }
+
+    @Override
+    public void turnEnded(Turn newTurn) {
+        //do nothing
     }
 
     @Override
     public void update(Turn turn) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //do nothing
     }
 
-    @Override
-    public void penaltyAdded() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     @Override
     public void actionReduced() {
+        //do nothing
+    }
+
+    @Override
+    public void actionHappened() {
         actionsLeft --;
         if(actionsLeft == 0){
             this.active = false;

@@ -226,7 +226,7 @@ public class GridBuilder {
 
     private void placeIdentityDiscs(int numberOfItems) {
         for (Position position : this.playerPositions) {
-            placeItemToPlayer(squares[position.getVIndex()][position.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()));
+            placeItemToPlayer(squares[position.getVIndex()][position.getHIndex()], new IdentityDisc(new NormalIdentityDiscBehavior()), 7);
             numberOfItems -= 1;
         }
 
@@ -242,7 +242,7 @@ public class GridBuilder {
 
     private void placeLightMines(int numberOfItems) {
         for (Position position : this.playerPositions) {
-            placeItemToPlayer(squares[position.getVIndex()][position.getHIndex()], new LightMine());
+            placeItemToPlayer(squares[position.getVIndex()][position.getHIndex()], new LightMine(), 5);
             numberOfItems -= 1;
         }
 
@@ -332,14 +332,24 @@ public class GridBuilder {
         }
     }
 
-    private void placeItemToPlayer(Square playerOneSquare, Item item) {
-        for (Square square : getAllNeighboursFromSquare(playerOneSquare)) {
-            //find the middle tile
-            if (getAllNeighboursFromSquare(square).size() == 8) {
-                placeItemArea(square, item);
-                break;
+    private void placeItemToPlayer(Square playerSquare, Item item, int sizeOfArea) {
+        int hIndex = playerSquare.getPosition().getHIndex() - (int) Math.floor(sizeOfArea / 2);
+        int vIndex = playerSquare.getPosition().getVIndex() - (int) Math.floor(sizeOfArea / 2);
+
+        List<Position> area = new ArrayList<>();
+
+        for(int v = vIndex; v < vIndex + sizeOfArea; v ++){
+            if(v >= 0 && v < squares.length)  {
+                for(int h = hIndex; h < hIndex + sizeOfArea; h++){
+                   if(h >= 0 && h < squares[0].length){
+                      area.add(new Position(h,v));
+                   }
+                }
             }
         }
+
+        area.remove(playerSquare.getPosition());
+        placeItemArea(area, item);
     }
 
     private void placeOtherItems(List<Item> items) {
@@ -354,33 +364,17 @@ public class GridBuilder {
     }
 
 
-    private void placeItemArea(Square square, Item item) {
-        List<Square> possibleSquares = getAllNeighboursFromSquare(square);
-        List<Square> goodSquares = new ArrayList<Square>();
-        possibleSquares.add(square);
-        for (Square s : possibleSquares) {
-            if (!s.isObstructed() && s.getAvailableItems().size() == 0) {
-                goodSquares.add(s);
+    private void placeItemArea(List<Position> area, Item item) {
+        List<Position> goodPositions = new ArrayList<>();
+        for (Position p : area) {
+            if (!squares[p.getVIndex()][p.getHIndex()].isObstructed() && squares[p.getVIndex()][p.getHIndex()].getAvailableItems().size() == 0) {
+                goodPositions.add(p);
             }
         }
 
         Random generator = new Random();
-        int randomIndex = generator.nextInt(goodSquares.size());
-
-
-        goodSquares.get(randomIndex).addItem(item);
-
-
-    }
-
-    private List<Square> getAllNeighboursFromSquare(Square square) {
-        List<Square> neighbourSquares = new ArrayList<Square>();
-        for (Direction d : Direction.values()) {
-            if (square.getNeighbour(d) != null) {
-                neighbourSquares.add(square.getNeighbour(d));
-            }
-        }
-        return neighbourSquares;
+        Position randomPosition = goodPositions.get(generator.nextInt(goodPositions.size()));
+        squares[randomPosition.getVIndex()][randomPosition.getHIndex()].addItem(item);
     }
 
 
@@ -445,6 +439,12 @@ public class GridBuilder {
         }
         for (Direction d : Direction.values()) {
             if (square.getNeighbour(d) != null && square.getNeighbour(d).isObstructed()) {
+                return false;
+            }
+        }
+
+        for(Position p: playerPositions){
+            if(p.getVIndex() == square.getPosition().getVIndex() && p.getHIndex() == square.getPosition().getHIndex()){
                 return false;
             }
         }

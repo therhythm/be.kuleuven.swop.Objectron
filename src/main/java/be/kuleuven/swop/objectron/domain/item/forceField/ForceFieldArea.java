@@ -124,4 +124,9 @@ public class ForceFieldArea implements TurnSwitchObserver {
             forceFieldPair.update();
         }
     }
+
+    @Override
+    public void actionHappened() {
+        //do nothing
+    }
 }

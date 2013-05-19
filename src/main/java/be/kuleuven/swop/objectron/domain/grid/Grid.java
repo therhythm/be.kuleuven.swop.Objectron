@@ -137,6 +137,11 @@ public class Grid implements TurnSwitchObserver {
         // actionreduced
     }
 
+    @Override
+    public void actionHappened() {
+        //do nothing
+    }
+
     public ForceFieldArea getForceFieldArea() {
         return forceFieldArea;
     }

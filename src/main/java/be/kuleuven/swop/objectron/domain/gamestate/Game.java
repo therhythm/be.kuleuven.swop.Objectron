@@ -117,6 +117,11 @@ public abstract class Game implements SquareObserver, TurnSwitchObserver, Observ
 
     @Override
     public void actionReduced() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //donothing
+    }
+
+    @Override
+    public void actionHappened() {
+        //donothing
     }
 }
