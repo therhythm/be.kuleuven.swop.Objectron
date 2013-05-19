@@ -277,6 +277,7 @@ public class TestGameState {
         assertTrue(turnManager.getCurrentTurn().getCurrentPlayer().getInventoryItems().size() == 0);
 
         //3de vlag
+
         movePlayerHandler.move(Direction.UP_RIGHT);
 
         pickUpItemHandler.pickUpItem(0);

@@ -1,6 +1,5 @@
 package be.kuleuven.swop.objectron.domain;
 
-
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;

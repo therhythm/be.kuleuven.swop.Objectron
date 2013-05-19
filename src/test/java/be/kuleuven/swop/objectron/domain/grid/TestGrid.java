@@ -194,7 +194,6 @@ public class TestGrid {
         assertTrue(aantal == 1);
     }
 
-
     @Test(expected = IllegalArgumentException.class)
     public void test_getInvalidSquare() {
         grid.getSquareAtPosition(new Position(grid.getDimension().getHeight() + 1, grid.getDimension().getWidth() + 1));

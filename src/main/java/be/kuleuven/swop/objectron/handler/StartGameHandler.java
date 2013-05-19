@@ -28,8 +28,7 @@ public class StartGameHandler {
         builder.buildItems();
         Grid grid = builder.buildGrid();
 
-        Game game = new RaceGame(playerNames, grid);// todo building the dependency graph the right way and inject it
-        // all
+        Game game = new RaceGame(playerNames, grid);// todo building the dependency graph the right way and inject it all
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(game));

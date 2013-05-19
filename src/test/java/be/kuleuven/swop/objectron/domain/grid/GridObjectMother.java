@@ -51,7 +51,6 @@ public class GridObjectMother {
     }
 
     // Contstruct a grid with specified walls and without powerfailures
-
     public static Grid gridWithSpecifiedWallsPowerFailures(GridBuilder builder, List<Position> wallPositions) throws
             GridTooSmallException {
         builder.initGrid(0);
@@ -70,7 +69,6 @@ public class GridObjectMother {
     }
 
     // Contstruct a grid with specified walls and without powerfailures
-
     public static Grid gridWithSpecifiedWallsPowerFailuresItems(GridBuilder builder,
                                                                 List<Position> wallPositions) throws
             GridTooSmallException {

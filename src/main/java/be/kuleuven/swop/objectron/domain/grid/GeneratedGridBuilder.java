@@ -158,6 +158,7 @@ public class GeneratedGridBuilder implements GridBuilder {
 
         for (Square square : squaresNotObstructed) {
             List<Double> distances = new ArrayList<>();
+
             for (Position pos : playerPositions) {
                 distances.add(dijkstra.getShortestDistance(squares[pos.getVIndex()][pos.getHIndex()], square));
             }
