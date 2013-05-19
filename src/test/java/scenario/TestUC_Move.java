@@ -79,7 +79,7 @@ public class TestUC_Move {
 
     @Test(expected = NotEnoughActionsException.class)
     public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
-        stateMock.getTurnManager().getCurrentTurn().reduceRemainingActions(Turn.ACTIONS_EACH_TURN);
+        stateMock.getTurnManager().getCurrentTurn().addPenalty(Turn.ACTIONS_EACH_TURN);
 
         movePlayerHandler.move(Direction.UP);
     }

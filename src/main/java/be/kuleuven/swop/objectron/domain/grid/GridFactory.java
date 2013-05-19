@@ -121,31 +121,31 @@ public class GridFactory {
 
     // construct a grid without power , walls or items
     public static Grid unpoweredGridWithoutWallsWithoutItems(Dimension dimension, List<Position> positions) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, positions);
+        GridBuilder builder = new GridBuilder(dimension, positions, 100);
         Grid g = builder.getGrid();
 
         // powerfailure on every square
-        for (int x = 0; x < dimension.getWidth(); x++) {
+        /*for (int x = 0; x < dimension.getWidth(); x++) {
             for (int y = 0; y < dimension.getHeight(); y++) {
                 g.getSquareAtPosition(new Position(x, y)).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
             }
-        }
+        }      */
         return g;
     }
 
     // construct a grid without power
     public static Grid unpoweredGrid(Dimension dimension, List<Position> positions) throws GridTooSmallException {
-        GridBuilder builder = new GridBuilder(dimension, positions);
+        GridBuilder builder = new GridBuilder(dimension, positions, 100);
         builder.buildWalls();
         builder.buildItems();
         Grid g = builder.getGrid();
 
         // powerfailure on every square
-        for (int x = 0; x < dimension.getWidth(); x++) {
+        /*for (int x = 0; x < dimension.getWidth(); x++) {
             for (int y = 0; y < dimension.getHeight(); y++) {
                 g.getSquareAtPosition(new Position(x, y)).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
             }
-        }
+        }        */
         return g;
     }
 }

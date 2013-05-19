@@ -11,11 +11,11 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
  * To change this template use File | Settings | File Templates.
  */
 public interface PowerState {
-    void newTurn(Turn currentTurn);
+   /* void newTurn(Turn currentTurn);
 
     void stepOn(MovementStrategy movementStrategy);
 
     void powerFailure(int turns, int actions);
 
-    void endAction();
+    void endAction();    */
 }

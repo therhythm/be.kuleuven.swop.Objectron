@@ -11,7 +11,7 @@ import java.util.*;
  * Time: 10:13
  * To change this template use File | Settings | File Templates.
  */
-public class PowerFailure {
+public class PowerFailure {     /*
 
     public static final int PF_PRIMARY_TURNS = 3;
     public static final int PF_PRIMARY_ACTIONS = 0;
@@ -127,5 +127,5 @@ public class PowerFailure {
 
     public void receiveTertiaryPowerFailure(){
         currentSquare.receivePowerFailure(PF_TERTIARY_TURNS, PF_TERTIARY_ACTIONS);
-    }
+    }      */
 }

@@ -74,7 +74,7 @@ public class TestSquare {
     @Test
     public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException, SquareOccupiedException {
         Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
-        otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
+      //  otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         movePlayerHandler.move(Direction.UP);
         assertNotEquals(player2, gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer());
     }
@@ -82,7 +82,7 @@ public class TestSquare {
     @Test
     public void test_action_loss_unpowered(){
         Square square = grid.getSquareAtPosition(new Position(5,4));
-        square.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
+     //   square.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
         gamestate.getTurnManager().getCurrentTurn().setMoved();
         gamestate.getTurnManager().endTurn();
         assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), 2);

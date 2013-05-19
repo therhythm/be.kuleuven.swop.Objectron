@@ -77,8 +77,7 @@ public class UseItemHandler extends Handler {
         }
 
         currentTurn.checkEnoughActions();
-        currentTurn.reduceRemainingActions(1);
-        game.endAction();
+        currentTurn.reduceAction();
         ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer().getCurrentSquare());
         currentTurn.getCurrentPlayer().useItem(game.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
         game.getTurnManager().getCurrentTurn().setCurrentItem(null);
@@ -99,7 +98,7 @@ public class UseItemHandler extends Handler {
         ItemDeployer deployer = new ThrowingItemDeployer(currentPlayer.getCurrentSquare(), direction, turnManager);
         currentPlayer.useItem(game.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
         game.getTurnManager().getCurrentTurn().setCurrentItem(null);
-        currentTurn.reduceRemainingActions(1);
+        currentTurn.reduceAction();
     }
 
     /**

@@ -63,7 +63,13 @@ public class Turn implements Observable<TurnObserver> {
         return hasMoved;
     }
 
-    public void reduceRemainingActions(int amount) {
+    public void reduceAction(){
+       actionsRemaining -= 1;
+       notifyActionReduced();
+       notifyObservers();
+    }
+
+    public void addPenalty(int amount) {
         if (actionsRemaining > amount) {
             actionsRemaining -= amount;
         } else {
@@ -71,13 +77,19 @@ public class Turn implements Observable<TurnObserver> {
             actionsRemaining = 0;
             hasMoved = true;
         }
-        notifyActionsReduced();
+        notifyPenaltyAdded();
         notifyObservers();
     }
 
-    private void notifyActionsReduced() {
+    private void notifyActionReduced() {
         for(TurnObserver observer : observers){
             observer.actionReduced();
+        }
+    }
+
+    private void notifyPenaltyAdded() {
+        for(TurnObserver observer : observers){
+            observer.penaltyAdded();
         }
     }
 

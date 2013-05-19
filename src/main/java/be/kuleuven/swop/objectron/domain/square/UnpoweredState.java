@@ -11,7 +11,7 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
  *         Time: 03:01
  */
 public class UnpoweredState implements PowerState {
-    public static final int ACTIONS_TO_REDUCE = 1;
+   /* public static final int ACTIONS_TO_REDUCE = 1;
 
     private Square context;
     private int remainingTurns = 0;
@@ -24,7 +24,7 @@ public class UnpoweredState implements PowerState {
     @Override
     public void newTurn(Turn currentTurn) {
         if (currentTurn.getCurrentPlayer().getCurrentSquare().equals(context)) {
-            currentTurn.reduceRemainingActions(ACTIONS_TO_REDUCE);
+            currentTurn.addPenalty(ACTIONS_TO_REDUCE);
         }
         remainingTurns--;
         checkTransition();
@@ -59,5 +59,5 @@ public class UnpoweredState implements PowerState {
     public void endAction() {
         remainingActions--;
         checkTransition();
-    }
+    }  */
 }

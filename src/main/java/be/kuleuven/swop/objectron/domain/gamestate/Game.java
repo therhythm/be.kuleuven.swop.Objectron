@@ -74,10 +74,6 @@ public abstract class Game implements SquareObserver, TurnSwitchObserver, Observ
         }
     }
 
-    public void endAction() {
-        gameGrid.endAction();
-    }
-
     @Override
     public void attach(GameObserver observer) {
         observers.add(observer);

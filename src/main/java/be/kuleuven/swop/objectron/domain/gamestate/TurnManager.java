@@ -79,6 +79,13 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     }
 
     @Override
+    public void penaltyAdded() {
+        for (TurnSwitchObserver observer : observers) {
+            observer.actionReduced();
+        }
+    }
+
+    @Override
     public void actionReduced() {
         for (TurnSwitchObserver observer : observers) {
             observer.actionReduced();

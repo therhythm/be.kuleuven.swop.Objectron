@@ -24,7 +24,7 @@ public class PlayerMovementStrategy implements MovementStrategy {
     @Override
     public void powerFailure(boolean hasLightMine) {
         if(hasLightMine){
-            turnManager.getCurrentTurn().reduceRemainingActions(POWERFAILURE_ACTION_REDUCTION);
+            turnManager.getCurrentTurn().addPenalty(POWERFAILURE_ACTION_REDUCTION);
         } else{
             //Todo (Peter) kan mss beter.
             //Ja van het moment een player niet gemoved had, werd er meteen een gameOverException gegooid.

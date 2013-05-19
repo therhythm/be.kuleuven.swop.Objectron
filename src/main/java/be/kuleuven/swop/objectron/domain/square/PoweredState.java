@@ -10,7 +10,7 @@ import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
  *         Time: 03:00
  */
 public class PoweredState implements PowerState {
-
+  /*
     private Square context;
 
     public PoweredState(Square context) {
@@ -37,6 +37,6 @@ public class PoweredState implements PowerState {
     @Override
     public void endAction() {
         // do nothing
-    }
+    }  */
 
 }

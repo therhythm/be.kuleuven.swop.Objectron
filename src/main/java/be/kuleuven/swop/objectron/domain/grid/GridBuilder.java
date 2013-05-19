@@ -61,6 +61,21 @@ public class GridBuilder {
         forceFieldArea = new ForceFieldArea();
     }
 
+    public GridBuilder(Dimension dimension, List<Position> positions, int powerFailureChance) throws GridTooSmallException {
+        if (!isValidDimension(dimension)) {
+            throw new GridTooSmallException("The grid needs to be at least " +
+                    MIN_GRID_HEIGHT + " rows by " +
+                    MIN_GRID_HEIGHT + " columns");
+        }
+        this.dimension = dimension;
+        this.playerPositions = positions;
+
+
+
+        initGrid(powerFailureChance);
+        forceFieldArea = new ForceFieldArea();
+    }
+
     public GridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException {
         if (!isValidDimension(dimension)) {
             throw new GridTooSmallException("The grid needs to be at least " +

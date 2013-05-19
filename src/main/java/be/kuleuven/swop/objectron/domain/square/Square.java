@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.effect.PrimaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -27,7 +28,7 @@ public class Square implements Observable<SquareObserver> {
     private final Position position;
 
     private Set<SquareObserver> observers = new HashSet<>();
-    private PowerState state;
+   // private PowerState state;
     private Map<Direction, Square> neighbours = new HashMap<>();
     private List<Item> items = new ArrayList<>();
     private List<Effect> effects = new ArrayList<>();
@@ -37,7 +38,7 @@ public class Square implements Observable<SquareObserver> {
 
     public Square(final Position position) {
         this.position = position;
-        this.state = new PoweredState(this);
+       // this.state = new PoweredState(this);
     }
 
     public Square(final Position position, int powerFailureChance) {
@@ -61,7 +62,7 @@ public class Square implements Observable<SquareObserver> {
         for(Obstruction obstruction : obstructions){
             obstruction.hit(movable.getMovementStrategy());
         }
-        state.stepOn(movable.getMovementStrategy());
+      //  state.stepOn(movable.getMovementStrategy());
 
         for(Effect effect : effects){
             effect.activate(movable, manager);
@@ -120,7 +121,7 @@ public class Square implements Observable<SquareObserver> {
     public String toString() {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
-
+     /*
     public void transitionState(PowerState newState) {
         this.state = newState;
     }
@@ -129,7 +130,7 @@ public class Square implements Observable<SquareObserver> {
     public void receivePowerFailure(int turns, int actions) {
         state.powerFailure(turns, actions);
         notifyPowerFailure();
-    }
+    }    */
 
     private boolean losingPower() {
         int r = (int) (Math.random() * 100);
@@ -138,18 +139,16 @@ public class Square implements Observable<SquareObserver> {
 
     public void newTurn(Turn currentTurn) {   //todo observer
         if (losingPower()) {
-            powerFailure = new PowerFailure(this);
-            powerFailure.receivePrimaryPowerFailure();
+            new PrimaryPowerFailure(this);
         }
-        state.newTurn(currentTurn);
     }
-
+         /*
     public void endAction(){
        state.endAction();
        if(powerFailure != null) {
             powerFailure.rotate();
        }
-    }
+    }   */
 
     @Override
     public void attach(SquareObserver observer) {
