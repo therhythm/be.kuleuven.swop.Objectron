@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ReturnFlagToBaseDeployer;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.viewmodel.EffectViewModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,6 +55,11 @@ public class CtfFinish implements Effect {
                 System.out.println("aantal verzamelde vlaggen: " + this.collectedFlags.size());
             }
         }
+    }
+
+    @Override
+    public EffectViewModel getViewModel() {
+        return new EffectViewModel("ctffinish");
     }
 
     private boolean checkWin() {

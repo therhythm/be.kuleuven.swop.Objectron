@@ -11,9 +11,7 @@ import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
-import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
-import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
-import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
+import be.kuleuven.swop.objectron.viewmodel.*;
 
 import java.awt.*;
 import java.util.*;
@@ -385,10 +383,19 @@ public class GameView implements GameObserver {
     }
 
     @Override
-    public void update(TurnViewModel vm, List<PlayerViewModel> players) {
+    public void update(TurnViewModel vm, List<PlayerViewModel> players, GridViewModel gridModel) {
         currentTurn = vm;
         for (PlayerViewModel p : players) {
             updatePlayer(p);
+        }
+
+        for(SquareViewModel sq: gridModel.getSquareViewModels()){
+            gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
+            for(EffectViewModel e:sq.getEffectViewModels()){
+                 if(e.getEffect().equals("powerfailure")){
+                     gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].put(SquareStates.POWERFAILURE.zIndex, SquareStates.POWERFAILURE);
+                 }
+            }
         }
 
         gui.repaint();
@@ -397,15 +404,12 @@ public class GameView implements GameObserver {
 
     @Override
     public void noPower(Position position) {
-        gameGrid[position.getVIndex()][position.getHIndex()].put(SquareStates.POWERFAILURE.zIndex,
-                SquareStates.POWERFAILURE);
-        gui.repaint();
+//nothing
     }
 
     @Override
     public void regainedPower(Position position) {
-        gameGrid[position.getVIndex()][position.getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
-        gui.repaint();
+    //nothing
     }
 
     @Override

@@ -15,6 +15,8 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.viewmodel.GridViewModel;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -166,5 +168,16 @@ public class Grid implements TurnSwitchObserver {
 
     public Dimension getDimension() {
         return dimension;
+    }
+
+    public GridViewModel getViewModel() {
+        List<SquareViewModel> squareViewModels = new ArrayList<>();
+        for(Square[] row: squares){
+            for(Square sq: row){
+                squareViewModels.add(sq.getViewModel());
+            }
+
+        }
+        return new GridViewModel(squareViewModels);
     }
 }

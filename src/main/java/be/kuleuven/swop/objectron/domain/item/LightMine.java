@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.effect.EffectVisitor;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.viewmodel.EffectViewModel;
 
 /**
  * @author : Peter Bosmans
@@ -22,6 +23,11 @@ public class LightMine implements Item, Effect {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public EffectViewModel getViewModel() {
+        return new EffectViewModel("name");
     }
 
     @Override

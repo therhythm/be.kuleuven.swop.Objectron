@@ -67,7 +67,7 @@ public abstract class Game implements SquareObserver, TurnSwitchObserver, Observ
             playerVMs.add(p.getPlayerViewModel());
         }
         for (GameObserver observer : observers) {
-            observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs);
+            observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs, getGrid().getViewModel());
         }
     }
 

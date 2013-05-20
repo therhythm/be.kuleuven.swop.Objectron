@@ -12,6 +12,8 @@ import be.kuleuven.swop.objectron.domain.item.effect.PrimaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.viewmodel.EffectViewModel;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.*;
 
@@ -147,5 +149,13 @@ public class Square implements Observable<SquareObserver> {
 
     public void removeObstruction(Obstruction obstruction) {
         this.obstructions.remove(obstruction);
+    }
+
+    public SquareViewModel getViewModel(){
+        List<EffectViewModel> effectViewModels = new ArrayList<>();
+        for(Effect e: getEffects()){
+            effectViewModels.add(e.getViewModel());
+        }
+        return new SquareViewModel(this.position, effectViewModels);
     }
 }
