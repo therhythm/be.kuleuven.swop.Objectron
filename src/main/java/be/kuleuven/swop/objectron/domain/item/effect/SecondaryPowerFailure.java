@@ -9,10 +9,10 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,18 +31,16 @@ public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
     private int actionsLeft = PF_SECONDARY_ACTIONS;
     private Square square;
 
-    public SecondaryPowerFailure(Square square, Direction direction) {
+    public SecondaryPowerFailure(Square square, Direction direction, Observable<TurnSwitchObserver> observable) {
         this.square = square;
 
-        if(square != null){
-            initiateTertiaryPowerFailure(direction);
+            initiateTertiaryPowerFailure(direction, observable);
             square.addEffect(this);
-            square.notifyPowerFailure();
-        }
+            observable.attach(this);
 
     }
 
-    private void initiateTertiaryPowerFailure(Direction direction) {
+    private void initiateTertiaryPowerFailure(Direction direction, Observable<TurnSwitchObserver> observable) {
         List<Direction> possibleDirections = new ArrayList<Direction>();
         possibleDirections.add(direction);
         possibleDirections.add(direction.previous());
@@ -51,7 +49,7 @@ public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
         int index = (int) Math.floor(Math.random() * possibleDirections.size());
         Square neighbour = square.getNeighbour((possibleDirections.get(index)));
         if(neighbour != null){
-            new TertiaryPowerFailure(neighbour);
+            new TertiaryPowerFailure(neighbour, observable);
         }
     }
 
@@ -72,7 +70,7 @@ public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void turnEnded(Turn newTurn) {
+    public void turnEnded(Observable<TurnSwitchObserver> observable) {
         //do nothing
     }
 
@@ -87,11 +85,11 @@ public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void actionHappened() {
+    public void actionHappened(Observable<TurnSwitchObserver> observable) {
         actionsLeft --;
         if(actionsLeft == 0){
             this.active = false;
-            square.notifyPowered();
+            observable.detach(this);
         }
     }
 }

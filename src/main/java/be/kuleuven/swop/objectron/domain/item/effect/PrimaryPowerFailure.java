@@ -10,13 +10,10 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
-
-import java.util.ArrayList;
-import java.util.List;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,16 +34,14 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
 
     private int turnsLeft = PF_PRIMARY_TURNS;
 
-    public PrimaryPowerFailure(Square square){
+    public PrimaryPowerFailure(Square square, Observable<TurnSwitchObserver> observable){
         this.square = square;
         square.addEffect(this);
-        square.notifyPowerFailure();
-
-
-        initiateSecondaryPowerFailure();
+        initiateSecondaryPowerFailure(observable);
+        observable.attach(this);
     }
 
-    private void initiateSecondaryPowerFailure(){
+    private void initiateSecondaryPowerFailure(Observable<TurnSwitchObserver> observable){
         if(Math.random() < 0.5){
             this.clockWise = true;
         }
@@ -56,14 +51,15 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
         for (Direction direction: Direction.values()){
            if(i == startSquare){
                if(square.getNeighbour(direction) != null){
-                    new SecondaryPowerFailure(square.getNeighbour(direction), direction);
+                    new SecondaryPowerFailure(square.getNeighbour(direction), direction, observable);
                }
                this.prevDirection = direction;
            }
+           i++;
         }
     }
 
-    private void rotate(){
+    private void rotate(Observable<TurnSwitchObserver> observable){
         rotateCounter ++;
         if(rotateCounter >= 2){
             rotateCounter = 0;
@@ -74,7 +70,7 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
 
             Square secondaryFailure =  square.getNeighbour(prevDirection);
             if(secondaryFailure != null){
-                new SecondaryPowerFailure(secondaryFailure, prevDirection);
+                new SecondaryPowerFailure(secondaryFailure, prevDirection, observable);
             }
 
         }
@@ -98,11 +94,11 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void turnEnded(Turn newTurn) {
+    public void turnEnded(Observable<TurnSwitchObserver> observable) {
         turnsLeft --;
         if(turnsLeft == 0){
             active = false;
-            square.notifyPowered();
+            observable.detach(this);
         }
     }
 
@@ -117,7 +113,7 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void actionHappened() {
-        rotate();
+    public void actionHappened(Observable<TurnSwitchObserver> observable) {
+        rotate(observable);
     }
 }

@@ -24,7 +24,7 @@ public interface GridBuilder {
 
     public void addObserver(SquareObserver observer);
 
-    public void initGrid(int powerFailureChance);
+    public void initGrid();
 
     public Grid buildGrid();
 

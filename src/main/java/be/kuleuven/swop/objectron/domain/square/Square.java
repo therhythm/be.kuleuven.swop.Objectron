@@ -22,17 +22,13 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Observable<SquareObserver> {
-    public static final int POWER_FAILURE_CHANCE = 1;
 
-    PowerFailure powerFailure;
     private final Position position;
 
     private Set<SquareObserver> observers = new HashSet<>();
-   // private PowerState state;
     private Map<Direction, Square> neighbours = new HashMap<>();
     private List<Item> items = new ArrayList<>();
     private List<Effect> effects = new ArrayList<>();
-    private int powerFailureChance = POWER_FAILURE_CHANCE;
     private Set<Obstruction> obstructions = new HashSet<>();
 
 
@@ -40,10 +36,6 @@ public class Square implements Observable<SquareObserver> {
         this.position = position;
     }
 
-    public Square(final Position position, int powerFailureChance) {
-        this(position);
-        this.powerFailureChance = powerFailureChance;
-    }
 
     public void addNeighbour(Direction direction, Square neighbour) {
         neighbours.put(direction, neighbour);
@@ -123,15 +115,10 @@ public class Square implements Observable<SquareObserver> {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
 
-    private boolean losingPower() {
-        int r = (int) (Math.random() * 100);
-        return r < powerFailureChance;
-    }
+
 
     public void newTurn(Turn currentTurn) {   //todo observer
-        if (losingPower()) {
-            new PrimaryPowerFailure(this);
-        }
+
     }
 
     @Override
@@ -142,19 +129,6 @@ public class Square implements Observable<SquareObserver> {
     @Override
     public void detach(SquareObserver observer) {
         observers.remove(observer);
-    }
-
-    public void notifyPowerFailure() {
-        for (SquareObserver observer : observers) {
-            observer.lostPower(this.position);
-        }
-    }
-
-    public void notifyPowered() {
-        powerFailure = null;
-        for (SquareObserver observer : observers) {
-            observer.regainedPower(this.position);
-        }
     }
 
     public void notifyItemPlaced(Item item) {

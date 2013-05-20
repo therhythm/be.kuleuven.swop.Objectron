@@ -74,13 +74,13 @@ public class FileGridBuilder implements GridBuilder {
     }
 
     @Override
-    public void initGrid(int powerFailureChance) {
+    public void initGrid() {
         dimension = new Dimension(input.length - 2, input.length - 2);
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Position pos = new Position(horizontal, vertical);
-                squares[vertical][horizontal] = new Square(pos, powerFailureChance);
+                squares[vertical][horizontal] = new Square(pos);
             }
         }
         setupNeighbours();
@@ -94,7 +94,7 @@ public class FileGridBuilder implements GridBuilder {
             positions.add(playerPositions.get(i));
         }
 
-        return new Grid(squares, walls, dimension, forceFieldArea, positions);
+        return new Grid(squares, walls, dimension, forceFieldArea, positions, GeneratedGridBuilder.POWER_FAILURE_CHANCE);
     }
 
     private void interpretInput(char[][] input) {

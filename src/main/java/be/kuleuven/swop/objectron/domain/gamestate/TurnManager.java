@@ -3,9 +3,7 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author : Nik Torfs
@@ -50,14 +48,13 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     }
 
     public boolean checkWin() {
-        if (getPlayers().size() <= 1)
-            return true;
-        return false;
+        return getPlayers().size() <= 1;
     }
 
     private void notifyObservers() {
-        for (TurnSwitchObserver observer : observers) {
-            observer.turnEnded(currentTurn);
+        Set<TurnSwitchObserver> copyOfSet = new HashSet<>(observers);
+        for (TurnSwitchObserver observer: copyOfSet) {
+            observer.turnEnded(this);
         }
     }
 
@@ -87,9 +84,10 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
 
     @Override
     public void actionReduced() {
-        for (TurnSwitchObserver observer : observers) {
+        Set<TurnSwitchObserver> copyOfSet = new HashSet<>(observers);
+        for (TurnSwitchObserver observer : copyOfSet) {
             observer.actionReduced();
-            observer.actionHappened();
+            observer.actionHappened(this);
         }
     }
 }

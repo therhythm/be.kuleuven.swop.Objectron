@@ -8,10 +8,10 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,10 +27,10 @@ public class TertiaryPowerFailure implements Effect, TurnSwitchObserver {
     private boolean active = true;
     private Square square;
 
-    public TertiaryPowerFailure(Square square) {
+    public TertiaryPowerFailure(Square square, Observable<TurnSwitchObserver> observable) {
         this.square = square;
-        this.square.notifyPowerFailure();
         this.square.addEffect(this);
+        observable.attach(this);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class TertiaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void turnEnded(Turn newTurn) {
+    public void turnEnded(Observable<TurnSwitchObserver> observable) {
         //do nothing
     }
 
@@ -66,11 +66,11 @@ public class TertiaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void actionHappened() {
+    public void actionHappened(Observable<TurnSwitchObserver> observable) {
         actionsLeft --;
         if(actionsLeft == 0){
             this.active = false;
-            square.notifyPowered();
+            observable.detach(this);
         }
     }
 }

@@ -11,7 +11,6 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.item.effect.PrimaryPowerFailure;
-import be.kuleuven.swop.objectron.domain.square.PowerFailure;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -78,7 +77,7 @@ public class TestSquare {
     @Test
     public void test_action_loss_unpowered(){
         Square square = grid.getSquareAtPosition(new Position(5,4));
-        new PrimaryPowerFailure(square);
+        new PrimaryPowerFailure(square, gamestate.getTurnManager());
         gamestate.getTurnManager().getCurrentTurn().setMoved();
         gamestate.getTurnManager().endTurn();
         assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), 2);

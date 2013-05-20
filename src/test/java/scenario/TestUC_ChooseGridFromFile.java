@@ -1,6 +1,7 @@
 package scenario;
 
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -28,7 +29,7 @@ public class TestUC_ChooseGridFromFile {
 
     @Test
     public void test_basic_flow() {
-        gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
+        gridBuilder.initGrid();
         gridBuilder.buildWalls();
         Grid grid = gridBuilder.buildGrid();
 

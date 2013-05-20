@@ -103,7 +103,7 @@ public abstract class Game implements SquareObserver, TurnSwitchObserver, Observ
     }
 
     @Override
-    public void turnEnded(Turn newTurn) {
+    public void turnEnded(Observable<TurnSwitchObserver> observable) {
         //todo UI message?
     }
 
@@ -118,7 +118,7 @@ public abstract class Game implements SquareObserver, TurnSwitchObserver, Observ
     }
 
     @Override
-    public void actionHappened() {
+    public void actionHappened(Observable<TurnSwitchObserver> observable) {
         //donothing
     }
 }

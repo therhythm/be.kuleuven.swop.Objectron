@@ -38,6 +38,7 @@ public class GeneratedGridBuilder implements GridBuilder {
     public static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
     private static final int IDENTITY_DISK_PLAYER_AREA = 7;
     private static final int LIGHT_MINE_PLAYER_AREA = 5;
+    public static final int POWER_FAILURE_CHANCE = 1;
 
     private Dimension dimension;
     private List<Position> playerPositions;
@@ -58,7 +59,7 @@ public class GeneratedGridBuilder implements GridBuilder {
         forceFieldArea = new ForceFieldArea();
 
         initPlayerPositions(nbPlayers);
-        initGrid(Square.POWER_FAILURE_CHANCE);
+        initGrid();
     }
 
 
@@ -123,12 +124,12 @@ public class GeneratedGridBuilder implements GridBuilder {
     }
 
     @Override
-    public void initGrid(int powerFailureChance) {
+    public void initGrid() {
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Position pos = new Position(horizontal, vertical);
-                squares[vertical][horizontal] = new Square(pos, powerFailureChance);
+                squares[vertical][horizontal] = new Square(pos);
             }
         }
         setupNeighbours();
@@ -136,7 +137,7 @@ public class GeneratedGridBuilder implements GridBuilder {
 
     @Override
     public Grid buildGrid() {
-        return new Grid(squares, walls, dimension, forceFieldArea, playerPositions);
+        return new Grid(squares, walls, dimension, forceFieldArea, playerPositions, POWER_FAILURE_CHANCE);
     }
 
     private ArrayList<Square> getSquaresNotObstructed() {
@@ -380,16 +381,6 @@ public class GeneratedGridBuilder implements GridBuilder {
         return true;
     }
 
-
-    private List<Square> getAllNeighboursFromSquare(Square square) {
-        List<Square> neighbourSquares = new ArrayList<>();
-        for (Direction d : Direction.values()) {
-            if (square.getNeighbour(d) != null) {
-                neighbourSquares.add(square.getNeighbour(d));
-            }
-        }
-        return neighbourSquares;
-    }
 
     private void setupNeighbours() {
         for (int vertical = 0; vertical < dimension.getHeight(); vertical++) {

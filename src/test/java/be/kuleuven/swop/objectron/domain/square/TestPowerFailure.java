@@ -75,13 +75,13 @@ public class TestPowerFailure implements SquareObserver {
         TurnManager turnManager = state.getTurnManager();
         turnManager.getCurrentTurn().setMoved();
         turnManager.endTurn();
-        new PrimaryPowerFailure(currentSquare);
+        new PrimaryPowerFailure(currentSquare, state.getTurnManager());
         turnManager.getCurrentTurn().setMoved();
         turnManager.endTurn();
         assertEquals(Turn.ACTIONS_EACH_TURN - 1, turnManager.getCurrentTurn().getActionsRemaining());
         turnManager.getCurrentTurn().setMoved();
         turnManager.endTurn();
-        new PrimaryPowerFailure(currentSquare);
+        new PrimaryPowerFailure(currentSquare, state.getTurnManager());
         turnManager.getCurrentTurn().setMoved();
         turnManager.endTurn();
         assertEquals(Turn.ACTIONS_EACH_TURN - 1, state.getTurnManager().getCurrentTurn().getActionsRemaining());
@@ -89,9 +89,9 @@ public class TestPowerFailure implements SquareObserver {
 
     @Test
     public void testStepOnUnpoweredSquare() throws GameOverException, InvalidMoveException, NotEnoughActionsException, SquareOccupiedException {
-      new PrimaryPowerFailure(currentSquare.getNeighbour(Direction.UP));
+      new PrimaryPowerFailure(currentSquare.getNeighbour(Direction.UP), state.getTurnManager());
         assertEquals(player, state.getTurnManager().getCurrentTurn().getCurrentPlayer());
-        new PrimaryPowerFailure(currentSquare.getNeighbour(Direction.UP));
+        new PrimaryPowerFailure(currentSquare.getNeighbour(Direction.UP), state.getTurnManager());
 
         assertEquals(player, state.getTurnManager().getCurrentTurn().getCurrentPlayer());
         movePlayerHandler.move(Direction.UP);
@@ -102,7 +102,7 @@ public class TestPowerFailure implements SquareObserver {
     public void testStepOnActiveUnpowered() throws NotEnoughActionsException, SquareOccupiedException,
             InvalidMoveException, GameOverException {
         new LightMine().place(currentSquare.getNeighbour(Direction.UP));
-        new PrimaryPowerFailure(currentSquare.getNeighbour(Direction.UP));
+        new PrimaryPowerFailure(currentSquare.getNeighbour(Direction.UP), state.getTurnManager());
         int remainingActionsAfterMove = state.getTurnManager().getCurrentTurn().getActionsRemaining() - 1;
         movePlayerHandler.move(Direction.UP);
 
