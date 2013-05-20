@@ -8,6 +8,9 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.effect.PrimaryPowerFailure;
+import be.kuleuven.swop.objectron.domain.item.effect.SecondaryPowerFailure;
+import be.kuleuven.swop.objectron.domain.item.effect.TertiaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
@@ -391,8 +394,8 @@ public class GameView implements GameObserver {
 
         for(SquareViewModel sq: gridModel.getSquareViewModels()){
             gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
-            for(EffectViewModel e:sq.getEffectViewModels()){
-                 if(e.getEffect().equals("powerfailure")){
+            for(Class<?> c:sq.getEffectViewModels()){
+                 if(c.equals(PrimaryPowerFailure.class) || c.equals(SecondaryPowerFailure.class) || c.equals(TertiaryPowerFailure.class)){
                      gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].put(SquareStates.POWERFAILURE.zIndex, SquareStates.POWERFAILURE);
                  }
             }

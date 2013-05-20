@@ -8,11 +8,9 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.effect.PrimaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import be.kuleuven.swop.objectron.viewmodel.EffectViewModel;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.*;
@@ -143,6 +141,10 @@ public class Square implements Observable<SquareObserver> {
         return Collections.unmodifiableList(effects);
     }
 
+    public void removeEffect(Effect e){
+        effects.remove(e);
+    }
+
     public void addObstruction(Obstruction obstruction) {
         this.obstructions.add(obstruction);
     }
@@ -152,10 +154,10 @@ public class Square implements Observable<SquareObserver> {
     }
 
     public SquareViewModel getViewModel(){
-        List<EffectViewModel> effectViewModels = new ArrayList<>();
+        List<Class<?>> effects = new ArrayList<>();
         for(Effect e: getEffects()){
-            effectViewModels.add(e.getViewModel());
+            effects.add(e.getClass());
         }
-        return new SquareViewModel(this.position, effectViewModels);
+        return new SquareViewModel(this.position, effects);
     }
 }

@@ -179,20 +179,6 @@ public class TestPowerFailure implements SquareObserver {
         assertEquals(true, regainedPower);     */
     }
 
-
-    @Override
-    public void lostPower(Position position) {
-        powerLossCounter++;
-        if (position.getHIndex() == 5 && position.getVIndex() == 5) {
-            powerLoss = true;
-        }
-    }
-
-    @Override
-    public void regainedPower(Position position) {
-        regainedPower = true;
-    }
-
     @Override
     public void itemPlaced(Item item, Position position) {
         //irrelevant

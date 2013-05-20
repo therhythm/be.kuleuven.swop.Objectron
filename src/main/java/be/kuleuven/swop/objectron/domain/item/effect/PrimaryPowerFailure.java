@@ -14,7 +14,6 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Observable;
-import be.kuleuven.swop.objectron.viewmodel.EffectViewModel;
 
 /**
  * Created with IntelliJ IDEA.
@@ -90,16 +89,6 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public EffectViewModel getViewModel() {
-        if(active){
-            return new EffectViewModel("powerfailure");
-        } else {
-            return new EffectViewModel("inactivePF");
-        }
-
-    }
-
-    @Override
     public void accept(EffectVisitor visitor) {
        //do nothing
     }
@@ -110,6 +99,7 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
         if(turnsLeft == 0){
             active = false;
             observable.detach(this);
+            square.removeEffect(this);
         }
     }
 

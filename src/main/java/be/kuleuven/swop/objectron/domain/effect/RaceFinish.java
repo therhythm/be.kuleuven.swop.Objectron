@@ -4,7 +4,6 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
-import be.kuleuven.swop.objectron.viewmodel.EffectViewModel;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,8 +35,4 @@ public class RaceFinish implements Effect {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public EffectViewModel getViewModel() {
-        return new EffectViewModel("racefinish");
-    }
 }

@@ -4,7 +4,6 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.viewmodel.EffectViewModel;
 
 /**
  * @author : Kasper Vervaecke
@@ -38,11 +37,6 @@ public class Teleporter implements Effect {
     @Override
     public void accept(EffectVisitor visitor) {
         visitor.visitTeleporter();
-    }
-
-    @Override
-    public EffectViewModel getViewModel() {
-        return new EffectViewModel("teleporter");
     }
 
     public void setDestination(Teleporter destination) {

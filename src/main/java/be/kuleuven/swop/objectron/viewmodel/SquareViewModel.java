@@ -13,9 +13,9 @@ import java.util.List;
  */
 public class SquareViewModel {
     private Position position;
-    private List<EffectViewModel> effectViewModels;
+    private List<Class<?>> effectViewModels;
 
-    public SquareViewModel(Position position, List<EffectViewModel> effectViewModels){
+    public SquareViewModel(Position position, List<Class<?>> effectViewModels){
         this.effectViewModels = effectViewModels;
         this.position = position;
     }
@@ -24,7 +24,7 @@ public class SquareViewModel {
         return position;
     }
 
-    public List<EffectViewModel> getEffectViewModels() {
+    public List<Class<?>> getEffectViewModels() {
         return effectViewModels;
     }
 }

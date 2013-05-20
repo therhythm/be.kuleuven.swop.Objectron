@@ -81,20 +81,6 @@ public abstract class Game implements SquareObserver, TurnSwitchObserver, Observ
         observers.remove(observer);
     }
 
-    @Override
-    public void lostPower(Position position) {
-        for (GameObserver observer : observers) {
-            observer.noPower(position);
-        }
-    }
-
-    @Override
-    public void regainedPower(Position position) {
-        for (GameObserver observer : observers) {
-            observer.regainedPower(position);
-        }
-    }
-
     @Override //todo itemviewmodel
     public void itemPlaced(Item item, Position position) {
         for (GameObserver observer : observers) {
