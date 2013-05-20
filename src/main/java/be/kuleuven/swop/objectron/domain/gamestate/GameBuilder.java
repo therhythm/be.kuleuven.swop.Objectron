@@ -1,12 +1,18 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
+import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Position;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,13 +28,13 @@ public abstract class GameBuilder {
     protected List<String> playerNames;
     protected Dimension dimension;
 
-    public GameBuilder(List<String> playerNames, Dimension dimension){
+    public GameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException {
         this.playerNames = playerNames;
         this.dimension = dimension;
         this.builder = new GeneratedGridBuilder(dimension, playerNames.size());
     }
 
-    public void withFile(String file) {
+    public void withFile(String file) throws InvalidFileException {
         builder = new FileGridBuilder(file);
     }
 
@@ -50,10 +56,17 @@ public abstract class GameBuilder {
 
         Grid grid = builder.buildGrid();
 
-        List<Player> players = initializePLayers();
+        List<Player> players = initializePlayers(grid.getPlayerPositions());
 
-
+        return new Game(players, grid);
     }
 
-    protected abstract List<Player> initializePLayers();
+    protected List<Player> initializePlayers(List<Square> playerPositions){
+        List<Player> players = new ArrayList<>();
+        for (int i = 0; i < playerNames.size(); i++) {
+            players.add(new Player(playerNames.get(i), playerPositions.get(i)));
+        }
+
+        return players;
+    }
 }

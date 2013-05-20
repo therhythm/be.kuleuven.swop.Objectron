@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.gamestate.*;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -9,6 +10,7 @@ import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,7 @@ import java.util.List;
 public class StartGameHandler {
 
     public GameStartViewModel startNewRaceGame(List<String> playerNames,
-                                               Dimension dimension, String file) throws GridTooSmallException {
+                                               Dimension dimension, String file) throws GridTooSmallException, InvalidFileException {
         GameBuilder gameBuilder = new RaceGameBuilder(playerNames, dimension);
         if(!file.isEmpty()){
             gameBuilder.withFile(file);
@@ -47,7 +49,7 @@ public class StartGameHandler {
     }
 
     public GameStartViewModel startNewCTFGame(List<String> playerNames,
-                                              Dimension dimension, String file) throws GridTooSmallException {
+                                              Dimension dimension, String file) throws GridTooSmallException, InvalidFileException {
         GameBuilder gameBuilder = new CTFGameBuilder(playerNames, dimension);
         if(!file.isEmpty()){
             gameBuilder.withFile(file);
