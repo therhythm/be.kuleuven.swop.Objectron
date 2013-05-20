@@ -2,7 +2,6 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
-import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -20,19 +19,16 @@ import java.util.Map;
  *         Date: 11/05/13
  *         Time: 15:49
  */
-public class FileGridBuilder implements GridBuilder {
-    private Dimension dimension;
-    private List<Wall> walls;
+public class FileGridBuilder extends GridBuilder {
     private List<Square> wallSegments;
-    private Square[][] squares;
-    private ForceFieldArea forceFieldArea;
     private char[][] input;
+
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
     public FileGridBuilder(String file) throws IOException {
+        super();
         GridFileReader fileReader = new GridFileReader();
         input = fileReader.readGridFile(file);
-        forceFieldArea = new ForceFieldArea();
     }
 
     @Override
@@ -55,12 +51,7 @@ public class FileGridBuilder implements GridBuilder {
 
     @Override
     public void buildWalls(List<Wall> walls) {
-        //Building pre-defined walls is not possible with file-generated grids.
-    }
-
-    @Override
-    public void buildItems() {
-
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -88,12 +79,16 @@ public class FileGridBuilder implements GridBuilder {
 
     @Override
     public Grid buildGrid() {
+        return new Grid(squares, walls, dimension, forceFieldArea, getPlayerPositions());
+    }
+
+    @Override
+    protected List<Position> getPlayerPositions() {
         List<Position> positions = new ArrayList<>();
         for (int i = 1; i < playerPositions.size(); i++) {
             positions.add(playerPositions.get(i));
         }
-
-        return new Grid(squares, walls, dimension, forceFieldArea, positions);
+        return positions;
     }
 
     private void interpretInput(char[][] input) {
@@ -124,12 +119,5 @@ public class FileGridBuilder implements GridBuilder {
                 }
             }
         }
-    }
-
-    private boolean isValidPosition(Position pos) {
-        return pos.getHIndex() > -1
-                && pos.getHIndex() < dimension.getWidth()
-                && pos.getVIndex() > -1
-                && pos.getVIndex() < dimension.getHeight();
     }
 }

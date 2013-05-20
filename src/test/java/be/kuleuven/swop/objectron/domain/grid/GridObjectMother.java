@@ -140,7 +140,8 @@ public class GridObjectMother {
         // powerfailure on every square
         for (int x = 0; x < g.getDimension().getWidth(); x++) {
             for (int y = 0; y < g.getDimension().getHeight(); y++) {
-                g.getSquareAtPosition(new Position(x, y)).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
+                g.getSquareAtPosition(new Position(x, y)).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS,
+                        PowerFailure.PF_PRIMARY_ACTIONS);
             }
         }
         return g;

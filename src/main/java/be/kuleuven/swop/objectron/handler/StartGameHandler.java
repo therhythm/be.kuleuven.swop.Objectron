@@ -28,7 +28,8 @@ public class StartGameHandler {
         builder.buildItems();
         Grid grid = builder.buildGrid();
 
-        Game game = new RaceGame(playerNames, grid);// todo building the dependency graph the right way and inject it all
+        Game game = new RaceGame(playerNames, grid);// todo building the dependency graph the right way and inject it
+        // all
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(game));
@@ -68,6 +69,7 @@ public class StartGameHandler {
         PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
         PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
 
-        return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel(), game.getGrid().getWalls(), game.getGrid().getItems(), game.getGrid().getEffects(), game);
+        return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel
+                (), game.getGrid().getWalls(), game.getGrid().getItems(), game.getGrid().getEffects(), game);
     }
 }

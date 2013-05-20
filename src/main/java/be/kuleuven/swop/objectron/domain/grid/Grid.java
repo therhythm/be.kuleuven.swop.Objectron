@@ -31,20 +31,6 @@ public class Grid implements TurnSwitchObserver {
     private ForceFieldArea forceFieldArea;
     private List<Position> playerPositions;
 
-    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension) {
-        this.squares = squares;
-        this.walls = walls;
-        this.dimension = dimension;
-        this.forceFieldArea = new ForceFieldArea();
-    }
-
-    public Grid(Square[][] squares, List<Wall> walls, Dimension dimension, ForceFieldArea forceFieldArea) {
-        this.squares = squares;
-        this.walls = walls;
-        this.dimension = dimension;
-        this.forceFieldArea = forceFieldArea;
-    }
-
     public Grid(Square[][] squares, List<Wall> walls, Dimension dimension, ForceFieldArea forceFieldArea,
                 List<Position> playerPositions) {
         this.squares = squares;

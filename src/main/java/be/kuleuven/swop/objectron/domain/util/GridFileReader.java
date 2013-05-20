@@ -19,23 +19,28 @@ public class GridFileReader {
     final static Charset ENCODING = StandardCharsets.UTF_8;
 
     public char[][] readGridFile(String fileName) throws IOException {
+        //todo change , doesnt work with other partitions (ask Thomas)
         Path path = Paths.get(fileName);
-        try {
-            BufferedReader reader = Files.newBufferedReader(path, ENCODING);
-            String line;
-            ArrayList<String> temp = new ArrayList<>();
-            while ((line = reader.readLine()) != null) {
-                temp.add(line);
+
+        BufferedReader reader = Files.newBufferedReader(path, ENCODING);
+        String line;
+        int lineLength = 0;
+        ArrayList<String> temp = new ArrayList<>();
+        while ((line = reader.readLine()) != null) {
+            temp.add(line);
+            if (lineLength != 0 && line.length() != 0 && line.length() != lineLength) {
+                //todo exception
+            } else {
+                lineLength = line.length();
             }
-            //TODO: is a grid always square?
-            char[][] inputArray = new char[temp.size()][temp.size()];
-            for (int i = 0; i < temp.size(); i++) {
-                char[] chars = temp.get(i).toCharArray();
-                inputArray[i] = chars;
-            }
-            return inputArray;
-        } catch (IOException e) {
-            throw e;
+
         }
+
+        char[][] inputArray = new char[temp.size()][lineLength];
+        for (int i = 0; i < temp.size(); i++) {
+            char[] chars = temp.get(i).toCharArray();
+            inputArray[i] = chars;
+        }
+        return inputArray;
     }
 }
