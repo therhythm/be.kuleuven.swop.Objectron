@@ -29,21 +29,12 @@ public class TestDijkstra {
 
     @Before
     public void setUp() throws GridTooSmallException {
-        List<Position> positions = new ArrayList<>();
-        Position p1Pos = new Position(1, 8);
-        Position p2Pos = new Position(3, 8);
-        positions.add(p1Pos);
-        positions.add(p2Pos);
-
-        Dimension dimension = new Dimension(10, 10);
-
         ArrayList<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(6, 6));
         wallPositions.add(new Position(5, 6));
         wallPositions.add(new Position(4, 6));
 
-        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
+        GridBuilder builder = new GeneratedGridBuilder(new Dimension(10, 10), 2);
         grid = GridObjectMother.gridWithSpecifiedWallsPowerFailuresItems(builder, wallPositions);
     }
 
@@ -54,7 +45,6 @@ public class TestDijkstra {
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
         Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
-        System.out.println("Distance: " + distance);
         assertTrue(distance == 5);
     }
 
@@ -65,7 +55,6 @@ public class TestDijkstra {
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
         Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
-        System.out.println("Distance: " + distance);
         assertTrue(distance == 5);
     }
 
@@ -76,7 +65,6 @@ public class TestDijkstra {
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
         Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
-        System.out.println("Distance: " + distance);
         assertTrue(distance == 6);
     }
 
@@ -87,7 +75,6 @@ public class TestDijkstra {
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
         Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
-        System.out.println("Distance: " + distance);
         assertTrue(distance == 3);
     }
 
@@ -98,8 +85,7 @@ public class TestDijkstra {
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
 
         Double distance = dijkstra.getShortestDistance(startSquare, destinationSquare);
-        System.out.println("Distance: " + distance);
-        assertTrue(dijkstra.getShortestDistance(startSquare, destinationSquare) == 4);
+        assertTrue(distance == 4);
     }
 
 }
