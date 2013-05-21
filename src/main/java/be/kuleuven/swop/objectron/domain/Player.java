@@ -42,6 +42,7 @@ public class Player implements Movable, Obstruction {
         return currentSquare;
     }
 
+    //todo mag weg?
     public Square getInitialSquare() {
         return initialSquare;
     }
@@ -83,6 +84,7 @@ public class Player implements Movable, Obstruction {
         newPosition.stepOn(this, manager);
     }
 
+    //todo, mag weg?
     public void teleport(Square destination) {
         isTeleporting = true;
         lightTrail.expand(currentSquare);
@@ -145,6 +147,7 @@ public class Player implements Movable, Obstruction {
         return result;
     }
 
+    //todo mag weg?
     public boolean isTeleporting() {
         return isTeleporting;
     }
