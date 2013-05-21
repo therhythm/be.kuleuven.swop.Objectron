@@ -2,10 +2,7 @@ package scenario;
 
 import be.kuleuven.swop.objectron.domain.Inventory;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
-import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
+import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
@@ -41,7 +38,7 @@ public class TestUC_pick_up_item {
     private Game gameState;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, FileInvalidException {
         Dimension dimension = new Dimension(10, 10);
 
         List<Position> positions = new ArrayList<>();

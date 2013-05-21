@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.exception.FileInvalidException;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.square.PowerFailure;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -16,7 +17,7 @@ import java.util.List;
  *         Time: 21:22
  */
 public class GridObjectMother {
-    public static Grid normalGrid(GridBuilder builder, SquareObserver observer) throws GridTooSmallException {
+    public static Grid normalGrid(GridBuilder builder, SquareObserver observer) throws GridTooSmallException, FileInvalidException {
         builder.initGrid(Square.POWER_FAILURE_CHANCE);
         builder.buildWalls();
         builder.buildItems();
@@ -26,7 +27,7 @@ public class GridObjectMother {
 
 
     // Contstruct a grid without walls and powerfailures
-    public static Grid gridWithoutWallsPowerFailures(GridBuilder builder) throws GridTooSmallException {
+    public static Grid gridWithoutWallsPowerFailures(GridBuilder builder) throws GridTooSmallException, FileInvalidException {
         builder.initGrid(0);
         builder.buildItems();
         return builder.buildGrid();
@@ -35,7 +36,7 @@ public class GridObjectMother {
     // Contstruct a grid with specified walls and without powerfailures and Items
     public static Grid gridWithSpecifiedWallsWithoutItemsAndPowerFailures(GridBuilder builder,
                                                                           List<Position> wallPositions) throws
-            GridTooSmallException {
+            GridTooSmallException, FileInvalidException {
         builder.initGrid(0);
         List<Wall> walls = new ArrayList<>();
 
@@ -52,7 +53,7 @@ public class GridObjectMother {
 
     // Contstruct a grid with specified walls and without powerfailures
     public static Grid gridWithSpecifiedWallsPowerFailures(GridBuilder builder, List<Position> wallPositions) throws
-            GridTooSmallException {
+            GridTooSmallException, FileInvalidException {
         builder.initGrid(0);
         List<Wall> walls = new ArrayList<Wall>();
 
@@ -71,7 +72,7 @@ public class GridObjectMother {
     // Contstruct a grid with specified walls and without powerfailures
     public static Grid gridWithSpecifiedWallsPowerFailuresItems(GridBuilder builder,
                                                                 List<Position> wallPositions) throws
-            GridTooSmallException {
+            GridTooSmallException, FileInvalidException {
         builder.initGrid(0);
         List<Wall> walls = new ArrayList<Wall>();
 
@@ -87,7 +88,7 @@ public class GridObjectMother {
     }
 
     // Contstruct a grid without powerfailures
-    public static Grid gridWithoutPowerFailures(GridBuilder builder) throws GridTooSmallException {
+    public static Grid gridWithoutPowerFailures(GridBuilder builder) throws GridTooSmallException, FileInvalidException {
         builder.initGrid(0);
         builder.buildItems();
         builder.buildWalls();
@@ -95,13 +96,13 @@ public class GridObjectMother {
     }
 
     // Contstruct a grid without walls, items and powerfailures
-    public static Grid gridWithoutWallsItemsPowerFailures(GridBuilder builder) throws GridTooSmallException {
+    public static Grid gridWithoutWallsItemsPowerFailures(GridBuilder builder) throws GridTooSmallException, FileInvalidException {
         builder.initGrid(0);
         return builder.buildGrid();
     }
 
     //construct a grid without walls
-    public static Grid gridWithoutWalls(GridBuilder builder) throws GridTooSmallException {
+    public static Grid gridWithoutWalls(GridBuilder builder) throws GridTooSmallException, FileInvalidException {
         builder.initGrid(Square.POWER_FAILURE_CHANCE);
         builder.buildItems();
         return builder.buildGrid();
@@ -109,14 +110,14 @@ public class GridObjectMother {
 
 
     //construct a grid without items
-    public static Grid gridWithoutItems(GridBuilder builder) throws GridTooSmallException {
+    public static Grid gridWithoutItems(GridBuilder builder) throws GridTooSmallException, FileInvalidException {
         builder.initGrid(Square.POWER_FAILURE_CHANCE);
         builder.buildWalls();
         return builder.buildGrid();
     }
 
     // construct a grid without power , walls or items
-    public static Grid unpoweredGridWithoutWallsWithoutItems(GridBuilder builder) throws GridTooSmallException {
+    public static Grid unpoweredGridWithoutWallsWithoutItems(GridBuilder builder) throws GridTooSmallException, FileInvalidException {
         builder.initGrid(Square.POWER_FAILURE_CHANCE);
         Grid g = builder.buildGrid();
 
@@ -131,7 +132,7 @@ public class GridObjectMother {
     }
 
     // construct a grid without power
-    public static Grid unpoweredGrid(GridBuilder builder) throws GridTooSmallException {
+    public static Grid unpoweredGrid(GridBuilder builder) throws GridTooSmallException, FileInvalidException {
         builder.initGrid(Square.POWER_FAILURE_CHANCE);
         builder.buildWalls();
         builder.buildItems();

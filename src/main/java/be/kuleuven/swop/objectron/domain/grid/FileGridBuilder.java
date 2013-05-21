@@ -2,6 +2,8 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.exception.FileInvalidException;
+import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -22,11 +24,13 @@ import java.util.Map;
 public class FileGridBuilder extends GridBuilder {
     private List<Square> wallSegments;
     private char[][] input;
+    private int nbPlayers;
 
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
-    public FileGridBuilder(String file) throws IOException {
+    public FileGridBuilder(String file, int nbPlayers) throws IOException {
         super();
+        this.nbPlayers = nbPlayers;
         GridFileReader fileReader = new GridFileReader();
         input = fileReader.readGridFile(file);
     }
@@ -64,7 +68,7 @@ public class FileGridBuilder extends GridBuilder {
     }
 
     @Override
-    public void initGrid(int powerFailureChance) {
+    public void initGrid(int powerFailureChance) throws FileInvalidException {
         dimension = new Dimension(input.length - 2, input.length - 2);
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
@@ -75,7 +79,41 @@ public class FileGridBuilder extends GridBuilder {
         }
         setupNeighbours();
         interpretInput(input);
+        validateFile();
     }
+
+    private void validateFile() throws FileInvalidException {
+        checkPaths();
+        checkStartingPositions();
+    }
+
+    private void checkStartingPositions() throws FileInvalidException {
+        if (nbPlayers != playerPositions.size()) {
+            throw new FileInvalidException("The number of starting positions in the file does not match the number of players.");
+        }
+    }
+
+    private void checkPaths() throws FileInvalidException {
+        ArrayList<Square> freeSquares = new ArrayList<>();
+        for (int i = 0; i < squares.length; i++) {
+            for (int j = 0; j < squares.length; j++) {
+                Square square = squares[i][j];
+                if (!wallSegments.contains(square)) {
+                    freeSquares.add(square);
+                }
+            }
+        }
+        Dijkstra dijkstra = new Dijkstra(freeSquares);
+        for (int i = 0; i < freeSquares.size(); i++) {
+            for (int j = 0; j < freeSquares.size(); j++) {
+                if (dijkstra.getShortestDistance(freeSquares.get(i), freeSquares.get(j)) == Double.POSITIVE_INFINITY
+                        && i != j) {
+                    throw new FileInvalidException("There are unreachable squares in this input.");
+                }
+            }
+        }
+    }
+
 
     @Override
     public Grid buildGrid() {
@@ -92,6 +130,7 @@ public class FileGridBuilder extends GridBuilder {
     }
 
     private void interpretInput(char[][] input) {
+        //TODO: *'s are ignored and it's assumed that grids are rectangular, should we support irregular grids?
         wallSegments = new ArrayList<>();
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input.length; j++) {

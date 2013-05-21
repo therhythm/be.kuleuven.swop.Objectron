@@ -67,7 +67,7 @@ public class Dijkstra {
         initialisation();
 
         TableEntry relaxedEntry = relax();
-        while (relaxedEntry.getSquare() != destinationSquare) {
+        while (relaxedEntry.getSquare() != destinationSquare && relaxedEntry.getSquare() != null) {
             relaxedEntry = relax();
             //System.out.println("lengte T: " + T.size());
             checkChangedT();

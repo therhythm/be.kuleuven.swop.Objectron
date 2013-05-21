@@ -30,7 +30,7 @@ public class TestUC_End_Turn {
     private Game state;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, FileInvalidException {
         Dimension dimension = new Dimension(10, 10);
 
         List<Position> positions = new ArrayList<>();

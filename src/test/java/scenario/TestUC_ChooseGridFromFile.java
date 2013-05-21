@@ -1,10 +1,10 @@
 package scenario;
 
+import be.kuleuven.swop.objectron.domain.exception.FileInvalidException;
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,14 +20,10 @@ public class TestUC_ChooseGridFromFile {
 
     private FileGridBuilder gridBuilder;
 
-    @Before
-    public void setUp() throws IOException {
-        String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").getFile();
-        gridBuilder = new FileGridBuilder(input_file);
-    }
-
     @Test
-    public void test_basic_flow() {
+    public void test_basic_flow() throws FileInvalidException, IOException {
+        String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").getFile();
+        gridBuilder = new FileGridBuilder(input_file, 2);
         gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
         gridBuilder.buildWalls();
         Grid grid = gridBuilder.buildGrid();
@@ -53,5 +49,19 @@ public class TestUC_ChooseGridFromFile {
         assertTrue(grid.getSquareAtPosition(new Position(5, 6)).isObstructed());
         assertTrue(grid.getSquareAtPosition(new Position(6, 6)).isObstructed());
         assertTrue(grid.getSquareAtPosition(new Position(7, 6)).isObstructed());
+    }
+
+    @Test (expected = FileInvalidException.class)
+    public void test_unreachable_square() throws FileInvalidException, IOException {
+        String input_file = ClassLoader.getSystemClassLoader().getResource("test_file_unreachable_square.txt").getFile();
+        gridBuilder = new FileGridBuilder(input_file, 2);
+        gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
+    }
+
+    @Test (expected = FileInvalidException.class)
+    public void test_wrong_number_of_players() throws FileInvalidException, IOException {
+        String input_file = ClassLoader.getSystemClassLoader().getResource("test_file_multiple_starting_positions.txt").getFile();
+        gridBuilder = new FileGridBuilder(input_file, 2);
+        gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
     }
 }

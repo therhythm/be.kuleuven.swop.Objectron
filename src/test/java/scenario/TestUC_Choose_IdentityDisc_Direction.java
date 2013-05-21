@@ -44,7 +44,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
     private Grid grid;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, FileInvalidException {
         Dimension dimension = new Dimension(10, 10);
 
         Position p1Pos = new Position(0, 9);

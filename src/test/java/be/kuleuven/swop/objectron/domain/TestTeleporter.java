@@ -33,7 +33,7 @@ public class TestTeleporter {
 
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, FileInvalidException {
         Dimension dimension = new Dimension(10, 10);
 
         List<Position> positions = new ArrayList<>();

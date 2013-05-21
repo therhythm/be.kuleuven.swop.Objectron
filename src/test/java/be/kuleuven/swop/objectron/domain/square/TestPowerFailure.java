@@ -44,7 +44,7 @@ public class TestPowerFailure implements SquareObserver {
     private GridBuilder builder;
 
     @Before
-    public void setUp() throws GridTooSmallException, SquareOccupiedException {
+    public void setUp() throws GridTooSmallException, SquareOccupiedException, FileInvalidException {
         Dimension dimension = new Dimension(10, 10);
 
         List<Position> positions = new ArrayList<>();
@@ -114,7 +114,7 @@ public class TestPowerFailure implements SquareObserver {
 
     @Test
     public void checkRotatingPowerFailure() throws GridTooSmallException, InvalidMoveException,
-            NotEnoughActionsException, GameOverException, SquareOccupiedException {
+            NotEnoughActionsException, GameOverException, SquareOccupiedException, FileInvalidException {
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(0, 0));
         positions.add(new Position(2, 2));

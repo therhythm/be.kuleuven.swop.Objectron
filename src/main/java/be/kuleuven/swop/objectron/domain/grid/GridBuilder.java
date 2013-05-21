@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.exception.FileInvalidException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.item.*;
@@ -47,7 +48,7 @@ public abstract class GridBuilder {
 
     public abstract void addObserver(SquareObserver observer);
 
-    public abstract void initGrid(int powerFailureChance);
+    public abstract void initGrid(int powerFailureChance) throws FileInvalidException;
 
     public abstract Grid buildGrid();
 

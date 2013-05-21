@@ -48,7 +48,7 @@ public class Test_Identity_Disc {
     private List<String> playerNames;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, FileInvalidException {
         Dimension dimension = new Dimension(10, 10);
 
         p1Pos = new Position(0, 9);
@@ -132,7 +132,7 @@ public class Test_Identity_Disc {
 
     @Test
     public void test_Uncharged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException,
-            SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
+            SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException, FileInvalidException {
         List<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(0, 6));
 
@@ -159,7 +159,7 @@ public class Test_Identity_Disc {
 
     @Test
     public void test_Charged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException,
-            SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
+            SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException, FileInvalidException {
         List<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(0, 3));
 
@@ -213,7 +213,7 @@ public class Test_Identity_Disc {
     @Test
     public void test_UnCharged_identity_disc_self_hit_teleported() throws InventoryFullException,
             NotEnoughActionsException, SquareOccupiedException, NoItemSelectedException, GridTooSmallException,
-            GameOverException {
+            GameOverException, FileInvalidException {
         Position p1Pos = new Position(0, 7);
         Position p2Pos = new Position(5, 9);
 

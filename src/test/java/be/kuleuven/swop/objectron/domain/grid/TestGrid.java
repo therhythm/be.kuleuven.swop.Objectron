@@ -37,7 +37,7 @@ public class TestGrid {
 
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, FileInvalidException {
 
         p1Pos = new Position(1, 8);
         p2Pos = new Position(3, 8);
@@ -86,7 +86,7 @@ public class TestGrid {
      * Deze test gaat controleren of er wel degelijk items in de grid geplaatst worden.
      */
     @Test
-    public void test_items_grid() throws GridTooSmallException {
+    public void test_items_grid() throws GridTooSmallException, FileInvalidException {
         grid = GridObjectMother.gridWithoutWallsPowerFailures(builder);
 
         boolean hasItems = false;
@@ -140,7 +140,7 @@ public class TestGrid {
     }
 
     @Test
-    public void test_charged_identity_disc() throws GridTooSmallException {
+    public void test_charged_identity_disc() throws GridTooSmallException, FileInvalidException {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(9, 0);
 
@@ -168,7 +168,7 @@ public class TestGrid {
     }
 
     @Test
-    public void test_no_charged_identity_disc() throws GridTooSmallException {
+    public void test_no_charged_identity_disc() throws GridTooSmallException, FileInvalidException {
         List<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(4, 5));
         wallPositions.add(new Position(5, 5));
@@ -208,7 +208,7 @@ public class TestGrid {
     }
 
     @Test
-    public void test_place_charged_identity_disc() throws GridTooSmallException {
+    public void test_place_charged_identity_disc() throws GridTooSmallException, FileInvalidException {
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
@@ -218,8 +218,8 @@ public class TestGrid {
         grid = GridObjectMother.gridWithoutWallsPowerFailures(builder);
 
         int numberOfIdentityDiscsCharged = 0;
-        for (int i = 0; i < 10; i++) {  // todo use dimension here! magic numbers!
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < dimension.getHeight(); i++) {
+            for (int j = 0; j < dimension.getHeight(); j++) {
                 if (grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() != 0) {
                     for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
                         if (item.getName().equals("Charged Identity Disc"))
@@ -232,7 +232,7 @@ public class TestGrid {
     }
 
     @Test
-    public void test_place_force_field_max_one_per_square() throws GridTooSmallException {
+    public void test_place_force_field_max_one_per_square() throws GridTooSmallException, FileInvalidException {
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
@@ -242,8 +242,8 @@ public class TestGrid {
             builder.setStartingPositions(positions);
             grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
 
-            for (int i = 0; i < 10; i++) {   // todo use dimension here! magic numbers!
-                for (int j = 0; j < 10; j++) {
+            for (int i = 0; i < dimension.getHeight(); i++) {
+                for (int j = 0; j < dimension.getHeight(); j++) {
                     Square square = grid.getSquareAtPosition(new Position(i, j));
                     int aantalForceFields = 0;
                     for (Item item : square.getAvailableItems()) {

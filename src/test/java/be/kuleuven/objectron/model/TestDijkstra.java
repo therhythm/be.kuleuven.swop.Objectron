@@ -1,5 +1,6 @@
 package be.kuleuven.objectron.model;
 
+import be.kuleuven.swop.objectron.domain.exception.FileInvalidException;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
@@ -28,7 +29,7 @@ public class TestDijkstra {
     private Grid grid;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, FileInvalidException {
         List<Position> positions = new ArrayList<>();
         Position p1Pos = new Position(1, 8);
         Position p2Pos = new Position(3, 8);
