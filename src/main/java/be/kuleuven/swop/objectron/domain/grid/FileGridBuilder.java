@@ -55,8 +55,8 @@ public class FileGridBuilder extends GridBuilder {
     }
 
     @Override
-    public void buildWalls(List<Wall> walls) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void buildWalls(List<List<Position>> walls) {
+
     }
 
     @Override

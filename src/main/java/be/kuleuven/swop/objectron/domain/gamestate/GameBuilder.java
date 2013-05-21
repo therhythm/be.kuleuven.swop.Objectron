@@ -9,9 +9,7 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
-import be.kuleuven.swop.objectron.domain.util.Position;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +21,7 @@ import java.util.List;
 public abstract class GameBuilder {
     private boolean withItems = false;
     private boolean withWalls = false;
+    private boolean withPowerFailures = false;
     private GridBuilder builder;
 
     protected List<String> playerNames;
@@ -32,6 +31,10 @@ public abstract class GameBuilder {
         this.playerNames = playerNames;
         this.dimension = dimension;
         this.builder = new GeneratedGridBuilder(dimension, playerNames.size());
+    }
+
+    public void withBuilder(GridBuilder builder){
+        this.builder = builder;
     }
 
     public void withFile(String file) throws InvalidFileException {
@@ -46,7 +49,15 @@ public abstract class GameBuilder {
         withWalls = true;
     }
 
+    public void withPowerFailures(){
+        withPowerFailures = true;
+    }
+
     public Game buildGame() {
+        if(!withPowerFailures){
+            builder.initGrid(0);
+        }
+
         if(withWalls){
             builder.buildWalls();
         }

@@ -29,10 +29,12 @@ public class TestDijkstra {
 
     @Before
     public void setUp() throws GridTooSmallException {
-        ArrayList<Position> wallPositions = new ArrayList<>();
-        wallPositions.add(new Position(6, 6));
-        wallPositions.add(new Position(5, 6));
-        wallPositions.add(new Position(4, 6));
+        List<List<Position>> wallPositions = new ArrayList<>();
+        List<Position> wall = new ArrayList<>();
+        wall.add(new Position(6, 6));
+        wall.add(new Position(5, 6));
+        wall.add(new Position(4, 6));
+        wallPositions.add(wall);
 
         GridBuilder builder = new GeneratedGridBuilder(new Dimension(10, 10), 2);
         grid = GridObjectMother.gridWithSpecifiedWallsPowerFailuresItems(builder, wallPositions);

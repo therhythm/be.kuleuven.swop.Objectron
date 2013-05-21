@@ -43,7 +43,7 @@ public abstract class GridBuilder {
 
     public abstract void buildWalls();
 
-    public abstract void buildWalls(List<Wall> walls);
+    public abstract void buildWalls(List<List<Position>> wallPositions);
 
     public abstract void addObserver(SquareObserver observer);
 
