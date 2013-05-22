@@ -30,7 +30,7 @@ public class StartGameMenu {
                 graphics.drawString("players:", 20, 180);
                 for (int i = 0; i < playerNames.size(); i++) {
                     String playerName = playerNames.get(i);
-                    graphics.drawString("player " + i+1 + ": " + playerName,20,270+ 20*i);
+                    graphics.drawString("player " + (i+1) + ": " + playerName,20,270+ 20*i);
                 }
 
             }
