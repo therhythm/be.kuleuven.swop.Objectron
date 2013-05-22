@@ -1,16 +1,15 @@
 package be.kuleuven.swop.objectron.handler;
 
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.gamestate.CTFGame;
-import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
+import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
+import be.kuleuven.swop.objectron.domain.gamestate.*;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +21,15 @@ import java.util.List;
 public class StartGameHandler {
 
     public GameStartViewModel startNewRaceGame(List<String> playerNames,
-                                               Dimension dimension) throws GridTooSmallException {
-        GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
-        builder.buildWalls();
-        builder.buildItems();
-        Grid grid = builder.buildGrid();
-        Game game = new RaceGame(playerNames, grid);// todo building the dependency graph the right way and inject it all
-        builder.addObserver(game);
+                                               Dimension dimension, String file) throws GridTooSmallException, InvalidFileException, TooManyPlayersException {
+        GameBuilder gameBuilder = new RaceGameBuilder(playerNames, dimension);
+        if(!file.isEmpty()){
+            gameBuilder.withFile(file);
+        }
+        gameBuilder.withItems();
+        gameBuilder.withWalls();
+
+        Game game = gameBuilder.buildGame();
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(game));
@@ -36,25 +37,28 @@ public class StartGameHandler {
         catalog.addHandler(new MovePlayerHandler(game));
         catalog.addHandler(new UseItemHandler(game));
 
+
         List<PlayerViewModel> playerViewModels = new ArrayList<>();
-        //todo fill list
+        for(Player player : game.getPlayers()){
+            playerViewModels.add(player.getPlayerViewModel());
+        }
 
-        PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
-        PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
-
-        return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel
+        return new GameStartViewModel(catalog, dimension, playerViewModels, game.getTurnManager().getCurrentTurn().getViewModel
                 (), game.getGrid().getWalls(), game.getGrid().getItems(), game.getGrid().getEffects(), game);
     }
 
     public GameStartViewModel startNewCTFGame(List<String> playerNames,
-                                              Dimension dimension) throws GridTooSmallException {
-        GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
-        builder.buildWalls();
-        builder.buildItems();
-        Grid grid = builder.buildGrid();
+                                              Dimension dimension, String file) throws GridTooSmallException, InvalidFileException, TooManyPlayersException {
+        GameBuilder gameBuilder = new CTFGameBuilder(playerNames, dimension);
+        if(!file.isEmpty()){
+            gameBuilder.withFile(file);
+        }
 
-        Game game = new CTFGame(playerNames, grid);     // todo building the dependency graph the right way and
-        // inject it all
+        //todo this should probably be standard..
+        gameBuilder.withItems();
+        gameBuilder.withWalls();
+
+        Game game = gameBuilder.buildGame();
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(game));
@@ -63,11 +67,11 @@ public class StartGameHandler {
         catalog.addHandler(new UseItemHandler(game));
 
         List<PlayerViewModel> playerViewModels = new ArrayList<>();
-        //todo fill list
+        for(Player player : game.getPlayers()){
+            playerViewModels.add(player.getPlayerViewModel());
+        }
 
-        PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
-        PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
-
-        return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel(), game.getGrid().getWalls(), game.getGrid().getItems(), game.getGrid().getEffects(), game);
+        return new GameStartViewModel(catalog, dimension, playerViewModels, game.getTurnManager().getCurrentTurn().getViewModel
+                (), game.getGrid().getWalls(), game.getGrid().getItems(), game.getGrid().getEffects(), game);
     }
 }

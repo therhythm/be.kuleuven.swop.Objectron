@@ -3,7 +3,7 @@ package be.kuleuven.swop.objectron.domain;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployCommand;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.PlayerMovementStrategy;
@@ -22,29 +22,21 @@ import java.util.List;
 public class Player implements Movable, Obstruction {
     private String name;
     private Square currentSquare;
-    private Square initialSquare;
     private LightTrail lightTrail = new LightTrail();
     private Inventory inventory = new Inventory();
     private int remainingPenalties;
-    private boolean isTeleporting;
     private TeleportStrategy teleportStrategy;
     private MovementStrategy movementStrategy;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
-        this.initialSquare = currentSquare;
         currentSquare.addObstruction(this);
         this.teleportStrategy = new PlayerTeleportStrategy();
     }
 
     public Square getCurrentSquare() {
         return currentSquare;
-    }
-
-    //todo mag weg?
-    public Square getInitialSquare() {
-        return initialSquare;
     }
 
     public void pickupItem(int identifier) throws InventoryFullException {
@@ -84,13 +76,6 @@ public class Player implements Movable, Obstruction {
         newPosition.stepOn(this, manager);
     }
 
-    //todo, mag weg?
-    public void teleport(Square destination) {
-        isTeleporting = true;
-        lightTrail.expand(currentSquare);
-        currentSquare = destination;
-    }
-
     public String getName() {
         return this.name;
     }
@@ -103,7 +88,7 @@ public class Player implements Movable, Obstruction {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item, ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException,
+    public void useItem(Item item, ItemDeployCommand deployer) throws SquareOccupiedException, NotEnoughActionsException,
             GameOverException {
 
         deployer.deploy(item);
@@ -120,7 +105,6 @@ public class Player implements Movable, Obstruction {
     public PlayerViewModel getPlayerViewModel() {
         return new PlayerViewModel(getName(),
                 currentSquare.getPosition(),
-                initialSquare.getPosition(),
                 lightTrail.getLightTrailViewModel());
     }
 
@@ -137,19 +121,6 @@ public class Player implements Movable, Obstruction {
         if (this.remainingPenalties < 0) {
             this.remainingPenalties = 0;
         }
-    }
-
-    public String toString() {
-        String result = "";
-        result += "name: " + this.getName() + "\n";
-        result += "position: " + this.getCurrentSquare() + "\n";
-
-        return result;
-    }
-
-    //todo mag weg?
-    public boolean isTeleporting() {
-        return isTeleporting;
     }
 
     @Override

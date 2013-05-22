@@ -128,10 +128,11 @@ public class TestUC_Use_Item {
     public void test_no_more_actions() throws NotEnoughActionsException, InvalidMoveException,
             InventoryFullException, SquareOccupiedException, NoItemSelectedException, GameOverException {
         PickUpItemHandler pickUpItemHandler = new PickUpItemHandler(stateMock);
-        pickUpItemHandler.pickUpItem(0);
-        player.getCurrentSquare().addItem(new LightMine());
-        pickUpItemHandler.pickUpItem(0);
-        player.getCurrentSquare().addItem(new LightMine());
+
+        for(int i = 0; i < Turn.ACTIONS_EACH_TURN; i++){
+            pickUpItemHandler.pickUpItem(0);
+            player.getCurrentSquare().addItem(new LightMine());
+        }
         pickUpItemHandler.pickUpItem(0);
         turnManager.getCurrentTurn().setCurrentItem(item);
         useItemHandler.selectItemFromInventory(0);

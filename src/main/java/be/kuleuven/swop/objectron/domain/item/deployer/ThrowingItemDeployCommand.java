@@ -13,12 +13,12 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  *         Date: 24/04/13
  *         Time: 22:53
  */
-public class ThrowingItemDeployer implements ItemDeployer {
+public class ThrowingItemDeployCommand implements ItemDeployCommand {
     private final Square sourceSquare;
     private final Direction throwingDirection;
     private final TurnManager turnManager;
 
-    public ThrowingItemDeployer(Square sourceSquare, Direction throwingDirection, TurnManager turnManager) {
+    public ThrowingItemDeployCommand(Square sourceSquare, Direction throwingDirection, TurnManager turnManager) {
         this.sourceSquare = sourceSquare;
         this.throwingDirection = throwingDirection;
         this.turnManager = turnManager;

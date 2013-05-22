@@ -38,7 +38,7 @@ public class TestUC_Move {
     private Game stateMock;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, TooManyPlayersException {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(0, 5);
 

@@ -5,11 +5,7 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
@@ -30,7 +26,7 @@ public class TestUC_End_Turn {
     private Game state;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, TooManyPlayersException {
         Dimension dimension = new Dimension(10, 10);
 
         List<Position> positions = new ArrayList<>();
@@ -41,10 +37,7 @@ public class TestUC_End_Turn {
         playerNames.add("jos");
         playerNames.add("piet");
 
-        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
-        Grid grid = GridObjectMother.gridWithoutWalls(builder);
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithoutWalls(dimension, playerNames, positions);
 
         endTurnHandler = new EndTurnHandler(state);
         movePlayerHandler = new MovePlayerHandler(state);

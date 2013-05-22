@@ -9,10 +9,10 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  *         Date: 24/04/13
  *         Time: 22:51
  */
-public class PlacingItemDeployer implements ItemDeployer {
+public class PlacingItemDeployCommand implements ItemDeployCommand {
     private final Square targetSquare;
 
-    public PlacingItemDeployer(Square targetSquare) {
+    public PlacingItemDeployCommand(Square targetSquare) {
         this.targetSquare = targetSquare;
     }
 
