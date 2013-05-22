@@ -84,7 +84,6 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
                 effect.accept(visitor);
             }
             movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
-
     }
 
     @Override

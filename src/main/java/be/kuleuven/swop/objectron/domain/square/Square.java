@@ -55,9 +55,9 @@ public class Square implements Observable<SquareObserver> {
         for (Obstruction obstruction : obstructions) {
             obstruction.hit(movable.getMovementStrategy());
         }
-      //  state.stepOn(movable.getMovementStrategy());
 
-        for (Effect effect : effects) {
+        List<Effect> copyOf = new ArrayList<>(effects);
+        for (Effect effect : copyOf) {
             effect.activate(movable, manager);
         }
     }
@@ -152,6 +152,11 @@ public class Square implements Observable<SquareObserver> {
         for(Effect e: getEffects()){
             effects.add(e.getClass());
         }
-        return new SquareViewModel(this.position, effects);
+
+        List<Class<?>> obstructionList = new ArrayList<>();
+        for(Obstruction o: obstructions){
+            obstructionList.add(o.getClass());
+        }
+        return new SquareViewModel(this.position, effects, obstructionList);
     }
 }
