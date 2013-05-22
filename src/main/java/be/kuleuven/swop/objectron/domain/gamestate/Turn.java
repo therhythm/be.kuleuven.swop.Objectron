@@ -17,7 +17,7 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 public class Turn implements Observable<TurnObserver> {
-    public static final int ACTIONS_EACH_TURN = 3;
+    public static final int ACTIONS_EACH_TURN = 4;
 
     private Player currentPlayer;
     private Item currentItem;

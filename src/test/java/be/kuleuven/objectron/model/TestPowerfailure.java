@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -31,7 +32,7 @@ import static org.junit.Assert.assertNotEquals;
  * Time: 21:26
  * To change this template use File | Settings | File Templates.
  */
-public class TestSquare {
+public class TestPowerfailure {
     private Player player2;
     private Game gamestate;
     private Grid grid;
@@ -69,7 +70,7 @@ public class TestSquare {
     public void test_square_lose_power() throws GameOverException, NotEnoughActionsException, InvalidMoveException,
             SquareOccupiedException {
         Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
-      //  otherSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
+        new PrimaryPowerFailure(otherSquare, gamestate.getTurnManager());
         movePlayerHandler.move(Direction.UP);
         assertNotEquals(player2, gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer());
     }
@@ -80,7 +81,7 @@ public class TestSquare {
         new PrimaryPowerFailure(square, gamestate.getTurnManager());
         gamestate.getTurnManager().getCurrentTurn().setMoved();
         gamestate.getTurnManager().endTurn();
-        assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), 2);
+        assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), Turn.ACTIONS_EACH_TURN - 1);
     }
 
 
