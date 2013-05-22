@@ -32,7 +32,7 @@ public abstract class GameBuilder {
         this.builder = new GeneratedGridBuilder(dimension, playerNames.size());
     }
 
-    public void withBuilder(GridBuilder builder){
+    public void withBuilder(GridBuilder builder) {
         this.builder = builder;
     }
 
@@ -49,10 +49,10 @@ public abstract class GameBuilder {
     }
 
     public Game buildGame() {
-        if(withWalls){
+        if (withWalls) {
             builder.buildWalls();
         }
-        if(withItems){
+        if (withItems) {
             builder.buildItems();
         }
 
@@ -63,12 +63,7 @@ public abstract class GameBuilder {
         return new Game(players, grid);
     }
 
-    protected List<Player> initializePlayers(List<Square> playerPositions){
-        List<Player> players = new ArrayList<>();
-        for (int i = 0; i < playerNames.size(); i++) {
-            players.add(new Player(playerNames.get(i), playerPositions.get(i)));
-        }
-
-        return players;
+    protected List<Player> initializePlayers(List<Square> playerPositions) {
+        return null;
     }
 }

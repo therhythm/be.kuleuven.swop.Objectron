@@ -27,17 +27,18 @@ public class PlayerCtf extends Player {
             Flag vlag = (Flag) item;
             if (vlag.getOwner().equals(this)) {
                 vlag.returnToBase();
+                return;
             }
-        } else {
-            try {
-                super.inventory.addItem(item);
-            } catch (InventoryFullException ex) {
-                super.getCurrentSquare().addItem(item);
-                throw ex;
-            } catch (TooManyItemsOfSameTypeException e) {
-                super.getCurrentSquare().addItem(item);
-            }
-            super.actionPerformed();
         }
+        try {
+            super.inventory.addItem(item);
+        } catch (InventoryFullException ex) {
+            super.getCurrentSquare().addItem(item);
+            throw ex;
+        } catch (TooManyItemsOfSameTypeException e) {
+            super.getCurrentSquare().addItem(item);
+        }
+        super.actionPerformed();
+
     }
 }

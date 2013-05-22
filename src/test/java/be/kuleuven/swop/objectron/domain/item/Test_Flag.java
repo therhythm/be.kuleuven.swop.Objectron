@@ -34,13 +34,14 @@ public class Test_Flag {
 
     private Position p1Pos;
     private Position p2Pos;
+    private Game state;
 
     @Before
     public void setUp() throws GridTooSmallException {
         Dimension dimension = new Dimension(10, 10);
 
         p1Pos = new Position(0, 9);
-        p2Pos = new Position(5, 9);
+        p2Pos = new Position(2, 9);
 
         List<Position> positions = new ArrayList<>();
         positions.add(p1Pos);
@@ -50,7 +51,7 @@ public class Test_Flag {
         playerNames.add("p1");
         playerNames.add("p2");
 
-        Game state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        state = GameObjectMother.ctfGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
         grid = state.getGrid();
 
         movePlayerHandler = new MovePlayerHandler(state);
@@ -66,15 +67,32 @@ public class Test_Flag {
     @Test
     public void test_amount_flags() throws InventoryFullException, NotEnoughActionsException, InvalidMoveException,
             GameOverException, SquareOccupiedException {
-        grid.getSquareAtPosition(new Position(0, 9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
-        grid.getSquareAtPosition(new Position(1, 9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
-        pickUpItemHandler.pickUpItem(0);
+       // grid.getSquareAtPosition(new Position(0, 9)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
+        Flag vlag = new Flag(player2, grid.getSquareAtPosition(p2Pos));
+        grid.getSquareAtPosition(new Position(1, 9)).addItem(vlag);
+        grid.getSquareAtPosition(new Position(1, 8)).addItem(new Flag(player2, grid.getSquareAtPosition(p2Pos)));
+
         movePlayerHandler.move(Direction.RIGHT);
+        pickUpItemHandler.pickUpItem(0);
+        movePlayerHandler.move(Direction.UP);
+        state.getTurnManager().getCurrentTurn().setMoved();
+        state.getTurnManager().endTurn();
         pickUpItemHandler.pickUpItem(0);
 
         assertTrue(player1.getInventoryItems().size() == 1);
         assertTrue(player1.getCurrentSquare().getAvailableItems().size() == 1);
-        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size() == 0);
+        assertTrue(grid.getSquareAtPosition(new Position(1,9)).getAvailableItems().size() == 0);
+    }
+
+    @Test
+    public void test_capture_own_Flag() throws InvalidMoveException, GameOverException, SquareOccupiedException, NotEnoughActionsException, InventoryFullException {
+        grid.getSquareAtPosition(new Position(1, 9)).addItem(new Flag(player1, grid.getSquareAtPosition(p1Pos)));
+
+        movePlayerHandler.move(Direction.RIGHT);
+        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size() == 1);
+        pickUpItemHandler.pickUpItem(0);
+        assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size() == 2);
+        assertTrue(player1.getInventoryItems().size() == 0);
     }
 
 }
