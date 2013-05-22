@@ -7,9 +7,9 @@ import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
-import be.kuleuven.swop.objectron.domain.item.deployer.PlacingItemDeployer;
-import be.kuleuven.swop.objectron.domain.item.deployer.ThrowingItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployCommand;
+import be.kuleuven.swop.objectron.domain.item.deployer.PlacingItemDeployCommand;
+import be.kuleuven.swop.objectron.domain.item.deployer.ThrowingItemDeployCommand;
 
 import java.util.List;
 
@@ -81,7 +81,7 @@ public class UseItemHandler extends Handler {
         currentTurn.checkEnoughActions();
         currentTurn.reduceRemainingActions(1);
         game.endAction();
-        ItemDeployer deployer = new PlacingItemDeployer(turnManager.getCurrentTurn().getCurrentPlayer()
+        ItemDeployCommand deployer = new PlacingItemDeployCommand(turnManager.getCurrentTurn().getCurrentPlayer()
                 .getCurrentSquare());
         currentTurn.getCurrentPlayer().useItem(game.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
         game.getTurnManager().getCurrentTurn().setCurrentItem(null);
@@ -100,7 +100,7 @@ public class UseItemHandler extends Handler {
         Player currentPlayer = turnManager.getCurrentTurn().getCurrentPlayer();
         currentTurn.checkEnoughActions();
 
-        ItemDeployer deployer = new ThrowingItemDeployer(currentPlayer.getCurrentSquare(), direction, turnManager);
+        ItemDeployCommand deployer = new ThrowingItemDeployCommand(currentPlayer.getCurrentSquare(), direction, turnManager);
         currentPlayer.useItem(game.getTurnManager().getCurrentTurn().getCurrentItem(), deployer);
         game.getTurnManager().getCurrentTurn().setCurrentItem(null);
         currentTurn.reduceRemainingActions(1);
