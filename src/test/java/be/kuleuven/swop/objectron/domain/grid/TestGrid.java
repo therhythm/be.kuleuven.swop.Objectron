@@ -34,6 +34,7 @@ public class TestGrid {
 
 
     @Before
+
     public void setUp() throws GridTooSmallException {
         Position p1Pos = new Position(1, 8);
         Position p2Pos = new Position(3, 8);
@@ -86,7 +87,7 @@ public class TestGrid {
      * Deze test gaat controleren of er wel degelijk items in de grid geplaatst worden.
      */
     @Test
-    public void test_items_grid() throws GridTooSmallException {
+    public void test_items_grid() throws GridTooSmallException{
         grid = GridObjectMother.gridWithoutWallsPowerFailures(builder);
 
         boolean hasItems = false;
@@ -167,11 +168,6 @@ public class TestGrid {
         assertTrue(aantal == 1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void test_getInvalidSquare() {
-        grid.getSquareAtPosition(new Position(grid.getDimension().getHeight() + 1, grid.getDimension().getWidth() + 1));
-    }
-
     @Test(expected = InvalidMoveException.class)
     public void test_invalid_move_neighbor() throws InvalidMoveException, NotEnoughActionsException,
             GameOverException, SquareOccupiedException {
@@ -216,6 +212,7 @@ public class TestGrid {
             GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
             builder.setStartingPositions(positions);
             grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
+
 
             for (int i = 0; i < dimension.getWidth(); i++) {
                 for (int j = 0; j < dimension.getHeight(); j++) {

@@ -37,7 +37,7 @@ public abstract class GameBuilder {
     }
 
     public void withFile(String file) throws InvalidFileException {
-        builder = new FileGridBuilder(file);
+        builder = new FileGridBuilder(file, playerNames.size());
     }
 
     public void withItems() {

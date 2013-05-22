@@ -1,12 +1,10 @@
 package be.kuleuven.swop.objectron.domain.grid;
 
-import be.kuleuven.swop.objectron.domain.Wall;
+
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,17 +13,38 @@ import java.util.List;
  *         Time: 21:22
  */
 public class GridObjectMother {
+
     // Contstruct a grid without walls and powerfailures
     public static Grid gridWithoutWallsPowerFailures(GridBuilder builder) throws GridTooSmallException {
         builder.initGrid(0);
         builder.buildItems();
         return builder.buildGrid();
     }
-
+                                                          /*
     // Contstruct a grid with specified walls and without powerfailures and Items
     public static Grid gridWithSpecifiedWallsWithoutItemsAndPowerFailures(GridBuilder builder,
+<<<<<<< HEAD
+                                                                          List<Position> wallPositions) throws
+            GridTooSmallException, FileInvalidException {
+        builder.initGrid(0);
+        List<Wall> walls = new ArrayList<>();
+
+        for (Position position : wallPositions) {
+            Wall wall = new Wall();
+            wall.addSquare(builder.buildGrid().getSquareAtPosition(position));
+            builder.buildGrid().getSquareAtPosition(position).addObstruction(wall);
+            walls.add(wall);
+        }
+        builder.buildWalls(walls);
+
+        return builder.buildGrid();
+    }
+                                                     */
+    // Contstruct a grid with specified walls and without powerfailures
+    public static Grid gridWithSpecifiedWallsPowerFailures(GridBuilder builder,
                                                                           List<List<Position>> wallPositions) throws
             GridTooSmallException {
+
 
         builder.initGrid(0);
         builder.buildWalls(wallPositions);

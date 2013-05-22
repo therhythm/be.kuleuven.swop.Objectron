@@ -46,6 +46,7 @@ public class Test_Identity_Disc {
     private List<Position> positions;
 
     @Before
+
     public void setUp() throws GridTooSmallException {
         dimension = new Dimension(10, 10);
 
