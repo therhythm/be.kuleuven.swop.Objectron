@@ -4,6 +4,7 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.effect.CtfFinish;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -17,7 +18,7 @@ import java.util.List;
  *         Time: 02:46
  */
 public class CTFGameBuilder extends GameBuilder {
-    public CTFGameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException {
+    public CTFGameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException, TooManyPlayersException {
         super(playerNames, dimension);
     }
 

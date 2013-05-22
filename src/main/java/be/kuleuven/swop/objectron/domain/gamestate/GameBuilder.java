@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
+import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -26,7 +27,7 @@ public abstract class GameBuilder {
     protected List<String> playerNames;
     protected Dimension dimension;
 
-    public GameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException {
+    public GameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException, TooManyPlayersException {
         this.playerNames = playerNames;
         this.dimension = dimension;
         this.builder = new GeneratedGridBuilder(dimension, playerNames.size());
@@ -36,7 +37,7 @@ public abstract class GameBuilder {
         this.builder = builder;
     }
 
-    public void withFile(String file) throws InvalidFileException {
+    public void withFile(String file) throws InvalidFileException, TooManyPlayersException {
         builder = new FileGridBuilder(file, playerNames.size());
     }
 

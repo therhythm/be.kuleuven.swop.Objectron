@@ -35,7 +35,7 @@ public class TestGrid {
 
     @Before
 
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, TooManyPlayersException {
         Position p1Pos = new Position(1, 8);
         Position p2Pos = new Position(3, 8);
 
@@ -141,7 +141,7 @@ public class TestGrid {
     }
 
     @Test
-    public void test_charged_identity_disc() throws GridTooSmallException {
+    public void test_charged_identity_disc() throws GridTooSmallException, TooManyPlayersException {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(9, 0);
 
@@ -177,7 +177,7 @@ public class TestGrid {
     }
 
     @Test
-    public void test_place_charged_identity_disc() throws GridTooSmallException {
+    public void test_place_charged_identity_disc() throws GridTooSmallException, TooManyPlayersException {
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
@@ -202,7 +202,7 @@ public class TestGrid {
     }
 
     @Test
-    public void test_place_force_field_max_one_per_square() throws GridTooSmallException {
+    public void test_place_force_field_max_one_per_square() throws GridTooSmallException, TooManyPlayersException {
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));

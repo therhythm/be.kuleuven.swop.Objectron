@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -22,6 +23,8 @@ import java.util.Map;
  *         Time: 15:49
  */
 public class FileGridBuilder extends GridBuilder {
+    private final static int MAX_PLAYERS = 9;
+    private int max_players = MAX_PLAYERS;
     private List<Square> wallSegments;
     private char[][] input;
     private int nbPlayers;
@@ -29,7 +32,7 @@ public class FileGridBuilder extends GridBuilder {
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
 
-    public FileGridBuilder(String file, int nbPlayers) throws InvalidFileException {
+    public FileGridBuilder(String file, int nbPlayers) throws InvalidFileException, TooManyPlayersException{
         super();
         this.nbPlayers = nbPlayers;
         try {
@@ -38,6 +41,7 @@ public class FileGridBuilder extends GridBuilder {
         } catch (IOException e) {
             throw new InvalidFileException("The specified file wasn't usable");
         }
+
         initGrid(Square.POWER_FAILURE_CHANCE);
         validateFile();
     }
@@ -88,9 +92,16 @@ public class FileGridBuilder extends GridBuilder {
         setupNeighbours();
     }
 
-    private void validateFile() throws InvalidFileException {
+    private void validateFile() throws InvalidFileException, TooManyPlayersException {
+        checkNbPlayers();
         checkPaths();
         checkStartingPositions();
+    }
+
+    private void checkNbPlayers() throws TooManyPlayersException {
+        if(nbPlayers > max_players){
+            throw new TooManyPlayersException("You can only play with " + max_players + " on this grid");
+        }
     }
 
     private void checkStartingPositions() throws InvalidFileException {
@@ -148,6 +159,7 @@ public class FileGridBuilder extends GridBuilder {
                 }
             }
         }
+        max_players = playerPositions.size();
     }
 
     private void setupNeighbours() {

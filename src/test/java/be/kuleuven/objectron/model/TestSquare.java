@@ -33,7 +33,7 @@ public class TestSquare {
     private MovePlayerHandler movePlayerHandler;
 
     @Before
-    public void setUp() throws GridTooSmallException, SquareOccupiedException {
+    public void setUp() throws GridTooSmallException, SquareOccupiedException, TooManyPlayersException {
         Position p1Pos = new Position(5, 4);
         Position p2Pos = new Position(5, 3);
 

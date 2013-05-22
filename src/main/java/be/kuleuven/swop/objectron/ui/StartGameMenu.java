@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
+import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.handler.StartGameHandler;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
@@ -102,6 +103,8 @@ public class StartGameMenu {
                     } catch (GridTooSmallException e) {
                         new DialogView("The given grid dimensions are too small (min 10x10)");
                     } catch (InvalidFileException e) {
+                        new DialogView(e.getMessage());
+                    } catch (TooManyPlayersException e) {
                         new DialogView(e.getMessage());
                     }
                 }
