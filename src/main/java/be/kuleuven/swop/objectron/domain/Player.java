@@ -24,7 +24,7 @@ public class Player implements Movable, Obstruction {
     private Square currentSquare;
     private Square initialSquare;
     private LightTrail lightTrail = new LightTrail();
-    private Inventory inventory = new Inventory();
+    protected Inventory inventory = new Inventory();
     private int remainingPenalties;
     private boolean isTeleporting;
     private TeleportStrategy teleportStrategy;
@@ -47,17 +47,7 @@ public class Player implements Movable, Obstruction {
     }
 
     public void pickupItem(int identifier) throws InventoryFullException {
-        Item item = currentSquare.pickUpItem(identifier);
 
-        try {
-            this.inventory.addItem(item);
-        } catch (InventoryFullException ex) {
-            currentSquare.addItem(item);
-            throw ex;
-        } catch (TooManyItemsOfSameTypeException e) {
-            currentSquare.addItem(item);
-        }
-        actionPerformed();
     }
 
     public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException,
@@ -111,7 +101,7 @@ public class Player implements Movable, Obstruction {
         actionPerformed();
     }
 
-    private void actionPerformed() {
+    protected void actionPerformed() {
         lightTrail.reduce();
     }
 
