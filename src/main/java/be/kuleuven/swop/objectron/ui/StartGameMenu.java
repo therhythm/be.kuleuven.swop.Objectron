@@ -86,7 +86,7 @@ public class StartGameMenu {
                                         new Dimension(nbHorizontalTiles, nbVerticalTiles), fileField.getText());
                                 break;
                             case CTFGAME:
-                                vm = handler.startNewRaceGame(playerNames,
+                                vm = handler.startNewCTFGame(playerNames,
                                         new Dimension(nbHorizontalTiles, nbVerticalTiles), fileField.getText());
                                 break;
                             default:
