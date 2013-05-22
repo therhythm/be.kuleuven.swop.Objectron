@@ -22,28 +22,21 @@ import java.util.List;
 public class Player implements Movable, Obstruction {
     private String name;
     private Square currentSquare;
-    private Square initialSquare;
     private LightTrail lightTrail = new LightTrail();
     protected Inventory inventory = new Inventory();
     private int remainingPenalties;
-    private boolean isTeleporting;
     private TeleportStrategy teleportStrategy;
     private MovementStrategy movementStrategy;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
-        this.initialSquare = currentSquare;
         currentSquare.addObstruction(this);
         this.teleportStrategy = new PlayerTeleportStrategy();
     }
 
     public Square getCurrentSquare() {
         return currentSquare;
-    }
-
-    public Square getInitialSquare() {
-        return initialSquare;
     }
 
     public void pickupItem(int identifier) throws InventoryFullException {
@@ -71,12 +64,6 @@ public class Player implements Movable, Obstruction {
         newPosition.addObstruction(this);
         currentSquare = newPosition;
         newPosition.stepOn(this, manager);
-    }
-
-    public void teleport(Square destination) {
-        isTeleporting = true;
-        lightTrail.expand(currentSquare);
-        currentSquare = destination;
     }
 
     public String getName() {
@@ -108,7 +95,6 @@ public class Player implements Movable, Obstruction {
     public PlayerViewModel getPlayerViewModel() {
         return new PlayerViewModel(getName(),
                 currentSquare.getPosition(),
-                initialSquare.getPosition(),
                 lightTrail.getLightTrailViewModel());
     }
 
@@ -125,18 +111,6 @@ public class Player implements Movable, Obstruction {
         if (this.remainingPenalties < 0) {
             this.remainingPenalties = 0;
         }
-    }
-
-    public String toString() {
-        String result = "";
-        result += "name: " + this.getName() + "\n";
-        result += "position: " + this.getCurrentSquare() + "\n";
-
-        return result;
-    }
-
-    public boolean isTeleporting() {
-        return isTeleporting;
     }
 
     @Override

@@ -3,7 +3,8 @@ package be.kuleuven.swop.objectron.domain.grid;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.gamestate.GameBuilder;
+import be.kuleuven.swop.objectron.domain.gamestate.RaceGameBuilder;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -26,21 +27,16 @@ import static org.junit.Assert.assertTrue;
  * To change this template use File | Settings | File Templates.
  */
 public class TestGrid {
-
     private EndTurnHandler endTurnHandler;
     private MovePlayerHandler movePlayerHandler;
     private Grid grid;
     private GridBuilder builder;
-    private Dimension dimension;
-    private Position p1Pos;
-    private Position p2Pos;
 
 
     @Before
     public void setUp() throws GridTooSmallException {
-
-        p1Pos = new Position(1, 8);
-        p2Pos = new Position(3, 8);
+        Position p1Pos = new Position(1, 8);
+        Position p2Pos = new Position(3, 8);
 
         List<Position> positions = new ArrayList<>();
         positions.add(p1Pos);
@@ -50,11 +46,15 @@ public class TestGrid {
         playerNames.add("p1");
         playerNames.add("p2");
 
-        dimension = new Dimension(10, 10);
+        Dimension dimension = new Dimension(10, 10);
         builder = new GeneratedGridBuilder(dimension, 2);
         builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-        Game state = new RaceGame(playerNames, grid);
+        builder.initGrid(0);
+
+        GameBuilder gameBuilder = new RaceGameBuilder(playerNames, dimension);
+        gameBuilder.withBuilder(builder);
+        Game state = gameBuilder.buildGame();
+        grid = state.getGrid();
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -118,7 +118,7 @@ public class TestGrid {
                 }
             }
         }
-        System.out.println(numberOfIdentityDiscsCharged);
+        Dimension dimension = grid.getDimension();
         assertTrue(numberOfLightMines <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_LIGHTMINES * dimension
                 .area()));
         assertTrue(numberOfTeleporters <= (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_TELEPORTERS * dimension
@@ -167,33 +167,6 @@ public class TestGrid {
         assertTrue(aantal == 1);
     }
 
-    @Test
-    public void test_no_charged_identity_disc() throws GridTooSmallException {
-        List<Position> wallPositions = new ArrayList<>();
-        wallPositions.add(new Position(4, 5));
-        wallPositions.add(new Position(5, 5));
-        wallPositions.add(new Position(5, 4));
-        wallPositions.add(new Position(4, 4));
-        wallPositions.add(new Position(4, 3));
-
-        int aantal = 0;
-        grid = GridObjectMother.gridWithSpecifiedWallsPowerFailures(builder, wallPositions);
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
-                    if (item.getName().equals("Charged Identity Disc")) {
-                        int distanceFromPlayer1 = calculatedistance(p1Pos, new Position(i, j));
-                        int distanceFromPlayer2 = calculatedistance(p2Pos, new Position(i, j));
-                        assertTrue(Math.abs(distanceFromPlayer1 - distanceFromPlayer2) < 2);
-                        aantal++;
-                    }
-
-                }
-            }
-        }
-        assertTrue(aantal == 1);
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void test_getInvalidSquare() {
         grid.getSquareAtPosition(new Position(grid.getDimension().getHeight() + 1, grid.getDimension().getWidth() + 1));
@@ -213,13 +186,14 @@ public class TestGrid {
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
 
+        Dimension dimension = grid.getDimension();
         GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
         builder.setStartingPositions(positions);
         grid = GridObjectMother.gridWithoutWallsPowerFailures(builder);
 
         int numberOfIdentityDiscsCharged = 0;
-        for (int i = 0; i < 10; i++) {  // todo use dimension here! magic numbers!
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < dimension.getWidth(); i++) {
+            for (int j = 0; j < dimension.getHeight(); j++) {
                 if (grid.getSquareAtPosition(new Position(i, j)).getAvailableItems().size() != 0) {
                     for (Item item : grid.getSquareAtPosition(new Position(i, j)).getAvailableItems()) {
                         if (item.getName().equals("Charged Identity Disc"))
@@ -237,13 +211,14 @@ public class TestGrid {
         positions.add(new Position(0, 9));
         positions.add(new Position(9, 0));
 
+        Dimension dimension = grid.getDimension();
         for (int repeat = 0; repeat < 100; repeat++) {
             GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
             builder.setStartingPositions(positions);
             grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
 
-            for (int i = 0; i < 10; i++) {   // todo use dimension here! magic numbers!
-                for (int j = 0; j < 10; j++) {
+            for (int i = 0; i < dimension.getWidth(); i++) {
+                for (int j = 0; j < dimension.getHeight(); j++) {
                     Square square = grid.getSquareAtPosition(new Position(i, j));
                     int aantalForceFields = 0;
                     for (Item item : square.getAvailableItems()) {

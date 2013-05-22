@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.handler.StartGameHandler;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
@@ -52,18 +53,20 @@ public class GameMenu {
                         }
 
                         //todo dynamicly fill list
-                        java.util.List<String> playerNames = new ArrayList();
+                        java.util.List<String> playerNames = new ArrayList<>();
                         playerNames.add(p1NameField.getText());
                         playerNames.add(p2NameField.getText());
 
                         GameStartViewModel vm = handler.startNewRaceGame(playerNames,
-                                new Dimension(nbHorizontalTiles, nbVerticalTiles));
+                                new Dimension(nbHorizontalTiles, nbVerticalTiles), "");
                         new GameView(vm).run();
                         gui.dispose();
                     } catch (NumberFormatException ex) {
                         new DialogView("Please enter (positive) numbers for the horizontal and vertical tiles!");
                     } catch (GridTooSmallException e) {
                         new DialogView("The given grid dimensions are too small (min 10x10)");
+                    } catch (InvalidFileException e) {
+                        new DialogView(e.getMessage());
                     }
                 }
             }

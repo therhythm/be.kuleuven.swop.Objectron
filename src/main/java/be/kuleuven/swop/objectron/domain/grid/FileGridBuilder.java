@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -25,10 +26,14 @@ public class FileGridBuilder extends GridBuilder {
 
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
-    public FileGridBuilder(String file) throws IOException {
+    public FileGridBuilder(String file) throws InvalidFileException {
         super();
         GridFileReader fileReader = new GridFileReader();
-        input = fileReader.readGridFile(file);
+        try {
+            input = fileReader.readGridFile(file);
+        } catch (IOException e) {
+            throw new InvalidFileException("The specified file wasn't usable");
+        }
     }
 
     @Override
@@ -50,8 +55,8 @@ public class FileGridBuilder extends GridBuilder {
     }
 
     @Override
-    public void buildWalls(List<Wall> walls) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void buildWalls(List<List<Position>> walls) {
+
     }
 
     @Override

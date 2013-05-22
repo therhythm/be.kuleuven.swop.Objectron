@@ -1,9 +1,8 @@
 package be.kuleuven.swop.objectron.handler;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.gamestate.CTFGame;
-import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
+import be.kuleuven.swop.objectron.domain.gamestate.*;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
@@ -11,6 +10,7 @@ import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +22,15 @@ import java.util.List;
 public class StartGameHandler {
 
     public GameStartViewModel startNewRaceGame(List<String> playerNames,
-                                               Dimension dimension) throws GridTooSmallException {
-        GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
-        builder.buildWalls();
-        builder.buildItems();
-        Grid grid = builder.buildGrid();
+                                               Dimension dimension, String file) throws GridTooSmallException, InvalidFileException {
+        GameBuilder gameBuilder = new RaceGameBuilder(playerNames, dimension);
+        if(!file.isEmpty()){
+            gameBuilder.withFile(file);
+        }
+        gameBuilder.withItems();
+        gameBuilder.withWalls();
 
-        Game game = new RaceGame(playerNames, grid);// todo building the dependency graph the right way and inject it
-        // all
+        Game game = gameBuilder.buildGame();
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(game));
@@ -48,14 +49,17 @@ public class StartGameHandler {
     }
 
     public GameStartViewModel startNewCTFGame(List<String> playerNames,
-                                              Dimension dimension) throws GridTooSmallException {
-        GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
-        builder.buildWalls();
-        builder.buildItems();
-        Grid grid = builder.buildGrid();
+                                              Dimension dimension, String file) throws GridTooSmallException, InvalidFileException {
+        GameBuilder gameBuilder = new CTFGameBuilder(playerNames, dimension);
+        if(!file.isEmpty()){
+            gameBuilder.withFile(file);
+        }
 
-        Game game = new CTFGame(playerNames, grid);     // todo building the dependency graph the right way and
-        // inject it all
+        //todo this should probably be standard..
+        gameBuilder.withItems();
+        gameBuilder.withWalls();
+
+        Game game = gameBuilder.buildGame();
 
         HandlerCatalog catalog = new HandlerCatalog();
         catalog.addHandler(new EndTurnHandler(game));

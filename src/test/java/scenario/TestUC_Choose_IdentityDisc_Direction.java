@@ -3,12 +3,9 @@ package scenario;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
+import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.NormalIdentityDiscBehavior;
@@ -57,10 +54,8 @@ public class TestUC_Choose_IdentityDisc_Direction {
         playerNames.add("p1");
         playerNames.add("p2");
 
-        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        grid = state.getGrid();
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);

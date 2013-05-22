@@ -1,5 +1,6 @@
 package scenario;
 
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -21,7 +22,7 @@ public class TestUC_ChooseGridFromFile {
     private FileGridBuilder gridBuilder;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws InvalidFileException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").getFile();
         gridBuilder = new FileGridBuilder(input_file);
     }

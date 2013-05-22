@@ -5,13 +5,10 @@ import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
+import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -42,30 +39,29 @@ public class Test_Identity_Disc {
     private UseItemHandler useItemHandler;
     private Game state;
     private Grid grid;
-    private GridBuilder builder;
 
+    private Dimension dimension;
     private Position p1Pos;
     private List<String> playerNames;
+    private List<Position> positions;
 
     @Before
     public void setUp() throws GridTooSmallException {
-        Dimension dimension = new Dimension(10, 10);
+        dimension = new Dimension(10, 10);
 
         p1Pos = new Position(0, 9);
         Position p2Pos = new Position(5, 9);
-        List<Position> positions = new ArrayList<>();
+
+        positions = new ArrayList<>();
         positions.add(p1Pos);
         positions.add(p2Pos);
-
-        builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-
 
         playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
-        state = new RaceGame(playerNames, grid);
+
+        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        grid = state.getGrid();
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -133,11 +129,15 @@ public class Test_Identity_Disc {
     @Test
     public void test_Uncharged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException,
             SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
+        List<List<Position>> walls  = new ArrayList<>();
         List<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(0, 6));
+        wallPositions.add(new Position(1, 6));
+        wallPositions.add(new Position(2, 6));
+        walls.add(wallPositions);
 
-        grid = GridObjectMother.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(builder, wallPositions);
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, playerNames, positions, walls);
+        grid = state.getGrid();
 
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
@@ -160,11 +160,15 @@ public class Test_Identity_Disc {
     @Test
     public void test_Charged_IdentityDisc_Wall() throws InventoryFullException, NotEnoughActionsException,
             SquareOccupiedException, NoItemSelectedException, GridTooSmallException, GameOverException {
+        List<List<Position>> walls = new ArrayList<>();
         List<Position> wallPositions = new ArrayList<>();
         wallPositions.add(new Position(0, 3));
+        wallPositions.add(new Position(1, 3));
+        wallPositions.add(new Position(2, 3));
+        walls.add(wallPositions);
 
-        grid = GridObjectMother.gridWithSpecifiedWallsWithoutItemsAndPowerFailures(builder, wallPositions);
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, playerNames,positions, walls);
+        grid = state.getGrid();
 
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
@@ -221,9 +225,8 @@ public class Test_Identity_Disc {
         positions.add(p1Pos);
         positions.add(p2Pos);
 
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        grid = state.getGrid();
 
         TurnManager turnManager = state.getTurnManager();
 

@@ -62,6 +62,9 @@ public class GeneratedGridBuilder extends GridBuilder {
 
     @Override
     public void buildWalls() {
+        if(walls != null){
+            return;
+        }
         walls = new ArrayList<>();
 
         int maxNumberOfWalls = (int) Math.floor(MAX_WALL_COVERAGE_PERCENTAGE *
@@ -74,9 +77,18 @@ public class GeneratedGridBuilder extends GridBuilder {
     }
 
     @Override
-    public void buildWalls(List<Wall> walls) {
-        this.walls = walls;
+    public void buildWalls(List<List<Position>> wallPositions) {
+        List<Wall> walls = new ArrayList<>();
+        for (List<Position> positionsOfWall : wallPositions) {
+            Wall wall = new Wall();
+            for(Position pos: positionsOfWall){
+                wall.addSquare(squares[pos.getVIndex()][pos.getHIndex()]);
+                squares[pos.getVIndex()][pos.getHIndex()].addObstruction(wall);
+            }
+            walls.add(wall);
+        }
 
+        this.walls = walls;
     }
 
     @Override

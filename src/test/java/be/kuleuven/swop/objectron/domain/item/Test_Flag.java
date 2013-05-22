@@ -4,11 +4,8 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
+import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
@@ -53,10 +50,9 @@ public class Test_Flag {
         playerNames.add("p1");
         playerNames.add("p2");
 
-        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-        Game state = new RaceGame(playerNames, grid);
+        Game state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        grid = state.getGrid();
+
         movePlayerHandler = new MovePlayerHandler(state);
         pickUpItemHandler = new PickUpItemHandler(state);
         player1 = state.getTurnManager().getCurrentTurn().getCurrentPlayer();

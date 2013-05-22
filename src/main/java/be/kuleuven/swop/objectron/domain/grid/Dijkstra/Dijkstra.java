@@ -1,7 +1,6 @@
 package be.kuleuven.swop.objectron.domain.grid.Dijkstra;
 
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class Dijkstra {
 
     private void constructEdges(ArrayList<Square> nodes) {
 
-        edges = new ArrayList<DirectedEdge>();
+        edges = new ArrayList<>();
         for (Square square : nodes) {
             for (Direction direction : Direction.values()) {
                 Square neighbor = square.getNeighbour(direction);
@@ -52,7 +51,7 @@ public class Dijkstra {
     }
 
     private ArrayList<DirectedEdge> getSubsetEdges(Square squareFrom) {
-        ArrayList<DirectedEdge> result = new ArrayList<DirectedEdge>();
+        ArrayList<DirectedEdge> result = new ArrayList<>();
 
         for (DirectedEdge edge : edges) {
             if (edge.getSquareSource().equals(squareFrom) && T.contains(edge.getSquareDestination()))
@@ -61,40 +60,33 @@ public class Dijkstra {
         return result;
     }
 
-    public Double getShortestDistance(Square start, Square destination) throws SquareUnreachableException {
+    public Double getShortestDistance(Square start, Square destination) {
         this.startSquare = start;
         this.destinationSquare = destination;
 
         initialisation();
 
         TableEntry relaxedEntry = relax();
-        while (relaxedEntry.getSquare() != destinationSquare) {
-
-            if(relaxedEntry.getSquare().equals(null))
-                throw new SquareUnreachableException("Squares are unreachable");
+        while (!relaxedEntry.getSquare().equals(destination)) {
             relaxedEntry = relax();
-            //System.out.println("lengte T: " + T.size());
             checkChangedT();
         }
         return relaxedEntry.getDistance();
-
-
     }
 
+    //todo Useless?
     private void checkChangedT() {
         int teller = 0;
         for (TableEntry tableEntry : L) {
             if (tableEntry.getDistance() != Double.POSITIVE_INFINITY)
                 teller++;
         }
-        //
-        // System.out.println("L entries not pos_Inf: " + teller);
     }
 
     private void initialisation() {
-        this.T = new ArrayList<Square>();
+        this.T = new ArrayList<>();
         this.T.addAll(nodes);
-        L = new ArrayList<TableEntry>();
+        L = new ArrayList<>();
         L.add(new TableEntry(startSquare, 0.0));
         for (Square square : T) {
             L.add(new TableEntry(square, Double.POSITIVE_INFINITY));
@@ -123,7 +115,6 @@ public class Dijkstra {
     private TableEntry getSquareSmallestDistance() {
         TableEntry smallestEntry = new TableEntry(null, Double.POSITIVE_INFINITY);
         for (TableEntry tableEntry : L) {
-            //System.out.println(tableEntry);
             boolean isDistanceSmaller = tableEntry.distance < smallestEntry.getDistance();
             boolean existInT = T.contains(tableEntry.getSquare());
             if (isDistanceSmaller && existInT) {
@@ -142,17 +133,6 @@ public class Dijkstra {
         return Double.POSITIVE_INFINITY;
     }
 
-    public String toStringEdges() {
-        String result = "";
-        for (DirectedEdge directEdge : edges) {
-            result += directEdge.toString() + '\n' + '\n';
-        }
-
-        return result;
-
-    }
-
-
     private class TableEntry {
         private Square square;
         private Double distance;
@@ -166,23 +146,12 @@ public class Dijkstra {
             return square;
         }
 
-        public void setSquare(Square square) {
-            this.square = square;
-        }
-
         public Double getDistance() {
             return distance;
         }
 
         public void setDistance(Double distance) {
             this.distance = distance;
-        }
-
-        public String toString() {
-            String result = "";
-            result += square.getPosition().toString() + '\t' + "distance: " + distance;
-            return result;
-
         }
     }
 }

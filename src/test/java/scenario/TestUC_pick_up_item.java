@@ -7,12 +7,8 @@ import be.kuleuven.swop.objectron.domain.exception.InventoryFullException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareEmptyException;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -52,10 +48,7 @@ public class TestUC_pick_up_item {
         playerNames.add("p1");
         playerNames.add("p2");
 
-        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
-        Grid grid = GridObjectMother.gridWithoutItems(builder);
-        gameState = new RaceGame(playerNames, grid);
+        gameState = GameObjectMother.raceGameWithoutItems(dimension, playerNames, positions);
 
         pickUpItemHandler = new PickUpItemHandler(gameState);
         player = gameState.getTurnManager().getCurrentTurn().getCurrentPlayer();
