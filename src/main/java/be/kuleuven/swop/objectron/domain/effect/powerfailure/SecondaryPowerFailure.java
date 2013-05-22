@@ -27,7 +27,6 @@ import java.util.List;
 public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
 
     public static final int PF_SECONDARY_ACTIONS = 2;
-    private boolean active = true;
     private int actionsLeft = PF_SECONDARY_ACTIONS;
     private Square square;
 
@@ -55,13 +54,13 @@ public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
 
     @Override
     public void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
-        if(active){
+
             PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
             for(Effect effect : square.getEffects()){
                 effect.accept(visitor);
             }
             movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
-        }
+
     }
 
     @Override
@@ -88,7 +87,6 @@ public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
     public void actionHappened(Observable<TurnSwitchObserver> observable) {
         actionsLeft --;
         if(actionsLeft == 0){
-            this.active = false;
             observable.detach(this);
             square.removeEffect(this);
         }

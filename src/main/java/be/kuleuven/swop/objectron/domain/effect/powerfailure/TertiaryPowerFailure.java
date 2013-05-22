@@ -24,7 +24,6 @@ public class TertiaryPowerFailure implements Effect, TurnSwitchObserver {
 
     public static final int PF_TERTIARY_ACTIONS = 1;
     private int actionsLeft = PF_TERTIARY_ACTIONS;
-    private boolean active = true;
     private Square square;
 
     public TertiaryPowerFailure(Square square, Observable<TurnSwitchObserver> observable) {
@@ -35,13 +34,11 @@ public class TertiaryPowerFailure implements Effect, TurnSwitchObserver {
 
     @Override
     public void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
-        if(active){
             PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
             for(Effect effect : square.getEffects()){
                 effect.accept(visitor);
             }
             movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
-        }
     }
 
     @Override
@@ -69,7 +66,6 @@ public class TertiaryPowerFailure implements Effect, TurnSwitchObserver {
     public void actionHappened(Observable<TurnSwitchObserver> observable) {
         actionsLeft --;
         if(actionsLeft == 0){
-            this.active = false;
             observable.detach(this);
             square.removeEffect(this);
         }

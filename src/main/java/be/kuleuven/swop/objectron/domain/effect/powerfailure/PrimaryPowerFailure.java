@@ -30,7 +30,6 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
     private Direction prevDirection;
     private int rotateCounter;
     private Square square;
-    private boolean active = true;
 
     private int turnsLeft = PF_PRIMARY_TURNS;
 
@@ -79,13 +78,13 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
 
     @Override
     public void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
-        if(active){
+
             PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
             for(Effect effect : square.getEffects()){
                 effect.accept(visitor);
             }
             movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
-        }
+
     }
 
     @Override
@@ -97,7 +96,6 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
     public void turnEnded(Observable<TurnSwitchObserver> observable) {
         turnsLeft --;
         if(turnsLeft == 0){
-            active = false;
             observable.detach(this);
             square.removeEffect(this);
         }
