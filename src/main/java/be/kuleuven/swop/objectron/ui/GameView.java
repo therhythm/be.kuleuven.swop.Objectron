@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
@@ -34,15 +35,15 @@ public class GameView implements GameObserver {
     private TurnViewModel currentTurn;
     private String selectedItem = "no item";
     private Map<Integer, SquareStates> gameGrid[][];
-    private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
-    private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
+    private Map<SquareStates, Image> gridImageMap = new HashMap<>();
+    private Map<String, SquareStates[]> playerColorMap = new HashMap<>();
     private HandlerCatalog catalog;
     private Dimension dimension;
     private SimpleGUI gui;
     private Map<Position, List<Item>> items;   //TODO itemviewmodels
     private Map<Position, List<Effect>> effects; //TODO viewmodel??
     private List<PlayerViewModel> players;
-    private Map<String, Position[]> lastPositions = new HashMap<String, Position[]>();
+    private Map<String, Position[]> lastPositions = new HashMap<>();
 
 
     public GameView(GameStartViewModel vm) {
@@ -55,7 +56,7 @@ public class GameView implements GameObserver {
         this.effects = vm.getEffects();
         for (int i = 0; i < dimension.getHeight(); i++) {
             for (int j = 0; j < dimension.getWidth(); j++) {
-                gameGrid[i][j] = new HashMap<Integer, SquareStates>();
+                gameGrid[i][j] = new HashMap<>();
                 gameGrid[i][j].put(SquareStates.EMPTY.zIndex, SquareStates.EMPTY);
             }
         }
@@ -105,6 +106,8 @@ public class GameView implements GameObserver {
             return SquareStates.IDENTITY_DISK;
         } else if (item instanceof Teleporter) {
             return SquareStates.TELEPORTER;
+        } else if (item instanceof ForcefieldGenerator){
+            return SquareStates.FF_GENERATOR_INACTIVE;
         } else {
             return SquareStates.EMPTY;
         }
@@ -131,7 +134,7 @@ public class GameView implements GameObserver {
                     public void paint(Graphics2D graphics) {
                         for (int i = 0; i < dimension.getWidth(); i++) {
                             for (int j = 0; j < dimension.getHeight(); j++) {
-                                List<Integer> keys = new ArrayList<Integer>(gameGrid[j][i].keySet());
+                                List<Integer> keys = new ArrayList<>(gameGrid[j][i].keySet());
                                 Collections.sort(keys);
                                 for (Integer key : keys) {
                                     graphics.drawImage(gridImageMap.get(gameGrid[j][i].get(key)),
@@ -163,9 +166,14 @@ public class GameView implements GameObserver {
                         TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.POWERFAILURE, gui.loadImage("cell_unpowered.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.TELEPORTER, gui.loadImage("teleporter.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.FF_GENERATOR_ACTIVE, gui.loadImage("force_field_generator_active.png",
+                        TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.FF_GENERATOR_INACTIVE, gui.loadImage("force_field_generator_inactive" +
+                        ".png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.FORCE_FIELD, gui.loadImage("force_field.png", TILEWIDTH, TILEHEIGHT));
 
 
-                Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
+                Map<Direction, Image> directionImageMap = new HashMap<>();
                 directionImageMap.put(Direction.UP_LEFT, gui.loadImage("arrow_NW.png", 20, 20));
                 directionImageMap.put(Direction.UP, gui.loadImage("arrow_N.png", 20, 20));
                 directionImageMap.put(Direction.UP_RIGHT, gui.loadImage("arrow_NE.png", 20, 20));
@@ -416,7 +424,8 @@ public class GameView implements GameObserver {
 
     public enum SquareStates {
         WALL(100), P1_LIGHT_WALL(99), P2_LIGHT_WALL(98), PLAYER1(97), PLAYER2(96), EMPTY(0), POWERFAILURE(1),
-        P1_FINISH(90), P2_FINISH(91), LIGHT_MINE(50), TELEPORTER(49), IDENTITY_DISK(48), CHARGED_IDENTITY_DISK(47);
+        P1_FINISH(80), P2_FINISH(81), LIGHT_MINE(50), TELEPORTER(49), IDENTITY_DISK(48), CHARGED_IDENTITY_DISK(47),
+        FORCE_FIELD(85), FF_GENERATOR_ACTIVE(84), FF_GENERATOR_INACTIVE(83);
 
         private int zIndex;
 
