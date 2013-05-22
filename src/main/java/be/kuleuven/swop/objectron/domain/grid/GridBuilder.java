@@ -48,7 +48,7 @@ public abstract class GridBuilder {
 
     public abstract void addObserver(SquareObserver observer);
 
-    public abstract void initGrid(int powerFailureChance) throws FileInvalidException;
+    public abstract void initGrid(int powerFailureChance);
 
     public abstract Grid buildGrid();
 

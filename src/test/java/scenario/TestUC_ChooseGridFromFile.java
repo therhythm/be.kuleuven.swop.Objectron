@@ -24,7 +24,6 @@ public class TestUC_ChooseGridFromFile {
     public void test_basic_flow() throws FileInvalidException, IOException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").getFile();
         gridBuilder = new FileGridBuilder(input_file, 2);
-        gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
         gridBuilder.buildWalls();
         Grid grid = gridBuilder.buildGrid();
 
@@ -55,13 +54,11 @@ public class TestUC_ChooseGridFromFile {
     public void test_unreachable_square() throws FileInvalidException, IOException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file_unreachable_square.txt").getFile();
         gridBuilder = new FileGridBuilder(input_file, 2);
-        gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
     }
 
     @Test (expected = FileInvalidException.class)
     public void test_wrong_number_of_players() throws FileInvalidException, IOException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file_multiple_starting_positions.txt").getFile();
         gridBuilder = new FileGridBuilder(input_file, 2);
-        gridBuilder.initGrid(Square.POWER_FAILURE_CHANCE);
     }
 }

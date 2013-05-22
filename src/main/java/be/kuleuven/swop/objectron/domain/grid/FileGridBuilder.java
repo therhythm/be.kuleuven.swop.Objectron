@@ -28,11 +28,13 @@ public class FileGridBuilder extends GridBuilder {
 
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
-    public FileGridBuilder(String file, int nbPlayers) throws IOException {
+    public FileGridBuilder(String file, int nbPlayers) throws IOException, FileInvalidException {
         super();
         this.nbPlayers = nbPlayers;
         GridFileReader fileReader = new GridFileReader();
         input = fileReader.readGridFile(file);
+        initGrid(Square.POWER_FAILURE_CHANCE);
+        validateFile();
     }
 
     @Override
@@ -68,7 +70,7 @@ public class FileGridBuilder extends GridBuilder {
     }
 
     @Override
-    public void initGrid(int powerFailureChance) throws FileInvalidException {
+    public void initGrid(int powerFailureChance) {
         dimension = new Dimension(input.length - 2, input.length - 2);
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
@@ -77,9 +79,8 @@ public class FileGridBuilder extends GridBuilder {
                 squares[vertical][horizontal] = new Square(pos, powerFailureChance);
             }
         }
+        interpretInput();
         setupNeighbours();
-        interpretInput(input);
-        validateFile();
     }
 
     private void validateFile() throws FileInvalidException {
@@ -129,11 +130,10 @@ public class FileGridBuilder extends GridBuilder {
         return positions;
     }
 
-    private void interpretInput(char[][] input) {
-        //TODO: *'s are ignored and it's assumed that grids are rectangular, should we support irregular grids?
+    private void interpretInput() {
         wallSegments = new ArrayList<>();
         for (int i = 0; i < input.length; i++) {
-            for (int j = 0; j < input.length; j++) {
+            for (int j = 0; j < input[0].length; j++) {
                 char c = input[i][j];
 
                 if (c == '#') {
