@@ -167,7 +167,7 @@ public class Test_Identity_Disc {
         wallPositions.add(new Position(2, 3));
         walls.add(wallPositions);
 
-        state = GameObjectMother.raceGameWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, playerNames,positions,walls);
+        state = GameObjectMother.raceGameWithSpecifiedWallsWithoutItemsAndPowerFailures(dimension, playerNames,positions, walls);
         grid = state.getGrid();
 
         pickUpItemHandler = new PickUpItemHandler(state);

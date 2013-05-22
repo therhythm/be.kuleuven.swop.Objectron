@@ -21,7 +21,6 @@ import java.util.List;
 public abstract class GameBuilder {
     private boolean withItems = false;
     private boolean withWalls = false;
-    private boolean withPowerFailures = false;
     private GridBuilder builder;
 
     protected List<String> playerNames;
@@ -49,15 +48,7 @@ public abstract class GameBuilder {
         withWalls = true;
     }
 
-    public void withPowerFailures(){
-        withPowerFailures = true;
-    }
-
     public Game buildGame() {
-        if(!withPowerFailures){
-            builder.initGrid(0);
-        }
-
         if(withWalls){
             builder.buildWalls();
         }
