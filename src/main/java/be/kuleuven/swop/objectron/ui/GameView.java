@@ -98,6 +98,9 @@ public class GameView implements GameObserver {
             Position pos = player.getPosition();
             gameGrid[pos.getVIndex()][pos.getHIndex()].put(playerColors[0].zIndex, playerColors[0]);
             gameGrid[pos.getVIndex()][pos.getHIndex()].put(playerColors[2].zIndex, playerColors[2]);
+            Position[] lastPos = new Position[1];
+            lastPos[0] = player.getPosition();
+            lastPositions.put(player.getName(), lastPos);
         }
     }
 
