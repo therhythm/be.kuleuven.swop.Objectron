@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.handler;
 
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.gamestate.*;
@@ -38,13 +39,13 @@ public class StartGameHandler {
         catalog.addHandler(new MovePlayerHandler(game));
         catalog.addHandler(new UseItemHandler(game));
 
+
         List<PlayerViewModel> playerViewModels = new ArrayList<>();
-        //todo fill list
+        for(Player player : game.getPlayers()){
+            playerViewModels.add(player.getPlayerViewModel());
+        }
 
-        PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
-        PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
-
-        return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel
+        return new GameStartViewModel(catalog, dimension, playerViewModels, game.getTurnManager().getCurrentTurn().getViewModel
                 (), game.getGrid().getWalls(), game.getGrid().getItems(), game.getGrid().getEffects(), game);
     }
 
@@ -68,12 +69,11 @@ public class StartGameHandler {
         catalog.addHandler(new UseItemHandler(game));
 
         List<PlayerViewModel> playerViewModels = new ArrayList<>();
-        //todo fill list
+        for(Player player : game.getPlayers()){
+            playerViewModels.add(player.getPlayerViewModel());
+        }
 
-        PlayerViewModel p1 = game.getPlayers().get(0).getPlayerViewModel();
-        PlayerViewModel p2 = game.getPlayers().get(1).getPlayerViewModel();
-
-        return new GameStartViewModel(catalog, dimension, p1, p2, game.getTurnManager().getCurrentTurn().getViewModel
+        return new GameStartViewModel(catalog, dimension, playerViewModels, game.getTurnManager().getCurrentTurn().getViewModel
                 (), game.getGrid().getWalls(), game.getGrid().getItems(), game.getGrid().getEffects(), game);
     }
 }

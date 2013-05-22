@@ -68,7 +68,7 @@ public class GameView implements GameObserver {
         this.effects = vm.getEffects();
         for (int i = 0; i < dimension.getHeight(); i++) {
             for (int j = 0; j < dimension.getWidth(); j++) {
-                gameGrid[i][j] = new HashMap<Integer, SquareStates>();
+                gameGrid[i][j] = new HashMap<>();
                 gameGrid[i][j].put(SquareStates.EMPTY.zIndex, SquareStates.EMPTY);
             }
         }
@@ -152,15 +152,52 @@ public class GameView implements GameObserver {
                 };
 
 
+                //player images
                 gridImageMap.put(SquareStates.PLAYER1, gui.loadImage("player_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.PLAYER2, gui.loadImage("player_blue.png", TILEWIDTH, TILEHEIGHT));
-                gridImageMap.put(SquareStates.EMPTY, gui.loadImage("cell.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER3, gui.loadImage("player_yellow.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER4, gui.loadImage("player_grass.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER5, gui.loadImage("player_purple.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER6, gui.loadImage("player_orange.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER7, gui.loadImage("player_dark_green.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER8, gui.loadImage("player_sky.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER9, gui.loadImage("player_pink.png", TILEWIDTH, TILEHEIGHT));
+
+                //finish images
                 gridImageMap.put(SquareStates.P1_FINISH, gui.loadImage("cell_finish_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_FINISH, gui.loadImage("cell_finish_blue.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P3_FINISH, gui.loadImage("cell_finish_yellow.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P4_FINISH, gui.loadImage("cell_finish_grass.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P5_FINISH, gui.loadImage("cell_finish_purple.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P6_FINISH, gui.loadImage("cell_finish_orange.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P7_FINISH, gui.loadImage("cell_finish_dark_green.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P8_FINISH, gui.loadImage("cell_finish_sky.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P9_FINISH, gui.loadImage("cell_finish_pink.png", TILEWIDTH, TILEHEIGHT));
+
+
+                //light wall images
                 gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH,
                         TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH,
                         TILEHEIGHT));
+                gridImageMap.put(SquareStates.P3_LIGHT_WALL, gui.loadImage("cell_lighttrail_yellow.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P4_LIGHT_WALL, gui.loadImage("cell_lighttrail_grass.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P5_LIGHT_WALL, gui.loadImage("cell_lighttrail_purple.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P6_LIGHT_WALL, gui.loadImage("cell_lighttrail_orange.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P7_LIGHT_WALL, gui.loadImage("cell_lighttrail_dark_green.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P8_LIGHT_WALL, gui.loadImage("cell_lighttrail_sky.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P9_LIGHT_WALL, gui.loadImage("cell_lighttrail_pink.png", TILEWIDTH,
+                        TILEHEIGHT));
+
+
+                gridImageMap.put(SquareStates.EMPTY, gui.loadImage("cell.png", TILEWIDTH, TILEHEIGHT));
+
                 gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("identity_disk.png", TILEWIDTH, TILEHEIGHT));
@@ -170,7 +207,7 @@ public class GameView implements GameObserver {
                 gridImageMap.put(SquareStates.TELEPORTER, gui.loadImage("teleporter.png", TILEWIDTH, TILEHEIGHT));
 
 
-                Map<Direction, Image> directionImageMap = new HashMap<Direction, Image>();
+                Map<Direction, Image> directionImageMap = new HashMap<>();
                 directionImageMap.put(Direction.UP_LEFT, gui.loadImage("arrow_NW.png", 20, 20));
                 directionImageMap.put(Direction.UP, gui.loadImage("arrow_N.png", 20, 20));
                 directionImageMap.put(Direction.UP_RIGHT, gui.loadImage("arrow_NE.png", 20, 20));
