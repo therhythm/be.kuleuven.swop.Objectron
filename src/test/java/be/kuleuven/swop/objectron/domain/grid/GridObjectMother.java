@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class GridObjectMother {
     public static Grid normalGrid(GridBuilder builder, SquareObserver observer) throws GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(GeneratedGridBuilder.POWER_FAILURE_CHANCE);
         builder.buildWalls();
         builder.buildItems();
         builder.addObserver(observer);
@@ -25,7 +25,7 @@ public class GridObjectMother {
 
     // Contstruct a grid without walls and powerfailures
     public static Grid gridWithoutWallsPowerFailures(GridBuilder builder) throws GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(0);
         builder.buildItems();
         return builder.buildGrid();
     }
@@ -34,7 +34,7 @@ public class GridObjectMother {
     public static Grid gridWithSpecifiedWallsWithoutItemsAndPowerFailures(GridBuilder builder,
                                                                           List<Position> wallPositions) throws
             GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(0);
         List<Wall> walls = new ArrayList<>();
 
         for (Position position : wallPositions) {
@@ -51,7 +51,7 @@ public class GridObjectMother {
     // Contstruct a grid with specified walls and without powerfailures
     public static Grid gridWithSpecifiedWallsPowerFailures(GridBuilder builder, List<Position> wallPositions) throws
             GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(0);
         List<Wall> walls = new ArrayList<Wall>();
 
         for (Position position : wallPositions) {
@@ -70,7 +70,7 @@ public class GridObjectMother {
     public static Grid gridWithSpecifiedWallsPowerFailuresItems(GridBuilder builder,
                                                                 List<Position> wallPositions) throws
             GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(0);
         List<Wall> walls = new ArrayList<Wall>();
 
         for (Position position : wallPositions) {
@@ -86,7 +86,7 @@ public class GridObjectMother {
 
     // Contstruct a grid without powerfailures
     public static Grid gridWithoutPowerFailures(GridBuilder builder) throws GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(0);
         builder.buildItems();
         builder.buildWalls();
         return builder.buildGrid();
@@ -94,13 +94,13 @@ public class GridObjectMother {
 
     // Contstruct a grid without walls, items and powerfailures
     public static Grid gridWithoutWallsItemsPowerFailures(GridBuilder builder) throws GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(0);
         return builder.buildGrid();
     }
 
     //construct a grid without walls
     public static Grid gridWithoutWalls(GridBuilder builder) throws GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(GeneratedGridBuilder.POWER_FAILURE_CHANCE);
         builder.buildItems();
         return builder.buildGrid();
     }
@@ -108,14 +108,14 @@ public class GridObjectMother {
 
     //construct a grid without items
     public static Grid gridWithoutItems(GridBuilder builder) throws GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(GeneratedGridBuilder.POWER_FAILURE_CHANCE);
         builder.buildWalls();
         return builder.buildGrid();
     }
 
     // construct a grid without power , walls or items
     public static Grid unpoweredGridWithoutWallsWithoutItems(GridBuilder builder) throws GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(100);
         Grid g = builder.buildGrid();
 
         // powerfailure on every square
@@ -129,7 +129,7 @@ public class GridObjectMother {
 
     // construct a grid without power
     public static Grid unpoweredGrid(GridBuilder builder) throws GridTooSmallException {
-        builder.initGrid();
+        builder.initGrid(100);
         builder.buildWalls();
         builder.buildItems();
         Grid g = builder.buildGrid();

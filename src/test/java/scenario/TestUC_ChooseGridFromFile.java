@@ -29,7 +29,7 @@ public class TestUC_ChooseGridFromFile {
 
     @Test
     public void test_basic_flow() {
-        gridBuilder.initGrid();
+        gridBuilder.initGrid(0);
         gridBuilder.buildWalls();
         Grid grid = gridBuilder.buildGrid();
 

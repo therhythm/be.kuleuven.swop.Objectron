@@ -45,6 +45,7 @@ public class GeneratedGridBuilder implements GridBuilder {
     private Square[][] squares;
     private List<Wall> walls;
     private ForceFieldArea forceFieldArea;
+    private int powerFailureChance = POWER_FAILURE_CHANCE;
 
     public GeneratedGridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException {
         if (!isValidDimension(dimension)) {
@@ -59,7 +60,7 @@ public class GeneratedGridBuilder implements GridBuilder {
         forceFieldArea = new ForceFieldArea();
 
         initPlayerPositions(nbPlayers);
-        initGrid();
+        initGrid(powerFailureChance);
     }
 
 
@@ -124,7 +125,8 @@ public class GeneratedGridBuilder implements GridBuilder {
     }
 
     @Override
-    public void initGrid() {
+    public void initGrid(int powerFailureChance) {
+        this.powerFailureChance = powerFailureChance;
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
@@ -137,7 +139,7 @@ public class GeneratedGridBuilder implements GridBuilder {
 
     @Override
     public Grid buildGrid() {
-        return new Grid(squares, walls, dimension, forceFieldArea, playerPositions, POWER_FAILURE_CHANCE);
+        return new Grid(squares, walls, dimension, forceFieldArea, playerPositions, powerFailureChance);
     }
 
     private ArrayList<Square> getSquaresNotObstructed() {

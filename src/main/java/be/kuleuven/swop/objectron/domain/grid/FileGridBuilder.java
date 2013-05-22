@@ -29,6 +29,7 @@ public class FileGridBuilder implements GridBuilder {
     private ForceFieldArea forceFieldArea;
     private char[][] input;
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
+    private int powerFailureChance = GeneratedGridBuilder.POWER_FAILURE_CHANCE;
 
     public FileGridBuilder(String file) throws IOException {
         GridFileReader fileReader = new GridFileReader();
@@ -74,7 +75,8 @@ public class FileGridBuilder implements GridBuilder {
     }
 
     @Override
-    public void initGrid() {
+    public void initGrid(int powerFailureChance) {
+        this.powerFailureChance = powerFailureChance;
         dimension = new Dimension(input.length - 2, input.length - 2);
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
@@ -94,7 +96,7 @@ public class FileGridBuilder implements GridBuilder {
             positions.add(playerPositions.get(i));
         }
 
-        return new Grid(squares, walls, dimension, forceFieldArea, positions, GeneratedGridBuilder.POWER_FAILURE_CHANCE);
+        return new Grid(squares, walls, dimension, forceFieldArea, positions, powerFailureChance);
     }
 
     private void interpretInput(char[][] input) {
