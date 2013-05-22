@@ -3,12 +3,9 @@ package be.kuleuven.swop.objectron.domain.forceField;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
+import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
@@ -48,7 +45,7 @@ public class Test_Force_Field {
     private Position p2Pos;
 
     @Before
-    public void setUp() throws GridTooSmallException, FileInvalidException {
+    public void setUp() throws GridTooSmallException {
         dimension = new Dimension(10, 10);
 
         p1Pos = new Position(4, 5);
@@ -58,15 +55,12 @@ public class Test_Force_Field {
         positions.add(p1Pos);
         positions.add(p2Pos);
 
-        GridBuilder gridBuilder = new GeneratedGridBuilder(dimension, 2);
-        gridBuilder.setStartingPositions(positions);
-
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
 
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(gridBuilder);
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        grid = state.getGrid();
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);
@@ -446,7 +440,7 @@ public class Test_Force_Field {
     @Test
     public void test_Force_Field_Direction_Left_Up_Pick_Up_ForceField() throws InventoryFullException,
             NotEnoughActionsException, NoItemSelectedException, SquareOccupiedException, InvalidMoveException,
-            GameOverException, GridTooSmallException, FileInvalidException {
+            GameOverException, GridTooSmallException {
         dimension = new Dimension(10, 10);
         p1Pos = new Position(4, 5);
         p2Pos = new Position(6, 6);
@@ -459,10 +453,8 @@ public class Test_Force_Field {
         playerNames.add("p1");
         playerNames.add("p2");
 
-        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        grid = state.getGrid();
 
         movePlayerHandler = new MovePlayerHandler(state);
         endTurnHandler = new EndTurnHandler(state);

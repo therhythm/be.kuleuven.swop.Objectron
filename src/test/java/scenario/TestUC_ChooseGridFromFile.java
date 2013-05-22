@@ -1,9 +1,9 @@
 package scenario;
 
-import be.kuleuven.swop.objectron.domain.exception.FileInvalidException;
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
+
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Test;
 
@@ -18,12 +18,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestUC_ChooseGridFromFile {
 
-    private FileGridBuilder gridBuilder;
+
 
     @Test
-    public void test_basic_flow() throws FileInvalidException, IOException {
+    public void test_basic_flow() throws InvalidFileException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").getFile();
-        gridBuilder = new FileGridBuilder(input_file, 2);
+         FileGridBuilder gridBuilder = new FileGridBuilder(input_file, 2);
         gridBuilder.buildWalls();
         Grid grid = gridBuilder.buildGrid();
 
@@ -50,15 +50,15 @@ public class TestUC_ChooseGridFromFile {
         assertTrue(grid.getSquareAtPosition(new Position(7, 6)).isObstructed());
     }
 
-    @Test (expected = FileInvalidException.class)
-    public void test_unreachable_square() throws FileInvalidException, IOException {
+    @Test (expected = InvalidFileException.class)
+    public void test_unreachable_square() throws InvalidFileException, IOException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file_unreachable_square.txt").getFile();
-        gridBuilder = new FileGridBuilder(input_file, 2);
+        new FileGridBuilder(input_file, 2);
     }
 
-    @Test (expected = FileInvalidException.class)
-    public void test_wrong_number_of_players() throws FileInvalidException, IOException {
+    @Test (expected = InvalidFileException.class)
+    public void test_wrong_number_of_players() throws InvalidFileException, IOException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file_multiple_starting_positions.txt").getFile();
-        gridBuilder = new FileGridBuilder(input_file, 2);
+        new FileGridBuilder(input_file, 2);
     }
 }

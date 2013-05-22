@@ -3,13 +3,8 @@ package be.kuleuven.objectron.model;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
+import be.kuleuven.swop.objectron.domain.gamestate.*;
+import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.square.PowerFailure;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -38,7 +33,7 @@ public class TestSquare {
     private MovePlayerHandler movePlayerHandler;
 
     @Before
-    public void setUp() throws GridTooSmallException, SquareOccupiedException, FileInvalidException {
+    public void setUp() throws GridTooSmallException, SquareOccupiedException {
         Position p1Pos = new Position(5, 4);
         Position p2Pos = new Position(5, 3);
 
@@ -51,11 +46,8 @@ public class TestSquare {
         playerNames.add("p2");
 
         Dimension dimension = new Dimension(10, 10);
-
-        GridBuilder builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-        gamestate = new RaceGame(playerNames, grid);
+        gamestate = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        grid = gamestate.getGrid();
 
         TurnManager turnManager = gamestate.getTurnManager();
         turnManager.getCurrentTurn().setMoved();

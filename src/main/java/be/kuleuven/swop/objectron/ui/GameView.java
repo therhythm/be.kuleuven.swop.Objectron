@@ -91,9 +91,9 @@ public class GameView implements GameObserver {
         lastPositions.put(p1.getName(), new Position[0]);
         lastPositions.put(p2.getName(), new Position[0]);
         gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()].put(SquareStates.PLAYER2.zIndex, SquareStates.PLAYER2);
-        gameGrid[p1.getStartPosition().getVIndex()][p1.getStartPosition().getHIndex()].put(SquareStates.P2_FINISH
+        gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()].put(SquareStates.P2_FINISH
                 .zIndex, SquareStates.P2_FINISH);
-        gameGrid[p2.getStartPosition().getVIndex()][p2.getStartPosition().getHIndex()].put(SquareStates.P1_FINISH
+        gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()].put(SquareStates.P1_FINISH
                 .zIndex, SquareStates.P1_FINISH);
 
     }

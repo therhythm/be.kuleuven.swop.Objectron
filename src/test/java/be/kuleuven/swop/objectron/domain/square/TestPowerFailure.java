@@ -4,13 +4,10 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
-import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
+import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
+import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -41,10 +38,9 @@ public class TestPowerFailure implements SquareObserver {
     private boolean regainedPower;
     private boolean powerLoss;
     private int powerLossCounter;
-    private GridBuilder builder;
 
     @Before
-    public void setUp() throws GridTooSmallException, SquareOccupiedException, FileInvalidException {
+    public void setUp() throws GridTooSmallException, SquareOccupiedException {
         Dimension dimension = new Dimension(10, 10);
 
         List<Position> positions = new ArrayList<>();
@@ -55,11 +51,8 @@ public class TestPowerFailure implements SquareObserver {
         playerNames.add("p1");
         playerNames.add("p2");
 
-
-        builder = new GeneratedGridBuilder(dimension, 2);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsPowerFailures(builder);
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithoutWallsPowerFailures(dimension, playerNames, positions);
+        grid = state.getGrid();
 
         player = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
         currentSquare = player.getCurrentSquare();
@@ -114,11 +107,12 @@ public class TestPowerFailure implements SquareObserver {
 
     @Test
     public void checkRotatingPowerFailure() throws GridTooSmallException, InvalidMoveException,
-            NotEnoughActionsException, GameOverException, SquareOccupiedException, FileInvalidException {
+            NotEnoughActionsException, GameOverException, SquareOccupiedException {
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(0, 0));
         positions.add(new Position(2, 2));
 
+        GridBuilder builder = new GeneratedGridBuilder(new Dimension(10,10), 2);
         builder.setStartingPositions(positions);
         grid = GridObjectMother.gridWithoutWalls(builder);
         Square currentSquare = grid.getSquareAtPosition(new Position(5, 5));

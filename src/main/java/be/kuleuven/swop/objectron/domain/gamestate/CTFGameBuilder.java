@@ -3,26 +3,28 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.effect.CtfFinish;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
+import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.util.Dimension;
 
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Nik
- * Date: 5/17/13
- * Time: 4:29 PM
- * To change this template use File | Settings | File Templates.
+ * @author : Nik Torfs
+ *         Date: 20/05/13
+ *         Time: 02:46
  */
-public class CTFGame extends Game {
-    public CTFGame(List<String> playerNames, Grid gameGrid) {
-        super(playerNames, gameGrid);
+public class CTFGameBuilder extends GameBuilder {
+    public CTFGameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException {
+        super(playerNames, dimension);
     }
 
     @Override
-    protected void initialize(List<Player> players) {
+    protected List<Player> initializePlayers(List<Square> playerPositions) {
+        List<Player> players = super.initializePlayers(playerPositions);
+
         for (Player player : players) {
             Square currentSquare = player.getCurrentSquare();
             Flag flag = new Flag(player, currentSquare);
@@ -30,5 +32,7 @@ public class CTFGame extends Game {
             currentSquare.addItem(flag);
             currentSquare.addEffect(ctfFinish);
         }
+
+        return players;
     }
 }

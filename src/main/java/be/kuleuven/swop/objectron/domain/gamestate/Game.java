@@ -18,28 +18,19 @@ import java.util.List;
  * Date: 5/17/13
  * Time: 4:25 PM
  */
-public abstract class Game implements SquareObserver, TurnSwitchObserver, Observable<GameObserver> {
+public class Game implements SquareObserver, TurnSwitchObserver, Observable<GameObserver> {
     private Grid gameGrid;
     private List<Player> players = new ArrayList<Player>();
     private List<GameObserver> observers = new ArrayList<>();
     private TurnManager turnManager;
 
-    public Game(List<String> playerNames,
+    public Game(List<Player> players,
                 Grid gameGrid) {
         this.gameGrid = gameGrid;
+        this.players = players;
 
-        // TODO fix dependencies in gamebuilder
-        List<Square> playerPositions = gameGrid.getPlayerPositions();
-        for (int i = 0; i < playerNames.size(); i++) {
-            players.add(new Player(playerNames.get(i), playerPositions.get(i)));
-        }
-
-
-        initialize(players);
         initializeTurnmanager();
     }
-
-    protected abstract void initialize(List<Player> players);
 
     private void initializeTurnmanager() {
         turnManager = new TurnManager(players);

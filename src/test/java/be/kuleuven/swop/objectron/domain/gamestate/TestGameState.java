@@ -3,10 +3,7 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
-import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
-import be.kuleuven.swop.objectron.domain.grid.GridObjectMother;
+import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -31,10 +28,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestGameState {
     private Game state;
-    private Grid grid;
 
     @Before
-    public void setUp() throws GridTooSmallException, FileInvalidException {
+    public void setUp() throws GridTooSmallException {
         Position p1Pos = new Position(0, 0);
         Position p2Pos = new Position(1, 0);
         List<Position> positions = new ArrayList<>();
@@ -45,10 +41,8 @@ public class TestGameState {
         playerNames.add("p1");
         playerNames.add("p2");
 
-        GridBuilder builder = new GeneratedGridBuilder(new Dimension(10, 10), 2);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-        state = new RaceGame(playerNames, grid);
+        Dimension dimension = new Dimension(10, 10);
+        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension,playerNames,positions);
     }
 
     @Test
@@ -72,8 +66,7 @@ public class TestGameState {
 
     @Test
     public void test_win_meerdere_players() throws GridTooSmallException, GameOverException, InvalidMoveException,
-            NotEnoughActionsException, SquareOccupiedException, FileInvalidException {
-
+            NotEnoughActionsException, SquareOccupiedException {
 
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
@@ -88,11 +81,7 @@ public class TestGameState {
         positions.add(new Position(9, 9));
         positions.add(new Position(0, 0));
 
-        GridBuilder builder = new GeneratedGridBuilder(new Dimension(10, 10), 4);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-
-        state = new RaceGame(playerNames, grid);
+        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(new Dimension(10, 10), playerNames, positions);
         EndTurnHandler endTurnHandler = new EndTurnHandler(state);
         MovePlayerHandler movePlayerHandler = new MovePlayerHandler(state);
 
@@ -109,7 +98,7 @@ public class TestGameState {
 
     @Test
     public void test_win_ctf_mode() throws GridTooSmallException, GameOverException, NotEnoughActionsException,
-            InvalidMoveException, InventoryFullException, SquareOccupiedException, FileInvalidException {
+            InvalidMoveException, InventoryFullException, SquareOccupiedException {
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
@@ -123,11 +112,8 @@ public class TestGameState {
         positions.add(new Position(2, 2));
         positions.add(new Position(1, 1));
 
-        GridBuilder builder = new GeneratedGridBuilder(new Dimension(10, 10), 4);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
-
-        state = new CTFGame(playerNames, grid);
+        state = GameObjectMother.ctfGameWithoutWallsItemsPowerFailures(new Dimension(10, 10), playerNames, positions);
+        Grid grid = state.getGrid();
 
         //controleren of vlaggen op juiste square staan
         assertTrue(grid.getSquareAtPosition(new Position(1, 2)).getAvailableItems().size() == 1);

@@ -2,8 +2,8 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
-import be.kuleuven.swop.objectron.domain.exception.FileInvalidException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
+import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -28,11 +28,16 @@ public class FileGridBuilder extends GridBuilder {
 
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
-    public FileGridBuilder(String file, int nbPlayers) throws IOException, FileInvalidException {
+
+    public FileGridBuilder(String file, int nbPlayers) throws InvalidFileException {
         super();
         this.nbPlayers = nbPlayers;
-        GridFileReader fileReader = new GridFileReader();
-        input = fileReader.readGridFile(file);
+        try {
+            GridFileReader fileReader = new GridFileReader();
+            input = fileReader.readGridFile(file);
+        } catch (IOException e) {
+            throw new InvalidFileException("The specified file wasn't usable");
+        }
         initGrid(Square.POWER_FAILURE_CHANCE);
         validateFile();
     }
@@ -56,8 +61,8 @@ public class FileGridBuilder extends GridBuilder {
     }
 
     @Override
-    public void buildWalls(List<Wall> walls) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void buildWalls(List<List<Position>> walls) {
+
     }
 
     @Override
@@ -83,22 +88,21 @@ public class FileGridBuilder extends GridBuilder {
         setupNeighbours();
     }
 
-    private void validateFile() throws FileInvalidException {
+    private void validateFile() throws InvalidFileException {
         checkPaths();
         checkStartingPositions();
     }
 
-    private void checkStartingPositions() throws FileInvalidException {
+    private void checkStartingPositions() throws InvalidFileException {
         if (nbPlayers != playerPositions.size()) {
-            throw new FileInvalidException("The number of starting positions in the file does not match the number of players.");
+            throw new InvalidFileException("The number of starting positions in the file does not match the number of players.");
         }
     }
 
-    private void checkPaths() throws FileInvalidException {
+    private void checkPaths() throws InvalidFileException {
         ArrayList<Square> freeSquares = new ArrayList<>();
-        for (int i = 0; i < squares.length; i++) {
-            for (int j = 0; j < squares.length; j++) {
-                Square square = squares[i][j];
+        for (Square[] row : squares) {
+            for (Square square : row) {
                 if (!wallSegments.contains(square)) {
                     freeSquares.add(square);
                 }
@@ -109,7 +113,7 @@ public class FileGridBuilder extends GridBuilder {
             for (int j = 0; j < freeSquares.size(); j++) {
                 if (dijkstra.getShortestDistance(freeSquares.get(i), freeSquares.get(j)) == Double.POSITIVE_INFINITY
                         && i != j) {
-                    throw new FileInvalidException("There are unreachable squares in this input.");
+                    throw new InvalidFileException("There are unreachable squares in this input.");
                 }
             }
         }
