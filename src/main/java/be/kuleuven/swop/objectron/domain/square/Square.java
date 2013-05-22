@@ -115,12 +115,6 @@ public class Square implements Observable<SquareObserver> {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
 
-
-
-    public void newTurn(Turn currentTurn) {   //todo observer
-
-    }
-
     @Override
     public void attach(SquareObserver observer) {
         observers.add(observer);

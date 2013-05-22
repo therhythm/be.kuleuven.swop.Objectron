@@ -2,6 +2,8 @@ package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.SecondaryPowerFailure;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.TertiaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.RaceGame;
@@ -16,6 +18,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -82,6 +85,28 @@ public class TestPowerfailure {
         gamestate.getTurnManager().getCurrentTurn().setMoved();
         gamestate.getTurnManager().endTurn();
         assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), Turn.ACTIONS_EACH_TURN - 1);
+    }
+
+    @Test
+    public void test_pf_passing(){
+        new PrimaryPowerFailure(grid.getSquareAtPosition(new Position(7,7)), gamestate.getTurnManager());
+        assertEquals(3,countPowerFailures());
+        gamestate.getTurnManager().getCurrentTurn().reduceAction();
+        assertEquals(2,countPowerFailures());
+        gamestate.getTurnManager().getCurrentTurn().reduceAction();
+        assertEquals(3,countPowerFailures());
+    }
+
+    private int countPowerFailures(){
+        int powerFailureCounter = 0;
+        for(SquareViewModel sq: grid.getViewModel().getSquareViewModels()){
+            for(Class<?>c: sq.getEffectViewModels()){
+                if(c.equals(PrimaryPowerFailure.class) || c.equals(SecondaryPowerFailure.class) || c.equals(TertiaryPowerFailure.class)){
+                   powerFailureCounter ++;
+                }
+            }
+        }
+        return powerFailureCounter;
     }
 
 
