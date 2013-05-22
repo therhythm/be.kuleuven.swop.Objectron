@@ -93,7 +93,7 @@ public class TestPowerFailure {
         new PrimaryPowerFailure(square, gamestate.getTurnManager());
         gamestate.getTurnManager().getCurrentTurn().setMoved();
         gamestate.getTurnManager().endTurn();
-        assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), Turn.ACTIONS_EACH_TURN - 1);
+        assertEquals(Turn.ACTIONS_EACH_TURN - 1, gamestate.getTurnManager().getCurrentTurn().getActionsRemaining());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class TestPowerFailure {
         new SecondaryPowerFailure(square, Direction.UP, gamestate.getTurnManager());
         gamestate.getTurnManager().getCurrentTurn().setMoved();
         gamestate.getTurnManager().endTurn();
-        assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), Turn.ACTIONS_EACH_TURN - 1);
+        assertEquals(Turn.ACTIONS_EACH_TURN - 1, gamestate.getTurnManager().getCurrentTurn().getActionsRemaining());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class TestPowerFailure {
         new TertiaryPowerFailure(square, gamestate.getTurnManager());
         gamestate.getTurnManager().getCurrentTurn().setMoved();
         gamestate.getTurnManager().endTurn();
-        assertEquals(gamestate.getTurnManager().getCurrentTurn().getActionsRemaining(), Turn.ACTIONS_EACH_TURN - 1);
+        assertEquals(Turn.ACTIONS_EACH_TURN - 1, gamestate.getTurnManager().getCurrentTurn().getActionsRemaining());
     }
 
     @Test
