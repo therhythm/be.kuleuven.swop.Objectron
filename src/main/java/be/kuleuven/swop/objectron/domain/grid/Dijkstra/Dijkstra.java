@@ -62,7 +62,6 @@ public class Dijkstra {
 
     public Double getShortestDistance(Square start, Square destination) throws SquareUnreachableException {
         this.startSquare = start;
-        this.destinationSquare = destination;
 
         initialisation();
 
