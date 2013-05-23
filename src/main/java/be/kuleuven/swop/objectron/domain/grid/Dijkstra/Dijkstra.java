@@ -15,7 +15,6 @@ import java.util.ArrayList;
  */
 public class Dijkstra {
     private Square startSquare;
-    private Square destinationSquare;
     private ArrayList<TableEntry> L;
     private ArrayList<Square> T;
     private ArrayList<DirectedEdge> edges;
@@ -68,22 +67,15 @@ public class Dijkstra {
         initialisation();
 
         TableEntry relaxedEntry = relax();
+
         while (!relaxedEntry.getSquare().equals(destination)) {
-            if(relaxedEntry.getSquare().equals(null))
-                throw new SquareUnreachableException("square is unreachable");
             relaxedEntry = relax();
-            checkChangedT();
+
+            if(relaxedEntry.getSquare() == null){
+                throw new SquareUnreachableException("square is unreachable");
+            }
         }
         return relaxedEntry.getDistance();
-    }
-
-    //todo Useless?
-    private void checkChangedT() {
-        int teller = 0;
-        for (TableEntry tableEntry : L) {
-            if (tableEntry.getDistance() != Double.POSITIVE_INFINITY)
-                teller++;
-        }
     }
 
     private void initialisation() {

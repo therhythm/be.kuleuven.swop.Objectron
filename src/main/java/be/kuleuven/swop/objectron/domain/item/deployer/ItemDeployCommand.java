@@ -10,7 +10,7 @@ import be.kuleuven.swop.objectron.domain.item.Item;
  *         Date: 24/04/13
  *         Time: 22:49
  */
-public interface ItemDeployer {
+public interface ItemDeployCommand {
 
     void deploy(Item item) throws SquareOccupiedException, GameOverException, NotEnoughActionsException;
 }

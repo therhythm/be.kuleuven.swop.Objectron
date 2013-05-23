@@ -12,7 +12,7 @@ import be.kuleuven.swop.objectron.domain.item.Item;
  * Time: 9:13
  * To change this template use File | Settings | File Templates.
  */
-public class ReturnFlagToBaseDeployer implements ItemDeployer {
+public class ReturnFlagToBaseDeployCommand implements ItemDeployCommand {
     @Override
     public void deploy(Item item) throws SquareOccupiedException, GameOverException {
         Flag flag = (Flag) item;

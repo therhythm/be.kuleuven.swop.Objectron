@@ -3,7 +3,7 @@ package be.kuleuven.swop.objectron.domain;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployCommand;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.movement.PlayerMovementStrategy;
@@ -78,7 +78,7 @@ public class Player implements Movable, Obstruction {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item, ItemDeployer deployer) throws SquareOccupiedException, NotEnoughActionsException,
+    public void useItem(Item item, ItemDeployCommand deployer) throws SquareOccupiedException, NotEnoughActionsException,
             GameOverException {
 
         deployer.deploy(item);

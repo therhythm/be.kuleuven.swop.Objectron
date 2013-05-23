@@ -17,4 +17,5 @@ public interface Effect {
             SquareOccupiedException;
 
     void accept(EffectVisitor visitor);
+
 }

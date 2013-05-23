@@ -2,11 +2,7 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Observable;
-import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.ArrayList;
@@ -18,9 +14,9 @@ import java.util.List;
  * Date: 5/17/13
  * Time: 4:25 PM
  */
-public class Game implements SquareObserver, TurnSwitchObserver, Observable<GameObserver> {
+public class Game implements TurnSwitchObserver, Observable<GameObserver> {
     private Grid gameGrid;
-    private List<Player> players = new ArrayList<Player>();
+    private List<Player> players = new ArrayList<>();
     private List<GameObserver> observers = new ArrayList<>();
     private TurnManager turnManager;
 
@@ -58,12 +54,8 @@ public class Game implements SquareObserver, TurnSwitchObserver, Observable<Game
             playerVMs.add(p.getPlayerViewModel());
         }
         for (GameObserver observer : observers) {
-            observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs);
+            observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs, getGrid().getViewModel());
         }
-    }
-
-    public void endAction() {
-        gameGrid.endAction();
     }
 
     @Override
@@ -77,28 +69,7 @@ public class Game implements SquareObserver, TurnSwitchObserver, Observable<Game
     }
 
     @Override
-    public void lostPower(Position position) {
-        for (GameObserver observer : observers) {
-            observer.noPower(position);
-        }
-    }
-
-    @Override
-    public void regainedPower(Position position) {
-        for (GameObserver observer : observers) {
-            observer.regainedPower(position);
-        }
-    }
-
-    @Override //todo itemviewmodel
-    public void itemPlaced(Item item, Position position) {
-        for (GameObserver observer : observers) {
-            observer.itemPlaced(item, position);
-        }
-    }
-
-    @Override
-    public void turnEnded(Turn newTurn) {
+    public void turnEnded(Observable<TurnSwitchObserver> observable) {
         //todo UI message?
     }
 
@@ -109,6 +80,11 @@ public class Game implements SquareObserver, TurnSwitchObserver, Observable<Game
 
     @Override
     public void actionReduced() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //donothing
+    }
+
+    @Override
+    public void actionHappened(Observable<TurnSwitchObserver> observable) {
+
     }
 }

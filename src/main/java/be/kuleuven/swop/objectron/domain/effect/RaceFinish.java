@@ -34,4 +34,5 @@ public class RaceFinish implements Effect {
     public void accept(EffectVisitor visitor) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
 }

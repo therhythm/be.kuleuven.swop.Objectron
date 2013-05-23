@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.gamestate.CTFGameBuilder;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.GameBuilder;
@@ -22,7 +23,7 @@ public class GameObjectMother {
 
     // Contstruct a grid without walls and powerfailures
     public static Game raceGameWithoutWallsPowerFailures(Dimension dimension,
-                                                         List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException {
+                                                         List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException, TooManyPlayersException {
         GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
         builder.initGrid(0);
         builder.setStartingPositions(playerPositions);
@@ -36,7 +37,7 @@ public class GameObjectMother {
     // Contstruct a grid with specified walls and without powerfailures and Items
     public static Game raceGameWithSpecifiedWallsWithoutItemsAndPowerFailures(Dimension dimension,
                                                                               List<String> playerNames, List<Position> playerPositions, List<List<Position>> wallPositions) throws
-            GridTooSmallException {
+            GridTooSmallException, TooManyPlayersException {
         GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
         builder.initGrid(0);
         builder.setStartingPositions(playerPositions);
@@ -49,7 +50,7 @@ public class GameObjectMother {
 
     // Contstruct a grid without walls, items and powerfailures
     public static Game raceGameWithoutWallsItemsPowerFailures(Dimension dimension,
-                                                              List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException {
+                                                              List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException, TooManyPlayersException {
         GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
         builder.initGrid(0);
         builder.setStartingPositions(playerPositions);
@@ -61,7 +62,7 @@ public class GameObjectMother {
 
     // Contstruct a grid without walls, items and powerfailures
     public static Game ctfGameWithoutWallsItemsPowerFailures(Dimension dimension,
-                                                              List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException {
+                                                              List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException, TooManyPlayersException {
         GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
         builder.initGrid(0);
         builder.setStartingPositions(playerPositions);
@@ -73,7 +74,7 @@ public class GameObjectMother {
 
     //construct a grid without walls
     public static Game raceGameWithoutWalls(Dimension dimension,
-                                            List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException {
+                                            List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException, TooManyPlayersException {
         GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
         builder.setStartingPositions(playerPositions);
         builder.buildItems();
@@ -85,7 +86,7 @@ public class GameObjectMother {
 
     //construct a grid without items
     public static Game raceGameWithoutItems(Dimension dimension,
-                                            List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException {
+                                            List<String> playerNames, List<Position> playerPositions) throws GridTooSmallException, TooManyPlayersException {
         GridBuilder builder = new GeneratedGridBuilder(dimension, playerNames.size());
         builder.setStartingPositions(playerPositions);
         builder.buildWalls();

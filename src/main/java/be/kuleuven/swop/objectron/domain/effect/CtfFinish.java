@@ -7,7 +7,7 @@ import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.deployer.ReturnFlagToBaseDeployer;
+import be.kuleuven.swop.objectron.domain.item.deployer.ReturnFlagToBaseDeployCommand;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class CtfFinish implements Effect {
 
     private void collectFlag(Flag flag, Player player) throws SquareOccupiedException, NotEnoughActionsException,
             GameOverException {
-        ReturnFlagToBaseDeployer returnFlagToBaseDeployer = new ReturnFlagToBaseDeployer();
+        ReturnFlagToBaseDeployCommand returnFlagToBaseDeployer = new ReturnFlagToBaseDeployCommand();
         collectedFlags.add(flag);
         player.useItem(flag, returnFlagToBaseDeployer);
     }

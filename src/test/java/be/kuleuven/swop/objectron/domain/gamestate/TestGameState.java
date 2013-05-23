@@ -30,7 +30,7 @@ public class TestGameState {
     private Game state;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, TooManyPlayersException {
         Position p1Pos = new Position(0, 0);
         Position p2Pos = new Position(1, 0);
         List<Position> positions = new ArrayList<>();
@@ -65,40 +65,8 @@ public class TestGameState {
     }
 
     @Test
-    public void test_win_meerdere_players() throws GridTooSmallException, GameOverException, InvalidMoveException,
-            NotEnoughActionsException, SquareOccupiedException {
-
-        List<String> playerNames = new ArrayList<>();
-        playerNames.add("p1");
-        playerNames.add("p2");
-        playerNames.add("p3");
-        playerNames.add("p4");
-
-        List<Position> positions = new ArrayList<>();
-
-        positions.add(new Position(0, 9));
-        positions.add(new Position(9, 0));
-        positions.add(new Position(9, 9));
-        positions.add(new Position(0, 0));
-
-        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(new Dimension(10, 10), playerNames, positions);
-        EndTurnHandler endTurnHandler = new EndTurnHandler(state);
-        MovePlayerHandler movePlayerHandler = new MovePlayerHandler(state);
-
-        assertTrue(state.getTurnManager().getPlayers().size() == 4);
-        endTurnHandler.endTurn();
-        assertTrue(state.getTurnManager().getPlayers().size() == 3);
-        movePlayerHandler.move(Direction.DOWN);
-        endTurnHandler.endTurn();
-        assertTrue(state.getTurnManager().getPlayers().size() == 3);
-        endTurnHandler.endTurn();
-
-        assertTrue(state.getTurnManager().getPlayers().size() == 2);
-    }
-
-    @Test
     public void test_win_ctf_mode() throws GridTooSmallException, GameOverException, NotEnoughActionsException,
-            InvalidMoveException, InventoryFullException, SquareOccupiedException {
+            InvalidMoveException, InventoryFullException, SquareOccupiedException, TooManyPlayersException {
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
