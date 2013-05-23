@@ -21,11 +21,10 @@ import java.util.*;
  *         Date: 22/02/13
  *         Time: 00:03
  */
-public class Square implements Observable<SquareObserver> {
+public class Square{
 
     private final Position position;
 
-    private Set<SquareObserver> observers = new HashSet<>();
     private Map<Direction, Square> neighbours = new HashMap<>();
     private List<Item> items = new ArrayList<>();
     private List<Effect> effects = new ArrayList<>();
@@ -68,7 +67,6 @@ public class Square implements Observable<SquareObserver> {
 
     public void addItem(Item item) {
         this.items.add(item);
-        notifyItemPlaced(item);
     }
 
     public void addEffect(Effect effect) {
@@ -113,22 +111,6 @@ public class Square implements Observable<SquareObserver> {
 
     public String toString() {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
-    }
-
-    @Override
-    public void attach(SquareObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void detach(SquareObserver observer) {
-        observers.remove(observer);
-    }
-
-    public void notifyItemPlaced(Item item) {
-        for (SquareObserver observer : observers) {
-            observer.itemPlaced(item, this.position);
-        }
     }
 
     public List<Effect> getEffects() {

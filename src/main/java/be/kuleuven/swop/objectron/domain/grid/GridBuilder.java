@@ -9,7 +9,6 @@ import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -48,8 +47,6 @@ public abstract class GridBuilder {
     public abstract void buildWalls();
 
     public abstract void buildWalls(List<List<Position>> wallPositions);
-
-    public abstract void addObserver(SquareObserver observer);
 
     public abstract void initGrid(int powerFailureChance);
 

@@ -6,7 +6,6 @@ import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 
@@ -97,15 +96,6 @@ public class GeneratedGridBuilder extends GridBuilder {
         }
 
         this.walls = walls;
-    }
-
-    @Override
-    public void addObserver(SquareObserver observer) {
-        for (Square[] row : squares) {
-            for (Square s : row) {
-                s.attach(observer);
-            }
-        }
     }
 
     @Override

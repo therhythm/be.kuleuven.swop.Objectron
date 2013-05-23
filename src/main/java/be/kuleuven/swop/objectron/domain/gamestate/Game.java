@@ -2,11 +2,7 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Observable;
-import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
 import java.util.ArrayList;
@@ -18,9 +14,9 @@ import java.util.List;
  * Date: 5/17/13
  * Time: 4:25 PM
  */
-public class Game implements SquareObserver, TurnSwitchObserver, Observable<GameObserver> {
+public class Game implements TurnSwitchObserver, Observable<GameObserver> {
     private Grid gameGrid;
-    private List<Player> players = new ArrayList<Player>();
+    private List<Player> players = new ArrayList<>();
     private List<GameObserver> observers = new ArrayList<>();
     private TurnManager turnManager;
 
@@ -70,13 +66,6 @@ public class Game implements SquareObserver, TurnSwitchObserver, Observable<Game
     @Override
     public void detach(GameObserver observer) {
         observers.remove(observer);
-    }
-
-    @Override //todo itemviewmodel  this can be removed soon
-    public void itemPlaced(Item item, Position position) {
-        for (GameObserver observer : observers) {
-            observer.itemPlaced(item, position);
-        }
     }
 
     @Override
