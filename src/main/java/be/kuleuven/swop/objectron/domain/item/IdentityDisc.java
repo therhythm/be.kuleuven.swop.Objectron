@@ -128,7 +128,7 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void effectActivation() {
+    public void dirsupted() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

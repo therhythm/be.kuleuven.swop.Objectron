@@ -23,7 +23,7 @@ public class Teleporter implements Effect {
             NotEnoughActionsException {
         try {
             movable.getTeleportStrategy().teleport(movable, this, manager);
-            movable.effectActivation();
+            movable.dirsupted();
         } catch (InvalidMoveException | WallHitException | ForceFieldHitException | PlayerHitException e) {
             // teleportation not possible.. do nothing
         }

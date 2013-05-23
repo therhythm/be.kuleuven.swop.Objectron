@@ -131,7 +131,7 @@ public abstract class Player implements Movable, Obstruction {
     }
 
     @Override
-    public void effectActivation() {
+    public void dirsupted() {
         EffectActivation activation = new EffectActivation(this);
         List<Item> inventoryCopy = new ArrayList<Item>();
         inventoryCopy.addAll(inventory.getAllItems());

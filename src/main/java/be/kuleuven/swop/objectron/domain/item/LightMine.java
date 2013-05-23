@@ -28,7 +28,7 @@ public class LightMine implements Item, Effect {
     public void activate(Movable movable, TurnManager manager) {
         if(isActive){
             manager.getCurrentTurn().addPenalty(NB_ACTIONS_BLINDED);
-            movable.effectActivation();
+            movable.dirsupted();
             isActive = false;
         }
     }

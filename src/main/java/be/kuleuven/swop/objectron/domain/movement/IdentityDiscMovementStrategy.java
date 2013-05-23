@@ -8,7 +8,6 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
 import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.IdentityDiscBehavior;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 
@@ -39,7 +38,7 @@ public class IdentityDiscMovementStrategy implements MovementStrategy {
             turnManager.endTurn();
         }
         turnManager.getCurrentTurn().extraTurn();
-        player.effectActivation();
+        player.dirsupted();
         throw new PlayerHitException();
     }
 

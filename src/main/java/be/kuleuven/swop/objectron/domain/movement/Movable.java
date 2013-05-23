@@ -17,5 +17,5 @@ public interface Movable {
 
     void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException,
             ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException;
-    void effectActivation();
+    void dirsupted();
 }
