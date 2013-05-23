@@ -1,8 +1,11 @@
 package be.kuleuven.swop.objectron.domain.item.forceField;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -128,13 +131,18 @@ public class ForceFieldArea implements TurnSwitchObserver {
 
     @Override
     public void actionReduced() {
+
+    }
+
+    @Override
+    public void actionHappened(TurnObserver observable,List<Player> players) {
         for (ForceField forceFieldPair : listForceFields) {
-            forceFieldPair.update();
+            forceFieldPair.update(observable,players);
         }
     }
 
     @Override
     public void actionHappened(Observable<TurnSwitchObserver> observable) {
-        //do nothing
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

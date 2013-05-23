@@ -15,6 +15,7 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     private List<Player> players;
     private Set<TurnSwitchObserver> observers = new HashSet<>();
 
+
     public TurnManager(List<Player> players) {
         this.currentTurn = new Turn(players.get(0));
         this.players = players;
@@ -87,8 +88,14 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     public void actionReduced() {
         Set<TurnSwitchObserver> copyOfSet = new HashSet<>(observers);
         for (TurnSwitchObserver observer : copyOfSet) {
-            observer.actionReduced();
+           // observer.actionReduced(this, players);
+            observer.actionHappened(this,players);
             observer.actionHappened(this);
         }
+    }
+
+    @Override
+    public void killPlayer(Player player) {
+        this.players.remove(player);
     }
 }

@@ -4,10 +4,16 @@ import be.kuleuven.swop.objectron.domain.Obstruction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,15 +38,29 @@ public class ForceField implements Obstruction {
         this.forceField1 = forceField1;
         this.forceField2 = forceField2;
         this.affectedSquares = squaresBetween;
-
+        this.playerHitLastTime = new ArrayList<Player>();
         deactivate();
     }
 
-    private void activate() {
+    private void activate(TurnObserver observable, List<Player> players) {
         active = true;
         for (Square square : affectedSquares) {
             square.addObstruction(this);
         }
+        List<Player> newListPlayerHit = new ArrayList<Player>();
+
+        for (Player player : players) {
+            for (Square square : affectedSquares) {
+                if (player.getCurrentSquare().equals(square)) {
+                    if (playerHitLastTime.contains(player)) {
+                        observable.killPlayer(player);
+                    }
+                    newListPlayerHit.add(player);
+                }
+            }
+        }
+        playerHitLastTime = newListPlayerHit;
+
     }
 
     private void deactivate() {
@@ -50,20 +70,22 @@ public class ForceField implements Obstruction {
         }
     }
 
-    private void switchActivation() {
+    private void switchActivation(TurnObserver observable, List<Player> players) {
         currentTurnSwitch = TURNSWITCH;
         if (active)
             deactivate();
         else
-            activate();
+            activate(observable, players);
 
     }
 
-    public void update() {
+    public void update(TurnObserver observable, List<Player> players) {
         currentTurnSwitch--;
         if (currentTurnSwitch == 0) {
-            this.switchActivation();
+            this.switchActivation(observable, players);
         }
+
+
     }
 
     public void prepareToRemove() {

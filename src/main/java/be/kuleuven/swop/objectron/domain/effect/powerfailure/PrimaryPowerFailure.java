@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.effect.powerfailure;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.EffectVisitor;
 import be.kuleuven.swop.objectron.domain.effect.PowerFailureEffectVisitor;
@@ -10,10 +11,13 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Observable;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -108,6 +112,11 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
     @Override
     public void actionReduced() {
        //do nothing
+    }
+
+    @Override
+    public void actionHappened(TurnObserver observable, List<Player> players) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

@@ -58,7 +58,7 @@ public class IdentityDisc implements Item, Movable {
                 break;
 
             try {
-                neighbor.stepOn(this, turnManager);
+                enter(neighbor,turnManager);
             } catch (InvalidMoveException e) {
                 break;
             } catch (WallHitException e) {
@@ -73,7 +73,7 @@ public class IdentityDisc implements Item, Movable {
 
 
             currentSquare = neighbor;
-            neighbor = currentSquare.getNeighbour(targetDirection);
+            neighbor =   currentSquare.getNeighbour(targetDirection);
             identityDiscBehavior.moved();
         }
 
@@ -82,6 +82,7 @@ public class IdentityDisc implements Item, Movable {
         }
         identityDiscBehavior.reset();
     }
+
 
     @Override
     public void pickedUp() {
@@ -124,6 +125,7 @@ public class IdentityDisc implements Item, Movable {
     public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException,
             WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException,
             SquareOccupiedException {
+
         square.stepOn(this, manager);
     }
 
