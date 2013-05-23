@@ -20,17 +20,17 @@ import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 //todo let Movable delegate this
 public class IdentityDiscMovementStrategy implements MovementStrategy {
     private TurnManager turnManager;
-    private IdentityDisc identityDisc;
+    private IdentityDiscBehavior identityDiscBehavior;
 
 
-    public IdentityDiscMovementStrategy(TurnManager turnManager, IdentityDisc identityDiscBehavior) {
+    public IdentityDiscMovementStrategy(TurnManager turnManager, IdentityDiscBehavior identityDiscBehavior) {
         this.turnManager = turnManager;
-        this.identityDisc = identityDiscBehavior;
+        this.identityDiscBehavior = identityDiscBehavior;
     }
 
     @Override
     public void powerFailure(boolean hasLightMine) {
-        identityDisc.moved();
+        identityDiscBehavior.moved();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class IdentityDiscMovementStrategy implements MovementStrategy {
             turnManager.endTurn();
         }
         turnManager.getCurrentTurn().extraTurn();
-        player.effectActivation(identityDisc);
+        player.effectActivation();
         throw new PlayerHitException();
     }
 

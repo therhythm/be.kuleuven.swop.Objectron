@@ -1,8 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item;
 
-import be.kuleuven.swop.objectron.domain.Activator;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.effect.Effect;
 
 /**
  * @author : Nik Torfs
@@ -10,11 +8,9 @@ import be.kuleuven.swop.objectron.domain.effect.Effect;
  *         Time: 03:24
  */
 public class EffectActivation {
-    private Activator activator;
     private Player victim;
 
-    public EffectActivation(Activator activator, Player victim){
-        this.activator = activator;
+    public EffectActivation(Player victim){
         this.victim = victim;
     }
 
@@ -22,8 +18,5 @@ public class EffectActivation {
         victim.randomlyDrop(item);
     }
 
-    public Activator getActivator() {
-        return activator;
-    }
 
 }

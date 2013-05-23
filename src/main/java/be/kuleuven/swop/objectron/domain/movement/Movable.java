@@ -1,7 +1,5 @@
 package be.kuleuven.swop.objectron.domain.movement;
 
-import be.kuleuven.swop.objectron.domain.Activator;
-import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
@@ -19,5 +17,5 @@ public interface Movable {
 
     void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException, WallHitException,
             ForceFieldHitException, GameOverException, NotEnoughActionsException, SquareOccupiedException;
-    void effectActivation(Activator activator);
+    void effectActivation();
 }

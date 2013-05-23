@@ -1,9 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item;
 
-import be.kuleuven.swop.objectron.domain.Activator;
 import be.kuleuven.swop.objectron.domain.Direction;
-import be.kuleuven.swop.objectron.domain.effect.Effect;
-import be.kuleuven.swop.objectron.domain.effect.EffectVisitor;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.IdentityDiscMovementStrategy;
@@ -20,7 +17,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 20:04
  * To change this template use File | Settings | File Templates.
  */
-public class IdentityDisc implements Item, Movable,Activator {
+public class IdentityDisc implements Item, Movable {
     private static final int MAX_IN_BAG = Integer.MAX_VALUE; // Can't have annoying side effects. It would be
     // impossible for a game to have even this amount of items.
 
@@ -50,7 +47,7 @@ public class IdentityDisc implements Item, Movable,Activator {
         if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
-        movementStrategy = new IdentityDiscMovementStrategy(turnManager, this);
+        movementStrategy = new IdentityDiscMovementStrategy(turnManager, identityDiscBehavior);
 
         Square currentSquare = sourceSquare;
         Square neighbor = currentSquare.getNeighbour(targetDirection);
@@ -131,7 +128,7 @@ public class IdentityDisc implements Item, Movable,Activator {
     }
 
     @Override
-    public void effectActivation(Activator activator) {
+    public void effectActivation() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
