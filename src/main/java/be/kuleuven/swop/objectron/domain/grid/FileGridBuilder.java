@@ -71,7 +71,7 @@ public class FileGridBuilder extends GridBuilder {
     @Override
     public void initGrid(int powerFailureChance) {
         this.powerFailureChance = powerFailureChance;
-        dimension = new Dimension(input.length - 2, input.length - 2);
+        dimension = new Dimension(input.length - 2, input[0].length - 2);
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
@@ -130,7 +130,7 @@ public class FileGridBuilder extends GridBuilder {
     @Override
     protected List<Position> getPlayerPositions() {
         List<Position> positions = new ArrayList<>();
-        for (int i = 1; i < playerPositions.size(); i++) {
+        for (int i = 0; i < playerPositions.size(); i++) {
             positions.add(playerPositions.get(i));
         }
         return positions;
@@ -146,7 +146,7 @@ public class FileGridBuilder extends GridBuilder {
                     Square square = squares[j - 1][i - 1];
                     wallSegments.add(square);
                 } else if ((c - '0') > 0 && (c - '0') < 10) { // little trick
-                    playerPositions.put(c - 48, new Position(j - 1, i - 1));
+                    playerPositions.put((c - '0') - 1, new Position(j - 1, i - 1));
                 }
             }
         }
