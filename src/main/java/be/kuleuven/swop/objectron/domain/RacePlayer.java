@@ -12,8 +12,8 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 19:21
  * To change this template use File | Settings | File Templates.
  */
-public class PlayerRace extends Player {
-    public PlayerRace(String name, Square currentSquare) {
+public class RacePlayer extends Player {
+    public RacePlayer(String name, Square currentSquare) {
         super(name, currentSquare);
     }
 

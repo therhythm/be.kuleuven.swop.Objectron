@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.item.forceField;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.item.EffectActivation;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -46,5 +47,10 @@ public class ForcefieldGenerator implements Item {
     @Override
     public int getMaxInBag() {
         return MAX_IN_BAG;
+    }
+
+    @Override
+    public void effectActivated(EffectActivation activation) {
+        // I don't do anything when an effect is activated
     }
 }

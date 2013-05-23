@@ -24,4 +24,6 @@ public interface Item {
     void pickedUp();
 
     int getMaxInBag();
+
+    void effectActivated(EffectActivation activation);
 }

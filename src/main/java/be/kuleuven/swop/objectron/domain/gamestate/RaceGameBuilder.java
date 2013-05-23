@@ -1,7 +1,7 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.PlayerRace;
+import be.kuleuven.swop.objectron.domain.RacePlayer;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.RaceFinish;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
@@ -43,7 +43,7 @@ public class RaceGameBuilder extends GameBuilder {
     private List<Player> buildPlayers(List<Square> playerPositions) {
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < playerNames.size(); i++) {
-            players.add(new PlayerRace(playerNames.get(i), playerPositions.get(i)));
+            players.add(new RacePlayer(playerNames.get(i), playerPositions.get(i)));
         }
 
         return players;

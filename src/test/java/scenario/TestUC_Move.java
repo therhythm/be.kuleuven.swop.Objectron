@@ -3,6 +3,7 @@ package scenario;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.RacePlayer;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
@@ -51,7 +52,7 @@ public class TestUC_Move {
         builder.setStartingPositions(positions);
         Grid grid = GridObjectMother.gridWithoutWallsItemsPowerFailures(builder);
 
-        player1 = new Player("p1", grid.getSquareAtPosition(p1Pos));
+        player1 = new RacePlayer("p1", grid.getSquareAtPosition(p1Pos));
         Turn turn = new Turn(player1);
         stateMock = mock(Game.class);
         TurnManager turnManager = mock(TurnManager.class);

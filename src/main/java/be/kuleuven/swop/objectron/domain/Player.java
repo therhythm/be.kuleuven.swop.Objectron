@@ -1,7 +1,9 @@
 package be.kuleuven.swop.objectron.domain;
 
+import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.item.EffectActivation;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployCommand;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
@@ -19,7 +21,7 @@ import java.util.List;
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public class Player implements Movable, Obstruction {
+public abstract class Player implements Movable, Obstruction {
     private String name;
     private Square currentSquare;
     private LightTrail lightTrail = new LightTrail();
@@ -39,9 +41,7 @@ public class Player implements Movable, Obstruction {
         return currentSquare;
     }
 
-    public void pickupItem(int identifier) throws InventoryFullException {
-
-    }
+    public abstract void pickupItem(int identifier) throws InventoryFullException;
 
     public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException,
             SquareOccupiedException, NotEnoughActionsException {
@@ -126,5 +126,17 @@ public class Player implements Movable, Obstruction {
     @Override
     public void hit(MovementStrategy strategy) throws InvalidMoveException, PlayerHitException {
         strategy.hitPlayer(this);
+    }
+
+    public void effectActivation(Effect effect){
+        EffectActivation activation = new EffectActivation(effect, this);
+        for(Item item : inventory.getAllItems()){
+            item.effectActivated(activation);
+        }
+    }
+
+    public void randomlyDrop(Item item) {
+        inventory.removeItem(item);
+
     }
 }

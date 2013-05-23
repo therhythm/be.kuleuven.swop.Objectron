@@ -1,7 +1,6 @@
 package scenario;
 
-import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.PlayerRace;
+import be.kuleuven.swop.objectron.domain.RacePlayer;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
@@ -31,7 +30,7 @@ import static org.mockito.Mockito.when;
  */
 public class TestUC_Use_Item {
     private UseItemHandler useItemHandler;
-    private PlayerRace player;
+    private RacePlayer player;
     private Item item;
     private Game stateMock;
     private TurnManager turnManager;
@@ -42,7 +41,7 @@ public class TestUC_Use_Item {
         Square square = new Square(new Position(0, 0));
         item = new LightMine();
         square.addItem(item);
-        player = new PlayerRace("p1", square);
+        player = new RacePlayer("p1", square);
         Turn turn = new Turn(player);
         turnManager = mock(TurnManager.class);
         when(turnManager.getCurrentTurn()).thenReturn(turn);

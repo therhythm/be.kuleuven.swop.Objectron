@@ -93,6 +93,11 @@ public class IdentityDisc implements Item, Movable {
         return MAX_IN_BAG;
     }
 
+    @Override
+    public void effectActivated(EffectActivation activation) {
+        // we dont do anything on activation
+    }
+
     private boolean validDirection(Direction direction) {
         return direction != Direction.UP_LEFT && direction != Direction.UP_RIGHT && direction != Direction.DOWN_LEFT
                 && direction != Direction.DOWN_RIGHT;

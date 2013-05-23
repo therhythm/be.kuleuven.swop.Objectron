@@ -62,6 +62,11 @@ public class LightMine implements Item, Effect {
         return MAX_IN_BAG;
     }
 
+    @Override
+    public void effectActivated(EffectActivation activation) {
+        // I don't do anything on activation
+    }
+
 
     public String toString() {
         String result = "";

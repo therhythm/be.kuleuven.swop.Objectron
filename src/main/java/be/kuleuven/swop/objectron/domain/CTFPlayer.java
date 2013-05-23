@@ -13,9 +13,9 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 19:19
  * To change this template use File | Settings | File Templates.
  */
-public class PlayerCtf extends Player {
+public class CTFPlayer extends Player {
 
-    public PlayerCtf(String name, Square currentSquare) {
+    public CTFPlayer(String name, Square currentSquare) {
         super(name, currentSquare);
     }
 
@@ -24,9 +24,9 @@ public class PlayerCtf extends Player {
         Item item = super.getCurrentSquare().pickUpItem(identifier);
 
         if (item instanceof Flag) {
-            Flag vlag = (Flag) item;
-            if (vlag.getOwner().equals(this)) {
-                vlag.returnToBase();
+            Flag flag = (Flag) item;
+            if (flag.getOwner().equals(this)) {
+                flag.returnToBase();
                 return;
             }
         }
