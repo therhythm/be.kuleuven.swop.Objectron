@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item;
 
+import be.kuleuven.swop.objectron.domain.Activator;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.EffectVisitor;
@@ -12,7 +13,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  *         Date: 27/02/13
  *         Time: 20:56
  */
-public class LightMine implements Item, Effect {
+public class LightMine implements Item, Effect,Activator {
     private static final int MAX_IN_BAG = Integer.MAX_VALUE;
     private static final int NB_ACTIONS_BLINDED = 3;
 
@@ -28,6 +29,7 @@ public class LightMine implements Item, Effect {
     public void activate(Movable movable, TurnManager manager) {
         if(isActive){
             manager.getCurrentTurn().addPenalty(NB_ACTIONS_BLINDED);
+            movable.effectActivation(this);
             isActive = false;
         }
     }

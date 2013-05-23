@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
 import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.IdentityDiscBehavior;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 
@@ -19,17 +20,17 @@ import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 //todo let Movable delegate this
 public class IdentityDiscMovementStrategy implements MovementStrategy {
     private TurnManager turnManager;
-    private IdentityDiscBehavior identityDiscBehavior;
+    private IdentityDisc identityDisc;
 
 
-    public IdentityDiscMovementStrategy(TurnManager turnManager, IdentityDiscBehavior identityDiscBehavior) {
+    public IdentityDiscMovementStrategy(TurnManager turnManager, IdentityDisc identityDiscBehavior) {
         this.turnManager = turnManager;
-        this.identityDiscBehavior = identityDiscBehavior;
+        this.identityDisc = identityDiscBehavior;
     }
 
     @Override
     public void powerFailure(boolean hasLightMine) {
-        identityDiscBehavior.moved();
+        identityDisc.moved();
     }
 
     @Override
@@ -38,6 +39,7 @@ public class IdentityDiscMovementStrategy implements MovementStrategy {
             turnManager.endTurn();
         }
         turnManager.getCurrentTurn().extraTurn();
+        player.effectActivation(identityDisc);
         throw new PlayerHitException();
     }
 

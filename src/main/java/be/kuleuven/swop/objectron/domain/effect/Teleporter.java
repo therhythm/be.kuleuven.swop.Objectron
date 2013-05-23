@@ -1,7 +1,9 @@
 package be.kuleuven.swop.objectron.domain.effect;
 
+import be.kuleuven.swop.objectron.domain.Activator;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.item.EffectActivation;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
@@ -10,7 +12,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  *         Date: 09/04/13
  *         Time: 16:32
  */
-public class Teleporter implements Effect {
+public class Teleporter implements Effect,Activator {
     private Teleporter destination;
     private Square location;
 
@@ -23,6 +25,7 @@ public class Teleporter implements Effect {
             NotEnoughActionsException {
         try {
             movable.getTeleportStrategy().teleport(movable, this, manager);
+            movable.effectActivation(this);
         } catch (InvalidMoveException | WallHitException | ForceFieldHitException | PlayerHitException e) {
             // teleportation not possible.. do nothing
         }
@@ -50,4 +53,6 @@ public class Teleporter implements Effect {
     public Teleporter getDestination() {
         return destination;
     }
+
+
 }

@@ -14,7 +14,9 @@ import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author : Nik Torfs
@@ -128,9 +130,12 @@ public abstract class Player implements Movable, Obstruction {
         strategy.hitPlayer(this);
     }
 
-    public void effectActivation(Effect effect){
-        EffectActivation activation = new EffectActivation(effect, this);
-        for(Item item : inventory.getAllItems()){
+    @Override
+    public void effectActivation(Activator activator) {
+        EffectActivation activation = new EffectActivation(activator, this);
+        List<Item> inventoryCopy = new ArrayList<Item>();
+        inventoryCopy.addAll(inventory.getAllItems());
+        for (Item item : inventoryCopy) {
             item.effectActivated(activation);
         }
     }
@@ -138,5 +143,18 @@ public abstract class Player implements Movable, Obstruction {
     public void randomlyDrop(Item item) {
         inventory.removeItem(item);
 
+        Direction[] directions = Direction.values();
+        Random random = new Random();
+        int randomDirection = random.nextInt(directions.length);
+        Square randomSquare = getCurrentSquare().getNeighbour(directions[randomDirection]);
+        while (randomSquare == null || randomSquare.isObstructed()) {
+            randomDirection = random.nextInt(directions.length);
+            randomSquare = getCurrentSquare().getNeighbour(directions[randomDirection]);
+        }
+
+        randomSquare.addItem(item);
+
     }
+
+
 }

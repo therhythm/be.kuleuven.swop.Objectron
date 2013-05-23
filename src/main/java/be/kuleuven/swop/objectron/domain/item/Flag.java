@@ -1,5 +1,6 @@
 package be.kuleuven.swop.objectron.domain.item;
 
+import be.kuleuven.swop.objectron.domain.Activator;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
@@ -16,7 +17,7 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Time: 21:26
  * To change this template use File | Settings | File Templates.
  */
-public class Flag implements Item {
+public class Flag implements Item, Activator {
     private static final int MAX_IN_BAG = 1;
 
     private final Player owner;
@@ -63,11 +64,11 @@ public class Flag implements Item {
 
     @Override
     public void effectActivated(EffectActivation activation) {
-        Effect activator = activation.getActivator();
+        Activator activator = activation.getActivator();
         //todo this is just applying a constraint, still wonder if the instanceof is allowed here..
-        if(activator instanceof LightMine ||
-                activator instanceof Teleporter){
-                //todo this is not an effect...  ||   activator instanceof IdentityDisc
+        if (activator instanceof LightMine ||
+                activator instanceof Teleporter || activator instanceof IdentityDisc) {
+            //todo this is not an effect...  ||   activator instanceof IdentityDisc
             activation.dropMe(this);
         }
     }
