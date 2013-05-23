@@ -6,7 +6,6 @@ import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.GridFileReader;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -67,15 +66,6 @@ public class FileGridBuilder extends GridBuilder {
     @Override
     public void buildWalls(List<List<Position>> walls) {
 
-    }
-
-    @Override
-    public void addObserver(SquareObserver observer) {
-        for (Square[] row : squares) {
-            for (Square s : row) {
-                s.attach(observer);
-            }
-        }
     }
 
     @Override

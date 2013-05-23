@@ -140,7 +140,7 @@ public class TestPowerFailure {
         Square secondarySquare = null;
         for (Direction d : Direction.values()) {
             for (Class<?> c : grid.getSquareAtPosition(new Position(7, 7)).getNeighbour(d).getViewModel()
-                    .getEffectViewModels()) {
+                    .getEffects()) {
                 if (c.equals(SecondaryPowerFailure.class)) {
                     secondaryFailure = true;
                     secondarySquare = grid.getSquareAtPosition(new Position(7, 7)).getNeighbour(d);
@@ -152,7 +152,7 @@ public class TestPowerFailure {
         gamestate.getTurnManager().getCurrentTurn().reduceAction();
         gamestate.getTurnManager().getCurrentTurn().reduceAction();
         for (Direction d : Direction.values()) {
-            if (secondarySquare.getNeighbour(d).getViewModel().getEffectViewModels().contains(SecondaryPowerFailure
+            if (secondarySquare.getNeighbour(d).getViewModel().getEffects().contains(SecondaryPowerFailure
                     .class)) {
                 secondaryFailure = true;
             }
@@ -163,7 +163,7 @@ public class TestPowerFailure {
     private int countPowerFailures() {
         int powerFailureCounter = 0;
         for (SquareViewModel sq : grid.getViewModel().getSquareViewModels()) {
-            for (Class<?> c : sq.getEffectViewModels()) {
+            for (Class<?> c : sq.getEffects()) {
                 if (c.equals(PrimaryPowerFailure.class) || c.equals(SecondaryPowerFailure.class) || c.equals
                         (TertiaryPowerFailure.class)) {
                     powerFailureCounter++;

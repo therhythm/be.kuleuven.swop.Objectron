@@ -48,6 +48,6 @@ public class MovePlayerHandler extends Handler {
         currentTurn.setMoved();
 
         currentTurn.reduceAction();
-        game.notifyObservers();
+        //game.notifyObservers();
     }
 }

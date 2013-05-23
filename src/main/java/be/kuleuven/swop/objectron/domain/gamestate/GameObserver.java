@@ -17,9 +17,5 @@ public interface GameObserver {
 
     void update(TurnViewModel vm, List<PlayerViewModel> players, GridViewModel gridModel);
 
-    void noPower(Position position);
-
-    void regainedPower(Position position);
-
     void itemPlaced(Item item, Position position);
 }

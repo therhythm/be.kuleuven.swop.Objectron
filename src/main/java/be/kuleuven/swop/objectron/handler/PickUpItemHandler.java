@@ -45,7 +45,7 @@ public class PickUpItemHandler extends Handler {
         Player currentPlayer = currentTurn.getCurrentPlayer();
         currentPlayer.pickupItem(selectionId);
         currentTurn.reduceAction();
-        game.notifyObservers();
+        //game.notifyObservers();
     }
 
     /**

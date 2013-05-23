@@ -14,9 +14,11 @@ import java.util.List;
 public class SquareViewModel {
     private Position position;
     private List<Class<?>> effects;
+    private List<Class<?>> items;
     private List<Class<?>> obstructions;
 
-    public SquareViewModel(Position position, List<Class<?>> effects, List<Class<?>> obstructions){
+    public SquareViewModel(Position position, List<Class<?>> effects, List<Class<?>> obstructions, List<Class<?>> items){
+        this.items = items;
         this.effects = effects;
         this.position = position;
         this.obstructions = obstructions;
@@ -26,8 +28,12 @@ public class SquareViewModel {
         return position;
     }
 
-    public List<Class<?>> getEffectViewModels() {
+    public List<Class<?>> getEffects() {
         return effects;
+    }
+
+    public List<Class<?>> getItems() {
+        return items;
     }
 
     public List<Class<?>> getObstructions() {
