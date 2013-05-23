@@ -42,7 +42,36 @@ public class TestUC_Start_New_Game {
     @Test(expected = GridTooSmallException.class)
     public void test_invalid_size() throws InventoryEmptyException, GridTooSmallException, InvalidFileException, TooManyPlayersException {
         Dimension dimension = new Dimension(9, 10);
-
         startGameHandler.startNewRaceGame(players, dimension, "");
     }
+
+    @Test(expected = TooManyPlayersException.class)
+    public void test_too_many_for_race() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
+        Dimension dimension = new Dimension(20,20);
+        players.add("player 3");
+        startGameHandler.startNewRaceGame(players, dimension, "");
+    }
+
+    @Test
+    public void test_ctf_with_four() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
+        Dimension dimension = new Dimension(20,20);
+        players.add("player 3");
+        players.add("player 4");
+        startGameHandler.startNewCTFGame(players, dimension, "");
+    }
+
+    @Test (expected = TooManyPlayersException.class)
+    public void test_too_many_for_ctf() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
+        Dimension dimension = new Dimension(20,20);
+        players.add("player 3");
+        players.add("player 4");
+        players.add("player 5");
+        startGameHandler.startNewCTFGame(players, dimension, "");
+    }
+     /*
+    @Test
+    public void test_file_start_race() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
+        Dimension dimension = new Dimension(20, 20);
+        startGameHandler.startNewCTFGame(players, dimension,ClassLoader.getSystemClassLoader().getResource("test_file").getFile());
+    }   */
 }
