@@ -20,21 +20,17 @@ import java.util.Map;
 public class GameStartViewModel {
     private HandlerCatalog catalog;
     private Dimension dimension;
-    private PlayerViewModel p1;
-    private PlayerViewModel p2;
     private TurnViewModel currentTurn;
     private List<List<Position>> walls;
-
     private Map<Position, List<Item>> items;
-
+    private List<PlayerViewModel> players;
     private Observable<GameObserver> observable;
     private Map<Position, List<Effect>> effects;
 
 
     public GameStartViewModel(HandlerCatalog catalog,
                               Dimension dimension,
-                              PlayerViewModel p1,
-                              PlayerViewModel p2,
+                              List<PlayerViewModel> players,
                               TurnViewModel currentTurn,
                               List<List<Position>> walls,
                               Map<Position, List<Item>> items,
@@ -43,8 +39,7 @@ public class GameStartViewModel {
 
         this.catalog = catalog;
         this.dimension = dimension;
-        this.p1 = p1;
-        this.p2 = p2;
+        this.players = players;
         this.currentTurn = currentTurn;
         this.walls = walls;
         this.items = items;
@@ -58,14 +53,6 @@ public class GameStartViewModel {
 
     public Dimension getDimension() {
         return this.dimension;
-    }
-
-    public PlayerViewModel getP1() {
-        return p1;
-    }
-
-    public PlayerViewModel getP2() {
-        return p2;
     }
 
     public TurnViewModel getCurrentTurn() {
@@ -89,5 +76,9 @@ public class GameStartViewModel {
 
     public Map<Position, List<Effect>> getEffects() {
         return effects;
+    }
+
+    public List<PlayerViewModel> getPlayers() {
+        return players;
     }
 }

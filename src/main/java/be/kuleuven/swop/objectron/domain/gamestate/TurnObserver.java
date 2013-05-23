@@ -9,5 +9,7 @@ public interface TurnObserver {
 
     void update(Turn turn);
 
+    void penaltyAdded();
+
     void actionReduced();
 }

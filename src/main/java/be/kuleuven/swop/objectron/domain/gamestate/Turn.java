@@ -17,7 +17,7 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 public class Turn implements Observable<TurnObserver> {
-    public static final int ACTIONS_EACH_TURN = 3;
+    public static final int ACTIONS_EACH_TURN = 4;
 
     private Player currentPlayer;
     private Item currentItem;
@@ -64,7 +64,13 @@ public class Turn implements Observable<TurnObserver> {
         return hasMoved;
     }
 
-    public void reduceRemainingActions(int amount) {
+    public void reduceAction(){
+       actionsRemaining -= 1;
+       notifyActionsReduced();
+       notifyObservers();
+    }
+
+    public void addPenalty(int amount) {
         if (actionsRemaining > amount) {
             actionsRemaining -= amount;
         } else {
@@ -72,13 +78,19 @@ public class Turn implements Observable<TurnObserver> {
             actionsRemaining = 0;
             hasMoved = true;
         }
-        notifyActionsReduced();
+        notifyPenaltyAdded();
         notifyObservers();
     }
 
     private void notifyActionsReduced() {
         for (TurnObserver observer : observers) {
             observer.actionReduced();
+        }
+    }
+
+    private void notifyPenaltyAdded() {
+        for(TurnObserver observer : observers){
+            observer.penaltyAdded();
         }
     }
 

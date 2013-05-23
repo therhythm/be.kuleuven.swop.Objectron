@@ -1,7 +1,8 @@
 package be.kuleuven.swop.objectron;
 
 import be.kuleuven.swop.objectron.handler.StartGameHandler;
-import be.kuleuven.swop.objectron.ui.GameMenu;
+import be.kuleuven.swop.objectron.ui.Menu;
+import be.kuleuven.swop.objectron.ui.StartGameMenu;
 
 /**
  * @author : Nik Torfs
@@ -11,6 +12,6 @@ import be.kuleuven.swop.objectron.ui.GameMenu;
 public class Main {
 
     public static void main(String[] args) {
-        new GameMenu(new StartGameHandler());
+        new Menu(new StartGameHandler());
     }
 }

@@ -1,6 +1,8 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.LightTrail;
+import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
@@ -8,13 +10,15 @@ import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.PrimaryPowerFailure;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.SecondaryPowerFailure;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.TertiaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.*;
-import be.kuleuven.swop.objectron.viewmodel.GameStartViewModel;
-import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
-import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
+import be.kuleuven.swop.objectron.viewmodel.*;
 
 import java.awt.*;
 import java.util.*;
@@ -35,8 +39,23 @@ public class GameView implements GameObserver {
     private TurnViewModel currentTurn;
     private String selectedItem = "no item";
     private Map<Integer, SquareStates> gameGrid[][];
-    private Map<SquareStates, Image> gridImageMap = new HashMap<>();
-    private Map<String, SquareStates[]> playerColorMap = new HashMap<>();
+
+    private Map<Integer, SquareStates[]> colors = new HashMap<>();
+    {
+        colors.put(0, new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL, SquareStates.P1_FINISH});
+        colors.put(1, new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL, SquareStates.P2_FINISH});
+        colors.put(2, new SquareStates[]{SquareStates.PLAYER3, SquareStates.P3_LIGHT_WALL, SquareStates.P3_FINISH});
+        colors.put(3, new SquareStates[]{SquareStates.PLAYER4, SquareStates.P4_LIGHT_WALL, SquareStates.P4_FINISH});
+        colors.put(4, new SquareStates[]{SquareStates.PLAYER5, SquareStates.P5_LIGHT_WALL, SquareStates.P5_FINISH});
+        colors.put(5, new SquareStates[]{SquareStates.PLAYER6, SquareStates.P6_LIGHT_WALL, SquareStates.P6_FINISH});
+        colors.put(6, new SquareStates[]{SquareStates.PLAYER7, SquareStates.P7_LIGHT_WALL, SquareStates.P7_FINISH});
+        colors.put(7, new SquareStates[]{SquareStates.PLAYER8, SquareStates.P8_LIGHT_WALL, SquareStates.P8_FINISH});
+        colors.put(8, new SquareStates[]{SquareStates.PLAYER9, SquareStates.P9_LIGHT_WALL, SquareStates.P9_FINISH});
+    }
+
+    private Map<SquareStates, Image> gridImageMap = new HashMap<SquareStates, Image>();
+    private Map<String, SquareStates[]> playerColorMap = new HashMap<String, SquareStates[]>();
+
     private HandlerCatalog catalog;
     private Dimension dimension;
     private SimpleGUI gui;
@@ -77,50 +96,23 @@ public class GameView implements GameObserver {
                 gameGrid[pos.getVIndex()][pos.getHIndex()].put(state.zIndex, state);
             }
         }
-        PlayerViewModel p1 = vm.getP1();
-        PlayerViewModel p2 = vm.getP2();
-        players = new ArrayList<>();
-        players.add(p1);
-        players.add(p2);
-        playerColorMap.put(p1.getName(), new SquareStates[]{SquareStates.PLAYER1, SquareStates.P1_LIGHT_WALL,
-                SquareStates.P1_FINISH});
-        playerColorMap.put(p2.getName(), new SquareStates[]{SquareStates.PLAYER2, SquareStates.P2_LIGHT_WALL,
-                SquareStates.P2_FINISH});
-        Position p1Pos = p1.getPosition();
-        gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()].put(SquareStates.PLAYER1.zIndex, SquareStates.PLAYER1);
-        Position p2Pos = p2.getPosition();
-        lastPositions.put(p1.getName(), new Position[0]);
-        lastPositions.put(p2.getName(), new Position[0]);
-        gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()].put(SquareStates.PLAYER2.zIndex, SquareStates.PLAYER2);
-        gameGrid[p1Pos.getVIndex()][p1Pos.getHIndex()].put(SquareStates.P2_FINISH
-                .zIndex, SquareStates.P2_FINISH);
-        gameGrid[p2Pos.getVIndex()][p2Pos.getHIndex()].put(SquareStates.P1_FINISH
-                .zIndex, SquareStates.P1_FINISH);
 
-    }
-
-    private SquareStates getItemSquareState(Item item) {
-        if (item instanceof LightMine) {
-            return SquareStates.LIGHT_MINE;
-        } else if (item instanceof IdentityDisc) {
-            return SquareStates.IDENTITY_DISK;
-        } else if (item instanceof Teleporter) {
-            return SquareStates.TELEPORTER;
-        } else if (item instanceof ForcefieldGenerator){
-            return SquareStates.FF_GENERATOR_INACTIVE;
-        } else {
-            return SquareStates.EMPTY;
+        players = vm.getPlayers();
+        for (int i = 0; i < players.size(); i++) {
+            PlayerViewModel player = players.get(i);
+            SquareStates[] playerColors = colors.get(i);
+            playerColorMap.put(player.getName(), playerColors);
+            Position pos = player.getPosition();
+            gameGrid[pos.getVIndex()][pos.getHIndex()].put(playerColors[0].zIndex, playerColors[0]);
+            gameGrid[pos.getVIndex()][pos.getHIndex()].put(playerColors[2].zIndex, playerColors[2]);
+            Position[] lastPos = new Position[1];
+            lastPos[0] = player.getPosition();
+            lastPositions.put(player.getName(), lastPos);
         }
     }
 
-    private SquareStates getEffectSquareState(Effect effect) {
-        // no need for lightmine, the effects are invisible
-        if (effect instanceof Teleporter) {
-            return SquareStates.TELEPORTER;
-        } else {
-            return SquareStates.EMPTY;
-        }
-    }
+
+
 
     public void run() {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -150,15 +142,52 @@ public class GameView implements GameObserver {
                 };
 
 
+                //player images
                 gridImageMap.put(SquareStates.PLAYER1, gui.loadImage("player_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.PLAYER2, gui.loadImage("player_blue.png", TILEWIDTH, TILEHEIGHT));
-                gridImageMap.put(SquareStates.EMPTY, gui.loadImage("cell.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER3, gui.loadImage("player_yellow.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER4, gui.loadImage("player_grass.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER5, gui.loadImage("player_purple.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER6, gui.loadImage("player_orange.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER7, gui.loadImage("player_dark_green.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER8, gui.loadImage("player_sky.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.PLAYER9, gui.loadImage("player_pink.png", TILEWIDTH, TILEHEIGHT));
+
+                //finish images
                 gridImageMap.put(SquareStates.P1_FINISH, gui.loadImage("cell_finish_red.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_FINISH, gui.loadImage("cell_finish_blue.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P3_FINISH, gui.loadImage("cell_finish_yellow.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P4_FINISH, gui.loadImage("cell_finish_grass.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P5_FINISH, gui.loadImage("cell_finish_purple.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P6_FINISH, gui.loadImage("cell_finish_orange.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P7_FINISH, gui.loadImage("cell_finish_dark_green.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P8_FINISH, gui.loadImage("cell_finish_sky.png", TILEWIDTH, TILEHEIGHT));
+                gridImageMap.put(SquareStates.P9_FINISH, gui.loadImage("cell_finish_pink.png", TILEWIDTH, TILEHEIGHT));
+
+
+                //light wall images
                 gridImageMap.put(SquareStates.P1_LIGHT_WALL, gui.loadImage("cell_lighttrail_red.png", TILEWIDTH,
                         TILEHEIGHT));
                 gridImageMap.put(SquareStates.P2_LIGHT_WALL, gui.loadImage("cell_lighttrail_blue.png", TILEWIDTH,
                         TILEHEIGHT));
+                gridImageMap.put(SquareStates.P3_LIGHT_WALL, gui.loadImage("cell_lighttrail_yellow.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P4_LIGHT_WALL, gui.loadImage("cell_lighttrail_grass.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P5_LIGHT_WALL, gui.loadImage("cell_lighttrail_purple.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P6_LIGHT_WALL, gui.loadImage("cell_lighttrail_orange.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P7_LIGHT_WALL, gui.loadImage("cell_lighttrail_dark_green.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P8_LIGHT_WALL, gui.loadImage("cell_lighttrail_sky.png", TILEWIDTH,
+                        TILEHEIGHT));
+                gridImageMap.put(SquareStates.P9_LIGHT_WALL, gui.loadImage("cell_lighttrail_pink.png", TILEWIDTH,
+                        TILEHEIGHT));
+
+
+                gridImageMap.put(SquareStates.EMPTY, gui.loadImage("cell.png", TILEWIDTH, TILEHEIGHT));
+
                 gridImageMap.put(SquareStates.WALL, gui.loadImage("wall.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.LIGHT_MINE, gui.loadImage("lightgrenade.png", TILEWIDTH, TILEHEIGHT));
                 gridImageMap.put(SquareStates.IDENTITY_DISK, gui.loadImage("identity_disk.png", TILEWIDTH, TILEHEIGHT));
@@ -393,27 +422,113 @@ public class GameView implements GameObserver {
     }
 
     @Override
-    public void update(TurnViewModel vm, List<PlayerViewModel> players) {
+    public void update(TurnViewModel vm, List<PlayerViewModel> players, GridViewModel gridModel) {
         currentTurn = vm;
         for (PlayerViewModel p : players) {
             updatePlayer(p);
         }
 
+        for(SquareViewModel sq: gridModel.getSquareViewModels()){
+            updateSquare(sq);
+        }
+
         gui.repaint();
     }
 
+    private void updateSquare(SquareViewModel sq) {
+        clearSquarePosition(sq);
 
-    @Override
-    public void noPower(Position position) {
-        gameGrid[position.getVIndex()][position.getHIndex()].put(SquareStates.POWERFAILURE.zIndex,
-                SquareStates.POWERFAILURE);
-        gui.repaint();
+        for(Class<?> c:sq.getEffects()){
+            SquareStates st = getEffectSquareState(c);
+            gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].put(st.zIndex, st);
+        }
+
+        for(Class<?> c: sq.getObstructions()){
+            SquareStates st = getObstructionSquareState(c);
+            gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].put(st.zIndex, st);
+        }
+
+        for(Class<?> c: sq.getItems()){
+            SquareStates st = getitemSquareState(c);
+            if(st.equals(SquareStates.FF_GENERATOR_INACTIVE)){
+                SquareStates ff_state = gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].get(SquareStates.FORCE_FIELD.zIndex);
+                if(ff_state != null){
+                    st = SquareStates.FF_GENERATOR_ACTIVE;
+                    gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.FORCE_FIELD.zIndex);
+                }
+
+            }
+            gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].put(st.zIndex, st);
+        }
     }
 
-    @Override
-    public void regainedPower(Position position) {
-        gameGrid[position.getVIndex()][position.getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
-        gui.repaint();
+    private void clearSquarePosition(SquareViewModel sq) {
+        gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.POWERFAILURE.zIndex);
+        gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.TELEPORTER.zIndex);
+        gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.FORCE_FIELD.zIndex);
+        gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.FF_GENERATOR_ACTIVE.zIndex);
+        gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.FF_GENERATOR_INACTIVE.zIndex);
+        gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.IDENTITY_DISK.zIndex);
+        gameGrid[sq.getPosition().getVIndex()][sq.getPosition().getHIndex()].remove(SquareStates.LIGHT_MINE.zIndex);
+    }
+
+    private SquareStates getItemSquareState(Item item) {
+        if (item instanceof LightMine) {
+            return SquareStates.LIGHT_MINE;
+        } else if (item instanceof IdentityDisc) {
+            return SquareStates.IDENTITY_DISK;
+        } else if (item instanceof ForcefieldGenerator){
+            return SquareStates.FF_GENERATOR_INACTIVE;
+        } else {
+            return SquareStates.EMPTY;
+        }
+    }
+
+    private SquareStates getEffectSquareState(Effect effect) {
+        // no need for lightmine, the effects are invisible
+        if (effect instanceof Teleporter) {
+            return SquareStates.TELEPORTER;
+        } else {
+            return SquareStates.EMPTY;
+        }
+    }
+
+    private SquareStates getEffectSquareState(Class<?> effect) {
+        // no need for lightmine, the effects are invisible
+        if (effect.equals(Teleporter.class)) {
+            return SquareStates.TELEPORTER;
+        }if (effect.equals(PrimaryPowerFailure.class) ||
+                effect.equals(SecondaryPowerFailure.class) ||
+                effect.equals(TertiaryPowerFailure.class)) {
+            return SquareStates.POWERFAILURE;
+        }
+        else {
+            return SquareStates.EMPTY;
+        }
+    }
+
+
+    private SquareStates getObstructionSquareState(Class<?> obstruction) {
+        if(obstruction.equals(Wall.class)){
+            return SquareStates.WALL;
+        }else if(obstruction.equals(ForceField.class)){
+            return SquareStates.FORCE_FIELD;
+        }
+        return SquareStates.EMPTY;
+    }
+
+    private SquareStates getitemSquareState(Class<?> item) {
+        if (item.equals(LightMine.class)) {
+            return SquareStates.LIGHT_MINE;
+        } else if (item.equals(IdentityDisc.class)) {
+            return SquareStates.IDENTITY_DISK;
+        } else if (item.equals(Teleporter.class)) {
+            return SquareStates.TELEPORTER;
+        } else if (item.equals(ForcefieldGenerator.class)){
+            return SquareStates.FF_GENERATOR_INACTIVE;
+        } else {
+            return SquareStates.EMPTY;
+        }
     }
 
     @Override
@@ -423,9 +538,43 @@ public class GameView implements GameObserver {
     }
 
     public enum SquareStates {
-        WALL(100), P1_LIGHT_WALL(99), P2_LIGHT_WALL(98), PLAYER1(97), PLAYER2(96), EMPTY(0), POWERFAILURE(1),
-        P1_FINISH(80), P2_FINISH(81), LIGHT_MINE(50), TELEPORTER(49), IDENTITY_DISK(48), CHARGED_IDENTITY_DISK(47),
-        FORCE_FIELD(85), FF_GENERATOR_ACTIVE(84), FF_GENERATOR_INACTIVE(83);
+        WALL(100),
+        P1_LIGHT_WALL(99),
+        P2_LIGHT_WALL(98),
+        P3_LIGHT_WALL(97),
+        P4_LIGHT_WALL(96),
+        P5_LIGHT_WALL(95),
+        P6_LIGHT_WALL(94),
+        P7_LIGHT_WALL(93),
+        P8_LIGHT_WALL(92),
+        P9_LIGHT_WALL(91),
+        PLAYER1(90),
+        PLAYER2(89),
+        PLAYER3(88),
+        PLAYER4(87),
+        PLAYER5(86),
+        PLAYER6(85),
+        PLAYER7(84),
+        PLAYER8(83),
+        PLAYER9(82),
+        FORCE_FIELD(81),
+        FF_GENERATOR_ACTIVE(80),
+        FF_GENERATOR_INACTIVE(79),
+        P1_FINISH(78),
+        P2_FINISH(77),
+        P3_FINISH(76),
+        P4_FINISH(75),
+        P5_FINISH(74),
+        P6_FINISH(73),
+        P7_FINISH(72),
+        P8_FINISH(71),
+        P9_FINISH(70),
+        EMPTY(0),
+        POWERFAILURE(1),
+        LIGHT_MINE(50),
+        TELEPORTER(49),
+        IDENTITY_DISK(48),
+        CHARGED_IDENTITY_DISK(47);
 
         private int zIndex;
 

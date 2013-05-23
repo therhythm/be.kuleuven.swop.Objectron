@@ -65,20 +65,10 @@ public class Dijkstra {
         initialisation();
 
         TableEntry relaxedEntry = relax();
-        while (!relaxedEntry.getSquare().equals(destination)) {
+        while (relaxedEntry.getSquare() != null && !relaxedEntry.getSquare().equals(destination) ) {
             relaxedEntry = relax();
-            checkChangedT();
         }
         return relaxedEntry.getDistance();
-    }
-
-    //todo Useless?
-    private void checkChangedT() {
-        int teller = 0;
-        for (TableEntry tableEntry : L) {
-            if (tableEntry.getDistance() != Double.POSITIVE_INFINITY)
-                teller++;
-        }
     }
 
     private void initialisation() {

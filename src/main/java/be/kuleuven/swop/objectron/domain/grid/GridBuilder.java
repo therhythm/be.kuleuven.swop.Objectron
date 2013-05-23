@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
@@ -29,6 +30,9 @@ public abstract class GridBuilder {
     public static final double PERCENTAGE_OF_FORCEFIELDS = 0.07;
     private static final int IDENTITY_DISK_PLAYER_AREA = 7;
     private static final int LIGHT_MINE_PLAYER_AREA = 5;
+    public static final int POWER_FAILURE_CHANCE = 1;
+
+    protected int powerFailureChance = POWER_FAILURE_CHANCE;
 
     protected Dimension dimension;
     protected Square[][] squares;
@@ -39,7 +43,7 @@ public abstract class GridBuilder {
         forceFieldArea = new ForceFieldArea();
     }
 
-    public abstract void setStartingPositions(List<Position> positions);
+    public abstract void setStartingPositions(List<Position> positions) throws TooManyPlayersException;
 
     public abstract void buildWalls();
 

@@ -45,7 +45,7 @@ public class Test_Force_Field {
     private Position p2Pos;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, TooManyPlayersException {
         dimension = new Dimension(10, 10);
 
         p1Pos = new Position(4, 5);
@@ -440,7 +440,7 @@ public class Test_Force_Field {
     @Test
     public void test_Force_Field_Direction_Left_Up_Pick_Up_ForceField() throws InventoryFullException,
             NotEnoughActionsException, NoItemSelectedException, SquareOccupiedException, InvalidMoveException,
-            GameOverException, GridTooSmallException {
+            GameOverException, GridTooSmallException, TooManyPlayersException {
         dimension = new Dimension(10, 10);
         p1Pos = new Position(4, 5);
         p2Pos = new Position(6, 6);

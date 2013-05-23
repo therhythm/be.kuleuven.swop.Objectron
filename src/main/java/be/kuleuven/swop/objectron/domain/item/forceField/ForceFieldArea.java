@@ -6,6 +6,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,7 +117,7 @@ public class ForceFieldArea implements TurnSwitchObserver {
     }
 
     @Override
-    public void turnEnded(Turn newTurn) {
+    public void turnEnded(Observable<TurnSwitchObserver> observable) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -130,5 +131,10 @@ public class ForceFieldArea implements TurnSwitchObserver {
         for (ForceField forceFieldPair : listForceFields) {
             forceFieldPair.update();
         }
+    }
+
+    @Override
+    public void actionHappened(Observable<TurnSwitchObserver> observable) {
+        //do nothing
     }
 }

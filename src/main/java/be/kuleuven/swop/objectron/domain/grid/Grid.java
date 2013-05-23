@@ -9,10 +9,14 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.PrimaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
+import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.viewmodel.GridViewModel;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,14 +34,16 @@ public class Grid implements TurnSwitchObserver {
     private List<Wall> walls;
     private ForceFieldArea forceFieldArea;
     private List<Position> playerPositions;
+    private int powerFailureChance;
 
     public Grid(Square[][] squares, List<Wall> walls, Dimension dimension, ForceFieldArea forceFieldArea,
-                List<Position> playerPositions) {
+                List<Position> playerPositions, int powerFailureChance) {
         this.squares = squares;
         this.walls = walls;
         this.dimension = dimension;
         this.forceFieldArea = forceFieldArea;
         this.playerPositions = playerPositions;
+        this.powerFailureChance = powerFailureChance;
     }
 
     public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException,
@@ -78,27 +84,11 @@ public class Grid implements TurnSwitchObserver {
     }
 
     public List<List<Position>> getWalls() {
-        List<List<Position>> wallViewModels = new ArrayList<List<Position>>();
+        List<List<Position>> wallViewModels = new ArrayList<>();
         for (Wall w : this.walls) {
             wallViewModels.add(w.getWallViewModel());
         }
         return wallViewModels;
-    }
-
-    public void newTurn(Turn currentTurn) {
-        for (Square[] square : squares) {
-            for (Square sq : square) {
-                sq.newTurn(currentTurn);
-            }
-        }
-    }
-
-    public void endAction() {
-        for (Square[] square : squares) {
-            for (Square sq : square) {
-                sq.endAction();
-            }
-        }
     }
 
     public Map<Position, List<Item>> getItems() {
@@ -122,12 +112,19 @@ public class Grid implements TurnSwitchObserver {
     }
 
     @Override
-    public void turnEnded(Turn turn) {
+    public void turnEnded(Observable<TurnSwitchObserver> observable) {
         for (Square[] square : squares) {
             for (Square sq : square) {
-                sq.newTurn(turn);
+                if (losingPower()) {
+                    new PrimaryPowerFailure(sq, observable);
+                }
             }
         }
+    }
+
+    private boolean losingPower() {
+        int r = (int) (Math.random() * 100);
+        return r < powerFailureChance;
     }
 
     @Override
@@ -140,13 +137,18 @@ public class Grid implements TurnSwitchObserver {
         // actionreduced
     }
 
+    @Override
+    public void actionHappened(Observable<TurnSwitchObserver> observable) {
+        //do nothing
+    }
+
     public ForceFieldArea getForceFieldArea() {
         return forceFieldArea;
     }
 
     //obstruction is van het type wall  //todo ??
     public ArrayList<Square> getSquaresNotObstructed() {
-        ArrayList<Square> result = new ArrayList<Square>();
+        ArrayList<Square> result = new ArrayList<>();
         for (Square[] row : squares) {
             for (Square square : row) {
                 if (!square.isObstructed())
@@ -158,5 +160,16 @@ public class Grid implements TurnSwitchObserver {
 
     public Dimension getDimension() {
         return dimension;
+    }
+
+    public GridViewModel getViewModel() {
+        List<SquareViewModel> squareViewModels = new ArrayList<>();
+        for(Square[] row: squares){
+            for(Square sq: row){
+                squareViewModels.add(sq.getViewModel());
+            }
+
+        }
+        return new GridViewModel(squareViewModels);
     }
 }

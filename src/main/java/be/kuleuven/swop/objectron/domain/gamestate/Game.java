@@ -58,12 +58,8 @@ public class Game implements SquareObserver, TurnSwitchObserver, Observable<Game
             playerVMs.add(p.getPlayerViewModel());
         }
         for (GameObserver observer : observers) {
-            observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs);
+            observer.update(turnManager.getCurrentTurn().getViewModel(), playerVMs, getGrid().getViewModel());
         }
-    }
-
-    public void endAction() {
-        gameGrid.endAction();
     }
 
     @Override
@@ -76,21 +72,7 @@ public class Game implements SquareObserver, TurnSwitchObserver, Observable<Game
         observers.remove(observer);
     }
 
-    @Override
-    public void lostPower(Position position) {
-        for (GameObserver observer : observers) {
-            observer.noPower(position);
-        }
-    }
-
-    @Override
-    public void regainedPower(Position position) {
-        for (GameObserver observer : observers) {
-            observer.regainedPower(position);
-        }
-    }
-
-    @Override //todo itemviewmodel
+    @Override //todo itemviewmodel  this can be removed soon
     public void itemPlaced(Item item, Position position) {
         for (GameObserver observer : observers) {
             observer.itemPlaced(item, position);
@@ -98,7 +80,7 @@ public class Game implements SquareObserver, TurnSwitchObserver, Observable<Game
     }
 
     @Override
-    public void turnEnded(Turn newTurn) {
+    public void turnEnded(Observable<TurnSwitchObserver> observable) {
         //todo UI message?
     }
 
@@ -109,6 +91,11 @@ public class Game implements SquareObserver, TurnSwitchObserver, Observable<Game
 
     @Override
     public void actionReduced() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //donothing
+    }
+
+    @Override
+    public void actionHappened(Observable<TurnSwitchObserver> observable) {
+
     }
 }

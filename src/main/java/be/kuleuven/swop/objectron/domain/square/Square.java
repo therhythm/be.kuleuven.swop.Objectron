@@ -11,6 +11,7 @@ import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.*;
 
@@ -21,29 +22,20 @@ import java.util.*;
  *         Time: 00:03
  */
 public class Square implements Observable<SquareObserver> {
-    public static final int POWER_FAILURE_CHANCE = 1;
 
-    PowerFailure powerFailure;
     private final Position position;
 
     private Set<SquareObserver> observers = new HashSet<>();
-    private PowerState state;
     private Map<Direction, Square> neighbours = new HashMap<>();
     private List<Item> items = new ArrayList<>();
     private List<Effect> effects = new ArrayList<>();
-    private int powerFailureChance = POWER_FAILURE_CHANCE;
     private Set<Obstruction> obstructions = new HashSet<>();
 
 
     public Square(final Position position) {
         this.position = position;
-        this.state = new PoweredState(this);
     }
 
-    public Square(final Position position, int powerFailureChance) {
-        this(position);
-        this.powerFailureChance = powerFailureChance;
-    }
 
     public void addNeighbour(Direction direction, Square neighbour) {
         neighbours.put(direction, neighbour);
@@ -63,9 +55,9 @@ public class Square implements Observable<SquareObserver> {
         for (Obstruction obstruction : obstructions) {
             obstruction.hit(movable.getMovementStrategy());
         }
-        state.stepOn(movable.getMovementStrategy());
 
-        for (Effect effect : effects) {
+        List<Effect> copyOf = new ArrayList<>(effects);
+        for (Effect effect : copyOf) {
             effect.activate(movable, manager);
         }
     }
@@ -123,36 +115,6 @@ public class Square implements Observable<SquareObserver> {
         return position.toString() + "\n" + "isObstructed: " + this.isObstructed();
     }
 
-    public void transitionState(PowerState newState) {
-        this.state = newState;
-    }
-
-
-    public void receivePowerFailure(int turns, int actions) {
-        state.powerFailure(turns, actions);
-        notifyPowerFailure();
-    }
-
-    private boolean losingPower() {
-        int r = (int) (Math.random() * 100);
-        return r < powerFailureChance;
-    }
-
-    public void newTurn(Turn currentTurn) {   //todo observer
-        if (losingPower()) {
-            powerFailure = new PowerFailure(this);
-            powerFailure.receivePrimaryPowerFailure();
-        }
-        state.newTurn(currentTurn);
-    }
-
-    public void endAction() {
-        state.endAction();
-        if (powerFailure != null) {
-            powerFailure.rotate();
-        }
-    }
-
     @Override
     public void attach(SquareObserver observer) {
         observers.add(observer);
@@ -161,19 +123,6 @@ public class Square implements Observable<SquareObserver> {
     @Override
     public void detach(SquareObserver observer) {
         observers.remove(observer);
-    }
-
-    public void notifyPowerFailure() {
-        for (SquareObserver observer : observers) {
-            observer.lostPower(this.position);
-        }
-    }
-
-    public void notifyPowered() {
-        powerFailure = null;
-        for (SquareObserver observer : observers) {
-            observer.regainedPower(this.position);
-        }
     }
 
     public void notifyItemPlaced(Item item) {
@@ -186,11 +135,33 @@ public class Square implements Observable<SquareObserver> {
         return Collections.unmodifiableList(effects);
     }
 
+    public void removeEffect(Effect e){
+        effects.remove(e);
+    }
+
     public void addObstruction(Obstruction obstruction) {
         this.obstructions.add(obstruction);
     }
 
     public void removeObstruction(Obstruction obstruction) {
         this.obstructions.remove(obstruction);
+    }
+
+    public SquareViewModel getViewModel(){
+        List<Class<?>> effects = new ArrayList<>();
+        for(Effect e: getEffects()){
+            effects.add(e.getClass());
+        }
+
+        List<Class<?>> obstructionList = new ArrayList<>();
+        for(Obstruction o: obstructions){
+            obstructionList.add(o.getClass());
+        }
+
+        List<Class<?>> itemList = new ArrayList<>();
+        for(Item i: items){
+            itemList.add(i.getClass());
+        }
+        return new SquareViewModel(this.position, effects, obstructionList, itemList);
     }
 }

@@ -4,6 +4,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.square.SquareObserver;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
@@ -20,15 +21,22 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class GeneratedGridBuilder extends GridBuilder {
+    private static final int MAX_PLAYERS = 4;
     private static final double MAX_WALL_COVERAGE_PERCENTAGE = 0.2;
     private static final int MIN_WALL_LENGTH = 2;
     private static final double MAX_WALL_LENGTH_PERCENTAGE = 0.5;
     private static final int MIN_GRID_WIDTH = 10;
     private static final int MIN_GRID_HEIGHT = 10;
+
+
     private List<Position> playerPositions;
 
-    public GeneratedGridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException {
+    public GeneratedGridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException, TooManyPlayersException {
         super();
+
+        if(nbPlayers > MAX_PLAYERS){
+            throw new TooManyPlayersException("You can only play with " + MAX_PLAYERS + " on this grid");
+        }
 
         if (!isValidDimension(dimension)) {
             throw new GridTooSmallException("The grid needs to be at least " +
@@ -39,7 +47,7 @@ public class GeneratedGridBuilder extends GridBuilder {
         this.dimension = dimension;
 
         initPlayerPositions(nbPlayers);
-        initGrid(Square.POWER_FAILURE_CHANCE);
+        initGrid(powerFailureChance);
     }
 
     private void initPlayerPositions(int nbPlayers) {
@@ -102,11 +110,12 @@ public class GeneratedGridBuilder extends GridBuilder {
 
     @Override
     public void initGrid(int powerFailureChance) {
+        this.powerFailureChance = powerFailureChance;
         this.squares = new Square[dimension.getHeight()][dimension.getWidth()];
         for (int vertical = 0; vertical < squares.length; vertical++) {
             for (int horizontal = 0; horizontal < squares[0].length; horizontal++) {
                 Position pos = new Position(horizontal, vertical);
-                squares[vertical][horizontal] = new Square(pos, powerFailureChance);
+                squares[vertical][horizontal] = new Square(pos);
             }
         }
         setupNeighbours();
@@ -114,7 +123,7 @@ public class GeneratedGridBuilder extends GridBuilder {
 
     @Override
     public Grid buildGrid() {
-        return new Grid(squares, walls, dimension, forceFieldArea, playerPositions);
+        return new Grid(squares, walls, dimension, forceFieldArea, playerPositions, powerFailureChance);
     }
 
     @Override

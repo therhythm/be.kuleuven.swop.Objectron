@@ -38,7 +38,7 @@ public class TestUC_Move {
     private Game stateMock;
 
     @Before
-    public void setUp() throws GridTooSmallException {
+    public void setUp() throws GridTooSmallException, TooManyPlayersException {
         Position p1Pos = new Position(0, 9);
         Position p2Pos = new Position(0, 5);
 
@@ -84,9 +84,8 @@ public class TestUC_Move {
 
 
     @Test(expected = NotEnoughActionsException.class)
-    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException,
-            SquareOccupiedException {
-        stateMock.getTurnManager().getCurrentTurn().reduceRemainingActions(Turn.ACTIONS_EACH_TURN);
+    public void test_no_more_actions() throws InvalidMoveException, NotEnoughActionsException, GameOverException, SquareOccupiedException {
+        stateMock.getTurnManager().getCurrentTurn().addPenalty(Turn.ACTIONS_EACH_TURN);
 
         movePlayerHandler.move(Direction.UP);
     }

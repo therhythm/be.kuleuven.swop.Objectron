@@ -2,25 +2,26 @@ package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.PrimaryPowerFailure;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.SecondaryPowerFailure;
+import be.kuleuven.swop.objectron.domain.effect.powerfailure.TertiaryPowerFailure;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.grid.*;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
+import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,161 +30,149 @@ import static org.junit.Assert.assertNotEquals;
  * Time: 21:26
  * To change this template use File | Settings | File Templates.
  */
-public class TestPowerFailure implements SquareObserver {
-    private Square currentSquare;
-    private Player player;
-    private Game state;
-    private MovePlayerHandler movePlayerHandler;
+public class TestPowerFailure {
+    private Player player2;
+    private Game gamestate;
     private Grid grid;
-    private boolean regainedPower;
-    private boolean powerLoss;
-    private int powerLossCounter;
+    private MovePlayerHandler movePlayerHandler;
 
     @Before
-    public void setUp() throws GridTooSmallException, SquareOccupiedException {
-        Dimension dimension = new Dimension(10, 10);
+    public void setUp() throws GridTooSmallException, SquareOccupiedException, TooManyPlayersException {
+        Position p1Pos = new Position(5, 4);
+        Position p2Pos = new Position(5, 3);
 
         List<Position> positions = new ArrayList<>();
-        positions.add(new Position(0, 9));
-        positions.add(new Position(9, 0));
+        positions.add(p1Pos);
+        positions.add(p2Pos);
 
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
 
-        state = GameObjectMother.raceGameWithoutWallsPowerFailures(dimension, playerNames, positions);
-        grid = state.getGrid();
+        Dimension dimension = new Dimension(10, 10);
+        gamestate = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
+        grid = gamestate.getGrid();
 
-        player = state.getTurnManager().getCurrentTurn().getCurrentPlayer();
-        currentSquare = player.getCurrentSquare();
-        movePlayerHandler = new MovePlayerHandler(state);
-        regainedPower = false;
-        powerLoss = false;
-        powerLossCounter = 0;
+        TurnManager turnManager = gamestate.getTurnManager();
+        turnManager.getCurrentTurn().setMoved();
+        turnManager.endTurn();
+        player2 = turnManager.getCurrentTurn().getCurrentPlayer();
+        movePlayerHandler = new MovePlayerHandler(gamestate);
     }
 
     @Test
-    public void testStartUnpowered() {
-        TurnManager turnManager = state.getTurnManager();
-        turnManager.getCurrentTurn().setMoved();
-        turnManager.endTurn();
-        currentSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
-        turnManager.getCurrentTurn().setMoved();
-        turnManager.endTurn();
-        assertEquals(Turn.ACTIONS_EACH_TURN - 1, turnManager.getCurrentTurn().getActionsRemaining());
-        turnManager.getCurrentTurn().setMoved();
-        turnManager.endTurn();
-        currentSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
-        turnManager.getCurrentTurn().setMoved();
-        turnManager.endTurn();
-        assertEquals(Turn.ACTIONS_EACH_TURN - 1, state.getTurnManager().getCurrentTurn().getActionsRemaining());
-    }
-
-    @Test
-    public void testStepOnUnpoweredSquare() throws GameOverException, InvalidMoveException,
-            NotEnoughActionsException, SquareOccupiedException {
-        currentSquare.getNeighbour(Direction.UP).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS,
-                PowerFailure.PF_PRIMARY_ACTIONS);
-        assertEquals(player, state.getTurnManager().getCurrentTurn().getCurrentPlayer());
-        currentSquare.getNeighbour(Direction.UP).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS,
-                PowerFailure.PF_PRIMARY_ACTIONS);
-        assertEquals(player, state.getTurnManager().getCurrentTurn().getCurrentPlayer());
+    public void test_stepon_primary() throws GameOverException, NotEnoughActionsException, InvalidMoveException,
+            SquareOccupiedException {
+        Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
+        new PrimaryPowerFailure(otherSquare, gamestate.getTurnManager());
         movePlayerHandler.move(Direction.UP);
-        assertNotEquals(player, state.getTurnManager().getCurrentTurn().getCurrentPlayer());
+        assertNotEquals(player2, gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer());
     }
 
     @Test
-    public void testStepOnActiveUnpowered() throws NotEnoughActionsException, SquareOccupiedException,
-            InvalidMoveException, GameOverException {
-        new LightMine().place(currentSquare.getNeighbour(Direction.UP));
-        currentSquare.getNeighbour(Direction.UP).receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS,
-                PowerFailure.PF_PRIMARY_ACTIONS);
-        int remainingActionsAfterMove = state.getTurnManager().getCurrentTurn().getActionsRemaining() - 1;
+    public void test_stepon_secondary() throws GameOverException, NotEnoughActionsException, InvalidMoveException,
+            SquareOccupiedException {
+        Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
+        new SecondaryPowerFailure(otherSquare, Direction.UP, gamestate.getTurnManager());
         movePlayerHandler.move(Direction.UP);
-
-        state.getTurnManager().endTurn();
-        assertEquals(1 + Turn.ACTIONS_EACH_TURN - remainingActionsAfterMove, player.getRemainingPenalties());
+        assertNotEquals(player2, gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer());
     }
 
     @Test
-    public void checkRotatingPowerFailure() throws GridTooSmallException, InvalidMoveException,
-            NotEnoughActionsException, GameOverException, SquareOccupiedException {
-        List<Position> positions = new ArrayList<>();
-        positions.add(new Position(0, 0));
-        positions.add(new Position(2, 2));
+    public void test_stepon_tertiary() throws GameOverException, NotEnoughActionsException, InvalidMoveException,
+            SquareOccupiedException {
+        Square otherSquare = grid.getSquareAtPosition(new Position(5, 2));
+        new TertiaryPowerFailure(otherSquare, gamestate.getTurnManager());
+        movePlayerHandler.move(Direction.UP);
+        assertNotEquals(player2, gamestate.getTurnManager().getCurrentTurn().getCurrentPlayer());
+    }
 
-        GridBuilder builder = new GeneratedGridBuilder(new Dimension(10,10), 2);
-        builder.setStartingPositions(positions);
-        grid = GridObjectMother.gridWithoutWalls(builder);
-        Square currentSquare = grid.getSquareAtPosition(new Position(5, 5));
-        currentSquare.attach(this);
+    @Test
+    public void test_action_loss_unpowered_primary() {
+        Square square = grid.getSquareAtPosition(new Position(5, 4));
+        new PrimaryPowerFailure(square, gamestate.getTurnManager());
+        gamestate.getTurnManager().getCurrentTurn().setMoved();
+        gamestate.getTurnManager().endTurn();
+        assertEquals(Turn.ACTIONS_EACH_TURN - 1, gamestate.getTurnManager().getCurrentTurn().getActionsRemaining());
+    }
+
+    @Test
+    public void test_action_loss_unpowered_secondary() {
+        Square square = grid.getSquareAtPosition(new Position(5, 4));
+        new SecondaryPowerFailure(square, Direction.UP, gamestate.getTurnManager());
+        gamestate.getTurnManager().getCurrentTurn().setMoved();
+        gamestate.getTurnManager().endTurn();
+        assertEquals(Turn.ACTIONS_EACH_TURN - 1, gamestate.getTurnManager().getCurrentTurn().getActionsRemaining());
+    }
+
+    @Test
+    public void test_action_loss_unpowered_tertiary() {
+        Square square = grid.getSquareAtPosition(new Position(5, 4));
+        new TertiaryPowerFailure(square, gamestate.getTurnManager());
+        gamestate.getTurnManager().getCurrentTurn().setMoved();
+        gamestate.getTurnManager().endTurn();
+        assertEquals(Turn.ACTIONS_EACH_TURN - 1, gamestate.getTurnManager().getCurrentTurn().getActionsRemaining());
+    }
+
+    @Test
+    public void test_pf_passing() {
+        new PrimaryPowerFailure(grid.getSquareAtPosition(new Position(7, 7)), gamestate.getTurnManager());
+        assertEquals(3, countPowerFailures());
+        gamestate.getTurnManager().getCurrentTurn().reduceAction();
+        assertEquals(2, countPowerFailures());
+        gamestate.getTurnManager().getCurrentTurn().reduceAction();
+        assertEquals(3, countPowerFailures());
+        gamestate.getTurnManager().getCurrentTurn().setMoved();
+        gamestate.getTurnManager().endTurn();
+        gamestate.getTurnManager().getCurrentTurn().setMoved();
+        gamestate.getTurnManager().endTurn();
+        gamestate.getTurnManager().getCurrentTurn().setMoved();
+        gamestate.getTurnManager().endTurn();
+        gamestate.getTurnManager().getCurrentTurn().reduceAction();
+        gamestate.getTurnManager().getCurrentTurn().reduceAction();
+        assertEquals(0, countPowerFailures());
+    }
+
+    @Test
+    public void test_rotate() {
+        new PrimaryPowerFailure(grid.getSquareAtPosition(new Position(7, 7)), gamestate.getTurnManager());
+        boolean secondaryFailure = false;
+        Square secondarySquare = null;
         for (Direction d : Direction.values()) {
-            currentSquare.getNeighbour(d).attach(this);
+            for (Class<?> c : grid.getSquareAtPosition(new Position(7, 7)).getNeighbour(d).getViewModel()
+                    .getEffects()) {
+                if (c.equals(SecondaryPowerFailure.class)) {
+                    secondaryFailure = true;
+                    secondarySquare = grid.getSquareAtPosition(new Position(7, 7)).getNeighbour(d);
+                }
+            }
         }
-
-        while (!powerLoss) {
-            currentSquare.newTurn(new Turn(player));
+        assertTrue(secondaryFailure);
+        secondaryFailure = false;
+        gamestate.getTurnManager().getCurrentTurn().reduceAction();
+        gamestate.getTurnManager().getCurrentTurn().reduceAction();
+        for (Direction d : Direction.values()) {
+            if (secondarySquare.getNeighbour(d).getViewModel().getEffects().contains(SecondaryPowerFailure
+                    .class)) {
+                secondaryFailure = true;
+            }
         }
-
-        assertEquals(powerLossCounter, 2);
-
-        movePlayerHandler.move(Direction.UP);
-        movePlayerHandler.move(Direction.UP);
-
-        assertEquals(powerLossCounter, 2);
+        assertTrue(secondaryFailure);
     }
 
-    @Test
-    public void testRegainPowerPrimary() {
-        currentSquare.receivePowerFailure(PowerFailure.PF_PRIMARY_TURNS, PowerFailure.PF_PRIMARY_ACTIONS);
-        currentSquare.attach(this);
-        for (int i = 0; i < PowerFailure.PF_PRIMARY_TURNS; i++) {
-            state.getTurnManager().getCurrentTurn().setMoved();
-            state.getTurnManager().endTurn();
+    private int countPowerFailures() {
+        int powerFailureCounter = 0;
+        for (SquareViewModel sq : grid.getViewModel().getSquareViewModels()) {
+            for (Class<?> c : sq.getEffects()) {
+                if (c.equals(PrimaryPowerFailure.class) || c.equals(SecondaryPowerFailure.class) || c.equals
+                        (TertiaryPowerFailure.class)) {
+                    powerFailureCounter++;
+                }
+            }
         }
-        assertEquals(true, regainedPower);
-    }
+        return powerFailureCounter;
 
-    @Test
-    public void testRegainPowerSecodary() throws InvalidMoveException, NotEnoughActionsException, GameOverException,
-            SquareOccupiedException {
-        regainedPower = false;
-        currentSquare.receivePowerFailure(PowerFailure.PF_SECONDARY_TURNS, PowerFailure.PF_SECONDARY_ACTIONS);
-        currentSquare.attach(this);
-        for (int i = 0; i < PowerFailure.PF_SECONDARY_ACTIONS; i++) {
-            movePlayerHandler.move(Direction.UP);
-        }
-        assertEquals(true, regainedPower);
-    }
-
-    @Test
-    public void testRegainPowerTertiary() throws InvalidMoveException, NotEnoughActionsException, GameOverException,
-            SquareOccupiedException {
-        regainedPower = false;
-        currentSquare.receivePowerFailure(PowerFailure.PF_TERTIARY_TURNS, PowerFailure.PF_TERTIARY_ACTIONS);
-        currentSquare.attach(this);
-        for (int i = 0; i < PowerFailure.PF_TERTIARY_ACTIONS; i++) {
-            movePlayerHandler.move(Direction.UP);
-        }
-        assertEquals(true, regainedPower);
     }
 
 
-    @Override
-    public void lostPower(Position position) {
-        powerLossCounter++;
-        if (position.getHIndex() == 5 && position.getVIndex() == 5) {
-            powerLoss = true;
-        }
-    }
-
-    @Override
-    public void regainedPower(Position position) {
-        regainedPower = true;
-    }
-
-    @Override
-    public void itemPlaced(Item item, Position position) {
-        //irrelevant
-    }
 }
