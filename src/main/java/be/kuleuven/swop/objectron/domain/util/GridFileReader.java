@@ -18,7 +18,7 @@ public class GridFileReader {
     final static Charset ENCODING = StandardCharsets.UTF_8;
 
     public char[][] readGridFile(String fileName) throws IOException {
-        //todo change , doesnt work with other partitions (ask Thomas)
+        System.out.println(fileName);
         Path path = Paths.get(fileName);
 
         BufferedReader reader = Files.newBufferedReader(path, ENCODING);
