@@ -58,7 +58,7 @@ public class IdentityDisc implements Item, Movable {
                 break;
 
             try {
-                neighbor.stepOn(this, turnManager);
+                enter(neighbor,turnManager);
             } catch (InvalidMoveException e) {
                 break;
             } catch (WallHitException e) {
@@ -73,7 +73,7 @@ public class IdentityDisc implements Item, Movable {
 
 
             currentSquare = neighbor;
-            neighbor = currentSquare.getNeighbour(targetDirection);
+            neighbor =   currentSquare.getNeighbour(targetDirection);
             identityDiscBehavior.moved();
         }
 
@@ -83,6 +83,7 @@ public class IdentityDisc implements Item, Movable {
         identityDiscBehavior.reset();
     }
 
+
     @Override
     public void pickedUp() {
         //do nothing
@@ -91,6 +92,11 @@ public class IdentityDisc implements Item, Movable {
     @Override
     public int getMaxInBag() {
         return MAX_IN_BAG;
+    }
+
+    @Override
+    public void effectActivated(EffectActivation activation) {
+        // we dont do anything on activation
     }
 
     private boolean validDirection(Direction direction) {
@@ -119,6 +125,16 @@ public class IdentityDisc implements Item, Movable {
     public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException,
             WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException,
             SquareOccupiedException {
+
         square.stepOn(this, manager);
+    }
+
+    @Override
+    public void dirsupted() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void moved() {
+        identityDiscBehavior.moved();
     }
 }

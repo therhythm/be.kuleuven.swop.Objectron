@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
@@ -58,4 +59,11 @@ public class Flag implements Item {
     public int getMaxInBag() {
         return MAX_IN_BAG;
     }
-}
+
+    @Override
+    public void effectActivated(EffectActivation activation) {
+            //todo this is not an effect...
+            activation.dropMe(this);
+        }
+    }
+

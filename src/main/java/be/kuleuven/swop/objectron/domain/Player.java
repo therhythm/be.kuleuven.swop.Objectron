@@ -1,7 +1,9 @@
 package be.kuleuven.swop.objectron.domain;
 
+import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
+import be.kuleuven.swop.objectron.domain.item.EffectActivation;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployCommand;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
@@ -12,18 +14,20 @@ import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author : Nik Torfs
  *         Date: 22/02/13
  *         Time: 00:06
  */
-public class Player implements Movable, Obstruction {
+public abstract class Player implements Movable, Obstruction {
     private String name;
     private Square currentSquare;
     private LightTrail lightTrail = new LightTrail();
-    private Inventory inventory = new Inventory();
+    protected Inventory inventory = new Inventory();
     private int remainingPenalties;
     private TeleportStrategy teleportStrategy;
     private MovementStrategy movementStrategy;
@@ -39,19 +43,7 @@ public class Player implements Movable, Obstruction {
         return currentSquare;
     }
 
-    public void pickupItem(int identifier) throws InventoryFullException {
-        Item item = currentSquare.pickUpItem(identifier);
-
-        try {
-            this.inventory.addItem(item);
-        } catch (InventoryFullException ex) {
-            currentSquare.addItem(item);
-            throw ex;
-        } catch (TooManyItemsOfSameTypeException e) {
-            currentSquare.addItem(item);
-        }
-        actionPerformed();
-    }
+    public abstract void pickupItem(int identifier) throws InventoryFullException;
 
     public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException,
             SquareOccupiedException, NotEnoughActionsException {
@@ -98,7 +90,7 @@ public class Player implements Movable, Obstruction {
         actionPerformed();
     }
 
-    private void actionPerformed() {
+    protected void actionPerformed() {
         lightTrail.reduce();
     }
 
@@ -137,4 +129,32 @@ public class Player implements Movable, Obstruction {
     public void hit(MovementStrategy strategy) throws InvalidMoveException, PlayerHitException {
         strategy.hitPlayer(this);
     }
+
+    @Override
+    public void dirsupted() {
+        EffectActivation activation = new EffectActivation(this);
+        List<Item> inventoryCopy = new ArrayList<Item>();
+        inventoryCopy.addAll(inventory.getAllItems());
+        for (Item item : inventoryCopy) {
+            item.effectActivated(activation);
+        }
+    }
+
+    public void randomlyDrop(Item item) {
+        inventory.removeItem(item);
+
+        Direction[] directions = Direction.values();
+        Random random = new Random();
+        int randomDirection = random.nextInt(directions.length);
+        Square randomSquare = getCurrentSquare().getNeighbour(directions[randomDirection]);
+        while (randomSquare == null || randomSquare.isObstructed()) {
+            randomDirection = random.nextInt(directions.length);
+            randomSquare = getCurrentSquare().getNeighbour(directions[randomDirection]);
+        }
+
+        randomSquare.addItem(item);
+
+    }
+
+
 }

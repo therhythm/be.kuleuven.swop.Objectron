@@ -1,5 +1,7 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
+import be.kuleuven.swop.objectron.domain.Player;
+
 /**
  * @author : Nik Torfs
  *         Date: 29/04/13
@@ -12,4 +14,6 @@ public interface TurnObserver {
     void penaltyAdded();
 
     void actionReduced();
+
+    void killPlayer(Player player);
 }

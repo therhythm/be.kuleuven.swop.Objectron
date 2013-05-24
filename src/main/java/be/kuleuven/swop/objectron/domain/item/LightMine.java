@@ -28,6 +28,7 @@ public class LightMine implements Item, Effect {
     public void activate(Movable movable, TurnManager manager) {
         if(isActive){
             manager.getCurrentTurn().addPenalty(NB_ACTIONS_BLINDED);
+            movable.dirsupted();
             isActive = false;
         }
     }
@@ -60,6 +61,11 @@ public class LightMine implements Item, Effect {
     @Override
     public int getMaxInBag() {
         return MAX_IN_BAG;
+    }
+
+    @Override
+    public void effectActivated(EffectActivation activation) {
+        // I don't do anything on activation
     }
 
 

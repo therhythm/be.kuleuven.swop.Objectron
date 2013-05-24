@@ -2,11 +2,13 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.effect.powerfailure.PrimaryPowerFailure;
@@ -135,6 +137,11 @@ public class Grid implements TurnSwitchObserver {
     @Override
     public void actionReduced() {
         // actionreduced
+    }
+
+    @Override
+    public void actionHappened(TurnObserver observable, List<Player> players) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

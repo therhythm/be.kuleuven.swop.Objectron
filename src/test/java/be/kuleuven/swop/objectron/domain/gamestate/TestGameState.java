@@ -42,7 +42,7 @@ public class TestGameState {
         playerNames.add("p2");
 
         Dimension dimension = new Dimension(10, 10);
-        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension,playerNames,positions);
+        state = GameObjectMother.raceGameWithoutWallsItemsPowerFailures(dimension, playerNames, positions);
     }
 
     @Test

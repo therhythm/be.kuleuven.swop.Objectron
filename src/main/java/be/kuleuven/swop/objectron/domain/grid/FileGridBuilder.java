@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
 import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
@@ -113,8 +114,12 @@ public class FileGridBuilder extends GridBuilder {
         Dijkstra dijkstra = new Dijkstra(freeSquares);
         for (int i = 0; i < freeSquares.size(); i++) {
             for (int j = 0; j < freeSquares.size(); j++) {
-                if (dijkstra.getShortestDistance(freeSquares.get(i), freeSquares.get(j)) == Double.POSITIVE_INFINITY
-                        && i != j) {
+                try {
+                    if (dijkstra.getShortestDistance(freeSquares.get(i), freeSquares.get(j)) == Double.POSITIVE_INFINITY
+                            && i != j) {
+                        throw new InvalidFileException("There are unreachable squares in this input.");
+                    }
+                } catch (SquareUnreachableException e) {
                     throw new InvalidFileException("There are unreachable squares in this input.");
                 }
             }

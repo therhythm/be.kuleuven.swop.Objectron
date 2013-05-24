@@ -1,6 +1,7 @@
 package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
 import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
@@ -50,7 +51,7 @@ public class TestDijkstra {
     }
 
     @Test
-    public void test_DijkstraShortestPath_straight_line() {
+    public void test_DijkstraShortestPath_straight_line() throws SquareUnreachableException {
         Square startSquare = grid.getSquareAtPosition(new Position(0, 0));
         Square destinationSquare = grid.getSquareAtPosition(new Position(0, 5));
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
@@ -60,7 +61,7 @@ public class TestDijkstra {
     }
 
     @Test
-    public void test_DijkstraShortestPath_not_straight_1() {
+    public void test_DijkstraShortestPath_not_straight_1() throws SquareUnreachableException {
         Square startSquare = grid.getSquareAtPosition(new Position(0, 0));
         Square destinationSquare = grid.getSquareAtPosition(new Position(1, 5));
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
@@ -70,7 +71,7 @@ public class TestDijkstra {
     }
 
     @Test
-    public void test_DijkstraShortestPath_not_straight_2() {
+    public void test_DijkstraShortestPath_not_straight_2() throws SquareUnreachableException {
         Square startSquare = grid.getSquareAtPosition(new Position(0, 0));
         Square destinationSquare = grid.getSquareAtPosition(new Position(2, 6));
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
@@ -80,7 +81,7 @@ public class TestDijkstra {
     }
 
     @Test
-    public void test_DijkstraShortestPath_not_straight_3() {
+    public void test_DijkstraShortestPath_not_straight_3() throws SquareUnreachableException {
         Square startSquare = grid.getSquareAtPosition(new Position(5, 5));
         Square destinationSquare = grid.getSquareAtPosition(new Position(2, 3));
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());
@@ -90,7 +91,7 @@ public class TestDijkstra {
     }
 
     @Test
-    public void test_DijkstraShortestPath_with_wall() {
+    public void test_DijkstraShortestPath_with_wall() throws SquareUnreachableException {
         Square startSquare = grid.getSquareAtPosition(new Position(5, 5));
         Square destinationSquare = grid.getSquareAtPosition(new Position(5, 7));
         Dijkstra dijkstra = new Dijkstra(grid.getSquaresNotObstructed());

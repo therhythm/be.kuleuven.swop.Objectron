@@ -1,6 +1,9 @@
 package be.kuleuven.swop.objectron.domain.gamestate;
 
+import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.util.Observable;
+
+import java.util.List;
 
 /**
  * @author : Nik Torfs
@@ -17,5 +20,9 @@ public interface TurnSwitchObserver {
 
     void actionReduced();
 
+    void actionHappened(TurnObserver observable,List<Player> players);
+
     void actionHappened(Observable<TurnSwitchObserver> observable);
+
+
 }
