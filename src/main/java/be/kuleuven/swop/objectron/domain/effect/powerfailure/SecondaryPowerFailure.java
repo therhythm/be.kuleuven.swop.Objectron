@@ -24,18 +24,18 @@ import java.util.List;
  * Time: 17:42
  * To change this template use File | Settings | File Templates.
  */
-public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
+public class SecondaryPowerFailure extends PowerFailure {
 
     public static final int PF_SECONDARY_ACTIONS = 2;
     private int actionsLeft = PF_SECONDARY_ACTIONS;
-    private Square square;
 
     public SecondaryPowerFailure(Square square, Direction direction, Observable<TurnSwitchObserver> observable) {
+        super();
         this.square = square;
 
-            initiateTertiaryPowerFailure(direction, observable);
-            square.addEffect(this);
-            observable.attach(this);
+        initiateTertiaryPowerFailure(direction, observable);
+        square.addEffect(this);
+        observable.attach(this);
 
     }
 
@@ -50,37 +50,6 @@ public class SecondaryPowerFailure implements Effect, TurnSwitchObserver {
         if(neighbour != null){
             new TertiaryPowerFailure(neighbour, observable);
         }
-    }
-
-    @Override
-    public void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
-
-            PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
-            for(Effect effect : square.getEffects()){
-                effect.accept(visitor);
-            }
-            movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
-
-    }
-
-    @Override
-    public void accept(EffectVisitor visitor) {
-        //do nothing
-    }
-
-    @Override
-    public void turnEnded(Observable<TurnSwitchObserver> observable) {
-        //do nothing
-    }
-
-    @Override
-    public void update(Turn turn) {
-        //do nothing
-    }
-
-    @Override
-    public void actionReduced() {
-        //do nothing
     }
 
     @Override

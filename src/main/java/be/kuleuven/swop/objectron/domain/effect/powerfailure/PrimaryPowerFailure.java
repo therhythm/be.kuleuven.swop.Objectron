@@ -22,18 +22,18 @@ import be.kuleuven.swop.objectron.domain.util.Observable;
  * Time: 17:21
  * To change this template use File | Settings | File Templates.
  */
-public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
+public class PrimaryPowerFailure extends PowerFailure {
 
     public static final int PF_PRIMARY_TURNS = 3;
 
     private boolean clockWise = false;
     private Direction prevDirection;
     private int rotateCounter;
-    private Square square;
 
     private int turnsLeft = PF_PRIMARY_TURNS;
 
     public PrimaryPowerFailure(Square square, Observable<TurnSwitchObserver> observable){
+        super();
         this.square = square;
         square.addEffect(this);
         initiateSecondaryPowerFailure(observable);
@@ -77,31 +77,13 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
-            PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
-            for(Effect effect : square.getEffects()){
-                effect.accept(visitor);
-            }
-            movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
-    }
-
-    @Override
-    public void accept(EffectVisitor visitor) {
-       //do nothing
-    }
-
-    @Override
     public void turnEnded(Observable<TurnSwitchObserver> observable) {
+        super.turnEnded(observable);
         turnsLeft --;
         if(turnsLeft == 0){
             observable.detach(this);
             square.removeEffect(this);
         }
-    }
-
-    @Override
-    public void update(Turn turn) {
-        //nothing to do
     }
 
     @Override
