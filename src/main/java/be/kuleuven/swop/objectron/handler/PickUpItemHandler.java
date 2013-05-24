@@ -12,12 +12,20 @@ import be.kuleuven.swop.objectron.domain.square.Square;
 import java.util.List;
 
 /**
+ * A class of PickUpItemHandlers involving a Game.
  * @author : Nik Torfs
  *         Date: 12/03/13
  *         Time: 01:10
  */
 public class PickUpItemHandler extends Handler {
 
+    /**
+     * Initialize this new PickUpItemHandler with a given Game.
+     * @param game
+     *        The game for this new PickUpItemHandler.
+     * @post  This PickUpItemHandler is initialized with the given Game.
+     *        | new.this.game == game
+     */
     public PickUpItemHandler(Game game) {
         super(game);
     }
@@ -25,18 +33,19 @@ public class PickUpItemHandler extends Handler {
     /**
      * Pick up an item from the current square.
      *
-     * @param selectionId The ID of the item to pick up.
+     * @param selectionId
+     *        The ID of the item to pick up.
      * @throws be.kuleuven.swop.objectron.domain.exception.InventoryFullException
      *          The player's inventory is full.
-     *          | game.getCurrentPlayer().getInventoryItems() == 6
+     *          | currentTurn.getCurrentPlayer().getInventoryItems() == 6
      * @throws be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException
      *          The player has no more available actions.
-     *          | game.getCurrentPlayer().getAvailableActions() == 0
+     *          | currentTurn.getActionsRemaining() == 0
      * @post The item is removed from the current square.
-     * | !game.getCurrentPlayer().getCurrentSquare().
+     * | !new.currentTurn.getCurrentPlayer().getCurrentSquare().
      * |  getAvailableItems().get(selectionId)
      * @post The item is added to the inventory of the current player.
-     * | game.getCurrentPlayer().getInventoryItems().get(selectionId)
+     * | new.currentTurn.getCurrentPlayer().getInventoryItems().get(selectionId)
      */
     public void pickUpItem(int selectionId) throws InventoryFullException, NotEnoughActionsException {
         Turn currentTurn = game.getTurnManager().getCurrentTurn();
@@ -45,17 +54,18 @@ public class PickUpItemHandler extends Handler {
         Player currentPlayer = currentTurn.getCurrentPlayer();
         currentPlayer.pickupItem(selectionId);
         currentTurn.reduceAction();
-        //game.notifyObservers();
     }
 
     /**
      * Retrieve a list of available items on the current square.
      *
      * @return A list with available items.
-     * @throws IllegalStateException The inventory of the current player is full.
-     *                               | currentPlayer.isInventoryFull()
-     * @throws IllegalStateException The current square has no items
-     *                               | currentSquare.availableItems().size() == 0
+     * @throws NotEnoughActionsException
+     *         The player has no more available actions.
+     *         | currentTurn.getActionsRemaining() == 0
+     * @throws SquareEmptyException
+     *         The current square has no items
+     *         | currentSquare.availableItems().size() == 0
      */
     public List<Item> getAvailableItems() throws SquareEmptyException, NotEnoughActionsException {
         Turn currentTurn = game.getTurnManager().getCurrentTurn();

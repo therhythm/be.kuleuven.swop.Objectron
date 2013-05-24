@@ -14,12 +14,20 @@ import be.kuleuven.swop.objectron.domain.item.deployer.ThrowingItemDeployCommand
 import java.util.List;
 
 /**
+ * A class of UseItemHandlers involving a Game.
  * @author : Nik Torfs
  *         Date: 12/03/13
  *         Time: 01:10
  */
 public class UseItemHandler extends Handler {
 
+    /**
+     * Initialize this new UseItemHandler with a given Game.
+     * @param game
+     *        The game for this new UseItemHandler.
+     * @post  This UseItemHandler is initialized with the given Game.
+     *        | new.this.game == game
+     */
     public UseItemHandler(Game game) {
         super(game);
     }
@@ -44,10 +52,10 @@ public class UseItemHandler extends Handler {
     /**
      * Retrieve an item from the player's inventory and set it as the currently selected item
      *
-     * @param identifier The identifier of the item.
+     * @param identifier
+     *        The identifier of the item.
      * @post The item is selected
-     * | currentPlayer.getCurrentlySelectedItem()
-     * |  == currentPlayer.getInventory().retrieveItem(identifier)
+     *       | new.currentTurn.getCurrentItem() == currentPlayer.getInventoryItem(identifier)
      */
     public String selectItemFromInventory(int identifier) {
         Item currentlySelectedItem = game.getTurnManager().getCurrentTurn().getCurrentPlayer().getInventoryItem
@@ -61,12 +69,15 @@ public class UseItemHandler extends Handler {
      *
      * @throws be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException
      *          The square the player is trying to access, is occupied.
-     *          | game.getCurrentPlayer().getCurrentSquare().hasActiveItem()
+     *          | currentTurn.getCurrentPlayer().getCurrentSquare().hasActiveItem()
      * @throws be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException
      *          The player has no more available actions.
-     *          | game.getCurrentPlayer().getAvailableActions() == 0
+     *          | currentTurn.getAvailableActions() == 0
+     * @throws be.kuleuven.swop.objectron.domain.exception.NoItemSelectedException
+     *          The player has no items selected.
+     *          | currentTurn.getCurrentItem() == null
      * @post The item is removed from the player's inventory
-     * | !currentPlayer.getInventory().contains(currentPlayer.getCurrentlySelectedItem())
+     * | !new.currentPlayer.getInventory().contains(currentPlayer.getCurrentlySelectedItem())
      * @post The player's available actions is reduced by 1
      * | new.currentPlayer.getAvailableActions() = currentPlayer.getAvailableActions()-1
      */
@@ -87,6 +98,24 @@ public class UseItemHandler extends Handler {
 
     }
 
+    /**
+     * Use the currently selected identity disc.
+     *
+     * @param direction
+     *        The direction to throw the disc in.
+     * @throws SquareOccupiedException
+     *         The square the player is trying to access, is occupied.
+     *         | currentTurn.getCurrentPlayer().getCurrentSquare().hasActiveItem()
+     * @throws NotEnoughActionsException
+     *         The player has no more available actions.
+     *         | currentTurn.getAvailableActions() == 0
+     * @throws NoItemSelectedException
+     *         The player has no items selected.
+     *         | currentTurn.getCurrentItem() == null
+     * @throws GameOverException
+     *         The game is finished.
+     *         | game.getTurnManager().checkWin() == true
+     */
     public void useCurrentIdentityDisc(Direction direction) throws SquareOccupiedException,
             NotEnoughActionsException, NoItemSelectedException, GameOverException {
         TurnManager turnManager = game.getTurnManager();
