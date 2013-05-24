@@ -1,19 +1,24 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 /**
- * Created with IntelliJ IDEA.
+ * An interface for IdentityDiscBehaviors.
  * User: Peter
  * Date: 11/04/13
  * Time: 14:49
- * To change this template use File | Settings | File Templates.
  */
 public interface IdentityDiscBehavior {
 
     int getRemainingRange();
 
+    /**
+     * The identity disc has moved.
+     */
     void moved();
 
     String getName();
 
+    /**
+     * Reset this IdentityDiscBehavior.
+     */
     void reset();
 }

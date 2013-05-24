@@ -11,11 +11,10 @@ import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
- * Created with IntelliJ IDEA.
+ * A class of IdentityDiscs involving an IdentityDiscBehavior implementing Item and Movable.
  * User: Peter
  * Date: 8/04/13
  * Time: 20:04
- * To change this template use File | Settings | File Templates.
  */
 public class IdentityDisc implements Item, Movable {
     private static final int MAX_IN_BAG = Integer.MAX_VALUE; // Can't have annoying side effects. It would be
@@ -25,6 +24,11 @@ public class IdentityDisc implements Item, Movable {
     private TeleportStrategy teleportStrategy;
     private MovementStrategy movementStrategy;
 
+    /**
+     * Initialize this IdentityDisc with a given IdentityDiscBehavior.
+     * @param identityDiscBehavior
+     *        The IdentityDiscBehavior for this IdentityDisc.
+     */
     public IdentityDisc(IdentityDiscBehavior identityDiscBehavior) {
         this.identityDiscBehavior = identityDiscBehavior;
         this.teleportStrategy = new IdentityDiscTeleportStrategy();
@@ -96,7 +100,7 @@ public class IdentityDisc implements Item, Movable {
 
     @Override
     public void effectActivated(EffectActivation activation) {
-        // we dont do anything on activation
+        // we don't do anything on activation
     }
 
     private boolean validDirection(Direction direction) {
@@ -131,10 +135,7 @@ public class IdentityDisc implements Item, Movable {
 
     @Override
     public void dirsupted() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //do nothing
     }
 
-    public void moved() {
-        identityDiscBehavior.moved();
-    }
 }

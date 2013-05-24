@@ -6,11 +6,10 @@ import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
 /**
- * Created with IntelliJ IDEA.
+ * A class of ReturnFlagToBaseDeployCommands implementing ItemDeployCommand.
  * User: Piet
  * Date: 17/05/13
  * Time: 9:13
- * To change this template use File | Settings | File Templates.
  */
 public class ReturnFlagToBaseDeployCommand implements ItemDeployCommand {
     @Override

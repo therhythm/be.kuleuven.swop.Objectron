@@ -9,11 +9,10 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
- * Created with IntelliJ IDEA.
+ * A class of Flags involving a Player and a Square implementing Item.
  * User: Piet
  * Date: 13/05/13
  * Time: 21:26
- * To change this template use File | Settings | File Templates.
  */
 public class Flag implements Item {
     private static final int MAX_IN_BAG = 1;
@@ -21,6 +20,13 @@ public class Flag implements Item {
     private final Player owner;
     private final Square base;
 
+    /**
+     * Initialize this Flag with a given Player and Square.
+     * @param player
+     *        The Player for this Flag.
+     * @param base
+     *        The Square for this Flag.
+     */
     public Flag(Player player, Square base) {
         this.owner = player;
         this.base = base;

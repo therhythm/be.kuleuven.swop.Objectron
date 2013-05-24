@@ -1,20 +1,21 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 /**
+ * A class of NormalIdentityDiscBehaviors implementing IdentityDiscBehavior.
  * Created with IntelliJ IDEA.
  * User: Piet
  * Date: 11/04/13
  * Time: 14:37
- * To change this template use File | Settings | File Templates.
  */
 public class NormalIdentityDiscBehavior implements IdentityDiscBehavior {
-
 
     public static final int MAX_RANGE = 4;
 
     private int remainingRange;
 
-
+    /**
+     * Initialize this NormalIdentityDiscBehavior.
+     */
     public NormalIdentityDiscBehavior() {
         this.remainingRange = MAX_RANGE;
     }

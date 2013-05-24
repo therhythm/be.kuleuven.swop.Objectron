@@ -6,11 +6,23 @@ import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.item.Item;
 
 /**
+ * An interface for ItemDeployCommands.
  * @author : Nik Torfs
  *         Date: 24/04/13
  *         Time: 22:49
  */
 public interface ItemDeployCommand {
 
+    /**
+     * Deploy a given Item.
+     * @param item
+     *        The Item to deploy.
+     * @throws SquareOccupiedException
+     *         The square is occupied.
+     * @throws GameOverException
+     *         The game is over.
+     * @throws NotEnoughActionsException
+     *         The player has not enough actions remaining.
+     */
     void deploy(Item item) throws SquareOccupiedException, GameOverException, NotEnoughActionsException;
 }

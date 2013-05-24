@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.movement.Movable;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
+ * A class of LightMines implementing Item and Effect.
  * @author : Peter Bosmans
  *         Date: 27/02/13
  *         Time: 20:56

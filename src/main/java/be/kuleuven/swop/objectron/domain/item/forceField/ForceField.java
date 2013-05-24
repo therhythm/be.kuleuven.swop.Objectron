@@ -17,11 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
+ * A class of ForceFields involving 2 ForcefieldGenerators and a list of Squares implementing Obstruction.
  * User: Peter
  * Date: 28/04/13
  * Time: 9:49
- * To change this template use File | Settings | File Templates.
  */
 
 public class ForceField implements Obstruction {
@@ -34,8 +33,16 @@ public class ForceField implements Obstruction {
     private boolean active;
     private List<Player> playerHitLastTime;
 
+    /**
+     * Initialize this ForceField with 2 given ForcefieldGenerators and a list of Squares.
+     * @param forceField1
+     *        The first ForceFieldGenerator for this ForceField.
+     * @param forceField2
+     *        The second ForceFieldGenerator for this ForceField.
+     * @param squaresBetween
+     *        The list of Squares between the 2 generators.
+     */
     public ForceField(ForcefieldGenerator forceField1, ForcefieldGenerator forceField2, List<Square> squaresBetween) {
-
         this.forceField1 = forceField1;
         this.forceField2 = forceField2;
         this.affectedSquares = squaresBetween;
@@ -87,6 +94,11 @@ public class ForceField implements Obstruction {
 
     }
 
+    /**
+     * Update this ForceField.
+     * @param turnManager
+     *        The TurnManager to execute the update with.
+     */
     public void update(TurnManager turnManager) {
         currentTurnSwitch--;
         if (currentTurnSwitch == 0) {

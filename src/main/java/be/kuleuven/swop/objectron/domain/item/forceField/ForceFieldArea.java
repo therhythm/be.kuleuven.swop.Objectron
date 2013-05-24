@@ -17,26 +17,32 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
+ * A class of ForceFieldAreas implementing TurnSwitchObserver.
  * User: Peter
  * Date: 28/04/13
  * Time: 9:49
- * To change this template use File | Settings | File Templates.
  */
 public class ForceFieldArea implements TurnSwitchObserver {
     private final int maxRange = 3;
     private Map<ForcefieldGenerator, Square> listForceFieldGenerators;
     private List<ForceField> listForceFields;
 
+    /**
+     * Initialize this ForceFieldArea.
+     */
     public ForceFieldArea() {
         listForceFieldGenerators = new HashMap<ForcefieldGenerator, Square>();
         listForceFields = new ArrayList<ForceField>();
     }
 
     /**
+     * Place a ForceFieldGenerator on a Square.
      * @param changedForceFieldGenerator
+     *        The changed ForceFieldGenerator to place.
      * @param currentSquare
-     * @throws SquareOccupiedException Thrown when the square already contains a ForceFieldGenerator
+     *        The square to place the ForceFieldGenerator on.
+     * @throws SquareOccupiedException
+     *         The square already contains a ForceFieldGenerator.
      * @effect the square will be assigned to the "changedForceFieldGenerator" in the list listForceFieldGenerators
      * @effect if there is a focrefieldGenerator within range and fullfills the requirements to create a forcefield,
      * a forcefield will be created
@@ -55,7 +61,9 @@ public class ForceFieldArea implements TurnSwitchObserver {
     }
 
     /**
+     * Pick up a ForceFieldGenerator.
      * @param changedForceFieldGenerator
+     *        The ForceFieldGenerator to pick up.
      * @Effect The corresponding square in the "listForceFields" is set to null
      * @Effect if there is a ForceField that contains that ForceFieldGenerator,   that forcefield is removed from the
      * list forceFields.

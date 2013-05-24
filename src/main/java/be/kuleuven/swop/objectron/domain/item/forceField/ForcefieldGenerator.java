@@ -8,11 +8,10 @@ import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
- * Created with IntelliJ IDEA.
+ * A class of ForcefieldGenerators involving a ForceFieldArea implementing Item.
  * User: Peter
  * Date: 28/04/13
  * Time: 9:50
- * To change this template use File | Settings | File Templates.
  */
 public class ForcefieldGenerator implements Item {
     private final static int MAX_IN_BAG = Integer.MAX_VALUE;
@@ -20,6 +19,11 @@ public class ForcefieldGenerator implements Item {
     private final String name = "Force Field";
     private ForceFieldArea forcefieldArea;
 
+    /**
+     * Initialize this ForcefieldGenerator with a given ForceFieldArea.
+     * @param forcefieldArea
+     *        The ForceFieldArea for this ForcefieldGenerator.
+     */
     public ForcefieldGenerator(ForceFieldArea forcefieldArea) {
         this.forcefieldArea = forcefieldArea;
     }
