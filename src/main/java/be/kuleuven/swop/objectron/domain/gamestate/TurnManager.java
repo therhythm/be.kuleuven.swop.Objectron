@@ -39,8 +39,8 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
         checkMoved();
 
         currentTurn = newTurn;
-        update(currentTurn);
         notifyObservers();
+        update(currentTurn);
     }
 
     private void checkMoved() {
