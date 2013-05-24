@@ -10,6 +10,7 @@ import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
+ * A class for Movements involving a Movable, Direction, Square, MovementRangeStrategy and TurnManager.
  * @author : Nik Torfs
  *         Date: 24/05/13
  *         Time: 13:14
@@ -24,8 +25,19 @@ public class Movement {
     protected MovementRangeStrategy movementRangeStrategy;
     private boolean isTeleporting = false;
 
-
-
+    /**
+     * Initialize this Movement with a given Movable, Direction, Square, MovementRangeStrategy and TurnManager.
+     * @param movable
+     *        The Movable for this Movement.
+     * @param direction
+     *        The Direction for this Movement.
+     * @param currentSquare
+     *        The Square for this Movement.
+     * @param movementRangeStrategy
+     *        The MovementRangeStrategy for this Movement.
+     * @param manager
+     *        The TurnManager for this Movement.
+     */
     public Movement(Movable movable, Direction direction, Square currentSquare,
                     MovementRangeStrategy movementRangeStrategy, TurnManager manager) {
         this.movable = movable;
@@ -35,6 +47,9 @@ public class Movement {
         this.manager = manager;
     }
 
+    /**
+     * Execute a move.
+     */
     public void move(){
         // iterator could make this easier to use, move the responsibility to movement Range Strategy to reduce the range
         while(movementRangeStrategy.hasNext()){
@@ -48,6 +63,11 @@ public class Movement {
         }
     }
 
+    /**
+     * Move only one step.
+     * @throws InvalidMoveException
+     *         This is an invalid move.
+     */
     private void moveOneStep() throws InvalidMoveException {
         Square neighbour = currentSquare.getNeighbour(direction);
         if(neighbour != null){
@@ -58,6 +78,11 @@ public class Movement {
         }
     }
 
+    /**
+     * Teleport to a different Square.
+     * @param newSquare
+     *        The Square to teleport to.
+     */
     //wrap isTeleporting boolean?
     public void teleport(Square newSquare){
         disrupted();
