@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
+ * A class of GridFileReaders.
  * @author : Kasper Vervaecke
  *         Date: 11/05/13
  *         Time: 15:22
@@ -17,6 +18,14 @@ public class GridFileReader {
 
     final static Charset ENCODING = StandardCharsets.UTF_8;
 
+    /**
+     * Read a file specified in a filename.
+     * @param fileName
+     *        The filename of the file to read.
+     * @return A two-dimensional array of characters.
+     * @throws IOException
+     *         The system encountered an IOError.
+     */
     public char[][] readGridFile(String fileName) throws IOException {
         System.out.println(fileName);
         Path path = Paths.get(fileName);

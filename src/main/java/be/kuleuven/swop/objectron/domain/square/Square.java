@@ -1,6 +1,5 @@
 package be.kuleuven.swop.objectron.domain.square;
 
-
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Obstruction;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
@@ -15,13 +14,13 @@ import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
 
 import java.util.*;
 
-
 /**
+ * A class of Squares involving a Position.
  * @author : Nik Torfs
  *         Date: 22/02/13
  *         Time: 00:03
  */
-public class Square{
+public class Square {
 
     private final Position position;
 
@@ -30,11 +29,14 @@ public class Square{
     private List<Effect> effects = new ArrayList<>();
     private Set<Obstruction> obstructions = new HashSet<>();
 
-
+    /**
+     * Initialize this Square with a given position.
+     * @param position
+     *        The Position to initialize this Square with.
+     */
     public Square(final Position position) {
         this.position = position;
     }
-
 
     public void addNeighbour(Direction direction, Square neighbour) {
         neighbours.put(direction, neighbour);
@@ -48,6 +50,30 @@ public class Square{
         return !obstructions.isEmpty();
     }
 
+    /**
+     * A Movable steps on this Square with a TurnManager.
+     * @param movable
+     *        The Movable that steps on this square.
+     * @param manager
+     *        The TurnManager to execute the step with.
+     * @throws InvalidMoveException
+     *         This is an invalid move.
+     * @throws PlayerHitException
+     *         A player is hit by an identity disc.
+     * @throws WallHitException
+     *         A wall is hit by an identity disc.
+     * @throws ForceFieldHitException
+     *         A force field is hit by an identity disc.
+     * @throws GameOverException
+     *         The game is over.
+     *         | manager.checkWin()
+     * @throws SquareOccupiedException
+     *         The square is occupied.
+     *         | isObstructed()
+     * @throws NotEnoughActionsException
+     *         The player has not enough actions remaining.
+     *         | manager.getCurrentTurn().getActionsRemaining() == 0
+     */
     public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException,
             WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException,
             NotEnoughActionsException {
@@ -77,6 +103,12 @@ public class Square{
         return this.position;
     }
 
+    /**
+     * Pick up an Item from this Square.
+     * @param selectionId
+     *        The ID of the Item to pick up.
+     * @return the Item to pick up.
+     */
     public Item pickUpItem(int selectionId) {
         Item selectedItem = items.get(selectionId);
 
@@ -84,6 +116,12 @@ public class Square{
         return selectedItem;
     }
 
+    /**
+     * This Square is a valid position to move to.
+     * @param direction
+     *        The direction a Movable wants to move in.
+     * @return this Square is a valid position.
+     */
     public boolean isValidPosition(Direction direction) {
         if (this.isObstructed())
             return false;
@@ -129,6 +167,10 @@ public class Square{
         this.obstructions.remove(obstruction);
     }
 
+    /**
+     * Return lists of Effects, Obstructions and Items on this Square.
+     * @return lists of Effects, Obstructions and Items.
+     */
     public SquareViewModel getViewModel(){
         List<Class<?>> effects = new ArrayList<>();
         for(Effect e: getEffects()){
