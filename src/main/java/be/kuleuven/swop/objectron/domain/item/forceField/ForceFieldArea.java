@@ -135,9 +135,9 @@ public class ForceFieldArea implements TurnSwitchObserver {
     }
 
     @Override
-    public void actionHappened(TurnObserver observable,List<Player> players) {
+    public void actionHappened(TurnManager turnManager,List<Player> players) {
         for (ForceField forceFieldPair : listForceFields) {
-            forceFieldPair.update(observable,players);
+            forceFieldPair.update(turnManager,players);
         }
     }
 

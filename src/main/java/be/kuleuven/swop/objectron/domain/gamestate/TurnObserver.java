@@ -14,6 +14,4 @@ public interface TurnObserver {
     void penaltyAdded();
 
     void actionReduced();
-
-    void killPlayer(Player player);
 }

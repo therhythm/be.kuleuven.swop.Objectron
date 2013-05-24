@@ -114,7 +114,7 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void actionHappened(TurnObserver observable, List<Player> players) {
+    public void actionHappened(TurnManager turnManager, List<Player> players) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

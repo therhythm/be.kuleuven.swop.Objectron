@@ -5,8 +5,10 @@ import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Game;
 import be.kuleuven.swop.objectron.domain.gamestate.GameObjectMother;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.item.Item;
+import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -390,6 +392,7 @@ public class Test_Force_Field {
 
         assertTrue(squareFF2.isObstructed());
         endTurnHandler.endTurn();
+        state.getTurnManager().getCurrentTurn().getCurrentPlayer().setIncapacitated(false);
         movePlayerHandler.move(Direction.DOWN);
         movePlayerHandler.move(Direction.DOWN);
         assertFalse(squareFF2.isObstructed());
@@ -501,6 +504,119 @@ public class Test_Force_Field {
 
         forceFieldArea.placeForceField(new ForcefieldGenerator(forceFieldArea), square);
         forceFieldArea.placeForceField(new ForcefieldGenerator(forceFieldArea), square);
+
+    }
+
+    @Test(expected = GameOverException.class)
+    public void test_force_field_player_dies() throws SquareOccupiedException, GameOverException, NotEnoughActionsException, InvalidMoveException, InventoryFullException, NoItemSelectedException {
+
+        Square square1 = grid.getSquareAtPosition(new Position(3, 4));
+        Square square2 = grid.getSquareAtPosition(p2Pos);
+
+        ForceFieldArea forceFieldArea = grid.getForceFieldArea();
+
+        forceFieldArea.placeForceField(new ForcefieldGenerator(forceFieldArea), square1);
+        forceFieldArea.placeForceField(new ForcefieldGenerator(forceFieldArea), square2);
+
+        TurnManager turnmanager = state.getTurnManager();
+
+        turnmanager.getCurrentTurn().setMoved();
+        turnmanager.endTurn();
+        pickUpItemHandler.pickUpItem(0);
+        for (int i = 0; i < 2; i++) {
+            System.out.println(turnmanager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+            movePlayerHandler.move(Direction.LEFT);
+            System.out.println(turnmanager.getCurrentTurn().getCurrentPlayer().getCurrentSquare().getPosition());
+        }
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentItem();
+
+        turnmanager.endTurn();
+        turnmanager.getCurrentTurn().setMoved();
+        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        turnmanager.endTurn();
+        for (int i = 0; i < ForceField.TURNSWITCH; i++) {
+            movePlayerHandler.move(Direction.UP);
+        }
+
+        turnmanager.endTurn();
+        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        turnmanager.endTurn();
+        assertTrue(turnmanager.getPlayers().size() == 2);
+        for (int i = 0; i < ForceField.TURNSWITCH; i++) {
+            movePlayerHandler.move(Direction.UP);
+        }
+        turnmanager.endTurn();
+        turnmanager.getCurrentTurn().setMoved();
+        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        turnmanager.endTurn();
+        assertTrue(turnmanager.getPlayers().size() == 2);
+        for (int i = 0; i < ForceField.TURNSWITCH; i++) {
+            movePlayerHandler.move(Direction.LEFT);
+        }
+        assertTrue(turnmanager.getPlayers().size() == 1);
+        endTurnHandler.endTurn();
+
+    }
+
+
+    @Test
+    public void test_force_field_player_doesnt_dies() throws SquareOccupiedException, GameOverException, NotEnoughActionsException, InvalidMoveException, InventoryFullException, NoItemSelectedException {
+
+        Square square1 = grid.getSquareAtPosition(new Position(3, 4));
+        Square square2 = grid.getSquareAtPosition(p2Pos);
+
+        ForceFieldArea forceFieldArea = grid.getForceFieldArea();
+
+        forceFieldArea.placeForceField(new ForcefieldGenerator(forceFieldArea), square1);
+        forceFieldArea.placeForceField(new ForcefieldGenerator(forceFieldArea), square2);
+
+        TurnManager turnmanager = state.getTurnManager();
+
+        turnmanager.getCurrentTurn().setMoved();
+        turnmanager.endTurn();
+        pickUpItemHandler.pickUpItem(0);
+        for (int i = 0; i < 2; i++) {
+            movePlayerHandler.move(Direction.LEFT);
+        }
+        useItemHandler.selectItemFromInventory(0);
+        useItemHandler.useCurrentItem();
+
+        turnmanager.endTurn();
+        turnmanager.getCurrentTurn().setMoved();
+        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        turnmanager.endTurn();
+        movePlayerHandler.move(Direction.UP);
+
+        movePlayerHandler.move(Direction.UP);
+        turnmanager.endTurn();
+        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        turnmanager.endTurn();
+        assertTrue(turnmanager.getPlayers().size() == 2);
+        for (int i = 0; i < ForceField.TURNSWITCH; i++) {
+            movePlayerHandler.move(Direction.UP);
+        }
+        turnmanager.endTurn();
+        turnmanager.getCurrentTurn().setMoved();
+        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        movePlayerHandler.move(Direction.LEFT);
+        movePlayerHandler.move(Direction.LEFT);
+        assertTrue(grid.getSquareAtPosition(new Position(4, 5)).isObstructed());
+        movePlayerHandler.move(Direction.DOWN);
+        movePlayerHandler.move(Direction.RIGHT);
+        assertFalse(grid.getSquareAtPosition(new Position(4, 5)).isObstructed());
+        turnmanager.endTurn();
+        turnmanager.getCurrentTurn().setMoved();
+        turnmanager.endTurn();
+        movePlayerHandler.move(Direction.UP_RIGHT);
+
+        turnmanager.endTurn();
+        assertTrue(turnmanager.getPlayers().size() == 2);
+        movePlayerHandler.move(Direction.LEFT);
+        endTurnHandler.endTurn();
+        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+
+        assertTrue(turnmanager.getPlayers().size() == 2);
 
     }
 
