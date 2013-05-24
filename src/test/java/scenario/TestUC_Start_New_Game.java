@@ -50,14 +50,14 @@ public class TestUC_Start_New_Game {
 
     @Test(expected = TooManyPlayersException.class)
     public void test_too_many_for_race() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
-        Dimension dimension = new Dimension(20,20);
+        Dimension dimension = new Dimension(10,10);
         players.add("player 3");
         startGameHandler.startNewRaceGame(players, dimension, "");
     }
 
     @Test
     public void test_ctf_with_four() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
-        Dimension dimension = new Dimension(20,20);
+        Dimension dimension = new Dimension(10,10);
         players.add("player 3");
         players.add("player 4");
         startGameHandler.startNewCTFGame(players, dimension, "");
@@ -65,7 +65,7 @@ public class TestUC_Start_New_Game {
 
     @Test (expected = TooManyPlayersException.class)
     public void test_too_many_for_ctf() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
-        Dimension dimension = new Dimension(20,20);
+        Dimension dimension = new Dimension(10,10);
         players.add("player 3");
         players.add("player 4");
         players.add("player 5");
