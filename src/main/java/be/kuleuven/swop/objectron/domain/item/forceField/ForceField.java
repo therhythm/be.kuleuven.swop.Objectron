@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Observable;
@@ -105,7 +106,7 @@ public class ForceField implements Obstruction {
     }
 
     @Override
-    public void hit(MovementStrategy strategy) throws InvalidMoveException, ForceFieldHitException {
-        strategy.hitForceField(this);
+    public void hit(Movement movement) throws InvalidMoveException {
+        movement.hitForceField(this);
     }
 }

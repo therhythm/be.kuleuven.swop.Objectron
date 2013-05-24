@@ -44,10 +44,8 @@ public class MovePlayerHandler extends Handler {
         currentTurn.checkEnoughActions();
         Player current = currentTurn.getCurrentPlayer();
         Square newSquare = game.getGrid().makeMove(direction, current.getCurrentSquare());
-        current.move(newSquare, turnManager);
+        current.move(direction, turnManager);
         currentTurn.setMoved();
-
         currentTurn.reduceAction();
-        //game.notifyObservers();
     }
 }

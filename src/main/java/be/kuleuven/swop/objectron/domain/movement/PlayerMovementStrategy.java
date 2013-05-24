@@ -13,7 +13,7 @@ import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
  *         Time: 00:30
  */
 public class PlayerMovementStrategy implements MovementStrategy {
-    public static final int POWERFAILURE_ACTION_REDUCTION = 1;
+    /*public static final int POWERFAILURE_ACTION_REDUCTION = 1;
     TurnManager turnManager;
 
     public PlayerMovementStrategy(TurnManager turnManager) {
@@ -54,5 +54,5 @@ public class PlayerMovementStrategy implements MovementStrategy {
     @Override
     public void hitForceField(ForceField forceField) throws InvalidMoveException {
         throw new InvalidMoveException();
-    }
+    }*/
 }

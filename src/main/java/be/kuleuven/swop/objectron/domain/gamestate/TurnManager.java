@@ -11,15 +11,17 @@ import java.util.*;
  *         Time: 00:16
  */
 public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver {
+    private Game game;
     private Turn currentTurn;
     private List<Player> players;
     private Set<TurnSwitchObserver> observers = new HashSet<>();
 
 
-    public TurnManager(List<Player> players) {
+    public TurnManager(Game game, List<Player> players) {
         this.currentTurn = new Turn(players.get(0));
         this.players = players;
         this.currentTurn.attach(this);
+        this.game = game;
     }
 
     public List<Player> getPlayers() {
@@ -45,7 +47,7 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     }
 
     private void checkMoved() {
-        if (!currentTurn.hasMoved() && !currentTurn.getCurrentPlayer().isIncapacitaded())
+        if (!currentTurn.hasMoved() && !currentTurn.getCurrentPlayer().isIncapacitated())
             this.players.remove(currentTurn.getCurrentPlayer());
     }
 
@@ -94,5 +96,9 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
 
     public void killPlayer(Player player) {
         this.players.remove(player);
+    }
+
+    public void gameWon() {
+        game.gameWon(currentTurn.getCurrentPlayer());
     }
 }

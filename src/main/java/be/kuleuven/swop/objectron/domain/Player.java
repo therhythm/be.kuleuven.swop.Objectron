@@ -1,14 +1,12 @@
 package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.EffectActivation;
+import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployCommand;
-import be.kuleuven.swop.objectron.domain.movement.Movable;
-import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
-import be.kuleuven.swop.objectron.domain.movement.PlayerMovementStrategy;
+import be.kuleuven.swop.objectron.domain.movement.*;
 import be.kuleuven.swop.objectron.domain.movement.teleport.PlayerTeleportStrategy;
 import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -45,7 +43,7 @@ public abstract class Player implements Movable, Obstruction {
         this.incapacitaded = incapacitaded;
     }
 
-    public boolean isIncapacitaded(){
+    public boolean isIncapacitated(){
         return this.incapacitaded;
     }
 
@@ -58,8 +56,8 @@ public abstract class Player implements Movable, Obstruction {
     public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException,
             SquareOccupiedException, NotEnoughActionsException {
         actionPerformed();
-        this.movementStrategy = new PlayerMovementStrategy(manager);
-        if(this.isIncapacitaded()){
+        this.movementStrategy = new PlayerMovementStrategy();
+        if(this.isIncapacitated()){
             throw new InvalidMoveException();
         }
         try {
@@ -68,6 +66,21 @@ public abstract class Player implements Movable, Obstruction {
             throw new InvalidMoveException();
         }
         teleportStrategy = new PlayerTeleportStrategy();
+    }
+
+    public void move(Direction direction, TurnManager manager) throws InvalidMoveException {
+        actionPerformed();
+        if(this.isIncapacitated()){
+            throw new InvalidMoveException();
+        }
+
+        Movement movement = new Movement(this, direction, currentSquare, new NormalMovementRangeStrategy(1), manager);
+        movement.move();
+        lightTrail.expand(currentSquare);
+        currentSquare.removeObstruction(this);
+
+        currentSquare = movement.getCurrentSquare();
+        currentSquare.addObstruction(this);
     }
 
     @Override
@@ -93,12 +106,11 @@ public abstract class Player implements Movable, Obstruction {
         return inventory.retrieveItem(identifier);
     }
 
-    public void useItem(Item item, ItemDeployCommand deployer) throws SquareOccupiedException, NotEnoughActionsException,
-            GameOverException {
+    public void useItem(Item item, ItemDeployCommand deployer) throws SquareOccupiedException{
 
         deployer.deploy(item);
 
-        inventory.removeItem(item);
+        removeItem(item);
 
         actionPerformed();
     }
@@ -139,14 +151,14 @@ public abstract class Player implements Movable, Obstruction {
     }
 
     @Override
-    public void hit(MovementStrategy strategy) throws InvalidMoveException, PlayerHitException {
-        strategy.hitPlayer(this);
+    public void hit(Movement movement) throws InvalidMoveException {
+        movement.hitPlayer(this);
     }
 
     @Override
-    public void dirsupted() {
+    public void disrupted() {
         EffectActivation activation = new EffectActivation(this);
-        List<Item> inventoryCopy = new ArrayList<Item>();
+        List<Item> inventoryCopy = new ArrayList<>();
         inventoryCopy.addAll(inventory.getAllItems());
         for (Item item : inventoryCopy) {
             item.effectActivated(activation);
@@ -170,4 +182,7 @@ public abstract class Player implements Movable, Obstruction {
     }
 
 
+    public void removeItem(Item item){
+        inventory.removeItem(item);
+    }
 }

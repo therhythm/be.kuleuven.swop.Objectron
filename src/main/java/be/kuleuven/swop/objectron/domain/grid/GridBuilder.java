@@ -93,7 +93,7 @@ public abstract class GridBuilder {
             }
 
             if (distOk) {
-                square.addItem(new IdentityDisc(new ChargedIdentityDiscBehavior()));
+                square.addItem(new ChargedIdentityDisc());
                 return;
             }
         }
@@ -131,7 +131,7 @@ public abstract class GridBuilder {
     private void placeIdentityDiscs(int numberOfItems) {
         for (Position pos : getPlayerPositions()) {
             Square target = squares[pos.getVIndex()][pos.getHIndex()];
-            IdentityDisc disc = new IdentityDisc(new NormalIdentityDiscBehavior());
+            IdentityDisc disc = new UnchargedIdentityDisc();
             placeItemToPlayer(target, disc, IDENTITY_DISK_PLAYER_AREA);
             numberOfItems--;
         }
@@ -139,7 +139,7 @@ public abstract class GridBuilder {
         List<Item> identityDiscs = new ArrayList<>();
 
         for (int i = 0; i < numberOfItems; i++) {
-            identityDiscs.add(new IdentityDisc(new NormalIdentityDiscBehavior()));
+            identityDiscs.add(new UnchargedIdentityDisc());
         }
         placeOtherItems(identityDiscs);
 

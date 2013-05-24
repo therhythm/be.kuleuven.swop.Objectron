@@ -18,8 +18,7 @@ public interface Item {
 
     void place(Square targetSquare) throws SquareOccupiedException;
 
-    void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws GameOverException,
-            NotEnoughActionsException, SquareOccupiedException;
+    void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws SquareOccupiedException;
 
     void pickedUp();
 

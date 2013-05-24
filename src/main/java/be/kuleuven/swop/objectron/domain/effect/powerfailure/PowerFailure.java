@@ -12,6 +12,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 
@@ -29,12 +30,22 @@ public abstract class PowerFailure implements Effect, TurnSwitchObserver {
     protected Square square;
     private boolean actionLost;
     @Override
-    public void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
+    public void activate(Movable movable, TurnManager manager){
         PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
         for(Effect effect : square.getEffects()){
             effect.accept(visitor);
         }
-        movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
+        //movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
+    }
+
+    @Override
+    public void activate(Movement movement, TurnManager manager){
+        PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
+        for(Effect effect : square.getEffects()){
+            effect.accept(visitor);
+        }
+        movement.powerFailure(visitor.hasLightMine());
+        //movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
     }
 
     @Override

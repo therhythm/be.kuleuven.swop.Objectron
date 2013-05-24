@@ -18,7 +18,7 @@ import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
  */
 //todo let Movable delegate this
 public class IdentityDiscMovementStrategy implements MovementStrategy {
-    private TurnManager turnManager;
+   /* private TurnManager turnManager;
     private IdentityDiscBehavior identityDiscBehavior;
 
 
@@ -38,7 +38,7 @@ public class IdentityDiscMovementStrategy implements MovementStrategy {
             turnManager.endTurn();
         }
         turnManager.getCurrentTurn().extraTurn();
-        player.dirsupted();
+        player.disrupted();
         throw new PlayerHitException();
     }
 
@@ -56,5 +56,5 @@ public class IdentityDiscMovementStrategy implements MovementStrategy {
     public void hitForceField(ForceField forceField) throws InvalidMoveException, ForceFieldHitException {
         throw new ForceFieldHitException();
     }
-
+      */
 }

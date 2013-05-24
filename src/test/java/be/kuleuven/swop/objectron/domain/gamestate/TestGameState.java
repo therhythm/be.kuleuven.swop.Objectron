@@ -4,12 +4,16 @@ import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.grid.*;
+import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.handler.EndTurnHandler;
 import be.kuleuven.swop.objectron.handler.MovePlayerHandler;
 import be.kuleuven.swop.objectron.handler.PickUpItemHandler;
+import be.kuleuven.swop.objectron.viewmodel.GridViewModel;
+import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
+import be.kuleuven.swop.objectron.viewmodel.TurnViewModel;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +22,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -251,14 +258,14 @@ public class TestGameState {
             movePlayerHandler.move(Direction.LEFT);
         }
 
-        //win
-        boolean win = false;
-        try {
-            movePlayerHandler.move(Direction.UP);
-        } catch (GameOverException exc) {
-            win = true;
-        }
-        assertTrue(win);
+        GameObserver observer = mock(GameObserver.class);
+
+
+        state.attach(observer);
+
+        movePlayerHandler.move(Direction.UP);
+
+
 
 
     }

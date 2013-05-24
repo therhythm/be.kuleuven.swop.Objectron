@@ -12,5 +12,5 @@ import be.kuleuven.swop.objectron.domain.item.Item;
  */
 public interface ItemDeployCommand {
 
-    void deploy(Item item) throws SquareOccupiedException, GameOverException, NotEnoughActionsException;
+    void deploy(Item item) throws SquareOccupiedException;
 }

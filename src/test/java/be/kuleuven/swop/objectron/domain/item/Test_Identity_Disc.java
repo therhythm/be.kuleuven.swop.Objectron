@@ -73,7 +73,7 @@ public class Test_Identity_Disc {
     @Test
     public void test_Charged_identity_disc_no_hit() throws InventoryFullException, NotEnoughActionsException,
             SquareOccupiedException, NoItemSelectedException, GameOverException {
-        Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
+        Item identityDisc = new ChargedIdentityDisc();
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
@@ -90,7 +90,7 @@ public class Test_Identity_Disc {
     @Test
     public void test_UnCharged_identity_disc_hit_boundary() throws InventoryFullException, NotEnoughActionsException,
             SquareOccupiedException, NoItemSelectedException, GameOverException {
-        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        Item identityDisc = new UnchargedIdentityDisc();
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
@@ -103,7 +103,7 @@ public class Test_Identity_Disc {
     @Test
     public void test_Charged_identity_disc_hit() throws InventoryFullException, NotEnoughActionsException,
             SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
-        Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
+        Item identityDisc = new ChargedIdentityDisc();
         TurnManager turnManager = state.getTurnManager();
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
@@ -143,7 +143,7 @@ public class Test_Identity_Disc {
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
 
-        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        Item identityDisc = new UnchargedIdentityDisc();
         grid.getSquareAtPosition(p1Pos).addItem(identityDisc);
         assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size() > 0);
         pickUpItemHandler.pickUpItem(0);
@@ -174,7 +174,7 @@ public class Test_Identity_Disc {
         pickUpItemHandler = new PickUpItemHandler(state);
         useItemHandler = new UseItemHandler(state);
 
-        Item identityDisc = new IdentityDisc(new ChargedIdentityDiscBehavior());
+        Item identityDisc = new ChargedIdentityDisc();
         grid.getSquareAtPosition(p1Pos).addItem(identityDisc);
         assertTrue(grid.getSquareAtPosition(p1Pos).getAvailableItems().size() > 0);
         pickUpItemHandler.pickUpItem(0);
@@ -204,7 +204,7 @@ public class Test_Identity_Disc {
         upNeighbor.addEffect(teleporter1);
         rightNeighbor.addEffect(teleporter2);
 
-        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        Item identityDisc = new UnchargedIdentityDisc();
         currentSquare.addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
@@ -248,7 +248,7 @@ public class Test_Identity_Disc {
         rightNeighbor.addEffect(teleporter2);
 
 
-        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        Item identityDisc = new UnchargedIdentityDisc();
         currentSquare.addItem(identityDisc);
 
         pickUpItemHandler.pickUpItem(0);
@@ -264,10 +264,10 @@ public class Test_Identity_Disc {
 
     @Test
     public void test_string_contains() {
-        Item item = new IdentityDisc(new NormalIdentityDiscBehavior());
+        Item item = new UnchargedIdentityDisc();
         assertTrue(item.getName().contains("Identity Disc"));
 
-        Item item2 = new IdentityDisc(new ChargedIdentityDiscBehavior());
+        Item item2 = new ChargedIdentityDisc();
         assertTrue(item2.getName().contains("Identity Disc"));
     }
 }

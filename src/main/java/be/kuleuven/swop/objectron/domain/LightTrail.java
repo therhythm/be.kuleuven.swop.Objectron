@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain;
 
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -67,7 +68,7 @@ public class LightTrail implements Obstruction {
     }
 
     @Override
-    public void hit(MovementStrategy strategy) throws InvalidMoveException {
-        strategy.hitLightTrail(this);
+    public void hit(Movement movement) throws InvalidMoveException {
+        movement.hitLightTrail(this);
     }
 }

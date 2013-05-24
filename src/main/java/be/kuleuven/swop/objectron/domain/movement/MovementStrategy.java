@@ -15,14 +15,15 @@ import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
  *         Time: 00:30
  */
 public interface MovementStrategy {
-    void powerFailure(boolean hasLightMine);
+    /*void powerFailure(boolean hasLightMine);
 
     //todo move to somewhere else
-    void hitPlayer(Player player) throws InvalidMoveException, PlayerHitException;
+    void hitPlayer(Player player) throws InvalidMoveException;
 
-    void hitWall(Wall wall) throws InvalidMoveException, WallHitException;
+    void hitWall(Wall wall) throws InvalidMoveException;
 
     void hitLightTrail(LightTrail lightTrail) throws InvalidMoveException;
 
-    void hitForceField(ForceField forceField) throws InvalidMoveException, ForceFieldHitException;
+    void hitForceField(ForceField forceField) throws InvalidMoveException;
+    */
 }

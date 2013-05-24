@@ -18,4 +18,6 @@ public interface GameObserver {
     void update(TurnViewModel vm, List<PlayerViewModel> players, GridViewModel gridModel);
 
     void itemPlaced(Item item, Position position);
+
+    void gameWon(PlayerViewModel player);
 }

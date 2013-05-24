@@ -3,6 +3,7 @@ package be.kuleuven.swop.objectron.domain.effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -19,18 +20,17 @@ public class Teleporter implements Effect {
     }
 
     @Override
-    public void activate(Movable movable, TurnManager manager) throws GameOverException, SquareOccupiedException,
-            NotEnoughActionsException {
-        if(!destination.getLocation().isObstructed()){
+    public void activate(Movable movable, TurnManager manager) {
+        /*if(!destination.getLocation().isObstructed()){
 
             try {
-            movable.getTeleportStrategy().teleport(movable, this, manager);
-            movable.dirsupted();
+            //movable.getTeleportStrategy().teleport(movable, this, manager);
+            movable.disrupted();
         } catch (InvalidMoveException | WallHitException | ForceFieldHitException | PlayerHitException e) {
             // teleportation not possible.. do nothing
            
         }
-    }
+        }*/
     }
     public void teleport(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException,
             WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException,
@@ -41,6 +41,13 @@ public class Teleporter implements Effect {
     @Override
     public void accept(EffectVisitor visitor) {
         visitor.visitTeleporter();
+    }
+
+    @Override
+    public void activate(Movement movement, TurnManager manager) {
+        if(!destination.getLocation().isObstructed()){
+            movement.teleport(destination.getLocation());
+        }
     }
 
     public void setDestination(Teleporter destination) {

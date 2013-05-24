@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 
 /**
  * @author : Nik Torfs
@@ -13,9 +14,9 @@ import be.kuleuven.swop.objectron.domain.movement.Movable;
  */
 public interface Effect {
 
-    void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException,
-            SquareOccupiedException;
+    void activate(Movable movable, TurnManager manager);
 
     void accept(EffectVisitor visitor);
 
+    void activate(Movement movement, TurnManager manager);
 }

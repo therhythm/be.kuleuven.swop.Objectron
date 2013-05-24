@@ -25,7 +25,7 @@ public class ThrowingItemDeployCommand implements ItemDeployCommand {
     }
 
     @Override
-    public void deploy(Item item) throws GameOverException, SquareOccupiedException, NotEnoughActionsException {
+    public void deploy(Item item) throws SquareOccupiedException {
         item.throwMe(sourceSquare, throwingDirection, turnManager);
     }
 }
