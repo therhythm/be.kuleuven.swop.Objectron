@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * A class of Players implementing Movable and Obstruction.
  * @author : Nik Torfs
  *         Date: 22/02/13
  *         Time: 00:06
@@ -33,6 +34,16 @@ public abstract class Player implements Movable, Obstruction {
     private MovementStrategy movementStrategy;
     private boolean incapacitaded;
 
+    /**
+     * Initialize this Player with a given name and Square.
+     * @param name
+     *        The name of this player.
+     * @param currentSquare
+     *        The square of this player.
+     * @post  This Player is initialized with the given name and Square.
+     *        | new.this.getName() == name
+     *        | new.this.getCurrentSquare() = currentSquare
+     */
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
@@ -55,6 +66,24 @@ public abstract class Player implements Movable, Obstruction {
 
     public abstract void pickupItem(int identifier) throws InventoryFullException;
 
+    /**
+     * Move the player to a new position.
+     * @param newPosition
+     *        The new square to move the player to.
+     * @param manager
+     *        The TurnManager to execute the move with.
+     * @throws InvalidMoveException
+     *         This is an invalid move.
+     * @throws GameOverException
+     *         The game is over.
+     *         | manager.checkWin()
+     * @throws SquareOccupiedException
+     *         The square is occupied.
+     *         | newPosition.isOccupied()
+     * @throws NotEnoughActionsException
+     *         The player has not enough actions remaining.
+     *         | manager.getCurrentTurn().getActionsRemaining() == 0
+     */
     public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException,
             SquareOccupiedException, NotEnoughActionsException {
         actionPerformed();
@@ -93,13 +122,26 @@ public abstract class Player implements Movable, Obstruction {
         return inventory.retrieveItem(identifier);
     }
 
+    /**
+     * Use a given item.
+     * @param item
+     *        The item to use.
+     * @param deployer
+     *        The ItemDeployCommand to use the item with.
+     * @throws SquareOccupiedException
+     *         The square is occupied.
+     *         | newPosition.isOccupied()
+     * @throws NotEnoughActionsException
+     *         The player has not enough actions remaining.
+     *         | manager.getCurrentTurn().getActionsRemaining() == 0
+     * @throws GameOverException
+     *         The game is over
+     *         | manager.checkWin()
+     */
     public void useItem(Item item, ItemDeployCommand deployer) throws SquareOccupiedException, NotEnoughActionsException,
             GameOverException {
-
         deployer.deploy(item);
-
         inventory.removeItem(item);
-
         actionPerformed();
     }
 
@@ -153,6 +195,11 @@ public abstract class Player implements Movable, Obstruction {
         }
     }
 
+    /**
+     * Randomly drop a given item.
+     * @param item
+     *        The item to drop.
+     */
     public void randomlyDrop(Item item) {
         inventory.removeItem(item);
 

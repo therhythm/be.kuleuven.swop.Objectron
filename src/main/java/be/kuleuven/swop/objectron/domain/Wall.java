@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A class of Walls implementing Obstructions.
  * Created with IntelliJ IDEA.
  * User: thomas
  * Date: 28/02/13
  * Time: 21:45
- * To change this template use File | Settings | File Templates.
  */
 public class Wall implements Obstruction {
 
@@ -28,12 +28,22 @@ public class Wall implements Obstruction {
         return squares.size();
     }
 
+    /**
+     * Add an obstruction to every square in this wall.
+     * @post All squares in the wall are obstructed.
+     *       | for (square:squares)
+     *       |  new.square.isObstructed()
+     */
     public void build() {
         for (Square square : squares) {
             square.addObstruction(this);
         }
     }
 
+    /**
+     * Get a list of the positions in this wall.
+     * @return A list of positions.
+     */
     public List<Position> getWallViewModel() {
         List<Position> squaresVm = new ArrayList<Position>();
         for (Square s : this.squares) {

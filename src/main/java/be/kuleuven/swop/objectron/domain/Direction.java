@@ -98,26 +98,4 @@ public enum Direction {
         return currentNode.prev.d;
     }
 
-   /* public List<Direction> getNeigbouringDirections(){
-         List<Direction> directions = new ArrayList<>();
-        if(this == Direction.UP_LEFT){
-            directions.add(Direction.UP); directions.add(Direction.LEFT);
-        } else if(this == Direction.UP) {
-            directions.add(Direction.UP_LEFT);directions.add(Direction.UP_RIGHT);
-        } else if(this == Direction.UP_RIGHT){
-            directions.add(Direction.UP);directions.add(Direction.RIGHT);
-        } else if(this == Direction.RIGHT){
-            directions.add(Direction.UP_RIGHT);directions.add(Direction.DOWN_RIGHT);
-        } else if(this == Direction.DOWN_RIGHT){
-            directions.add(Direction.RIGHT);directions.add(Direction.DOWN);
-        } else if(this == Direction.DOWN){
-            directions.add(Direction.DOWN_RIGHT);directions.add(Direction.DOWN_LEFT);
-        } else if(this == Direction.DOWN_LEFT){
-            directions.add(Direction.DOWN);directions.add(Direction.LEFT);
-        } else {
-            directions.add(Direction.DOWN_LEFT);directions.add(Direction.UP_LEFT);
-        }
-
-        return directions;
-    } */
 }

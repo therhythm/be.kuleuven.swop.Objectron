@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * A class of Inventories involving Items.
  * @author : Nik Torfs
  *         Date: 21/02/13
  *         Time: 23:51
@@ -18,19 +19,10 @@ public class Inventory {
 
     private List<Item> items = new ArrayList<Item>();
 
-    /**
-     * @return
-     */
     public List<Item> getAllItems() {
         return Collections.unmodifiableList(items);
     }
 
-    /**
-     * Takes (removes) an item from the inventory and returns it.
-     *
-     * @param identifier: the item identifier
-     * @return the item to retrieve
-     */
     public Item retrieveItem(int identifier) {
         return items.get(identifier);
     }
@@ -43,6 +35,7 @@ public class Inventory {
      * Add an item to the inventory
      *
      * @param itemToAdd
+     *        The item to add to the Inventory.
      */
     public void addItem(Item itemToAdd) throws InventoryFullException, TooManyItemsOfSameTypeException {
         if (isLimitReached()) {
@@ -63,11 +56,6 @@ public class Inventory {
         items.add(itemToAdd);
     }
 
-    /**
-     * Remove an item from the inventory
-     *
-     * @param item
-     */
     public void removeItem(Item item) {
         items.remove(item);
     }

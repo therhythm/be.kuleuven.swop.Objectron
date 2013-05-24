@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A class of LightTrails implementing Obstruction.
  * @author : Nik Torfs
  *         Date: 27/02/13
  *         Time: 22:45
@@ -20,11 +21,19 @@ public class LightTrail implements Obstruction {
     private Square[] trail;
     private int[] remainingActions;
 
+    /**
+     * Initialize this LightTrail.
+     */
     public LightTrail() {
         trail = new Square[MAX_LIGHT_TRAIL_COVERAGE];
         remainingActions = new int[MAX_LIGHT_TRAIL_COVERAGE];
     }
 
+    /**
+     * Expand the lighttrail with a given square.
+     * @param newSquare
+     *        The square to expand the lighttrail with.
+     */
     public void expand(Square newSquare) {
         if (trail[MAX_LIGHT_TRAIL_COVERAGE - 1] != null) {
             trail[MAX_LIGHT_TRAIL_COVERAGE - 1].removeObstruction(this);
@@ -48,6 +57,9 @@ public class LightTrail implements Obstruction {
         }
     }
 
+    /**
+     * Reduce the lighttrail.
+     */
     public void reduce() {
         for (int i = 0; i < MAX_LIGHT_TRAIL_COVERAGE; i++) {
             remainingActions[i]--;
@@ -55,6 +67,10 @@ public class LightTrail implements Obstruction {
         retract();
     }
 
+    /**
+     * Return a list of Positions in the lighttrail.
+     * @return the Positions in the lighttrail.
+     */
     public List<Position> getLightTrailViewModel() {
         List<Position> list = new ArrayList<Position>();
 
