@@ -16,6 +16,10 @@ public class RaceFinish implements Effect {
 
     private Player starter;
 
+    /**
+     * Initiates a Finish of a certain player starter
+     * @param starter the player that starts on this finish
+     */
     public RaceFinish(Player starter) {
         this.starter = starter;
     }

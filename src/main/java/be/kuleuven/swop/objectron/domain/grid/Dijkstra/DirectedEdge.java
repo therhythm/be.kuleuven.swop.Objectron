@@ -14,20 +14,43 @@ public class DirectedEdge {
     private Square squareDestination;
     private int distance;
 
+    /**
+     * Initializes a new DirectedEdge with a give source, destination and distance
+     *
+     * @param squareSource The source square
+     * @param squareDestination the destination square
+     * @param distance the distance
+     * @post the source is equal to the given squareSource
+     *       |this.squareSource.equals(squareSource)
+     * @post the destination is equal to the given destination
+     *       |this.squareDestination.equals(squareDestination)
+     * @post the distance is equal to the given distance
+     *       |this.distance == distance
+     *
+     */
     public DirectedEdge(Square squareSource, Square squareDestination, int distance) {
         this.squareSource = squareSource;
         this.squareDestination = squareDestination;
         this.distance = distance;
     }
 
+    /**
+     * Returns the source square for this edge
+     */
     public Square getSquareSource() {
         return squareSource;
     }
 
+    /**
+     * Returns the destination square for this edge
+     */
     public Square getSquareDestination() {
         return squareDestination;
     }
 
+    /**
+     * Returns the distance for this edge
+     */
     public int getDistance() {
         return distance;
     }

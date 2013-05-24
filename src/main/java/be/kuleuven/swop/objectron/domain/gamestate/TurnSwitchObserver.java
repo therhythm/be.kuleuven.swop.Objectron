@@ -14,11 +14,26 @@ import java.util.List;
 
 public interface TurnSwitchObserver {
 
+    /**
+     * The turn has ended
+     * @param observable an observable that is used to keep observing
+     */
     void turnEnded(Observable<TurnSwitchObserver> observable);
 
+    /**
+     * Gives observers an update about the current turn
+     * @param turn the current turn
+     */
     void update(Turn turn);
 
+    /**
+     * Gives Observers an update that the actions have been reduced
+     */
     void actionReduced();
 
+    /**
+     * Gives observes an update that the player has performed an action
+     * @param turnManager The current turn manager
+     */
     void actionHappened(TurnManager turnManager);
 }

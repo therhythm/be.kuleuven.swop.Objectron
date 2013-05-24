@@ -20,6 +20,18 @@ public class Game implements TurnSwitchObserver, Observable<GameObserver> {
     private List<GameObserver> observers = new ArrayList<>();
     private TurnManager turnManager;
 
+    /**
+     * Initializes a new Game with a given list of plaers and a given grid
+     *
+     * @param players The list of players who participate in the game
+     * @param gameGrid The grid on which the game is going to be played
+     *
+     * @post The players of the new game are equal to the given list of players
+     *       |this.players == players
+     * @post The grid is equal to the given grid
+     *       |this.gameGrid = gameGrid
+     *
+     */
     public Game(List<Player> players,
                 Grid gameGrid) {
         this.gameGrid = gameGrid;
@@ -28,6 +40,9 @@ public class Game implements TurnSwitchObserver, Observable<GameObserver> {
         initializeTurnmanager();
     }
 
+    /**
+     * Initializes a new TurnManager with the objects that the constructor received
+     */
     private void initializeTurnmanager() {
         turnManager = new TurnManager(players);
         turnManager.attach(this);
@@ -35,19 +50,30 @@ public class Game implements TurnSwitchObserver, Observable<GameObserver> {
         turnManager.attach(gameGrid.getForceFieldArea());
     }
 
-
+    /**
+     * Returns the Turnmanager of the game
+     */
     public TurnManager getTurnManager() {
         return turnManager;
     }
 
+    /**
+     * Returns the grid of the game
+     */
     public Grid getGrid() {
         return gameGrid;
     }
 
+    /**
+     * Returns the list of players of the game
+     */
     public List<Player> getPlayers() {
         return players;
     }
 
+    /**
+     * Notifies the observers with the changes in the game
+     */
     public void notifyObservers() {
         List<PlayerViewModel> playerVMs = new ArrayList<>();
         for (Player p : players) {

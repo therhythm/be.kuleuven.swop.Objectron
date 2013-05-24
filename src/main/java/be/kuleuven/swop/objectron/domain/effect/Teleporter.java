@@ -14,6 +14,10 @@ public class Teleporter implements Effect {
     private Teleporter destination;
     private Square location;
 
+    /**
+     * Initiates a teleporter on a given location
+     * @param location the location of the new teleporter
+     */
     public Teleporter(Square location) {
         this.location = location;
     }
@@ -32,6 +36,26 @@ public class Teleporter implements Effect {
         }
     }
     }
+
+    /**
+     * Teleports a movable
+     * @param movable the movable to be teleported
+     * @param manager the turnmanager
+     * @throws InvalidMoveException
+     *         The place where the movable wants to teleport isn't valid
+     * @throws PlayerHitException
+     *         You hit a player on the place you want to teleport
+     * @throws WallHitException
+     *         You hit a wall where you want to teleport
+     * @throws ForceFieldHitException
+     *         You hit a forcefield where you want to teleport
+     * @throws GameOverException
+     *         You win or lose the game because of the teleport
+     * @throws SquareOccupiedException
+     *         The Square is occupied
+     * @throws NotEnoughActionsException
+     *         the movable hasn't have enough actions left
+     */
     public void teleport(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException,
             WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException,
             NotEnoughActionsException {
@@ -43,14 +67,24 @@ public class Teleporter implements Effect {
         visitor.visitTeleporter();
     }
 
+    /**
+     * sets the destination of the teleporter
+     * @param destination The destination teleporter
+     */
     public void setDestination(Teleporter destination) {
         this.destination = destination;
     }
 
+    /**
+     * Return the location of the teleporter
+     */
     public Square getLocation() {
         return location;
     }
 
+    /**
+     * Return the destination of the teleporter
+     */
     public Teleporter getDestination() {
         return destination;
     }

@@ -19,6 +19,17 @@ import java.util.List;
  *         Time: 02:46
  */
 public class CTFGameBuilder extends GameBuilder {
+
+    /**
+     * Inatialize a new CTFGameBuilder with given list of player names and dimension
+     *
+     * @param playerNames A list of player names
+     * @param dimension The dimension for the size of the grid
+     * @throws GridTooSmallException
+     *         The dimension is too small
+     * @throws NumberOfPlayersException
+     *         There are too many players in the given List
+     */
     public CTFGameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException, NumberOfPlayersException {
         super(playerNames, dimension);
     }
@@ -38,6 +49,11 @@ public class CTFGameBuilder extends GameBuilder {
         return players;
     }
 
+    /**
+     *
+     * @param playerPositions adds players to the game on the given position
+     * @return A list of CTFPlayers with a name and a startingposition
+     */
 
     private List<Player> buildPlayers(List<Square> playerPositions) {
         List<Player> players = new ArrayList<>();

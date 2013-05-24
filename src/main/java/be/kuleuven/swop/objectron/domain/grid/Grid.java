@@ -39,6 +39,16 @@ public class Grid implements TurnSwitchObserver {
     private List<Position> playerPositions;
     private int powerFailureChance;
 
+    /**
+     * Initializes a new Grid with all the given parameters.
+     *
+     * @param squares A list of squares for the grid to use
+     * @param walls A list of walls for the new grid
+     * @param dimension The dimension for the new Grid
+     * @param forceFieldArea The forcefieldArea for the new grid
+     * @param playerPositions The positions where the players must start
+     * @param powerFailureChance The chance of a square losing power each turn
+     */
     public Grid(Square[][] squares, List<Wall> walls, Dimension dimension, ForceFieldArea forceFieldArea,
                 List<Position> playerPositions, int powerFailureChance) {
         this.squares = squares;
@@ -49,8 +59,15 @@ public class Grid implements TurnSwitchObserver {
         this.powerFailureChance = powerFailureChance;
     }
 
-    public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException,
-            NotEnoughActionsException {
+    /**
+     * Tries to move in a certain direction , and returns the square in that direction
+     * @param direction the direction to move
+     * @param currentSquare the square where to move from
+     * @return the neighbouring square in the given direction
+     * @throws InvalidMoveException
+     *         The square in that direction isn't valid to make a move on
+     */
+    public Square makeMove(Direction direction, Square currentSquare) throws InvalidMoveException {
         Square neighbour = currentSquare.getNeighbour(direction);
 
         if (neighbour == null)
@@ -62,6 +79,9 @@ public class Grid implements TurnSwitchObserver {
         return neighbour;
     }
 
+    /**
+     * Returns the positions of the players
+     */
     public List<Square> getPlayerPositions() {
         List<Square> positions = new ArrayList<>();
         for (Position pos : playerPositions) {
@@ -70,6 +90,12 @@ public class Grid implements TurnSwitchObserver {
         return positions;
     }
 
+    /**
+     * Returns the square of the grid
+     * @param position the postion of the square to be found
+     * @throws IllegalArgumentException
+     *         The given position isnt valid for this grid
+     */
     public Square getSquareAtPosition(Position position) {
         if (!isValidPosition(position)) {
             throw new IllegalArgumentException("Not a valid square index");
@@ -78,7 +104,10 @@ public class Grid implements TurnSwitchObserver {
         return squares[position.getVIndex()][position.getHIndex()];
     }
 
-
+    /**
+     * checks if a given position is valid on this grid
+     * @param pos the position to check
+     */
     private boolean isValidPosition(Position pos) {
         return pos.getHIndex() > -1
                 && pos.getHIndex() < dimension.getWidth()
@@ -86,6 +115,9 @@ public class Grid implements TurnSwitchObserver {
                 && pos.getVIndex() < dimension.getHeight();
     }
 
+    /**
+     * Returns the list of walls
+     */
     public List<List<Position>> getWalls() {
         List<List<Position>> wallViewModels = new ArrayList<>();
         for (Wall w : this.walls) {
@@ -94,6 +126,9 @@ public class Grid implements TurnSwitchObserver {
         return wallViewModels;
     }
 
+    /**
+     * Returns a map of item positions
+     */
     public Map<Position, List<Item>> getItems() {
         Map<Position, List<Item>> items = new HashMap<>();
         for (Square[] row : squares) {
@@ -104,6 +139,9 @@ public class Grid implements TurnSwitchObserver {
         return items;
     }
 
+    /**
+     * Returns a map of effects and their positions
+     */
     public Map<Position, List<Effect>> getEffects() {
         Map<Position, List<Effect>> effects = new HashMap<>();
         for (Square[] row : squares) {
@@ -145,11 +183,16 @@ public class Grid implements TurnSwitchObserver {
         // do nothing
     }
 
+    /**
+     * Returns the forceFieldArea
+     */
     public ForceFieldArea getForceFieldArea() {
         return forceFieldArea;
     }
 
-    //obstruction is van het type wall  //todo ??
+    /**
+     * Returns the squares that aren't obstructed
+     */
     public ArrayList<Square> getSquaresNotObstructed() {
         ArrayList<Square> result = new ArrayList<>();
         for (Square[] row : squares) {
@@ -161,10 +204,16 @@ public class Grid implements TurnSwitchObserver {
         return result;
     }
 
+    /**
+     * Returns the dimension of the grid
+     */
     public Dimension getDimension() {
         return dimension;
     }
 
+    /**
+     * Returns the viewmodel of the grid
+     */
     public GridViewModel getViewModel() {
         List<SquareViewModel> squareViewModels = new ArrayList<>();
         for(Square[] row: squares){
