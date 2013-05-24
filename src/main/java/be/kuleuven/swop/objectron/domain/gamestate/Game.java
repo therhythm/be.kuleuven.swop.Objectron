@@ -44,7 +44,7 @@ public class Game implements TurnSwitchObserver, Observable<GameObserver> {
      * Initializes a new TurnManager with the objects that the constructor received
      */
     private void initializeTurnmanager() {
-        turnManager = new TurnManager(players);
+        turnManager = new TurnManager(this, players);
         turnManager.attach(this);
         turnManager.attach(gameGrid);
         turnManager.attach(gameGrid.getForceFieldArea());
@@ -112,5 +112,11 @@ public class Game implements TurnSwitchObserver, Observable<GameObserver> {
     @Override
     public void actionHappened(TurnManager turnManager) {
         // do nothing
+    }
+
+    public void gameWon(Player currentPlayer) {
+        for(GameObserver observer : observers){
+            observer.gameWon(currentPlayer.getPlayerViewModel());
+        }
     }
 }

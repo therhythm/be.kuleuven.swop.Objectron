@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.grid.*;
 import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.NormalIdentityDiscBehavior;
+import be.kuleuven.swop.objectron.domain.item.UnchargedIdentityDisc;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -66,7 +67,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
     @Test
     public void basic_flow() throws InventoryFullException, NotEnoughActionsException, SquareOccupiedException,
             NoItemSelectedException, GameOverException {
-        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        Item identityDisc = new UnchargedIdentityDisc();
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
         useItemHandler.selectItemFromInventory(0);
@@ -83,7 +84,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
     @Test
     public void alternate_flow_player_hit() throws InventoryFullException, NotEnoughActionsException,
             SquareOccupiedException, InvalidMoveException, GameOverException, NoItemSelectedException {
-        Item identityDisc = new IdentityDisc(new NormalIdentityDiscBehavior());
+        Item identityDisc = new UnchargedIdentityDisc();
         grid.getSquareAtPosition(new Position(0, 9)).addItem(identityDisc);
         pickUpItemHandler.pickUpItem(0);
 

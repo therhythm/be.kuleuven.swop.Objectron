@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.item;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
  * A class of EffectActivations involving a Player.

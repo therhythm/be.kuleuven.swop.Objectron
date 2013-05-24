@@ -1,16 +1,11 @@
 package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.EffectActivation;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployCommand;
-import be.kuleuven.swop.objectron.domain.movement.Movable;
-import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
-import be.kuleuven.swop.objectron.domain.movement.PlayerMovementStrategy;
-import be.kuleuven.swop.objectron.domain.movement.teleport.PlayerTeleportStrategy;
-import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
+import be.kuleuven.swop.objectron.domain.movement.*;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
@@ -30,8 +25,6 @@ public abstract class Player implements Movable, Obstruction {
     private LightTrail lightTrail = new LightTrail();
     protected Inventory inventory = new Inventory();
     private int remainingPenalties;
-    private TeleportStrategy teleportStrategy;
-    private MovementStrategy movementStrategy;
     private boolean incapacitaded;
 
     /**
@@ -48,7 +41,6 @@ public abstract class Player implements Movable, Obstruction {
         this.name = name;
         this.currentSquare = currentSquare;
         currentSquare.addObstruction(this);
-        this.teleportStrategy = new PlayerTeleportStrategy();
         this.incapacitaded = false;
     }
 
@@ -56,7 +48,7 @@ public abstract class Player implements Movable, Obstruction {
         this.incapacitaded = incapacitaded;
     }
 
-    public boolean isIncapacitaded(){
+    public boolean isIncapacitated(){
         return this.incapacitaded;
     }
 
@@ -68,46 +60,27 @@ public abstract class Player implements Movable, Obstruction {
 
     /**
      * Move the player to a new position.
-     * @param newPosition
-     *        The new square to move the player to.
+     * @param direction
+     *        the direction to move in
      * @param manager
      *        The TurnManager to execute the move with.
      * @throws InvalidMoveException
      *         This is an invalid move.
-     * @throws GameOverException
-     *         The game is over.
-     *         | manager.checkWin()
-     * @throws SquareOccupiedException
-     *         The square is occupied.
-     *         | newPosition.isOccupied()
-     * @throws NotEnoughActionsException
-     *         The player has not enough actions remaining.
-     *         | manager.getCurrentTurn().getActionsRemaining() == 0
      */
-    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException,
-            SquareOccupiedException, NotEnoughActionsException {
-        actionPerformed();
-        this.movementStrategy = new PlayerMovementStrategy(manager);
-        if(this.isIncapacitaded()){
-            throw new InvalidMoveException();
-        }
-        try {
-            enter(newPosition, manager);
-        } catch (PlayerHitException | ForceFieldHitException | WallHitException e) {
-            throw new InvalidMoveException();
-        }
-        teleportStrategy = new PlayerTeleportStrategy();
-    }
+    public void move(Direction direction, TurnManager manager) throws InvalidMoveException {
 
-    @Override
-    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException,
-            WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException,
-            SquareOccupiedException {
+        actionPerformed();
+        if(this.isIncapacitated()){
+            throw new InvalidMoveException();
+        }
+
+        Movement movement = new Movement(this, direction, currentSquare, new NormalMovementRangeStrategy(1), manager);
+        movement.move();
         lightTrail.expand(currentSquare);
         currentSquare.removeObstruction(this);
-        newPosition.addObstruction(this);
-        currentSquare = newPosition;
-        newPosition.stepOn(this, manager);
+
+        currentSquare = movement.getCurrentSquare();
+        currentSquare.addObstruction(this);
     }
 
     public String getName() {
@@ -131,17 +104,13 @@ public abstract class Player implements Movable, Obstruction {
      * @throws SquareOccupiedException
      *         The square is occupied.
      *         | newPosition.isOccupied()
-     * @throws NotEnoughActionsException
-     *         The player has not enough actions remaining.
-     *         | manager.getCurrentTurn().getActionsRemaining() == 0
-     * @throws GameOverException
-     *         The game is over
-     *         | manager.checkWin()
-     */
-    public void useItem(Item item, ItemDeployCommand deployer) throws SquareOccupiedException, NotEnoughActionsException,
-            GameOverException {
+    */
+    public void useItem(Item item, ItemDeployCommand deployer) throws SquareOccupiedException{
+
         deployer.deploy(item);
-        inventory.removeItem(item);
+
+        removeItem(item);
+
         actionPerformed();
     }
 
@@ -171,24 +140,14 @@ public abstract class Player implements Movable, Obstruction {
     }
 
     @Override
-    public TeleportStrategy getTeleportStrategy() {
-        return teleportStrategy;
+    public void hit(Movement movement) throws InvalidMoveException {
+        movement.hitPlayer(this);
     }
 
     @Override
-    public MovementStrategy getMovementStrategy() {
-        return movementStrategy;
-    }
-
-    @Override
-    public void hit(MovementStrategy strategy) throws InvalidMoveException, PlayerHitException {
-        strategy.hitPlayer(this);
-    }
-
-    @Override
-    public void dirsupted() {
+    public void disrupted() {
         EffectActivation activation = new EffectActivation(this);
-        List<Item> inventoryCopy = new ArrayList<Item>();
+        List<Item> inventoryCopy = new ArrayList<>();
         inventoryCopy.addAll(inventory.getAllItems());
         for (Item item : inventoryCopy) {
             item.effectActivated(activation);
@@ -217,4 +176,7 @@ public abstract class Player implements Movable, Obstruction {
     }
 
 
+    public void removeItem(Item item){
+        inventory.removeItem(item);
+    }
 }

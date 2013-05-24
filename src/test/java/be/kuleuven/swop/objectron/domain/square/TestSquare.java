@@ -9,6 +9,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.LightMine;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class TestSquare {
         }
         assertTrue(found != null);
 
-        square.stepOn(mock(Movable.class), turnManager);
+        square.stepOn(mock(Movement.class), turnManager);
 
         found = null;
         for (Effect effect : square.getEffects()) {

@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.gamestate.Turn;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.util.Observable;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import be.kuleuven.swop.objectron.viewmodel.SquareViewModel;
@@ -52,38 +53,21 @@ public class Square {
 
     /**
      * A Movable steps on this Square with a TurnManager.
-     * @param movable
-     *        The Movable that steps on this square.
+     * @param movement
+     *        The movement that steps on this square.
      * @param manager
      *        The TurnManager to execute the step with.
      * @throws InvalidMoveException
      *         This is an invalid move.
-     * @throws PlayerHitException
-     *         A player is hit by an identity disc.
-     * @throws WallHitException
-     *         A wall is hit by an identity disc.
-     * @throws ForceFieldHitException
-     *         A force field is hit by an identity disc.
-     * @throws GameOverException
-     *         The game is over.
-     *         | manager.checkWin()
-     * @throws SquareOccupiedException
-     *         The square is occupied.
-     *         | isObstructed()
-     * @throws NotEnoughActionsException
-     *         The player has not enough actions remaining.
-     *         | manager.getCurrentTurn().getActionsRemaining() == 0
      */
-    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException,
-            WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException,
-            NotEnoughActionsException {
+    public void stepOn(Movement movement, TurnManager manager) throws InvalidMoveException{
         for (Obstruction obstruction : obstructions) {
-            obstruction.hit(movable.getMovementStrategy());
+            obstruction.hit(movement);
         }
 
         List<Effect> copyOf = new ArrayList<>(effects);
         for (Effect effect : copyOf) {
-            effect.activate(movable, manager);
+            effect.activate(movement, manager);
         }
     }
 

@@ -11,21 +11,24 @@ import java.util.*;
  *         Time: 00:16
  */
 public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver {
+    private Game game;
     private Turn currentTurn;
     private List<Player> players;
     private Set<TurnSwitchObserver> observers = new HashSet<>();
 
-    /**
-     * Initializes a new TurnManager with a given list of players
-     *
-     * @param players The list of players
-     * @post  The list of players is equal to the given list
-     *        |this.players == players
-     */
-    public TurnManager(List<Player> players) {
+        /**
+         * Initializes a new TurnManager with a given list of players
+         *
+         * @param game the game of the turnmanager
+         * @param players The list of players
+         * @post  The list of players is equal to the given list
+         *        |this.players == players
+         */
+    public TurnManager(Game game, List<Player> players) {
         this.currentTurn = new Turn(players.get(0));
         this.players = players;
         this.currentTurn.attach(this);
+        this.game = game;
     }
 
     /**
@@ -63,7 +66,7 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
      * Checks if the player has moved and removes him if he hasn't moved
      */
     private void checkMoved() {
-        if (!currentTurn.hasMoved() && !currentTurn.getCurrentPlayer().isIncapacitaded())
+        if (!currentTurn.hasMoved() && !currentTurn.getCurrentPlayer().isIncapacitated())
             this.players.remove(currentTurn.getCurrentPlayer());
     }
 
@@ -121,5 +124,9 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
      */
     public void killPlayer(Player player) {
         this.players.remove(player);
+    }
+
+    public void gameWon() {
+        game.gameWon(currentTurn.getCurrentPlayer());
     }
 }

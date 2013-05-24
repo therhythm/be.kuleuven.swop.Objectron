@@ -3,11 +3,7 @@ package be.kuleuven.swop.objectron.domain.item;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.movement.IdentityDiscMovementStrategy;
-import be.kuleuven.swop.objectron.domain.movement.Movable;
-import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
-import be.kuleuven.swop.objectron.domain.movement.teleport.IdentityDiscTeleportStrategy;
-import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
+import be.kuleuven.swop.objectron.domain.movement.*;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -16,29 +12,10 @@ import be.kuleuven.swop.objectron.domain.square.Square;
  * Date: 8/04/13
  * Time: 20:04
  */
-public class IdentityDisc implements Item, Movable {
+public abstract class IdentityDisc implements Item, Movable {
     private static final int MAX_IN_BAG = Integer.MAX_VALUE; // Can't have annoying side effects. It would be
     // impossible for a game to have even this amount of items.
-
-    private IdentityDiscBehavior identityDiscBehavior;
-    private TeleportStrategy teleportStrategy;
-    private MovementStrategy movementStrategy;
-
-    /**
-     * Initialize this IdentityDisc with a given IdentityDiscBehavior.
-     * @param identityDiscBehavior
-     *        The IdentityDiscBehavior for this IdentityDisc.
-     */
-    public IdentityDisc(IdentityDiscBehavior identityDiscBehavior) {
-        this.identityDiscBehavior = identityDiscBehavior;
-        this.teleportStrategy = new IdentityDiscTeleportStrategy();
-
-    }
-
-    @Override
-    public String getName() {
-        return identityDiscBehavior.getName();
-    }
+    private boolean isTerminated;
 
     @Override
     public void place(Square targetSquare) {
@@ -46,46 +23,24 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws
-            GameOverException, NotEnoughActionsException, SquareOccupiedException {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws SquareOccupiedException {
         if (!validDirection(targetDirection)) {
             throw new IllegalArgumentException("No diagonal direction allowed"); //todo domain exception (invariant!)
         }
-        movementStrategy = new IdentityDiscMovementStrategy(turnManager, identityDiscBehavior);
 
-        Square currentSquare = sourceSquare;
-        Square neighbor = currentSquare.getNeighbour(targetDirection);
+        Movement movement = new IdentityDiscMovement(this, targetDirection, sourceSquare, getMovementRangeStrategy(), turnManager);
 
-        boolean forceFieldHit = false;
-        while (identityDiscBehavior.getRemainingRange() > 0) {
-            if (neighbor == null)
-                break;
+        movement.move();
 
-            try {
-                enter(neighbor,turnManager);
-            } catch (InvalidMoveException e) {
-                break;
-            } catch (WallHitException e) {
-                break;
-            } catch (PlayerHitException e) {
-                currentSquare = neighbor;
-                break;
-            } catch (ForceFieldHitException e) {
-                forceFieldHit = true;
-                break;
-            }
+        Square sq = movement.getCurrentSquare();
 
-
-            currentSquare = neighbor;
-            neighbor =   currentSquare.getNeighbour(targetDirection);
-            identityDiscBehavior.moved();
+        if(!isTerminated){
+            sq.addItem(this);
         }
-
-        if (!forceFieldHit) {
-            currentSquare.addItem(this);
-        }
-        identityDiscBehavior.reset();
     }
+
+    //factory method
+    protected abstract MovementRangeStrategy getMovementRangeStrategy();
 
 
     @Override
@@ -116,26 +71,11 @@ public class IdentityDisc implements Item, Movable {
     }
 
     @Override
-    public TeleportStrategy getTeleportStrategy() {
-        return this.teleportStrategy;
+    public void disrupted() {
+        // do nothing on disruption
     }
 
-    @Override
-    public MovementStrategy getMovementStrategy() {
-        return this.movementStrategy;
+    public void destroy() {
+        isTerminated = true;
     }
-
-    @Override
-    public void enter(Square square, TurnManager manager) throws InvalidMoveException, PlayerHitException,
-            WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException,
-            SquareOccupiedException {
-
-        square.stepOn(this, manager);
-    }
-
-    @Override
-    public void dirsupted() {
-        //do nothing
-    }
-
 }

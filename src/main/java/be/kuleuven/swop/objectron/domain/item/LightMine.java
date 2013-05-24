@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.EffectVisitor;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -26,17 +27,17 @@ public class LightMine implements Item, Effect {
     }
 
     @Override
-    public void activate(Movable movable, TurnManager manager) {
-        if(isActive){
-            manager.getCurrentTurn().addPenalty(NB_ACTIONS_BLINDED);
-            movable.dirsupted();
-            isActive = false;
-        }
+    public void accept(EffectVisitor visitor) {
+        visitor.visitLightMine();
     }
 
     @Override
-    public void accept(EffectVisitor visitor) {
-        visitor.visitLightMine();
+    public void activate(Movement movement, TurnManager manager) {
+        if(isActive){
+            manager.getCurrentTurn().addPenalty(NB_ACTIONS_BLINDED);
+            movement.disrupted();
+            isActive = false;
+        }
     }
 
     @Override

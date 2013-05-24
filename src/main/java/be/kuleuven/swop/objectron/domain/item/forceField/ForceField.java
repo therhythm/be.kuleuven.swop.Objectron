@@ -2,19 +2,13 @@ package be.kuleuven.swop.objectron.domain.item.forceField;
 
 import be.kuleuven.swop.objectron.domain.Obstruction;
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
-import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.square.Square;
-import be.kuleuven.swop.objectron.domain.util.Observable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A class of ForceFields involving 2 ForcefieldGenerators and a list of Squares implementing Obstruction.
@@ -117,7 +111,7 @@ public class ForceField implements Obstruction {
     }
 
     @Override
-    public void hit(MovementStrategy strategy) throws InvalidMoveException, ForceFieldHitException {
-        strategy.hitForceField(this);
+    public void hit(Movement movement) throws InvalidMoveException {
+        movement.hitForceField(this);
     }
 }

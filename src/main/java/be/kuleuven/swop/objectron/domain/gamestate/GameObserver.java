@@ -23,4 +23,5 @@ public interface GameObserver {
      */
     void update(TurnViewModel vm, List<PlayerViewModel> players, GridViewModel gridModel);
 
+    void gameWon(PlayerViewModel player);
 }

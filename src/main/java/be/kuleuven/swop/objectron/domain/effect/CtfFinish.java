@@ -1,14 +1,11 @@
 package be.kuleuven.swop.objectron.domain.effect;
 
 import be.kuleuven.swop.objectron.domain.Player;
-import be.kuleuven.swop.objectron.domain.exception.GameOverException;
-import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
-import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.deployer.ReturnFlagToBaseDeployCommand;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,62 +31,43 @@ public class CtfFinish implements Effect {
      */
     public CtfFinish(Player starter, List<Player> players) {
         this.starter = starter;
-        collectedFlags = new HashSet<Flag>();
+        collectedFlags = new HashSet<>();
         this.players = players;
     }
 
-
-    @Override
-    public void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException,
-            SquareOccupiedException {
-        if (movable instanceof Player) {
-            Player player = (Player) movable;
-            if (player.equals(starter)) {
-                List<Item> items = new ArrayList<Item>();
-                items.addAll(player.getInventoryItems());
-                for (Item item : items) {
-                    if (item instanceof Flag) {
-                        collectFlag((Flag) item, player);
-                        if (checkWin())
-                            throw new GameOverException(manager.getCurrentTurn().getCurrentPlayer().getName() + ", " +
-                                    "you win the game!");
-                    }
-                }
-                //Todo remove this when useless
-                System.out.println("aantal verzamelde vlaggen: " + this.collectedFlags.size());
-            }
-        }
-    }
-
-    /**
-     * Check if anyone won
-     */
     private boolean checkWin() {
-        if (collectedFlags.size() == (players.size() - 1))
-            return true;
-        return false;
+        return collectedFlags.size() == (players.size() - 1);
     }
 
-    /**
-     * Collect a flag on this finish
-     * @param flag the flag to collect
-     * @param player the player that has the flag
-     * @throws SquareOccupiedException
-     *         there is something blocking this square
-     * @throws NotEnoughActionsException
-     *         player hasn't got enough actions left
-     * @throws GameOverException
-     *         Player wins the game
-     */
-    private void collectFlag(Flag flag, Player player) throws SquareOccupiedException, NotEnoughActionsException,
-            GameOverException {
-        ReturnFlagToBaseDeployCommand returnFlagToBaseDeployer = new ReturnFlagToBaseDeployCommand();
+    private void collectFlag(Flag flag, Player player) {
         collectedFlags.add(flag);
-        player.useItem(flag, returnFlagToBaseDeployer);
+        flag.returnToBase();
+        player.removeItem(flag);
     }
 
     @Override
     public void accept(EffectVisitor visitor) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void activate(Movement movement, TurnManager manager) {
+        Movable movable = movement.getMovable();
+        if (movable instanceof Player) {
+            Player player = (Player) movable;
+            if (player.equals(starter)) {
+                List<Item> items = new ArrayList<>();
+                items.addAll(player.getInventoryItems());
+                for (Item item : items) {
+                    if (item instanceof Flag) {
+                        collectFlag((Flag) item, player);
+                        if (checkWin()){
+                            manager.gameWon();
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }

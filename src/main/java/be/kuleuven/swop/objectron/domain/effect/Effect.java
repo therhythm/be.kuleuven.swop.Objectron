@@ -5,6 +5,7 @@ import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 
 /**
  * @author : Nik Torfs
@@ -13,23 +14,14 @@ import be.kuleuven.swop.objectron.domain.movement.Movable;
  */
 public interface Effect {
 
+    void accept(EffectVisitor visitor);
+
     /**
      * Activate the effect
      *
-     * @param   movable The movable object that activates the effect
+     * @param   movement The movement object that activates the effect
      * @param   manager The Turnmanager of the game
-     * @throws  GameOverException
-     *          If movable is Player and wins on this effect
-     * @throws  NotEnoughActionsException
-     *          The player has no more available actions
-     *          | manager.getCurrentTurn().getActionsRemaining() == 0
-     * @throws  SquareOccupiedException
-     *          The square is occupied where the effect is active
      * @post    The effect has been executed
      */
-    void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException,
-            SquareOccupiedException;
-
-    void accept(EffectVisitor visitor);
-
+    void activate(Movement movement, TurnManager manager);
 }

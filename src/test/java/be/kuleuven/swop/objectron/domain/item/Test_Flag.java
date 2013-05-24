@@ -103,7 +103,7 @@ public class Test_Flag {
     }
 
     @Test
-    public void test_player_hit_ligjtmine_flag_drop() throws InventoryFullException, NotEnoughActionsException, GameOverException, SquareOccupiedException, InvalidMoveException, NoItemSelectedException {
+    public void test_player_hit_lightmine_flag_drop() throws InventoryFullException, NotEnoughActionsException, GameOverException, SquareOccupiedException, InvalidMoveException, NoItemSelectedException {
 
         grid.getSquareAtPosition(new Position(1, 9)).addItem(new LightMine());
 
@@ -218,7 +218,7 @@ public class Test_Flag {
     @Test
     public void test_player_hit_identityDisc_flag_drop() throws InventoryFullException, NotEnoughActionsException, GameOverException, SquareOccupiedException, InvalidMoveException, NoItemSelectedException {
 
-        grid.getSquareAtPosition(new Position(1, 9)).addItem(new IdentityDisc(new NormalIdentityDiscBehavior()));
+        grid.getSquareAtPosition(new Position(1, 9)).addItem(new UnchargedIdentityDisc());
 
         System.out.println(player1.getCurrentSquare().getPosition());
         movePlayerHandler.move(Direction.RIGHT);

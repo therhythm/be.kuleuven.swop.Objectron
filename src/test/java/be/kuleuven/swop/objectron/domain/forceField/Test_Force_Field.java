@@ -533,14 +533,14 @@ public class Test_Force_Field {
 
         turnmanager.endTurn();
         turnmanager.getCurrentTurn().setMoved();
-        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitated());
         turnmanager.endTurn();
         for (int i = 0; i < ForceField.TURNSWITCH; i++) {
             movePlayerHandler.move(Direction.UP);
         }
 
         turnmanager.endTurn();
-        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitated());
         turnmanager.endTurn();
         assertTrue(turnmanager.getPlayers().size() == 2);
         for (int i = 0; i < ForceField.TURNSWITCH; i++) {
@@ -548,7 +548,7 @@ public class Test_Force_Field {
         }
         turnmanager.endTurn();
         turnmanager.getCurrentTurn().setMoved();
-        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitated());
         turnmanager.endTurn();
         assertTrue(turnmanager.getPlayers().size() == 2);
         for (int i = 0; i < ForceField.TURNSWITCH; i++) {
@@ -584,13 +584,13 @@ public class Test_Force_Field {
 
         turnmanager.endTurn();
         turnmanager.getCurrentTurn().setMoved();
-        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitated());
         turnmanager.endTurn();
         movePlayerHandler.move(Direction.UP);
 
         movePlayerHandler.move(Direction.UP);
         turnmanager.endTurn();
-        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitated());
         turnmanager.endTurn();
         assertTrue(turnmanager.getPlayers().size() == 2);
         for (int i = 0; i < ForceField.TURNSWITCH; i++) {
@@ -598,7 +598,7 @@ public class Test_Force_Field {
         }
         turnmanager.endTurn();
         turnmanager.getCurrentTurn().setMoved();
-        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        assertFalse(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitated());
         movePlayerHandler.move(Direction.LEFT);
         movePlayerHandler.move(Direction.LEFT);
         assertTrue(grid.getSquareAtPosition(new Position(4, 5)).isObstructed());
@@ -614,7 +614,7 @@ public class Test_Force_Field {
         assertTrue(turnmanager.getPlayers().size() == 2);
         movePlayerHandler.move(Direction.LEFT);
         endTurnHandler.endTurn();
-        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitaded());
+        assertTrue(turnmanager.getCurrentTurn().getCurrentPlayer().isIncapacitated());
 
         assertTrue(turnmanager.getPlayers().size() == 2);
 

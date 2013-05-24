@@ -19,10 +19,6 @@ public interface ItemDeployCommand {
      *        The Item to deploy.
      * @throws SquareOccupiedException
      *         The square is occupied.
-     * @throws GameOverException
-     *         The game is over.
-     * @throws NotEnoughActionsException
-     *         The player has not enough actions remaining.
      */
-    void deploy(Item item) throws SquareOccupiedException, GameOverException, NotEnoughActionsException;
+    void deploy(Item item) throws SquareOccupiedException;
 }

@@ -1,8 +1,7 @@
 package be.kuleuven.swop.objectron.domain.effect;
 
-import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
-import be.kuleuven.swop.objectron.domain.movement.Movable;
+import be.kuleuven.swop.objectron.domain.movement.Movement;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 /**
@@ -23,48 +22,15 @@ public class Teleporter implements Effect {
     }
 
     @Override
-    public void activate(Movable movable, TurnManager manager) throws GameOverException, SquareOccupiedException,
-            NotEnoughActionsException {
-        if(!destination.getLocation().isObstructed()){
-
-            try {
-            movable.getTeleportStrategy().teleport(movable, this, manager);
-            movable.dirsupted();
-        } catch (InvalidMoveException | WallHitException | ForceFieldHitException | PlayerHitException e) {
-            // teleportation not possible.. do nothing
-           
-        }
-    }
-    }
-
-    /**
-     * Teleports a movable
-     * @param movable the movable to be teleported
-     * @param manager the turnmanager
-     * @throws InvalidMoveException
-     *         The place where the movable wants to teleport isn't valid
-     * @throws PlayerHitException
-     *         You hit a player on the place you want to teleport
-     * @throws WallHitException
-     *         You hit a wall where you want to teleport
-     * @throws ForceFieldHitException
-     *         You hit a forcefield where you want to teleport
-     * @throws GameOverException
-     *         You win or lose the game because of the teleport
-     * @throws SquareOccupiedException
-     *         The Square is occupied
-     * @throws NotEnoughActionsException
-     *         the movable hasn't have enough actions left
-     */
-    public void teleport(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException,
-            WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException,
-            NotEnoughActionsException {
-        movable.enter(destination.getLocation(), manager);
+    public void accept(EffectVisitor visitor) {
+        visitor.visitTeleporter();
     }
 
     @Override
-    public void accept(EffectVisitor visitor) {
-        visitor.visitTeleporter();
+    public void activate(Movement movement, TurnManager manager) {
+        if(!destination.getLocation().isObstructed()){
+            movement.teleport(destination.getLocation());
+        }
     }
 
     /**
@@ -81,13 +47,4 @@ public class Teleporter implements Effect {
     public Square getLocation() {
         return location;
     }
-
-    /**
-     * Return the destination of the teleporter
-     */
-    public Teleporter getDestination() {
-        return destination;
-    }
-
-
 }

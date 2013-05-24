@@ -562,6 +562,12 @@ public class GameView implements GameObserver {
     }
 
 
+    @Override
+    public void gameWon(PlayerViewModel player) {
+        new DialogView("Player " + player.getName() + " has won the game!");
+        gui.dispose();
+    }
+
     public enum SquareStates {
         WALL(100),
         PLAYER1(99),

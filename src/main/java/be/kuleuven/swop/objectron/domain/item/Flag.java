@@ -51,8 +51,7 @@ public class Flag implements Item {
     }
 
     @Override
-    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) throws
-            GameOverException {
+    public void throwMe(Square sourceSquare, Direction targetDirection, TurnManager turnManager) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
