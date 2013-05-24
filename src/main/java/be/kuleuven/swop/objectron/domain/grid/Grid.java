@@ -8,6 +8,7 @@ import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
 import be.kuleuven.swop.objectron.domain.exception.NotEnoughActionsException;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnObserver;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnSwitchObserver;
 import be.kuleuven.swop.objectron.domain.item.Item;
@@ -140,13 +141,8 @@ public class Grid implements TurnSwitchObserver {
     }
 
     @Override
-    public void actionHappened(TurnObserver observable, List<Player> players) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void actionHappened(Observable<TurnSwitchObserver> observable) {
-        //do nothing
+    public void actionHappened(TurnManager turnManager) {
+        // do nothing
     }
 
     public ForceFieldArea getForceFieldArea() {

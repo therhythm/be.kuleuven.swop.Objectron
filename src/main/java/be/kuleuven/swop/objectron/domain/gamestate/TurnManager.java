@@ -45,7 +45,7 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     }
 
     private void checkMoved() {
-        if (!currentTurn.hasMoved())
+        if (!currentTurn.hasMoved() && !currentTurn.getCurrentPlayer().isIncapacitaded())
             this.players.remove(currentTurn.getCurrentPlayer());
     }
 
@@ -88,13 +88,10 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     public void actionReduced() {
         Set<TurnSwitchObserver> copyOfSet = new HashSet<>(observers);
         for (TurnSwitchObserver observer : copyOfSet) {
-           // observer.actionReduced(this, players);
-            observer.actionHappened(this,players);
             observer.actionHappened(this);
         }
     }
 
-    @Override
     public void killPlayer(Player player) {
         this.players.remove(player);
     }

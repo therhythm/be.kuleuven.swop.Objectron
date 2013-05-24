@@ -91,7 +91,7 @@ public class PrimaryPowerFailure extends PowerFailure {
     }
 
     @Override
-    public void actionHappened(Observable<TurnSwitchObserver> observable) {
-        rotate(observable);
+    public void actionHappened(TurnManager turnManager) {
+        rotate(turnManager);
     }
 }

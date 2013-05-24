@@ -84,12 +84,7 @@ public class Game implements TurnSwitchObserver, Observable<GameObserver> {
     }
 
     @Override
-    public void actionHappened(TurnObserver observable, List<Player> players) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void actionHappened(Observable<TurnSwitchObserver> observable) {
-
+    public void actionHappened(TurnManager turnManager) {
+        // do nothing
     }
 }
