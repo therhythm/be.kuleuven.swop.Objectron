@@ -56,7 +56,7 @@ public abstract class PowerFailure implements Effect, TurnSwitchObserver {
     }
 
     @Override
-    public void actionHappened(TurnObserver observable, List<Player> players){
+    public void actionHappened(TurnManager manager, List<Player> players){
 
     }
 

@@ -31,12 +31,22 @@ public abstract class Player implements Movable, Obstruction {
     private int remainingPenalties;
     private TeleportStrategy teleportStrategy;
     private MovementStrategy movementStrategy;
+    private boolean incapacitaded;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
         currentSquare.addObstruction(this);
         this.teleportStrategy = new PlayerTeleportStrategy();
+        this.incapacitaded = false;
+    }
+
+    public void setIncapacitated(boolean incapacitaded) {
+        this.incapacitaded = incapacitaded;
+    }
+
+    public boolean isIncapacitaded(){
+        return this.incapacitaded;
     }
 
     public Square getCurrentSquare() {
@@ -49,6 +59,9 @@ public abstract class Player implements Movable, Obstruction {
             SquareOccupiedException, NotEnoughActionsException {
         actionPerformed();
         this.movementStrategy = new PlayerMovementStrategy(manager);
+        if(this.isIncapacitaded()){
+            throw new InvalidMoveException();
+        }
         try {
             enter(newPosition, manager);
         } catch (PlayerHitException | ForceFieldHitException | WallHitException e) {

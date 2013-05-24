@@ -45,7 +45,7 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     }
 
     private void checkMoved() {
-        if (!currentTurn.hasMoved())
+        if (!currentTurn.hasMoved() && !currentTurn.getCurrentPlayer().isIncapacitaded())
             this.players.remove(currentTurn.getCurrentPlayer());
     }
 
@@ -94,7 +94,6 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
         }
     }
 
-    @Override
     public void killPlayer(Player player) {
         this.players.remove(player);
     }
