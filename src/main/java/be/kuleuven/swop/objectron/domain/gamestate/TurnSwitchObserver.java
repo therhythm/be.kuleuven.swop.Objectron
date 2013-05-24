@@ -20,9 +20,5 @@ public interface TurnSwitchObserver {
 
     void actionReduced();
 
-    void actionHappened(TurnManager turnManager,List<Player> players);
-
-    void actionHappened(Observable<TurnSwitchObserver> observable);
-
-
+    void actionHappened(TurnManager turnManager);
 }

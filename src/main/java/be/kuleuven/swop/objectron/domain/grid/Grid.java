@@ -141,13 +141,8 @@ public class Grid implements TurnSwitchObserver {
     }
 
     @Override
-    public void actionHappened(TurnManager turnManager, List<Player> players) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void actionHappened(Observable<TurnSwitchObserver> observable) {
-        //do nothing
+    public void actionHappened(TurnManager turnManager) {
+        // do nothing
     }
 
     public ForceFieldArea getForceFieldArea() {

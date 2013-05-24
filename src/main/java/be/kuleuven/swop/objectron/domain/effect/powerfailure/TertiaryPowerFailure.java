@@ -37,10 +37,10 @@ public class TertiaryPowerFailure extends PowerFailure {
     }
 
     @Override
-    public void actionHappened(Observable<TurnSwitchObserver> observable) {
+    public void actionHappened(TurnManager manager) {
         actionsLeft --;
         if(actionsLeft == 0){
-            observable.detach(this);
+            manager.detach(this);
             square.removeEffect(this);
         }
     }

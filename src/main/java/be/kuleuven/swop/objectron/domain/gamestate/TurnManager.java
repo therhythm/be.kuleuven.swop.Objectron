@@ -88,8 +88,6 @@ public class TurnManager implements Observable<TurnSwitchObserver>, TurnObserver
     public void actionReduced() {
         Set<TurnSwitchObserver> copyOfSet = new HashSet<>(observers);
         for (TurnSwitchObserver observer : copyOfSet) {
-           // observer.actionReduced(this, players);
-            observer.actionHappened(this,players);
             observer.actionHappened(this);
         }
     }

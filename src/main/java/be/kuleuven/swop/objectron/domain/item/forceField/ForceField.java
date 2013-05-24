@@ -39,17 +39,17 @@ public class ForceField implements Obstruction {
         this.forceField1 = forceField1;
         this.forceField2 = forceField2;
         this.affectedSquares = squaresBetween;
-        this.playerHitLastTime = new ArrayList<Player>();
+        this.playerHitLastTime = new ArrayList<>();
         deactivate();
     }
 
-    private void activate(TurnManager turnManager, List<Player> players) {
+    private void activate(TurnManager turnManager) {
         active = true;
-        List<Player> newListPlayerHit = new ArrayList<Player>();
+        List<Player> newListPlayerHit = new ArrayList<>();
         for (Square square : affectedSquares) {
             square.addObstruction(this);
 
-            for (Player player : players) {
+            for (Player player : turnManager.getPlayers()) {
                 if (player.getCurrentSquare().equals(square)) {
                     player.setIncapacitated(true);
                     if (playerHitLastTime.contains(player)) {
@@ -78,19 +78,19 @@ public class ForceField implements Obstruction {
         }
     }
 
-    private void switchActivation(TurnManager turnManager, List<Player> players) {
+    private void switchActivation(TurnManager turnManager) {
         currentTurnSwitch = TURNSWITCH;
         if (active)
             deactivate();
         else
-            activate(turnManager, players);
+            activate(turnManager);
 
     }
 
-    public void update(TurnManager turnManager, List<Player> players) {
+    public void update(TurnManager turnManager) {
         currentTurnSwitch--;
         if (currentTurnSwitch == 0) {
-            this.switchActivation(turnManager, players);
+            this.switchActivation(turnManager);
         }
 
 
