@@ -30,26 +30,6 @@ public class CtfFinish implements Effect {
         this.players = players;
     }
 
-
-    @Override
-    public void activate(Movable movable, TurnManager manager) {
-        if (movable instanceof Player) {
-            Player player = (Player) movable;
-            if (player.equals(starter)) {
-                List<Item> items = new ArrayList<>();
-                items.addAll(player.getInventoryItems());
-                for (Item item : items) {
-                    if (item instanceof Flag) {
-                        collectFlag((Flag) item, player);
-                        if (checkWin()){
-                            manager.gameWon();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private boolean checkWin() {
         return collectedFlags.size() == (players.size() - 1);
     }

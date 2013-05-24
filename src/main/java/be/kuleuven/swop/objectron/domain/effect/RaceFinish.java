@@ -22,15 +22,6 @@ public class RaceFinish implements Effect {
     }
 
     @Override
-    public void activate(Movable movable, TurnManager manager) {
-        if (movable instanceof Player) {
-            if (!((Player) movable).equals(this.starter)) {
-                manager.gameWon();
-            }
-        }
-    }
-
-    @Override
     public void accept(EffectVisitor visitor) {
         //To change body of implemented methods use File | Settings | File Templates.
     }

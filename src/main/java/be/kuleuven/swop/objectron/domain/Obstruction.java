@@ -1,11 +1,7 @@
 package be.kuleuven.swop.objectron.domain;
 
-import be.kuleuven.swop.objectron.domain.exception.ForceFieldHitException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidMoveException;
-import be.kuleuven.swop.objectron.domain.exception.PlayerHitException;
-import be.kuleuven.swop.objectron.domain.exception.WallHitException;
 import be.kuleuven.swop.objectron.domain.movement.Movement;
-import be.kuleuven.swop.objectron.domain.movement.MovementStrategy;
 
 /**
  * @author : Nik Torfs

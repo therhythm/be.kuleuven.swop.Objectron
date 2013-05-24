@@ -3,12 +3,9 @@ package be.kuleuven.swop.objectron.domain;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.item.EffectActivation;
-import be.kuleuven.swop.objectron.domain.item.Flag;
 import be.kuleuven.swop.objectron.domain.item.Item;
 import be.kuleuven.swop.objectron.domain.item.deployer.ItemDeployCommand;
 import be.kuleuven.swop.objectron.domain.movement.*;
-import be.kuleuven.swop.objectron.domain.movement.teleport.PlayerTeleportStrategy;
-import be.kuleuven.swop.objectron.domain.movement.teleport.TeleportStrategy;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.viewmodel.PlayerViewModel;
 
@@ -27,15 +24,12 @@ public abstract class Player implements Movable, Obstruction {
     private LightTrail lightTrail = new LightTrail();
     protected Inventory inventory = new Inventory();
     private int remainingPenalties;
-    private TeleportStrategy teleportStrategy;
-    private MovementStrategy movementStrategy;
     private boolean incapacitaded;
 
     public Player(String name, Square currentSquare) {
         this.name = name;
         this.currentSquare = currentSquare;
         currentSquare.addObstruction(this);
-        this.teleportStrategy = new PlayerTeleportStrategy();
         this.incapacitaded = false;
     }
 
@@ -53,21 +47,6 @@ public abstract class Player implements Movable, Obstruction {
 
     public abstract void pickupItem(int identifier) throws InventoryFullException;
 
-    public void move(Square newPosition, TurnManager manager) throws InvalidMoveException, GameOverException,
-            SquareOccupiedException, NotEnoughActionsException {
-        actionPerformed();
-        this.movementStrategy = new PlayerMovementStrategy();
-        if(this.isIncapacitated()){
-            throw new InvalidMoveException();
-        }
-        try {
-            enter(newPosition, manager);
-        } catch (PlayerHitException | ForceFieldHitException | WallHitException e) {
-            throw new InvalidMoveException();
-        }
-        teleportStrategy = new PlayerTeleportStrategy();
-    }
-
     public void move(Direction direction, TurnManager manager) throws InvalidMoveException {
         actionPerformed();
         if(this.isIncapacitated()){
@@ -81,17 +60,6 @@ public abstract class Player implements Movable, Obstruction {
 
         currentSquare = movement.getCurrentSquare();
         currentSquare.addObstruction(this);
-    }
-
-    @Override
-    public void enter(Square newPosition, TurnManager manager) throws InvalidMoveException, PlayerHitException,
-            WallHitException, ForceFieldHitException, GameOverException, NotEnoughActionsException,
-            SquareOccupiedException {
-        lightTrail.expand(currentSquare);
-        currentSquare.removeObstruction(this);
-        newPosition.addObstruction(this);
-        currentSquare = newPosition;
-        newPosition.stepOn(this, manager);
     }
 
     public String getName() {
@@ -138,16 +106,6 @@ public abstract class Player implements Movable, Obstruction {
         if (this.remainingPenalties < 0) {
             this.remainingPenalties = 0;
         }
-    }
-
-    @Override
-    public TeleportStrategy getTeleportStrategy() {
-        return teleportStrategy;
-    }
-
-    @Override
-    public MovementStrategy getMovementStrategy() {
-        return movementStrategy;
     }
 
     @Override

@@ -49,16 +49,6 @@ public class Square{
         return !obstructions.isEmpty();
     }
 
-    public void stepOn(Movable movable, TurnManager manager) throws InvalidMoveException{
-        for (Obstruction obstruction : obstructions) {
-            //obstruction.hit(movable.getMovementStrategy());
-        }
-
-        List<Effect> copyOf = new ArrayList<>(effects);
-        for (Effect effect : copyOf) {
-            effect.activate(movable, manager);
-        }
-    }
     public void stepOn(Movement movement, TurnManager manager) throws InvalidMoveException{
         for (Obstruction obstruction : obstructions) {
             obstruction.hit(movement);

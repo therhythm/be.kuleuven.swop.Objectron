@@ -29,14 +29,6 @@ public abstract class PowerFailure implements Effect, TurnSwitchObserver {
 
     protected Square square;
     private boolean actionLost;
-    @Override
-    public void activate(Movable movable, TurnManager manager){
-        PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
-        for(Effect effect : square.getEffects()){
-            effect.accept(visitor);
-        }
-        //movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
-    }
 
     @Override
     public void activate(Movement movement, TurnManager manager){
@@ -45,7 +37,6 @@ public abstract class PowerFailure implements Effect, TurnSwitchObserver {
             effect.accept(visitor);
         }
         movement.powerFailure(visitor.hasLightMine());
-        //movable.getMovementStrategy().powerFailure(visitor.hasLightMine());
     }
 
     @Override

@@ -26,15 +26,6 @@ public class LightMine implements Item, Effect {
     }
 
     @Override
-    public void activate(Movable movable, TurnManager manager) {
-        if(isActive){
-            manager.getCurrentTurn().addPenalty(NB_ACTIONS_BLINDED);
-            movable.disrupted();
-            isActive = false;
-        }
-    }
-
-    @Override
     public void accept(EffectVisitor visitor) {
         visitor.visitLightMine();
     }

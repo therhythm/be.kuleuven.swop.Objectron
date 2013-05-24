@@ -124,7 +124,6 @@ public class Test_Identity_Disc {
         }
         Square squareIdentityDisc = grid.getSquareAtPosition(new Position(6, 9));
         assertTrue(squareIdentityDisc.getAvailableItems().contains(identityDisc));
-
     }
 
     @Test

@@ -30,6 +30,7 @@ public class IdentityDiscMovement extends Movement {
         player.disrupted();
 
         currentSquare = player.getCurrentSquare();
+        throw new InvalidMoveException();
     }
 
 

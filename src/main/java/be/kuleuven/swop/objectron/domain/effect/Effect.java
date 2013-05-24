@@ -14,8 +14,6 @@ import be.kuleuven.swop.objectron.domain.movement.Movement;
  */
 public interface Effect {
 
-    void activate(Movable movable, TurnManager manager);
-
     void accept(EffectVisitor visitor);
 
     void activate(Movement movement, TurnManager manager);

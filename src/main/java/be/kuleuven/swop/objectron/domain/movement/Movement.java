@@ -97,7 +97,6 @@ public class Movement {
         throw new InvalidMoveException();
     }
 
-
     public void disrupted() {
         movable.disrupted();
     }
