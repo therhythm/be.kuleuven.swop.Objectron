@@ -2,6 +2,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
 import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
@@ -113,8 +114,12 @@ public class FileGridBuilder extends GridBuilder {
         Dijkstra dijkstra = new Dijkstra(freeSquares);
         for (int i = 0; i < freeSquares.size(); i++) {
             for (int j = 0; j < freeSquares.size(); j++) {
-                if (dijkstra.getShortestDistance(freeSquares.get(i), freeSquares.get(j)) == Double.POSITIVE_INFINITY
-                        && i != j) {
+                try {
+                    if (dijkstra.getShortestDistance(freeSquares.get(i), freeSquares.get(j)) == Double.POSITIVE_INFINITY
+                            && i != j) {
+                        throw new InvalidFileException("There are unreachable squares in this input.");
+                    }
+                } catch (SquareUnreachableException e) {
                     throw new InvalidFileException("There are unreachable squares in this input.");
                 }
             }
@@ -143,7 +148,7 @@ public class FileGridBuilder extends GridBuilder {
                 char c = input[i][j];
 
                 if (c == '#') {
-                    Square square = squares[j - 1][i - 1];
+                    Square square = squares[i - 1][j - 1];
                     wallSegments.add(square);
                 } else if ((c - '0') > 0 && (c - '0') < 10) { // little trick
                     playerPositions.put((c - '0') - 1, new Position(j - 1, i - 1));

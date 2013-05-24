@@ -3,7 +3,9 @@ package be.kuleuven.swop.objectron.domain.grid;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
+import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
 import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
+import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
@@ -76,7 +78,11 @@ public abstract class GridBuilder {
             List<Double> distances = new ArrayList<>();
 
             for (Position pos : getPlayerPositions()) {
-                distances.add(dijkstra.getShortestDistance(squares[pos.getVIndex()][pos.getHIndex()], square));
+                try {
+                    distances.add(dijkstra.getShortestDistance(squares[pos.getVIndex()][pos.getHIndex()], square));
+                } catch (SquareUnreachableException e) {
+                    break;
+                }
             }
             boolean distOk = true;
             for (Double distance : distances) {

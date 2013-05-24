@@ -38,6 +38,7 @@ public class IdentityDiscMovementStrategy implements MovementStrategy {
             turnManager.endTurn();
         }
         turnManager.getCurrentTurn().extraTurn();
+        player.dirsupted();
         throw new PlayerHitException();
     }
 

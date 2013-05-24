@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.grid.Dijkstra;
 
 import be.kuleuven.swop.objectron.domain.Direction;
+import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 
 import java.util.ArrayList;
@@ -59,14 +60,19 @@ public class Dijkstra {
         return result;
     }
 
-    public Double getShortestDistance(Square start, Square destination) {
+    public Double getShortestDistance(Square start, Square destination) throws SquareUnreachableException {
         this.startSquare = start;
 
         initialisation();
 
         TableEntry relaxedEntry = relax();
-        while (relaxedEntry.getSquare() != null && !relaxedEntry.getSquare().equals(destination) ) {
+
+        while (!relaxedEntry.getSquare().equals(destination)) {
             relaxedEntry = relax();
+
+            if(relaxedEntry.getSquare() == null){
+                throw new SquareUnreachableException("square is unreachable");
+            }
         }
         return relaxedEntry.getDistance();
     }

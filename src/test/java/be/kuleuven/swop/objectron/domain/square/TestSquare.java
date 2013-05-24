@@ -1,6 +1,7 @@
 package be.kuleuven.swop.objectron.domain.square;
 
 import be.kuleuven.swop.objectron.domain.Player;
+import be.kuleuven.swop.objectron.domain.RacePlayer;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.Turn;
@@ -33,7 +34,7 @@ public class TestSquare {
         square = new Square(new Position(5, 5));
         item = new LightMine();
         item.place(square);
-        Player player = new Player("test", new Square(new Position(5, 4)));
+        Player player = new RacePlayer("test", new Square(new Position(5, 4)));
         turnManager = mock(TurnManager.class);
         Turn turn = new Turn(player);
         when(turnManager.getCurrentTurn()).thenReturn(turn);
