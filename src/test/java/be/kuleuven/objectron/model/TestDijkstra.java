@@ -1,8 +1,8 @@
 package be.kuleuven.objectron.model;
 
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
+import be.kuleuven.swop.objectron.domain.exception.NumberOfPlayersException;
 import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
-import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -30,7 +30,7 @@ public class TestDijkstra {
     private Grid grid;
 
     @Before
-    public void setUp() throws GridTooSmallException, TooManyPlayersException {
+    public void setUp() throws GridTooSmallException, NumberOfPlayersException {
         List<Position> positions = new ArrayList<>();
         Position p1Pos = new Position(1, 8);
         Position p2Pos = new Position(3, 8);

@@ -30,7 +30,7 @@ public class TestGameState {
     private Game state;
 
     @Before
-    public void setUp() throws GridTooSmallException, TooManyPlayersException {
+    public void setUp() throws GridTooSmallException, NumberOfPlayersException {
         Position p1Pos = new Position(0, 0);
         Position p2Pos = new Position(1, 0);
         List<Position> positions = new ArrayList<>();
@@ -66,7 +66,7 @@ public class TestGameState {
 
     @Test
     public void test_win_ctf_mode() throws GridTooSmallException, GameOverException, NotEnoughActionsException,
-            InvalidMoveException, InventoryFullException, SquareOccupiedException, TooManyPlayersException {
+            InvalidMoveException, InventoryFullException, SquareOccupiedException, NumberOfPlayersException {
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");

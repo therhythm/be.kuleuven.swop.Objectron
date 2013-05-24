@@ -2,10 +2,9 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
+import be.kuleuven.swop.objectron.domain.exception.NumberOfPlayersException;
 import be.kuleuven.swop.objectron.domain.exception.SquareOccupiedException;
 import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
-import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
-import be.kuleuven.swop.objectron.domain.gamestate.TurnManager;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceFieldArea;
@@ -44,7 +43,7 @@ public abstract class GridBuilder {
         forceFieldArea = new ForceFieldArea();
     }
 
-    public abstract void setStartingPositions(List<Position> positions) throws TooManyPlayersException;
+    public abstract void setStartingPositions(List<Position> positions) throws NumberOfPlayersException;
 
     public abstract void buildWalls();
 

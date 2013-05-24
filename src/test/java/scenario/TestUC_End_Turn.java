@@ -26,7 +26,7 @@ public class TestUC_End_Turn {
     private Game state;
 
     @Before
-    public void setUp() throws GridTooSmallException, TooManyPlayersException {
+    public void setUp() throws GridTooSmallException, NumberOfPlayersException {
         Dimension dimension = new Dimension(10, 10);
 
         List<Position> positions = new ArrayList<>();

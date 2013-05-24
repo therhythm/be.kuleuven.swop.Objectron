@@ -5,8 +5,8 @@ package be.kuleuven.swop.objectron.domain.exception;
  *         Date: 22/05/13
  *         Time: 23:58
  */
-public class TooManyPlayersException extends Throwable {
-    public TooManyPlayersException(String message) {
+public class NumberOfPlayersException extends Throwable {
+    public NumberOfPlayersException(String message) {
         super(message);
     }
 }

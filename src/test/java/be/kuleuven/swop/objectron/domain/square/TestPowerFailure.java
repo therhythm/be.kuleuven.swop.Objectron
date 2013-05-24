@@ -37,7 +37,7 @@ public class TestPowerFailure {
     private MovePlayerHandler movePlayerHandler;
 
     @Before
-    public void setUp() throws GridTooSmallException, SquareOccupiedException, TooManyPlayersException {
+    public void setUp() throws GridTooSmallException, SquareOccupiedException, NumberOfPlayersException {
         Position p1Pos = new Position(5, 4);
         Position p2Pos = new Position(5, 3);
 

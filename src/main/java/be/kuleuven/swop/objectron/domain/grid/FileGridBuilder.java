@@ -2,8 +2,8 @@ package be.kuleuven.swop.objectron.domain.grid;
 
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
+import be.kuleuven.swop.objectron.domain.exception.NumberOfPlayersException;
 import be.kuleuven.swop.objectron.domain.exception.SquareUnreachableException;
-import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.Dijkstra.Dijkstra;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.square.Square;
@@ -32,7 +32,7 @@ public class FileGridBuilder extends GridBuilder {
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
 
-    public FileGridBuilder(String file, int nbPlayers) throws InvalidFileException, TooManyPlayersException{
+    public FileGridBuilder(String file, int nbPlayers) throws InvalidFileException, NumberOfPlayersException {
         super();
         this.nbPlayers = nbPlayers;
         try {
@@ -84,15 +84,15 @@ public class FileGridBuilder extends GridBuilder {
         setupNeighbours();
     }
 
-    private void validateFile() throws InvalidFileException, TooManyPlayersException {
+    private void validateFile() throws InvalidFileException, NumberOfPlayersException {
         checkNbPlayers();
         checkPaths();
         checkStartingPositions();
     }
 
-    private void checkNbPlayers() throws TooManyPlayersException {
+    private void checkNbPlayers() throws NumberOfPlayersException {
         if(nbPlayers > max_players){
-            throw new TooManyPlayersException("You can only play with " + max_players + " on this grid");
+            throw new NumberOfPlayersException("You can only play with " + max_players + " on this grid");
         }
     }
 

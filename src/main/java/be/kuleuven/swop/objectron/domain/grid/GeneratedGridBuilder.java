@@ -4,7 +4,7 @@ package be.kuleuven.swop.objectron.domain.grid;
 import be.kuleuven.swop.objectron.domain.Direction;
 import be.kuleuven.swop.objectron.domain.Wall;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
+import be.kuleuven.swop.objectron.domain.exception.NumberOfPlayersException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.domain.util.Position;
@@ -30,11 +30,11 @@ public class GeneratedGridBuilder extends GridBuilder {
 
     private List<Position> playerPositions;
 
-    public GeneratedGridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException, TooManyPlayersException {
+    public GeneratedGridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException, NumberOfPlayersException {
         super();
 
         if(nbPlayers > MAX_PLAYERS){
-            throw new TooManyPlayersException("You can only play with " + MAX_PLAYERS + " on this grid");
+            throw new NumberOfPlayersException("You can only play with " + MAX_PLAYERS + " on this grid");
         }
 
         if (!isValidDimension(dimension)) {

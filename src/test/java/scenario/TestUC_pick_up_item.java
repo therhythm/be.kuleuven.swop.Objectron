@@ -34,7 +34,7 @@ public class TestUC_pick_up_item {
     private Game gameState;
 
     @Before
-    public void setUp() throws GridTooSmallException, TooManyPlayersException {
+    public void setUp() throws GridTooSmallException, NumberOfPlayersException {
         Dimension dimension = new Dimension(10, 10);
 
         List<Position> positions = new ArrayList<>();

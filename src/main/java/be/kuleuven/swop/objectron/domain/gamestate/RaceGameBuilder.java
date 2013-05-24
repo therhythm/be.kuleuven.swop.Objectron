@@ -5,7 +5,7 @@ import be.kuleuven.swop.objectron.domain.RacePlayer;
 import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.RaceFinish;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
-import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
+import be.kuleuven.swop.objectron.domain.exception.NumberOfPlayersException;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 
@@ -20,10 +20,10 @@ import java.util.List;
 public class RaceGameBuilder extends GameBuilder {
     private static final int MAX_PLAYERS = 2;
 
-    public RaceGameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException, TooManyPlayersException {
+    public RaceGameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException, NumberOfPlayersException {
         super(playerNames, dimension);
         if(playerNames.size() > MAX_PLAYERS){
-            throw new TooManyPlayersException("You can only play with " + MAX_PLAYERS + " on this grid");
+            throw new NumberOfPlayersException("You can only play with " + MAX_PLAYERS + " on this grid");
         }
     }
 

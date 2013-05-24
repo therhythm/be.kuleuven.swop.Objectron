@@ -41,7 +41,7 @@ public class TestUC_Choose_IdentityDisc_Direction {
     private Grid grid;
 
     @Before
-    public void setUp() throws GridTooSmallException, TooManyPlayersException {
+    public void setUp() throws GridTooSmallException, NumberOfPlayersException {
         Dimension dimension = new Dimension(10, 10);
 
         Position p1Pos = new Position(0, 9);

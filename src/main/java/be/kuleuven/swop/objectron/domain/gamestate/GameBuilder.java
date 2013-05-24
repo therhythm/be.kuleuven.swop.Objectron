@@ -3,7 +3,7 @@ package be.kuleuven.swop.objectron.domain.gamestate;
 import be.kuleuven.swop.objectron.domain.Player;
 import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
-import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
+import be.kuleuven.swop.objectron.domain.exception.NumberOfPlayersException;
 import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.GeneratedGridBuilder;
 import be.kuleuven.swop.objectron.domain.grid.Grid;
@@ -11,7 +11,6 @@ import be.kuleuven.swop.objectron.domain.grid.GridBuilder;
 import be.kuleuven.swop.objectron.domain.square.Square;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +19,7 @@ import java.util.List;
  *         Time: 02:32
  */
 public abstract class GameBuilder {
+    private static final int MIN_PLAYERS = 2;
     private boolean withItems = false;
     private boolean withWalls = false;
     private GridBuilder builder;
@@ -27,7 +27,10 @@ public abstract class GameBuilder {
     protected List<String> playerNames;
     protected Dimension dimension;
 
-    public GameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException, TooManyPlayersException {
+    public GameBuilder(List<String> playerNames, Dimension dimension) throws GridTooSmallException, NumberOfPlayersException {
+        if(playerNames.size() < MIN_PLAYERS){
+            throw new NumberOfPlayersException("At least " + MIN_PLAYERS + " players needed on this grid");
+        }
         this.playerNames = playerNames;
         this.dimension = dimension;
         this.builder = new GeneratedGridBuilder(dimension, playerNames.size());
@@ -37,7 +40,7 @@ public abstract class GameBuilder {
         this.builder = builder;
     }
 
-    public void withFile(String file) throws InvalidFileException, TooManyPlayersException {
+    public void withFile(String file) throws InvalidFileException, NumberOfPlayersException {
         builder = new FileGridBuilder(file, playerNames.size());
     }
 
