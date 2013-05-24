@@ -35,6 +35,7 @@ public class LightMine implements Item, Effect {
         if(isActive){
             manager.getCurrentTurn().addPenalty(NB_ACTIONS_BLINDED);
             movement.disrupted();
+            isActive = false;
         }
     }
 
