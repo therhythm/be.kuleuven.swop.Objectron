@@ -30,6 +30,16 @@ public class GeneratedGridBuilder extends GridBuilder {
 
     private List<Position> playerPositions;
 
+    /**
+     * Inatialize a new GeneratedGridBuilder with given list of player names and dimension
+     *
+     * @param dimension The dimension for the size of the grid
+     * @param nbPlayers the number of players for the grid
+     * @throws GridTooSmallException
+     *         The dimension is too small
+     * @throws NumberOfPlayersException
+     *         There are too many players in the given List
+     */
     public GeneratedGridBuilder(Dimension dimension, int nbPlayers) throws GridTooSmallException, NumberOfPlayersException {
         super();
 
@@ -49,6 +59,10 @@ public class GeneratedGridBuilder extends GridBuilder {
         initGrid(powerFailureChance);
     }
 
+    /**
+     * initiates the startpositions for a given number of players
+     * @param nbPlayers the number of players to get a startposition for
+     */
     private void initPlayerPositions(int nbPlayers) {
         List<Position> tempPositions = new ArrayList<>();
         tempPositions.add(new Position(0, this.dimension.getHeight() - 1));
@@ -121,6 +135,9 @@ public class GeneratedGridBuilder extends GridBuilder {
         return playerPositions;
     }
 
+    /**
+     * initiates a wall on a random position
+     */
     private void buildWall() {
         Square randomSquare = getRandomSquare();
         while (!isValidWallPosition(randomSquare)) {
@@ -155,6 +172,12 @@ public class GeneratedGridBuilder extends GridBuilder {
         buildWall(randomSquare, direction, maxLength);
     }
 
+    /**
+     * Builds a wall with given parameters
+     * @param currentSquare the startsquare of the wall
+     * @param direction the direction to build in
+     * @param maxLength the maximum length of the wall
+     */
     private void buildWall(Square currentSquare, Direction direction, int maxLength) {
         Wall wall = new Wall();
         double wallPercentage = calculateWallPercentage(0);
@@ -174,6 +197,9 @@ public class GeneratedGridBuilder extends GridBuilder {
         }
     }
 
+    /**
+     * checks if a given square is a valid position for a wall
+     */
     private boolean isValidWallPosition(Square square) {
         if (square.isObstructed()) {
             return false;
@@ -193,6 +219,9 @@ public class GeneratedGridBuilder extends GridBuilder {
         return true;
     }
 
+    /**
+     * sets up the neighbours for the squares
+     */
     private void setupNeighbours() {
         for (int vertical = 0; vertical < dimension.getHeight(); vertical++) {
             for (int horizontal = 0; horizontal < dimension.getWidth(); horizontal++) {
@@ -207,6 +236,11 @@ public class GeneratedGridBuilder extends GridBuilder {
         }
     }
 
+    /**
+     * calculate how many walls are allowed
+     * @param extraWalls if there are extra walls to be added
+     * @return
+     */
     private double calculateWallPercentage(int extraWalls) {
         for (Wall w : walls) {
             extraWalls += w.getLength();
@@ -214,11 +248,20 @@ public class GeneratedGridBuilder extends GridBuilder {
         return (double) extraWalls / (double) dimension.area();
     }
 
+    /**
+     * Returns if a given dimension is valid
+     * @param dimension the dimension to check
+     */
     private boolean isValidDimension(Dimension dimension) {
         return dimension.getWidth() >= MIN_GRID_WIDTH
                 && dimension.getHeight() >= MIN_GRID_HEIGHT;
     }
 
+    /**
+     * Returns if it's possible to build another wall
+     *
+     *
+      */
     private boolean isAnotherWallPossible() {
         boolean possible = false;
         for (Square[] row : squares) {

@@ -39,20 +39,47 @@ public abstract class GridBuilder {
     protected ForceFieldArea forceFieldArea;
     protected List<Wall> walls;
 
+    /**
+     * initiates a new GridBuilder
+     */
     public GridBuilder() {
         forceFieldArea = new ForceFieldArea();
     }
 
+    /**
+     * Sets the positions where the players should start
+     * @param positions the list of positions
+     * @throws NumberOfPlayersException
+     *         The given length of the positions list isn't corerct
+     */
     public abstract void setStartingPositions(List<Position> positions) throws NumberOfPlayersException;
 
+    /**
+     * builds the walls
+     */
     public abstract void buildWalls();
 
+    /**
+     * Builds the walls with given Positions
+     * @param wallPositions a list of lists of positions where the walls are located
+     */
     public abstract void buildWalls(List<List<Position>> wallPositions);
 
+    /**
+     * initiates the grid with a given power failure chance
+     * @param powerFailureChance the chance for each square to lose power
+     */
     public abstract void initGrid(int powerFailureChance);
 
+    /**
+     * Builds the gruid
+     * @return the grid that has been built
+     */
     public abstract Grid buildGrid();
 
+    /**
+     * Builds the items for the grid
+     */
     public void buildItems() {
         int numberOfLightmines = (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_LIGHTMINES * dimension.area());
         int numberOfTeleporters = (int) Math.ceil(GeneratedGridBuilder.PERCENTAGE_OF_TELEPORTERS * dimension.area());
@@ -67,8 +94,14 @@ public abstract class GridBuilder {
         placeForceFields(numberOfForceFields);
     }
 
+    /**
+     * Returns the list of playerPositions
+     */
     protected abstract List<Position> getPlayerPositions();
 
+    /**
+     * Places the charged id disc on the correct position
+     */
     private void placeChargedIdentityDisc() {
         ArrayList<Square> squaresNotObstructed = getSquaresNotObstructed();
         Dijkstra dijkstra = new Dijkstra(squaresNotObstructed);
@@ -99,6 +132,9 @@ public abstract class GridBuilder {
         }
     }
 
+    /**
+     * Places the force fields
+     */
     private void placeForceFields(int numberOfItems) {
         List<ForcefieldGenerator> forceFieldGenerators = new ArrayList<>();
         for (int i = 0; i < numberOfItems; i++) {
@@ -128,6 +164,9 @@ public abstract class GridBuilder {
 
     }
 
+    /**
+     * Places the uncharged identity discs
+     */
     private void placeIdentityDiscs(int numberOfItems) {
         for (Position pos : getPlayerPositions()) {
             Square target = squares[pos.getVIndex()][pos.getHIndex()];
@@ -146,6 +185,9 @@ public abstract class GridBuilder {
         placeChargedIdentityDisc();
     }
 
+    /**
+     * Places the LightMines
+     */
     private void placeLightMines(int numberOfItems) {
         for (Position pos : getPlayerPositions()) {
             Square target = squares[pos.getVIndex()][pos.getHIndex()];
@@ -160,11 +202,13 @@ public abstract class GridBuilder {
         placeOtherItems(lightMines);
     }
 
+    /**
+     * Places the teleporters
+     */
     private void placeTeleporters(int numberOfTeleporters) {
         Teleporter[] teleporters = new Teleporter[numberOfTeleporters];
         for (int i = 0; i < numberOfTeleporters; i++) {
             Square randomSquare = getRandomSquare();
-            // todo what with player locations
             while (randomSquare.isObstructed()) {
                 randomSquare = getRandomSquare();
             }
@@ -184,6 +228,12 @@ public abstract class GridBuilder {
         }
     }
 
+    /**
+     * Places an item next to a player into a given size of a square area
+     * @param playerSquare the square where the player is located
+     * @param item the item to place
+     * @param sizeOfArea the size of the square area
+     */
     private void placeItemToPlayer(Square playerSquare, Item item, int sizeOfArea) {
         int hIndex = playerSquare.getPosition().getHIndex() - (int) Math.floor(sizeOfArea / 2);
         int vIndex = playerSquare.getPosition().getVIndex() - (int) Math.floor(sizeOfArea / 2);
@@ -204,6 +254,9 @@ public abstract class GridBuilder {
         placeItemArea(area, item);
     }
 
+    /**
+     * places a list of items on randeom squares
+     */
     private void placeOtherItems(List<Item> items) {
         for (Item item : items) {
             Square randomSquare = getRandomSquare();
@@ -215,6 +268,11 @@ public abstract class GridBuilder {
         }
     }
 
+    /**
+     * places an item in a given area
+      * @param area a list of possible positions
+     * @param item the item to place
+     */
     private void placeItemArea(List<Position> area, Item item) {
         List<Position> goodPositions = new ArrayList<>();
         for (Position p : area) {
@@ -229,12 +287,18 @@ public abstract class GridBuilder {
         squares[randomPosition.getVIndex()][randomPosition.getHIndex()].addItem(item);
     }
 
+    /**
+     * Gets a random square of the grid
+     */
     protected Square getRandomSquare() {
         int verticalIndex = getRandomWithMax(0, dimension.getHeight() - 1);
         int horizontalIndex = getRandomWithMax(0, dimension.getWidth() - 1);
         return squares[verticalIndex][horizontalIndex];
     }
 
+    /**
+     * Returns the squares that aren't obstructed
+     */
     private ArrayList<Square> getSquaresNotObstructed() {
         ArrayList<Square> result = new ArrayList<>();
         for (Square[] row : squares) {

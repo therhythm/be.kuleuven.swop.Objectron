@@ -15,7 +15,12 @@ import java.util.List;
  */
 public interface GameObserver {
 
+    /**
+     * Receive an update a bout the game
+     * @param vm A viewmodel of the turn
+     * @param players A list of viewmodels of the players
+     * @param gridModel A viewmodel of the grid
+     */
     void update(TurnViewModel vm, List<PlayerViewModel> players, GridViewModel gridModel);
 
-    void itemPlaced(Item item, Position position);
 }

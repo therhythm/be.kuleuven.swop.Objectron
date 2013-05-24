@@ -561,11 +561,6 @@ public class GameView implements GameObserver {
         }
     }
 
-    @Override
-    public void itemPlaced(Item item, Position position) {
-        SquareStates state = getItemSquareState(item);
-        gameGrid[position.getVIndex()][position.getHIndex()].put(state.zIndex, state);
-    }
 
     public enum SquareStates {
         WALL(100),

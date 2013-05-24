@@ -27,6 +27,11 @@ public class CtfFinish implements Effect {
     private Player starter;
     private Set<Flag> collectedFlags;
 
+    /**
+     * Initiates a CTFFinish of a certain player and a given list of players
+     * @param starter the player that starts on this finish
+     * @param players a list of players that can finish here
+     */
     public CtfFinish(Player starter, List<Player> players) {
         this.starter = starter;
         collectedFlags = new HashSet<Flag>();
@@ -56,12 +61,26 @@ public class CtfFinish implements Effect {
         }
     }
 
+    /**
+     * Check if anyone won
+     */
     private boolean checkWin() {
         if (collectedFlags.size() == (players.size() - 1))
             return true;
         return false;
     }
 
+    /**
+     * Collect a flag on this finish
+     * @param flag the flag to collect
+     * @param player the player that has the flag
+     * @throws SquareOccupiedException
+     *         there is something blocking this square
+     * @throws NotEnoughActionsException
+     *         player hasn't got enough actions left
+     * @throws GameOverException
+     *         Player wins the game
+     */
     private void collectFlag(Flag flag, Player player) throws SquareOccupiedException, NotEnoughActionsException,
             GameOverException {
         ReturnFlagToBaseDeployCommand returnFlagToBaseDeployer = new ReturnFlagToBaseDeployCommand();

@@ -31,7 +31,16 @@ public class FileGridBuilder extends GridBuilder {
 
     private Map<Integer, Position> playerPositions = new HashMap<>(); //hashmap to have the right order
 
-
+    /**
+     * Inatialize a new FileGridBuilder with given list of player names and dimension
+     *
+     * @param file The file where the grid is located
+     * @param nbPlayers the number of players for the grid
+     * @throws InvalidFileException
+     *         The file isn't valid
+     * @throws NumberOfPlayersException
+     *         There are too many players in the given List
+     */
     public FileGridBuilder(String file, int nbPlayers) throws InvalidFileException, NumberOfPlayersException {
         super();
         this.nbPlayers = nbPlayers;
@@ -84,24 +93,46 @@ public class FileGridBuilder extends GridBuilder {
         setupNeighbours();
     }
 
+    /**
+     * Validates the file
+     * @throws InvalidFileException
+     *         The File isn't valid
+     * @throws NumberOfPlayersException
+     *         There are too many players
+     */
     private void validateFile() throws InvalidFileException, NumberOfPlayersException {
         checkNbPlayers();
         checkPaths();
         checkStartingPositions();
     }
 
+    /**
+     * Checks the number of players of the file
+     * @throws NumberOfPlayersException
+     *         There are too Many Players
+     */
     private void checkNbPlayers() throws NumberOfPlayersException {
         if(nbPlayers > max_players){
             throw new NumberOfPlayersException("You can only play with " + max_players + " on this grid");
         }
     }
 
+    /**
+     * Checks if the starting positions are correct
+     * @throws InvalidFileException
+     *         The number of players insn't equal to the given positions
+     */
     private void checkStartingPositions() throws InvalidFileException {
         if (nbPlayers != playerPositions.size()) {
             throw new InvalidFileException("The number of starting positions in the file does not match the number of players.");
         }
     }
 
+    /**
+     * Checks if there are paths for each square to another square
+     * @throws InvalidFileException
+     *         There is a square that can't be reached
+     */
     private void checkPaths() throws InvalidFileException {
         ArrayList<Square> freeSquares = new ArrayList<>();
         for (Square[] row : squares) {
@@ -141,6 +172,9 @@ public class FileGridBuilder extends GridBuilder {
         return positions;
     }
 
+    /**
+     * Interprets the input of the file
+     */
     private void interpretInput() {
         wallSegments = new ArrayList<>();
         for (int i = 0; i < input.length; i++) {
@@ -158,6 +192,9 @@ public class FileGridBuilder extends GridBuilder {
         max_players = playerPositions.size();
     }
 
+    /**
+     * Setup the neighbours for each square
+     */
     private void setupNeighbours() {
         for (int vertical = 0; vertical < dimension.getHeight(); vertical++) {
             for (int horizontal = 0; horizontal < dimension.getWidth(); horizontal++) {

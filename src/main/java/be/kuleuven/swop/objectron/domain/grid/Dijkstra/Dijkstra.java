@@ -21,6 +21,12 @@ public class Dijkstra {
     private ArrayList<Square> nodes;
 
 
+    /**
+     * Initializes a new Dijkstra Object with the given nodes and construcs the edges
+     * @param nodes a list of squares
+     * @post The list of nodes is equal to the given list of nodes
+     *       |this.nodes.equals(nodes)
+     */
     public Dijkstra(ArrayList<Square> nodes) {
         constructEdges(nodes);
 
@@ -28,6 +34,10 @@ public class Dijkstra {
     }
 
 
+    /**
+     * Construcs the edges with a given list of nodes
+     * @param nodes The list of nodes to construct the edges with
+     */
     private void constructEdges(ArrayList<Square> nodes) {
 
         edges = new ArrayList<>();
@@ -41,6 +51,11 @@ public class Dijkstra {
         }
     }
 
+    /**
+     * Checks if the give squares already are the destination of an edge
+     * @param start The start square
+     * @param destination The destination square
+     */
     private boolean containsEdge(Square start, Square destination) {
         for (DirectedEdge directEdge : edges) {
             if (directEdge.getSquareSource().equals(start) && directEdge.getSquareDestination().equals(destination))
@@ -50,6 +65,9 @@ public class Dijkstra {
         return false;
     }
 
+    /**
+     * Returns a list of Directed edges which the given square is the source of
+     */
     private ArrayList<DirectedEdge> getSubsetEdges(Square squareFrom) {
         ArrayList<DirectedEdge> result = new ArrayList<>();
 
@@ -60,6 +78,15 @@ public class Dijkstra {
         return result;
     }
 
+    /**
+     * Gets the shortest distance from Square A to Square B
+     *
+     * @param start Square A
+     * @param destination Square B
+     * @return The shortest distance
+     * @throws SquareUnreachableException
+     *          You cannot reach Square B from Sqaure A because the route is obstructed in all possible ways
+     */
     public Double getShortestDistance(Square start, Square destination) throws SquareUnreachableException {
         this.startSquare = start;
 
@@ -77,6 +104,9 @@ public class Dijkstra {
         return relaxedEntry.getDistance();
     }
 
+    /**
+     * Initialises objects to be able to calculate the shortest distance
+     */
     private void initialisation() {
         this.T = new ArrayList<>();
         this.T.addAll(nodes);
@@ -87,6 +117,9 @@ public class Dijkstra {
         }
     }
 
+    /**
+     * Look for the next shortest distance and return the TableEntry
+     */
     private TableEntry relax() {
         TableEntry nextEntry = getSquareSmallestDistance();
         T.remove(nextEntry.getSquare());
@@ -99,6 +132,11 @@ public class Dijkstra {
         return nextEntry;
     }
 
+    /**
+     * chanes the table entry for a given square
+     * @param square The square to change the entry for
+     * @param distance The new distance for the entry
+     */
     private void changeDistanceTableEntry(Square square, Double distance) {
         for (TableEntry tableEntry : L) {
             if (tableEntry.getSquare().equals(square))
@@ -106,6 +144,9 @@ public class Dijkstra {
         }
     }
 
+    /**
+     * Gets the Table Entry with the smallest distance
+     */
     private TableEntry getSquareSmallestDistance() {
         TableEntry smallestEntry = new TableEntry(null, Double.POSITIVE_INFINITY);
         for (TableEntry tableEntry : L) {
@@ -119,6 +160,11 @@ public class Dijkstra {
         return smallestEntry;
     }
 
+    /**
+     * Gets the distance from a corresponding Table Entry for a given Square
+     * @param square the square to find the distance for
+     * @return the distance
+     */
     private Double getDistance(Square square) {
         for (TableEntry tableEntry : L) {
             if (tableEntry.getSquare().equals(square))
