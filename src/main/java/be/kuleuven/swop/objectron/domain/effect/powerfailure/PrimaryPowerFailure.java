@@ -87,11 +87,6 @@ public class PrimaryPowerFailure extends PowerFailure {
     }
 
     @Override
-    public void actionReduced() {
-       //do nothing
-    }
-
-    @Override
     public void actionHappened(Observable<TurnSwitchObserver> observable) {
         rotate(observable);
     }
