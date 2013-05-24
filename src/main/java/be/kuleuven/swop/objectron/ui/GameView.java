@@ -59,9 +59,6 @@ public class GameView implements GameObserver {
     private HandlerCatalog catalog;
     private Dimension dimension;
     private SimpleGUI gui;
-    private Map<Position, List<Item>> items;   //TODO itemviewmodels
-    private Map<Position, List<Effect>> effects; //TODO viewmodel??
-    private List<PlayerViewModel> players;
     private Map<String, Position[]> lastPositions = new HashMap<>();
 
 
@@ -71,8 +68,8 @@ public class GameView implements GameObserver {
         this.dimension = vm.getDimension();
         this.gameGrid = new HashMap[dimension.getHeight()][dimension.getWidth()];
         this.currentTurn = vm.getCurrentTurn();
-        this.items = vm.getItems();
-        this.effects = vm.getEffects();
+        Map<Position, List<Item>> items = vm.getItems();
+        Map<Position, List<Effect>> effects = vm.getEffects();
         for (int i = 0; i < dimension.getHeight(); i++) {
             for (int j = 0; j < dimension.getWidth(); j++) {
                 gameGrid[i][j] = new HashMap<>();
@@ -97,7 +94,7 @@ public class GameView implements GameObserver {
             }
         }
 
-        players = vm.getPlayers();
+        List<PlayerViewModel> players = vm.getPlayers();
         for (int i = 0; i < players.size(); i++) {
             PlayerViewModel player = players.get(i);
             SquareStates[] playerColors = colors.get(i);
@@ -424,6 +421,10 @@ public class GameView implements GameObserver {
     @Override
     public void update(TurnViewModel vm, List<PlayerViewModel> players, GridViewModel gridModel) {
         currentTurn = vm;
+        if(players.size() < playerColorMap.size()){
+            removeMissingPlayer(players);
+        }
+
         for (PlayerViewModel p : players) {
             updatePlayer(p);
         }
@@ -433,6 +434,35 @@ public class GameView implements GameObserver {
         }
 
         gui.repaint();
+    }
+
+    private void removeMissingPlayer(List<PlayerViewModel> players) {
+        List<String> names = new ArrayList<>();
+        for(PlayerViewModel player : players){
+            names.add(player.getName());
+        }
+        Map<String, SquareStates[]> mapCopy = new HashMap<>(playerColorMap);
+        for(String name : names){
+            mapCopy.remove(name);
+        }
+
+        for(String name : mapCopy.keySet()){
+            removePlayerFromField(name);
+        }
+    }
+
+    private void removePlayerFromField(String name) {
+        SquareStates[] playerStates = playerColorMap.get(name);
+
+        for (Map<Integer, SquareStates>[] gridRow : gameGrid) {
+            for(Map<Integer, SquareStates> square : gridRow){
+                for (SquareStates state : playerStates) {
+                    square.remove(state.zIndex);
+                }
+            }
+        }
+
+        playerColorMap.remove(name);
     }
 
     private void updateSquare(SquareViewModel sq) {
@@ -539,24 +569,24 @@ public class GameView implements GameObserver {
 
     public enum SquareStates {
         WALL(100),
-        P1_LIGHT_WALL(99),
-        P2_LIGHT_WALL(98),
-        P3_LIGHT_WALL(97),
-        P4_LIGHT_WALL(96),
-        P5_LIGHT_WALL(95),
-        P6_LIGHT_WALL(94),
-        P7_LIGHT_WALL(93),
-        P8_LIGHT_WALL(92),
-        P9_LIGHT_WALL(91),
-        PLAYER1(90),
-        PLAYER2(89),
-        PLAYER3(88),
-        PLAYER4(87),
-        PLAYER5(86),
-        PLAYER6(85),
-        PLAYER7(84),
-        PLAYER8(83),
-        PLAYER9(82),
+        PLAYER1(99),
+        PLAYER2(98),
+        PLAYER3(97),
+        PLAYER4(96),
+        PLAYER5(95),
+        PLAYER6(94),
+        PLAYER7(93),
+        PLAYER8(92),
+        PLAYER9(91),
+        P1_LIGHT_WALL(90),
+        P2_LIGHT_WALL(89),
+        P3_LIGHT_WALL(88),
+        P4_LIGHT_WALL(87),
+        P5_LIGHT_WALL(86),
+        P6_LIGHT_WALL(85),
+        P7_LIGHT_WALL(84),
+        P8_LIGHT_WALL(83),
+        P9_LIGHT_WALL(82),
         FORCE_FIELD(81),
         FF_GENERATOR_ACTIVE(80),
         FF_GENERATOR_INACTIVE(79),

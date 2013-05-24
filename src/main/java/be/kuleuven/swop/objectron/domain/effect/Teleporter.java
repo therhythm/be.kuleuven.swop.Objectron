@@ -21,14 +21,17 @@ public class Teleporter implements Effect {
     @Override
     public void activate(Movable movable, TurnManager manager) throws GameOverException, SquareOccupiedException,
             NotEnoughActionsException {
-        try {
+        if(!destination.getLocation().isObstructed()){
+
+            try {
             movable.getTeleportStrategy().teleport(movable, this, manager);
             movable.dirsupted();
         } catch (InvalidMoveException | WallHitException | ForceFieldHitException | PlayerHitException e) {
             // teleportation not possible.. do nothing
+           
         }
     }
-
+    }
     public void teleport(Movable movable, TurnManager manager) throws InvalidMoveException, PlayerHitException,
             WallHitException, ForceFieldHitException, GameOverException, SquareOccupiedException,
             NotEnoughActionsException {

@@ -82,7 +82,6 @@ public class PrimaryPowerFailure implements Effect, TurnSwitchObserver {
 
     @Override
     public void activate(Movable movable, TurnManager manager) throws GameOverException, NotEnoughActionsException, SquareOccupiedException {
-
             PowerFailureEffectVisitor visitor = new PowerFailureEffectVisitor();
             for(Effect effect : square.getEffects()){
                 effect.accept(visitor);

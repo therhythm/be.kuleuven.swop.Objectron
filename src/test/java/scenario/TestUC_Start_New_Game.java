@@ -5,11 +5,14 @@ import be.kuleuven.swop.objectron.domain.exception.GridTooSmallException;
 import be.kuleuven.swop.objectron.domain.exception.InvalidFileException;
 import be.kuleuven.swop.objectron.domain.exception.InventoryEmptyException;
 import be.kuleuven.swop.objectron.domain.exception.TooManyPlayersException;
+import be.kuleuven.swop.objectron.domain.grid.FileGridBuilder;
+import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.util.Dimension;
 import be.kuleuven.swop.objectron.handler.StartGameHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,10 +71,11 @@ public class TestUC_Start_New_Game {
         players.add("player 5");
         startGameHandler.startNewCTFGame(players, dimension, "");
     }
-     /*
-    @Test
-    public void test_file_start_race() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
-        Dimension dimension = new Dimension(20, 20);
-        startGameHandler.startNewCTFGame(players, dimension,ClassLoader.getSystemClassLoader().getResource("test_file").getFile());
-    }   */
+
+    @Test(expected = TooManyPlayersException.class)
+    public void test_file_start_race_too_many_players() throws InvalidFileException, TooManyPlayersException, GridTooSmallException {
+        String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").getFile();
+        File file = new File(input_file);
+        new FileGridBuilder(file.getAbsolutePath(), 3);
+    }
 }

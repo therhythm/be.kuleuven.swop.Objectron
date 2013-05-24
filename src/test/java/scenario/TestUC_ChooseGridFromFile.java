@@ -7,6 +7,7 @@ import be.kuleuven.swop.objectron.domain.grid.Grid;
 import be.kuleuven.swop.objectron.domain.util.Position;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
@@ -24,7 +25,8 @@ public class TestUC_ChooseGridFromFile {
     @Test
     public void test_basic_flow() throws InvalidFileException, TooManyPlayersException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file.txt").getFile();
-         FileGridBuilder gridBuilder = new FileGridBuilder(input_file, 2);
+        File file = new File(input_file);
+         FileGridBuilder gridBuilder = new FileGridBuilder(file.getAbsolutePath(), 2);
         gridBuilder.buildWalls();
         Grid grid = gridBuilder.buildGrid();
 
@@ -54,12 +56,14 @@ public class TestUC_ChooseGridFromFile {
     @Test (expected = InvalidFileException.class)
     public void test_unreachable_square() throws InvalidFileException, IOException, TooManyPlayersException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file_unreachable_square.txt").getFile();
-        new FileGridBuilder(input_file, 2);
+        File file = new File(input_file);
+        new FileGridBuilder(file.getAbsolutePath(), 2);
     }
 
     @Test (expected = InvalidFileException.class)
     public void test_wrong_number_of_players() throws InvalidFileException, IOException, TooManyPlayersException {
         String input_file = ClassLoader.getSystemClassLoader().getResource("test_file_multiple_starting_positions.txt").getFile();
-        new FileGridBuilder(input_file, 2);
+        File file = new File(input_file);
+        new FileGridBuilder(file.getAbsolutePath(), 2);
     }
 }
