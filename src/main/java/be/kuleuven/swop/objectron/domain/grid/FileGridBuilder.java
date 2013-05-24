@@ -143,7 +143,7 @@ public class FileGridBuilder extends GridBuilder {
                 char c = input[i][j];
 
                 if (c == '#') {
-                    Square square = squares[j - 1][i - 1];
+                    Square square = squares[i - 1][j - 1];
                     wallSegments.add(square);
                 } else if ((c - '0') > 0 && (c - '0') < 10) { // little trick
                     playerPositions.put((c - '0') - 1, new Position(j - 1, i - 1));
