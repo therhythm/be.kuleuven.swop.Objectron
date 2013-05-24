@@ -51,6 +51,7 @@ public class Movement {
     private void moveOneStep() throws InvalidMoveException {
         Square neighbour = currentSquare.getNeighbour(direction);
         if(neighbour != null){
+
             newSquare(neighbour);
         }else{
             throw new InvalidMoveException();

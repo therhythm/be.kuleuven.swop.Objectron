@@ -38,10 +38,4 @@ public class Teleporter implements Effect {
     public Square getLocation() {
         return location;
     }
-
-    public Teleporter getDestination() {
-        return destination;
-    }
-
-
 }
