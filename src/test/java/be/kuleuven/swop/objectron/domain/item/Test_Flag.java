@@ -159,63 +159,6 @@ public class Test_Flag {
     }
 
     @Test
-    public void test_player_teleport_flag_drop() throws InventoryFullException, NotEnoughActionsException, GameOverException, SquareOccupiedException, InvalidMoveException, NoItemSelectedException {
-        Square squareTeleport1 = grid.getSquareAtPosition(new Position(1, 9));
-        Square squareTeleport2 = grid.getSquareAtPosition(new Position(8, 9));
-
-        Teleporter teleporter1 = new Teleporter(squareTeleport1);
-        Teleporter teleporter2 = new Teleporter(squareTeleport2);
-        teleporter1.setDestination(teleporter2);
-        teleporter2.setDestination(teleporter1);
-        squareTeleport1.addEffect(teleporter1);
-
-        squareTeleport2.addEffect(teleporter2);
-
-
-        //ervoor zorgen dat lighttrail player 2 uit de weg is
-        state.getTurnManager().getCurrentTurn().setMoved();
-        state.getTurnManager().endTurn();
-        state.getTurnManager().getCurrentTurn().setMoved();
-        state.getTurnManager().endTurn();
-        for (int i = 0; i < 3; i++) {
-            movePlayerHandler.move(Direction.UP);
-        }
-        state.getTurnManager().endTurn();
-        state.getTurnManager().getCurrentTurn().setMoved();
-        state.getTurnManager().endTurn();
-        for (int i = 0; i < 3; i++) {
-            movePlayerHandler.move(Direction.UP);
-        }
-        state.getTurnManager().endTurn();
-        System.out.println(player2.getCurrentSquare().getPosition());
-        movePlayerHandler.move(Direction.UP_LEFT);
-        System.out.println(player2.getCurrentSquare().getPosition());
-        movePlayerHandler.move(Direction.DOWN_LEFT);
-        System.out.println(player2.getCurrentSquare().getPosition());
-
-        pickUpItemHandler.pickUpItem(0);
-        assertTrue(player2.getInventoryItems().size() == 1);
-        movePlayerHandler.move(Direction.RIGHT);
-        assertTrue(state.getTurnManager().getCurrentTurn().getCurrentPlayer().getCurrentSquare().equals(squareTeleport2));
-        assertTrue(player2.getInventoryItems().size() == 0);
-
-        boolean checkVlagRandomNeighborSquare = false;
-        for (Direction direction : Direction.values()) {
-            if (player2.getCurrentSquare().getNeighbour(direction) != null) {
-                for (Item item : player2.getCurrentSquare().getNeighbour(direction).getAvailableItems()) {
-                    if (item instanceof Flag) {
-                        Flag vlag = (Flag) item;
-                        if (vlag.getOwner().equals(player1))
-                            checkVlagRandomNeighborSquare = true;
-                    }
-
-                }
-            }
-        }
-        assertTrue(checkVlagRandomNeighborSquare);
-    }
-
-    @Test
     public void test_player_hit_identityDisc_flag_drop() throws InventoryFullException, NotEnoughActionsException, GameOverException, SquareOccupiedException, InvalidMoveException, NoItemSelectedException {
 
         grid.getSquareAtPosition(new Position(1, 9)).addItem(new UnchargedIdentityDisc());

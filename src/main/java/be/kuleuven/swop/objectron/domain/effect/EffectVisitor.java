@@ -10,5 +10,5 @@ public interface EffectVisitor {
 
     void visitLightMine();
 
-    void visitForceField();//todo effect or not?
+    void visitForceField();
 }
