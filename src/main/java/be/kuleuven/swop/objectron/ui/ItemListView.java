@@ -1,9 +1,7 @@
 package be.kuleuven.swop.objectron.ui;
 
 import be.kuleuven.swop.objectron.domain.exception.GameOverException;
-import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +21,8 @@ public class ItemListView {
 
         inv.setCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         itemMap.put(LightMine.class, inv.loadImage("lightgrenade_big.png", 40, 40));
-        itemMap.put(IdentityDisc.class, inv.loadImage("identity_disk_big.png", 40, 40));
+        itemMap.put(ChargedIdentityDisc.class, inv.loadImage("identity_disk_big.png", 40, 40));
+        itemMap.put(UnchargedIdentityDisc.class, inv.loadImage("identity_disk_big.png", 40, 40));
         int hcount = 0, vcount = 0;
         for (int i = 0; i < items.size(); i++) {
             final int index = i;

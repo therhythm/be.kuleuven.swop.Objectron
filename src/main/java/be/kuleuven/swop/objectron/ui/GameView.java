@@ -7,9 +7,7 @@ import be.kuleuven.swop.objectron.domain.effect.Effect;
 import be.kuleuven.swop.objectron.domain.effect.Teleporter;
 import be.kuleuven.swop.objectron.domain.exception.*;
 import be.kuleuven.swop.objectron.domain.gamestate.GameObserver;
-import be.kuleuven.swop.objectron.domain.item.IdentityDisc;
-import be.kuleuven.swop.objectron.domain.item.Item;
-import be.kuleuven.swop.objectron.domain.item.LightMine;
+import be.kuleuven.swop.objectron.domain.item.*;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForceField;
 import be.kuleuven.swop.objectron.domain.item.forceField.ForcefieldGenerator;
 import be.kuleuven.swop.objectron.domain.effect.powerfailure.PrimaryPowerFailure;
@@ -550,7 +548,7 @@ public class GameView implements GameObserver {
     private SquareStates getitemSquareState(Class<?> item) {
         if (item.equals(LightMine.class)) {
             return SquareStates.LIGHT_MINE;
-        } else if (item.equals(IdentityDisc.class)) {
+        } else if (item.equals(ChargedIdentityDisc.class) || item.equals(UnchargedIdentityDisc.class)) {
             return SquareStates.IDENTITY_DISK;
         } else if (item.equals(Teleporter.class)) {
             return SquareStates.TELEPORTER;
